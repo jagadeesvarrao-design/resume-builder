@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZenResume - Peaceful, ATS-Compliant Resume Builder</title>
+  <meta name="description" content="Build premium, highly-approved, ATS-friendly resumes with ease. Select custom-fit templates for Software, Civil, Mechanical, and Electrical industries.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Peaceful & Dynamic Welcome Header -->
+    <header class="app-header no-print">
+      <h1 class="greeting-text" id="greeting-banner">Welcome, Professional</h1>
+      <p class="sub-greeting">Select a highly-approved ATS template tailored for your industry and experience, fill in your details, and download a beautiful vector-text PDF.</p>
+    </header>
+
+    <main>
+      
+      <!-- SCREEN 1: GREETING & SELECTING TEMPLATES (NO-PRINT) -->
+      <section class="selection-screen no-print" id="selection-screen">
+        
+        <!-- Interactive Category Filters -->
+        <div class="filters-panel">
+          
+          <div class="filter-group">
+            <span class="filter-label">1. Choose Experience Level</span>
+            <div class="filter-buttons" id="exp-filters">
+              <button class="btn-filter active" data-exp="fresher">Fresher</button>
+              <button class="btn-filter" data-exp="experienced">Experienced</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <span class="filter-label">2. Select Your Industry</span>
+            <div class="filter-buttons" id="industry-filters">
+              <button class="btn-filter active" data-ind="software">Software Industry</button>
+              <button class="btn-filter" data-ind="electrical">Electrical Industry</button>
+              <button class="btn-filter" data-ind="mechanical">Mechanical Industry</button>
+              <button class="btn-filter" data-ind="civil">Civil Industry</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Template Layout Catalog -->
+        <div class="filters-panel" style="padding-top: 15px;">
+          <span class="filter-label" style="margin-bottom: 12px; display: block;">3. Select A Layout Style</span>
+          <div class="templates-grid" id="templates-grid">
+            <!-- Dynamically Rendered by JS -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SCREEN 2: BUILDER WORKSPACE -->
+      <div class="mobile-tabs no-print" id="mobile-workspace-tabs" style="display: none;">
+        <button type="button" class="mobile-tab-btn active" id="tab-btn-edit">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit Details
+        </button>
+        <button type="button" class="mobile-tab-btn" id="tab-btn-preview">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Live Preview
+        </button>
+      </div>
+
+      <section class="builder-workspace" id="builder-workspace">
+        
+        <!-- Left Panel: Guided Multi-step Form -->
+        <div class="form-panel no-print">
+          
+          <div class="workspace-actions">
+            <button class="btn-back" id="btn-back-to-templates">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              Change Template
+            </button>
+            <div class="data-actions">
+              <button type="button" class="btn-data-action" id="btn-export-json" title="Export Resume Data as JSON file">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                Backup
+              </button>
+              <button type="button" class="btn-data-action" id="btn-import-json" title="Restore Resume Data from JSON file">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Restore
+              </button>
+              <input type="file" id="input-import-file" accept=".json" style="display: none;">
+            </div>
+            <div class="wizard-progress" id="wizard-progress-dots">
+              <!-- Dots added dynamically -->
+            </div>
+          </div>
+
+          <!-- Wizard Form Container -->
+          <form id="resume-form" onsubmit="event.preventDefault();">
+            
+            <!-- Step 1: Personal Details -->
+            <div class="form-step active" data-step="1">
+              <h2 class="step-title">Contact & Profiles</h2>
+              <p class="step-desc">Provide your contact details. Keep titles clear and emails professional.</p>
+              
+              <div class="form-group">
+                <label class="form-label" for="input-name">Full Name</label>
+                <input type="text" id="input-name" class="form-input" placeholder="e.g. Rohan Das">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-title">Professional Title</label>
+                <input type="text" id="input-title" class="form-input" placeholder="e.g. Graduate Mechanical Engineer">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="input-email">Email Address</label>
+                  <input type="email" id="input-email" class="form-input" placeholder="e.g. name@email.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="input-phone">Phone Number</label>
+                  <input type="text" id="input-phone" class="form-input" placeholder="e.g. +91 98765 43210">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-location">Location</label>
+                <input type="text" id="input-location" class="form-input" placeholder="e.g. Bangalore, India">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="input-website">Portfolio / Website Link</label>
+                  <input type="text" id="input-website" class="form-input" placeholder="e.g. rohandas.dev">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="input-linkedin">LinkedIn Username</label>
+                  <input type="text" id="input-linkedin" class="form-input" placeholder="e.g. linkedin.com/in/rohan">
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Professional Summary -->
+            <div class="form-step" data-step="2">
+              <h2 class="step-title">Professional Summary</h2>
+              <p class="step-desc">Write a concise, 3-4 sentence paragraph highlighting your core capabilities, technical goals, and credentials.</p>
+              
+              <div class="form-group">
+                <label class="form-label" for="input-summary">Summary Statement</label>
+                <textarea id="input-summary" class="form-input" placeholder="Highly motivated engineer with expertise in..."></textarea>
+              </div>
+            </div>
+
+            <!-- Step 3: Core Competencies / Skills -->
+            <div class="form-step" data-step="3">
+              <h2 class="step-title">Skills & Keywords</h2>
+              <p class="step-desc">List your technical skills and domain expertise. Separating them with commas makes it easy for the ATS to parse.</p>
+              
+              <div class="form-group">
+                <label class="form-label" for="input-skills">Skills (Comma-separated)</label>
+                <textarea id="input-skills" class="form-input" style="min-height: 120px;" placeholder="e.g. AutoCAD, SolidWorks, FEA, GD&T, CNC, Project Planning"></textarea>
+              </div>
+            </div>
+
+            <!-- Step 4: Professional Timeline (Experience) -->
+            <div class="form-step" data-step="4">
+              <h2 class="step-title">Work Experience</h2>
+              <p class="step-desc">Detail your recent professional history, internships, or leadership positions.</p>
+              
+              <div class="list-container" id="experience-list-container">
+                <!-- Dynamically generated entries -->
+              </div>
+              <button type="button" class="btn-add-item" id="btn-add-experience">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Experience Entry
+              </button>
+            </div>
+
+            <!-- Step 5: Key Projects -->
+            <div class="form-step" data-step="5">
+              <h2 class="step-title">Technical Projects</h2>
+              <p class="step-desc">List key academic capstone works, personal engineering repositories, or major prototypes built.</p>
+              
+              <div class="list-container" id="projects-list-container">
+                <!-- Dynamically generated entries -->
+              </div>
+              <button type="button" class="btn-add-item" id="btn-add-project">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Project Entry
+              </button>
+            </div>
+
+            <!-- Step 6: Education -->
+            <div class="form-step" data-step="6">
+              <h2 class="step-title">Education</h2>
+              <p class="step-desc">Add your formal degrees, universities, graduation timelines, and grade credentials.</p>
+              
+              <div class="list-container" id="education-list-container">
+                <!-- Dynamically generated entries -->
+              </div>
+              <button type="button" class="btn-add-item" id="btn-add-education">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Education Entry
+              </button>
+            </div>
+
+            <!-- Step 7: Certifications -->
+            <div class="form-step" data-step="7">
+              <h2 class="step-title">Certifications</h2>
+              <p class="step-desc">Add professional licensing, training courses, and verified developer badges to strengthen your profile.</p>
+              
+              <div class="list-container" id="certifications-list-container">
+                <!-- Dynamically generated entries -->
+              </div>
+              <button type="button" class="btn-add-item" id="btn-add-certification">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add Certification
+              </button>
+            </div>
+
+            <!-- Navigation Actions -->
+            <div class="wizard-nav no-print">
+              <button type="button" class="btn-nav-prev" id="btn-wizard-prev" style="visibility: hidden;">Previous Step</button>
+              <button type="button" class="btn-nav-next" id="btn-wizard-next">
+                Next Step
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+        <!-- Right Panel: Live Synchronized Preview -->
+        <div class="preview-panel">
+          
+          <div class="preview-bar no-print">
+            <span class="preview-status">
+              <span class="status-pulse"></span>
+              Live Syncing Preview
+            </span>
+            
+            <div class="quick-layout-switch">
+              <label for="select-layout-inline" class="quick-switch-label">Style:</label>
+              <select id="select-layout-inline" class="quick-switch-select">
+                <option value="classic">Minimalist Classic</option>
+                <option value="modern">Serene Modern</option>
+                <option value="grid">Technical Grid</option>
+                <option value="executive">Bold Executive</option>
+                <option value="academic">Academic Scholar</option>
+                <option value="minimalist">Minimalist Sans</option>
+                <option value="linear">Structured Linear</option>
+              </select>
+            </div>
+
+            <button class="btn-nav-next" style="padding: 6px 14px; font-size: 12px; border-radius: 6px;" id="btn-trigger-download">
+              Download Resume
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            </button>
+          </div>
+
+          <!-- Paper-like Printable Sheet Container -->
+          <div class="resume-paper-wrapper">
+            <div class="resume-paper" id="resume-print-area">
+              <!-- Rendered template structure injected here by app.js -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- DOWNLOAD/PRINT TUTORIAL MODAL OVERLAY (NO-PRINT) -->
+  <div class="modal-overlay no-print" id="print-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        </div>
+        <h3 class="modal-title">Export 100% ATS PDF</h3>
+      </div>
+      
+      <div class="modal-instruction">
+        <strong>Important Instructions:</strong>
+        <p>To export a searchable vector PDF that guarantees applicant systems parse your text correctly, we use the browser's native engine:</p>
+        <ol class="instruction-list">
+          <li>Select <strong>Destination: Save as PDF</strong> (or Microsoft Print to PDF).</li>
+          <li>Expand **More settings** at the bottom.</li>
+          <li>Make sure <strong>Headers and footers</strong> is <strong>unchecked</strong>.</li>
+          <li>Set **Margins** to **None** or **Default** for a clean print.</li>
+        </ol>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="btn-modal-cancel" id="btn-modal-close">Back to Editor</button>
+        <button class="btn-modal-print" id="btn-modal-confirm">
+          Save Resume PDF
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link templates data and main app controller scripts -->
+  <script src="templates-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
