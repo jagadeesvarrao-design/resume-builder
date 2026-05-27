@@ -657,6 +657,9 @@ function syncFormToPreview() {
 
   // Trigger LocalStorage Auto-Save
   autoSaveResume();
+
+  // Adjust preview scaling dynamically if on mobile
+  adjustPreviewScale();
 }
 
 /* ==========================================================================
@@ -785,6 +788,43 @@ function setMobileTab(activeTab) {
     btnPreview.classList.add('active');
     btnEdit.classList.remove('active');
     builderWorkspace.classList.add('show-preview');
+    
+    // Trigger dynamic fluid preview scaling on mobile view tab switch
+    setTimeout(adjustPreviewScale, 50);
+  }
+}
+
+/* ==========================================================================
+   7C. FLUID MOBILE PREVIEW SCALING
+   ========================================================================== */
+function adjustPreviewScale() {
+  const wrapper = document.querySelector('.resume-paper-wrapper');
+  const paper = document.getElementById('resume-print-area');
+  
+  if (!wrapper || !paper) return;
+  
+  // Apply changes ONLY when opened in mobile/tablet screens (width <= 1024px)
+  if (window.innerWidth <= 1024) {
+    const wrapperWidth = wrapper.clientWidth;
+    const paperWidth = 794; // 210mm in pixels at 96 dpi is 793.7px
+    
+    // If the preview panel is active/visible, calculate scale
+    if (wrapperWidth > 0) {
+      const scale = wrapperWidth / paperWidth;
+      
+      // Apply exact fluid scale
+      paper.style.transform = `scale(${scale})`;
+      paper.style.transformOrigin = 'top center';
+      
+      // Update parent wrapper height so scroll bars and containers match exactly
+      const paperHeight = paper.scrollHeight || 1122; // 297mm standard height fallback
+      wrapper.style.height = `${paperHeight * scale}px`;
+    }
+  } else {
+    // Completely clear dynamic mobile changes when on a laptop screen (desktop width > 1024px)
+    paper.style.transform = '';
+    paper.style.transformOrigin = '';
+    wrapper.style.height = '';
   }
 }
 
@@ -878,6 +918,9 @@ function attachEvents() {
     btnTabEdit.addEventListener('click', () => setMobileTab('edit'));
     btnTabPreview.addEventListener('click', () => setMobileTab('preview'));
   }
+
+  // Handle window resizing for responsive dynamic fluid preview scaling
+  window.addEventListener('resize', adjustPreviewScale);
 }
 
 /* ==========================================================================
@@ -890,6 +933,7 @@ function bootstrap() {
   setupWizardDots();
   attachEvents();
   loadSavedResume();
+  adjustPreviewScale();
 }
 
 // Fire up ZenResume!
