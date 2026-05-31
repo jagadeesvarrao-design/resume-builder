@@ -1012,8 +1012,60 @@ function autoFitToSinglePage() {
   const paper = document.getElementById('resume-print-area');
   if (!paper) return;
   
-  // Clear any existing compression classes so layout is natural
-  paper.classList.remove('compress-1', 'compress-2', 'compress-3', 'compress-4');
+  // Clear any existing compression/expansion classes first
+  paper.classList.remove(
+    'compress-1', 'compress-2', 'compress-3', 'compress-4',
+    'expand-1', 'expand-2', 'expand-3'
+  );
+  
+  // Temporarily set min-height to auto to get the natural natural height of the content
+  paper.style.minHeight = 'auto';
+  let naturalHeight = paper.scrollHeight;
+  paper.style.minHeight = '';
+  
+  const targetHeight = 1122; // 297mm standard height in pixels (A4)
+  
+  // 1. If it overflows the single page, apply compression classes step-by-step
+  if (naturalHeight > targetHeight) {
+    const compressClasses = ['compress-1', 'compress-2', 'compress-3', 'compress-4'];
+    let fitted = false;
+    for (let i = 0; i < compressClasses.length; i++) {
+      paper.classList.add(compressClasses[i]);
+      
+      paper.style.minHeight = 'auto';
+      naturalHeight = paper.scrollHeight;
+      paper.style.minHeight = '';
+      
+      if (naturalHeight <= targetHeight) {
+        fitted = true;
+        break; // Successfully fit on a single page!
+      }
+    }
+    
+    // If even maximum compression can't fit it on 1 page, it is a true multi-page resume!
+    // We remove compression to let it flow naturally and beautifully in full size over multiple pages.
+    if (!fitted) {
+      paper.classList.remove('compress-1', 'compress-2', 'compress-3', 'compress-4');
+    }
+  } 
+  // 2. If it is shorter than the single page, apply expansion classes step-by-step to fill the space
+  else if (naturalHeight < targetHeight - 80) {
+    const expandClasses = ['expand-1', 'expand-2', 'expand-3'];
+    for (let i = 0; i < expandClasses.length; i++) {
+      // Check if applying this class remains within target height
+      paper.classList.add(expandClasses[i]);
+      
+      paper.style.minHeight = 'auto';
+      naturalHeight = paper.scrollHeight;
+      paper.style.minHeight = '';
+      
+      if (naturalHeight > targetHeight) {
+        // If it overflows, back off by removing this expansion class and sticking to the previous one
+        paper.classList.remove(expandClasses[i]);
+        break;
+      }
+    }
+  }
 }
 
 /* ==========================================================================
