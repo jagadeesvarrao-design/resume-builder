@@ -1196,6 +1196,967 @@ const TEMPLATE_STYLES = {
       html += RenderHelpers.certifications(data, font, "Professional Structural Registrations", accent);
       return html;
     }
+  },
+
+  // ==========================================================================
+  // ADDED NEW TEMPLATES: 10 STRICT ATS & 5 CREATIVE PREMIUM LAYOUTS
+  // ==========================================================================
+
+  // --- 1. SOFTWARE INDUSTRY ---
+  software_fresher_hybrid: {
+    id: "software_fresher_hybrid",
+    name: "Developer Hybrid ATS",
+    description: "Skills-forward hybrid structure putting core technologies and capstone repositories in high-visibility blocks above the work timeline.",
+    industry: "software",
+    experience: "fresher",
+    render: (data) => {
+      const font = "'Outfit', sans-serif";
+      const accent = "#2b6cb0"; // Slate Teal
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Professional Summary", accent);
+      html += RenderHelpers.skills(data, font, "Technical Matrix & Core Skills", accent, "badges");
+      html += RenderHelpers.projects(data, font, "Selected Engineering Projects", accent, true);
+      html += RenderHelpers.experience(data, font, "Work History & Internships", accent);
+      html += RenderHelpers.education(data, font, "Academic History", accent);
+      html += RenderHelpers.certifications(data, font, "Licensing & Certifications", accent);
+      return html;
+    }
+  },
+  software_experienced_cloud: {
+    id: "software_experienced_cloud",
+    name: "Cloud Architect High-Density",
+    description: "High-density technical format designed for senior engineers to fit massive system designs, microservices, and cloud credentials on one page.",
+    industry: "software",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#1a202c"; // Charcoal
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Professional Scope", accent, true);
+      html += RenderHelpers.skills(data, font, "Technical Competency Stack", accent, "grid");
+      html += RenderHelpers.experience(data, font, "Professional History & Architectural Outcomes", accent);
+      html += RenderHelpers.projects(data, font, "Key Scale & Optimization Projects", accent, true);
+      html += RenderHelpers.education(data, font, "Education", accent);
+      html += RenderHelpers.certifications(data, font, "Cloud & Enterprise Certifications", accent);
+      return html;
+    }
+  },
+
+  // --- 2. DATA SCIENCE & AI ---
+  data_science_fresher_academic: {
+    id: "data_science_fresher_academic",
+    name: "Academic Scholar ATS",
+    description: "Highly structured academic format prioritizing research publications, Kaggle capstones, university degrees, and formal math coursework.",
+    industry: "data_science",
+    experience: "fresher",
+    render: (data) => {
+      const font = "Georgia, serif";
+      const accent = "#2A4E44"; // Deep Forest Sage
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Research & Career Statement", accent);
+      html += RenderHelpers.education(data, font, "Academic Foundations", accent);
+      html += RenderHelpers.projects(data, font, "Quantitative & Capstone Portfolio", accent);
+      html += RenderHelpers.skills(data, font, "Core Statistical & Programming Toolsets", accent, "bullets");
+      html += RenderHelpers.experience(data, font, "Internships & Research Positions", accent);
+      html += RenderHelpers.certifications(data, font, "Professional Accreditations", accent);
+      return html;
+    }
+  },
+  data_science_experienced_lead: {
+    id: "data_science_experienced_lead",
+    name: "AI Product Lead ATS",
+    description: "Executive layout placing operational metrics, model deployment business outcomes, and MLOps system leadership first.",
+    industry: "data_science",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Inter', sans-serif";
+      const accent = "#9b2c2c"; // Crimson Red
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Executive Summary", accent, true);
+      html += RenderHelpers.experience(data, font, "Leading Model Engineering & AI Leadership History", accent);
+      html += RenderHelpers.skills(data, font, "MLOps & Cloud Infrastructure Tools", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Deployed AI Systems & Business Impacts", accent);
+      html += RenderHelpers.education(data, font, "Formal Education", accent);
+      html += RenderHelpers.certifications(data, font, "Specialist Credentials", accent);
+      return html;
+    }
+  },
+
+  // --- 3. ELECTRICAL INDUSTRY ---
+  electrical_fresher_field: {
+    id: "electrical_fresher_field",
+    name: "Field Operations Entry",
+    description: "Practical layout highlighting laboratory tools, safety certifications, board-level testing, and manual instrumentation.",
+    industry: "electrical",
+    experience: "fresher",
+    render: (data) => {
+      const font = "Trebuchet MS, sans-serif";
+      const accent = "#b7791f"; // Copper
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.skills(data, font, "Laboratory & Instrumentation Competencies", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Hardware Prototyping Projects", accent);
+      html += RenderHelpers.education(data, font, "Formal Education", accent);
+      html += RenderHelpers.experience(data, font, "Practical Workshop & Site Apprenticeships", accent);
+      html += RenderHelpers.certifications(data, font, "Safety Certifications & Technical Badges", accent);
+      return html;
+    }
+  },
+  electrical_experienced_consultant: {
+    id: "electrical_experienced_consultant",
+    name: "Principal Grid Consultant",
+    description: "Focused on substation commissioning grids, design consultancy audits, and project bid leadership.",
+    industry: "electrical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Times New Roman', serif";
+      const accent = "#2c5282"; // Royal Blue
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Executive Profile", accent);
+      html += RenderHelpers.experience(data, font, "Power Systems & Project Consulting History", accent);
+      html += RenderHelpers.skills(data, font, "Grid protection & ETAP Modeling Specialties", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Capital Grid Commissions & Protective Redesigns", accent);
+      html += RenderHelpers.education(data, font, "Education History", accent);
+      html += RenderHelpers.certifications(data, font, "PE Licensing & Advisory Certifications", accent);
+      return html;
+    }
+  },
+
+  // --- 4. MECHANICAL INDUSTRY ---
+  mechanical_fresher_robotics: {
+    id: "mechanical_fresher_robotics",
+    name: "Robotics & Aero Prototyper",
+    description: "Tailored for aerospace, automotive, or robotics grads. Prioritizes Formula SAE chassis/aerodynamics work, custom CAD prototypes, and rapid 3D printing checks.",
+    industry: "mechanical",
+    experience: "fresher",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#3182ce"; // Steel Blue
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Career Profile", accent);
+      html += RenderHelpers.skills(data, font, "CAD, Prototyping & Control Toolkits", accent, "badges");
+      html += RenderHelpers.projects(data, font, "Rapid Hardware Design Projects", accent);
+      html += RenderHelpers.education(data, font, "Academic Education", accent);
+      html += RenderHelpers.experience(data, font, "SAE Design Teams & Workshop Internships", accent);
+      html += RenderHelpers.certifications(data, font, "SolidWorks & ANSYS Certifications", accent);
+      return html;
+    }
+  },
+  mechanical_experienced_operations: {
+    id: "mechanical_experienced_operations",
+    name: "Factory Systems Director",
+    description: "Focuses on shop floor tooling designs, Six Sigma operational pipelines, and assembly factory logistics.",
+    industry: "mechanical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Georgia, serif";
+      const accent = "#2F5C4B"; // Dark Sage
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Executive Summary", accent, true);
+      html += RenderHelpers.experience(data, font, "Manufacturing Plant Operations & CAD Design History", accent);
+      html += RenderHelpers.skills(data, font, "Six Sigma, Tooling Design & Machining Specialties", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Key Automated Tooling & Plant Modernizations", accent);
+      html += RenderHelpers.education(data, font, "Education Qualifications", accent);
+      html += RenderHelpers.certifications(data, font, "Quality & Design Certifications", accent);
+      return html;
+    }
+  },
+
+  // --- 5. CIVIL INDUSTRY ---
+  civil_fresher_infra: {
+    id: "civil_fresher_infra",
+    name: "Infrastructure Surveyor",
+    description: "Highlighting highway and concrete survey camps, concrete mixing logs, and structural AutoCAD drafting assignments.",
+    industry: "civil",
+    experience: "fresher",
+    render: (data) => {
+      const font = "'Inter', sans-serif";
+      const accent = "#22543d"; // Deep Green
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Professional Profile", accent);
+      html += RenderHelpers.education(data, font, "Academic Education", accent);
+      html += RenderHelpers.skills(data, font, "Site Surveying & CAD Drafting Competencies", accent, "bullets");
+      html += RenderHelpers.experience(data, font, "Apprenticeships & Concrete Logging Logs", accent);
+      html += RenderHelpers.projects(data, font, "On-site Projects & Soil Testing capstones", accent);
+      html += RenderHelpers.certifications(data, font, "AutoCAD & Surveying Credentials", accent);
+      return html;
+    }
+  },
+  civil_experienced_consulting: {
+    id: "civil_experienced_consulting",
+    name: "Consulting Civil Engineer",
+    description: "Optimized for construction contract bids, environmental impact licensing, and structural building auditing.",
+    industry: "civil",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Times New Roman', serif";
+      const accent = "#000000"; // Deep Black
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Professional Statement", accent);
+      html += RenderHelpers.experience(data, font, "Structural Bidding & Public Works Engineering", accent);
+      html += RenderHelpers.skills(data, font, "Estimator Scheduling & Compliance Auditing", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Municipal Bridges & Capital Commercial Designs", accent);
+      html += RenderHelpers.education(data, font, "Education History", accent);
+      html += RenderHelpers.certifications(data, font, "Chartered Structural Engineering Licensing", accent);
+      return html;
+    }
+  },
+
+  // --- 6. PREMIUM HIGH-AESTHETIC CREATIVE (NON-ATS) LAYOUTS ---
+  software_creative_dark: {
+    id: "software_creative_dark",
+    name: "Creative Dark Dev",
+    description: "High-impact visual dashboard theme. Features a solid dark slate top header, double-column grid layout, visual horizontal skill bars, and a left-accented vertical timeline.",
+    industry: "software",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Inter', Arial, sans-serif";
+      const darkBg = "#0f172a";
+      const cardBg = "#1e293b";
+      const neonTeal = "#06b6d4";
+      const textLight = "#f1f5f9";
+      const textSub = "#94a3b8";
+
+      // Render Contact Info
+      const email = data.personal.email ? `<span><strong style="color:${neonTeal}">Email:</strong> ${data.personal.email}</span>` : "";
+      const phone = data.personal.phone ? `<span><strong style="color:${neonTeal}">Phone:</strong> ${data.personal.phone}</span>` : "";
+      const loc = data.personal.location ? `<span><strong style="color:${neonTeal}">Location:</strong> ${data.personal.location}</span>` : "";
+      const web = data.personal.website ? `<span><strong style="color:${neonTeal}">Web:</strong> ${data.personal.website}</span>` : "";
+      const linkedin = data.personal.linkedin ? `<span><strong style="color:${neonTeal}">LinkedIn:</strong> ${data.personal.linkedin}</span>` : "";
+
+      // Skills Visual Progress Bars
+      let skillsHTML = '';
+      if (data.skills && data.skills.length > 0) {
+        data.skills.forEach((skill, i) => {
+          // Fake decreasing percentage for premium look
+          const pct = Math.max(55, 95 - (i * 6));
+          skillsHTML += `
+            <div style="margin-bottom: 8px;">
+              <div style="display:flex; justify-content:space-between; font-size:9.5px; color:${textLight}; font-weight:600; margin-bottom:3px;">
+                <span>${skill}</span>
+                <span style="color:${neonTeal}">${pct}%</span>
+              </div>
+              <div style="background:#334155; height:6px; border-radius:3px;">
+                <div style="background:${neonTeal}; height:100%; width:${pct}%; border-radius:3px; box-shadow:0 0 8px ${neonTeal}"></div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // Experience Timeline
+      let expHTML = '';
+      if (data.experience && data.experience.length > 0) {
+        data.experience.forEach(exp => {
+          expHTML += `
+            <div style="position:relative; padding-left:18px; margin-bottom:14px; border-left:2px solid ${neonTeal};">
+              <div style="position:absolute; left:-6px; top:3px; width:10px; height:10px; border-radius:50%; background:${darkBg}; border:2px solid ${neonTeal}"></div>
+              <table style="width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:3px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textLight}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">at ${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; text-align:right; color:${neonTeal}">${exp.dates || ""}</td>
+                </tr>
+                <tr>
+                  <td style="font-style:italic; color:${textSub}; font-size:9px;">${exp.location || ""}</td>
+                  <td></td>
+                </tr>
+              </table>
+              <ul style="margin:0; padding-left:14px; font-size:10px; color:${textLight}; line-height:1.4;">
+                ${exp.descriptions ? exp.descriptions.map(desc => `<li style="margin-bottom:2px;">${desc}</li>`).join('') : ''}
+              </ul>
+            </div>
+          `;
+        });
+      }
+
+      // Projects
+      let projHTML = '';
+      if (data.projects && data.projects.length > 0) {
+        data.projects.forEach(proj => {
+          projHTML += `
+            <div style="background:${cardBg}; padding:10px 14px; border-radius:6px; border:1px solid #334155; margin-bottom:8px;">
+              <table style="width:100%; border-collapse:collapse; font-size:10px; margin-bottom:3px;">
+                <tr>
+                  <td style="font-weight:bold; color:${neonTeal};">${proj.title || ""}</td>
+                  <td style="font-style:italic; text-align:right; color:${textSub}; font-family:monospace;">${proj.technologies || ""}</td>
+                </tr>
+              </table>
+              <p style="font-size:9.5px; color:${textLight}; line-height:1.35; margin:0;">${proj.description || ""}</p>
+            </div>
+          `;
+        });
+      }
+
+      // Education
+      let eduHTML = '';
+      if (data.education && data.education.length > 0) {
+        data.education.forEach(edu => {
+          eduHTML += `
+            <div style="margin-bottom:6px; font-size:10px;">
+              <table style="width:100%; border-collapse:collapse; margin-bottom:2px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textLight};">${edu.degree || ""}</td>
+                  <td style="font-weight:bold; text-align:right; color:${neonTeal}">${edu.dates || ""}</td>
+                </tr>
+                <tr>
+                  <td style="font-style:italic; color:${textSub};">${edu.institution || ""}, ${edu.location || ""}</td>
+                  <td style="text-align:right; font-weight:bold; color:${textLight};">${edu.gpa ? `GPA: ${edu.gpa}` : ""}</td>
+                </tr>
+              </table>
+            </div>
+          `;
+        });
+      }
+
+      return `
+        <div style="background:${darkBg}; color:${textLight}; font-family:${font}; min-height:100%; box-sizing:border-box; border-radius:4px; overflow:hidden;">
+          <!-- Top Creative Header Block -->
+          <div style="background:#1e293b; border-bottom:3px solid ${neonTeal}; padding:20px; text-align:center;">
+            <h1 style="font-size:26px; font-weight:bold; color:${textLight}; text-transform:uppercase; margin:0 0 2px 0; letter-spacing:1px; text-shadow: 0 0 10px rgba(6,182,212,0.3);">${data.personal.name || ""}</h1>
+            <p style="font-size:12px; font-weight:700; color:${neonTeal}; text-transform:uppercase; letter-spacing:1.5px; margin:0 0 10px 0;">${data.personal.title || ""}</p>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px 12px; font-size:10px; color:${textSub}; line-height:1.4;">
+              ${email} ${phone} ${loc} ${web} ${linkedin}
+            </div>
+          </div>
+          
+          <!-- Inner Split Column Layout -->
+          <div style="display:grid; grid-template-columns:1fr 2fr; gap:16px; padding:18px;">
+            <!-- Left Side Grid column (Summary, Skills, Education) -->
+            <div>
+              ${data.summary ? `
+                <div style="margin-bottom:14px;">
+                  <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Profile Summary</h3>
+                  <p style="font-size:9.5px; color:${textLight}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
+                </div>
+              ` : ''}
+              
+              <div style="margin-bottom:14px;">
+                <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Skill Progress</h3>
+                ${skillsHTML}
+              </div>
+
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Education</h3>
+                ${eduHTML}
+              </div>
+            </div>
+            
+            <!-- Right Side Grid column (Experience & Projects) -->
+            <div>
+              <div style="margin-bottom:14px;">
+                <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Employment Timeline</h3>
+                ${expHTML}
+              </div>
+
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Key Initiatives</h3>
+                ${projHTML}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  },
+  data_science_creative_dashboard: {
+    id: "data_science_creative_dashboard",
+    name: "Creative DS Dashboard",
+    description: "Premium visual analytics theme. Uses a solid left sidebar panel for contact & technical tools, visual circular competency badges, and clean grid card blocks.",
+    industry: "data_science",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Inter', sans-serif";
+      const sidebarBg = "#1e293b";
+      const accent = "#3b82f6"; // DS Analytics Blue
+      const cardBorder = "#e2e8f0";
+      const textMain = "#1e293b";
+      const textSub = "#475569";
+
+      // Render Contact Info
+      const email = data.personal.email ? `<div style="margin-bottom:6px;"><strong>Email:</strong><br>${data.personal.email}</div>` : "";
+      const phone = data.personal.phone ? `<div style="margin-bottom:6px;"><strong>Phone:</strong><br>${data.personal.phone}</div>` : "";
+      const loc = data.personal.location ? `<div style="margin-bottom:6px;"><strong>Location:</strong><br>${data.personal.location}</div>` : "";
+      const web = data.personal.website ? `<div style="margin-bottom:6px;"><strong>Web:</strong><br>${data.personal.website}</div>` : "";
+      const linkedin = data.personal.linkedin ? `<div style="margin-bottom:6px;"><strong>LinkedIn:</strong><br>${data.personal.linkedin}</div>` : "";
+
+      // Visual Bullet points for Skills
+      let skillsHTML = '';
+      if (data.skills && data.skills.length > 0) {
+        skillsHTML = `<div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">`;
+        data.skills.forEach(skill => {
+          skillsHTML += `
+            <div style="font-size:9.5px; color:#cbd5e1; display:flex; align-items:center; gap:5px;">
+              <span style="width:5px; height:5px; border-radius:50%; background:${accent}; display:inline-block;"></span>
+              <span>${skill}</span>
+            </div>
+          `;
+        });
+        skillsHTML += `</div>`;
+      }
+
+      // Experience Timeline
+      let expHTML = '';
+      if (data.experience && data.experience.length > 0) {
+        data.experience.forEach(exp => {
+          expHTML += `
+            <div style="background:#ffffff; border:1px solid ${cardBorder}; padding:10px 14px; border-radius:8px; margin-bottom:8px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+              <table style="width:100%; border-collapse:collapse; font-size:10px; margin-bottom:3px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain}; font-size:10.5px;">${exp.role || ""} at <span style="color:${accent}">${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; text-align:right; color:${accent}">${exp.dates || ""}</td>
+                </tr>
+                <tr>
+                  <td style="font-style:italic; color:${textSub}; font-size:9px;">${exp.location || ""}</td>
+                  <td></td>
+                </tr>
+              </table>
+              <ul style="margin:0; padding-left:14px; font-size:9.5px; color:${textSub}; line-height:1.4;">
+                ${exp.descriptions ? exp.descriptions.map(desc => `<li style="margin-bottom:2px;">${desc}</li>`).join('') : ''}
+              </ul>
+            </div>
+          `;
+        });
+      }
+
+      // Projects
+      let projHTML = '';
+      if (data.projects && data.projects.length > 0) {
+        data.projects.forEach(proj => {
+          projHTML += `
+            <div style="border-left:3px solid ${accent}; background:#f8fafc; padding:8px 12px; margin-bottom:8px; font-size:9.5px;">
+              <div style="display:flex; justify-content:space-between; font-weight:bold; color:${textMain}; margin-bottom:2px;">
+                <span>${proj.title || ""}</span>
+                <span style="color:${accent}; font-family:monospace; font-size:8.5px;">${proj.technologies || ""}</span>
+              </div>
+              <p style="margin:0 0 2px 0; color:${textSub};">${proj.description || ""}</p>
+              ${proj.link ? `<div style="font-size:8.5px; color:${textSub};">Link: <span style="text-decoration:underline;">${proj.link}</span></div>` : ''}
+            </div>
+          `;
+        });
+      }
+
+      // Education & Certifications
+      let eduHTML = '';
+      if (data.education && data.education.length > 0) {
+        data.education.forEach(edu => {
+          eduHTML += `
+            <div style="margin-bottom:6px; font-size:9.5px; border-bottom:1px dashed ${cardBorder}; padding-bottom:4px;">
+              <table style="width:100%; border-collapse:collapse; margin-bottom:1px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain};">${edu.degree || ""}</td>
+                  <td style="font-weight:bold; text-align:right; color:${accent}">${edu.dates || ""}</td>
+                </tr>
+              </table>
+              <div style="color:${textSub}; font-size:9px;">${edu.institution || ""}, ${edu.location || ""} ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}</div>
+            </div>
+          `;
+        });
+      }
+
+      return `
+        <div style="background:#ffffff; color:${textMain}; font-family:${font}; min-height:100%; display:grid; grid-template-columns:1fr 2.2fr; border-radius:4px; overflow:hidden;">
+          <!-- Left Visual Sidebar -->
+          <div style="background:${sidebarBg}; color:#f1f5f9; padding:22px 16px; display:flex; flex-direction:column; gap:16px;">
+            <div style="text-align:center; border-bottom:1px solid #334155; padding-bottom:14px; margin-bottom:4px;">
+              <h2 style="font-size:18px; font-weight:bold; margin:0 0 4px 0; color:#ffffff; text-transform:uppercase; letter-spacing:0.5px;">${data.personal.name || ""}</h2>
+              <span style="font-size:9.5px; font-weight:700; color:${accent}; text-transform:uppercase; letter-spacing:1px; background:rgba(59,130,246,0.15); padding:3px 8px; border-radius:4px;">${data.personal.title || ""}</span>
+            </div>
+            
+            <div style="font-size:9px; color:#94a3b8; display:flex; flex-direction:column; gap:8px;">
+              <h3 style="font-size:10px; font-weight:bold; color:#ffffff; border-bottom:1px solid #334155; padding-bottom:3px; text-transform:uppercase; margin:0;">Contact Info</h3>
+              ${email} ${phone} ${loc} ${web} ${linkedin}
+            </div>
+
+            <div>
+              <h3 style="font-size:10px; font-weight:bold; color:#ffffff; border-bottom:1px solid #334155; padding-bottom:3px; text-transform:uppercase; margin:0 0 6px 0;">Analytical Toolkit</h3>
+              ${skillsHTML}
+            </div>
+          </div>
+          
+          <!-- Right Grid Area -->
+          <div style="padding:22px; display:flex; flex-direction:column; gap:16px; background:#fafafa;">
+            ${data.summary ? `
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${accent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Data Science Profile</h3>
+                <p style="font-size:10px; color:${textSub}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
+              </div>
+            ` : ''}
+
+            <div>
+              <h3 style="font-size:11px; font-weight:bold; color:${accent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Model Development & History</h3>
+              ${expHTML}
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${accent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Kaggle & Portfolios</h3>
+                ${projHTML}
+              </div>
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${accent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Education & Degrees</h3>
+                ${eduHTML}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  },
+  electrical_creative_panel: {
+    id: "electrical_creative_panel",
+    name: "Creative EE Panel",
+    description: "Circuit copper visual theme. Highlights microcontroller, board design, and safety licenses inside dedicated visual timeline panels.",
+    industry: "electrical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Inter', sans-serif";
+      const copper = "#d97706"; // EE Copper Accent
+      const bgCard = "#fffbeb";
+      const cardBorder = "#fcd34d";
+      const textMain = "#1e293b";
+      const textSub = "#4b5563";
+
+      // Render Contact Info
+      const email = data.personal.email ? `<span><strong>Email:</strong> ${data.personal.email}</span>` : "";
+      const phone = data.personal.phone ? `<span><strong>Phone:</strong> ${data.personal.phone}</span>` : "";
+      const loc = data.personal.location ? `<span><strong>Location:</strong> ${data.personal.location}</span>` : "";
+      const web = data.personal.website ? `<span><strong>Web:</strong> ${data.personal.website}</span>` : "";
+      const linkedin = data.personal.linkedin ? `<span><strong>LinkedIn:</strong> ${data.personal.linkedin}</span>` : "";
+
+      // Skills Visual Progress Badges
+      let skillsHTML = '';
+      if (data.skills && data.skills.length > 0) {
+        skillsHTML = `<div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;">`;
+        data.skills.forEach(skill => {
+          skillsHTML += `<span style="font-size:9.0px; font-weight:500; background:#fef3c7; border:1px solid ${cardBorder}; padding:3px 8px; border-radius:4px; color:${copper};">${skill}</span>`;
+        });
+        skillsHTML += `</div>`;
+      }
+
+      // Experience Timeline
+      let expHTML = '';
+      if (data.experience && data.experience.length > 0) {
+        data.experience.forEach(exp => {
+          expHTML += `
+            <div style="position:relative; padding-left:20px; margin-bottom:12px; border-left:2px solid ${copper};">
+              <div style="position:absolute; left:-7px; top:4px; width:12px; height:12px; border-radius:50%; background:#ffffff; border:3px solid ${copper}"></div>
+              <table style="width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:2px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">at ${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; text-align:right; color:${copper}">${exp.dates || ""}</td>
+                </tr>
+                <tr>
+                  <td style="font-style:italic; color:${textSub}; font-size:9.5px;">${exp.location || ""}</td>
+                  <td></td>
+                </tr>
+              </table>
+              <ul style="margin:0; padding-left:14px; font-size:10px; color:${textSub}; line-height:1.45;">
+                ${exp.descriptions ? exp.descriptions.map(desc => `<li style="margin-bottom:1px;">${desc}</li>`).join('') : ''}
+              </ul>
+            </div>
+          `;
+        });
+      }
+
+      // Projects
+      let projHTML = '';
+      if (data.projects && data.projects.length > 0) {
+        data.projects.forEach(proj => {
+          projHTML += `
+            <div style="background:${bgCard}; border:1px solid ${cardBorder}; padding:10px 14px; border-radius:8px; margin-bottom:8px;">
+              <table style="width:100%; border-collapse:collapse; font-size:10px; margin-bottom:3px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain};">${proj.title || ""}</td>
+                  <td style="font-style:italic; text-align:right; color:${copper}; font-weight:bold;">${proj.technologies || ""}</td>
+                </tr>
+              </table>
+              <p style="font-size:9.5px; color:${textSub}; margin:0;">${proj.description || ""}</p>
+            </div>
+          `;
+        });
+      }
+
+      // Education & Certifications
+      let eduHTML = '';
+      if (data.education && data.education.length > 0) {
+        data.education.forEach(edu => {
+          eduHTML += `
+            <div style="margin-bottom:6px; font-size:10px;">
+              <table style="width:100%; border-collapse:collapse; margin-bottom:1px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain};">${edu.degree || ""}</td>
+                  <td style="font-weight:bold; text-align:right; color:${copper}">${edu.dates || ""}</td>
+                </tr>
+                <tr>
+                  <td style="font-style:italic; color:${textSub};">${edu.institution || ""}, ${edu.location || ""}</td>
+                  <td style="text-align:right; font-weight:bold; color:${textMain};">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
+                </tr>
+              </table>
+            </div>
+          `;
+        });
+      }
+
+      return `
+        <div style="background:#ffffff; color:${textMain}; font-family:${font}; padding:24px; min-height:100%; box-sizing:border-box; border-radius:4px; overflow:hidden;">
+          <!-- Top Grid Board Header -->
+          <div style="border-bottom:2px solid ${copper}; padding-bottom:12px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:10px;">
+              <div>
+                <h1 style="font-size:28px; font-weight:bold; color:${textMain}; text-transform:uppercase; margin:0 0 2px 0;">${data.personal.name || ""}</h1>
+                <p style="font-size:12px; font-weight:700; color:${copper}; text-transform:uppercase; letter-spacing:1px; margin:0;">${data.personal.title || ""}</p>
+              </div>
+              <div style="display:flex; flex-wrap:wrap; gap:4px 10px; font-size:10px; color:${textSub}; text-align:right;">
+                ${email} ${phone} ${loc} ${web} ${linkedin}
+              </div>
+            </div>
+          </div>
+          
+          ${data.summary ? `
+            <div style="margin-bottom:16px; background:#fffcf2; border-left:4px solid ${copper}; padding:10px 14px; border-radius: 0 6px 6px 0;">
+              <h3 style="font-size:11px; font-weight:bold; color:${copper}; text-transform:uppercase; margin:0 0 4px 0;">Career Objective</h3>
+              <p style="font-size:10px; color:${textSub}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
+            </div>
+          ` : ''}
+
+          <!-- Grid Panels -->
+          <div style="display:grid; grid-template-columns:1.8fr 1.2fr; gap:20px;">
+            <!-- Left Panel (Timeline & Projects) -->
+            <div>
+              <div style="margin-bottom:16px;">
+                <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Engineering Operations</h3>
+                ${expHTML}
+              </div>
+
+              <div>
+                <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Hardware Prototype Designs</h3>
+                ${projHTML}
+              </div>
+            </div>
+
+            <!-- Right Panel (Skills, Education, Certs) -->
+            <div>
+              <div style="margin-bottom:16px;">
+                <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">EE Instrument Toolkit</h3>
+                ${skillsHTML}
+              </div>
+
+              <div style="margin-bottom:16px;">
+                <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Education</h3>
+                ${eduHTML}
+              </div>
+
+              ${data.certifications && data.certifications.length > 0 ? `
+                <div>
+                  <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Safety & PE Accreditations</h3>
+                  <ul style="margin:0; padding-left:14px; font-size:10px; color:${textSub}; line-height:1.45;">
+                    ${data.certifications.map(cert => `<li style="margin-bottom:2px;">${cert}</li>`).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  },
+  mechanical_creative_blueprint: {
+    id: "mechanical_creative_blueprint",
+    name: "Creative ME Blueprint",
+    description: "Premium blueprint design containing split-columns, visual geometric outlines, and CAD competency rating stars.",
+    industry: "mechanical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Inter', sans-serif";
+      const steelBlue = "#1e3a8a"; // Mechanical Steel Blue
+      const bgCard = "#f0f4f8";
+      const cardBorder = "#cbd5e1";
+      const textMain = "#1e293b";
+      const textSub = "#475569";
+
+      // Render Contact Info
+      const email = data.personal.email ? `<span><strong>Email:</strong> ${data.personal.email}</span>` : "";
+      const phone = data.personal.phone ? `<span><strong>Phone:</strong> ${data.personal.phone}</span>` : "";
+      const loc = data.personal.location ? `<span><strong>Location:</strong> ${data.personal.location}</span>` : "";
+      const web = data.personal.website ? `<span><strong>Web:</strong> ${data.personal.website}</span>` : "";
+      const linkedin = data.personal.linkedin ? `<span><strong>LinkedIn:</strong> ${data.personal.linkedin}</span>` : "";
+
+      // Visual rating stars for Skills
+      let skillsHTML = '';
+      if (data.skills && data.skills.length > 0) {
+        skillsHTML = `<div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">`;
+        data.skills.forEach((skill, i) => {
+          // Fake ratings
+          const stars = i % 3 === 0 ? '★★★★★' : i % 2 === 0 ? '★★★★☆' : '★★★★☆';
+          skillsHTML += `
+            <div style="display:flex; justify-content:space-between; font-size:9.5px; color:${textMain}; font-weight:500;">
+              <span>${skill}</span>
+              <span style="color:${steelBlue}; letter-spacing:1px;">${stars}</span>
+            </div>
+          `;
+        });
+        skillsHTML += `</div>`;
+      }
+
+      // Experience Timeline
+      let expHTML = '';
+      if (data.experience && data.experience.length > 0) {
+        data.experience.forEach(exp => {
+          expHTML += `
+            <div style="background:#ffffff; border:1px solid ${cardBorder}; border-radius:6px; padding:10px; margin-bottom:8px;">
+              <table style="width:100%; border-collapse:collapse; font-size:10px; margin-bottom:3px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain}; font-size:10.5px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">at ${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; text-align:right; color:${steelBlue}">${exp.dates || ""}</td>
+                </tr>
+                <tr>
+                  <td style="font-style:italic; color:${textSub}; font-size:9px;">${exp.location || ""}</td>
+                  <td></td>
+                </tr>
+              </table>
+              <ul style="margin:0; padding-left:14px; font-size:9.5px; color:${textSub}; line-height:1.4;">
+                ${exp.descriptions ? exp.descriptions.map(desc => `<li style="margin-bottom:2px;">${desc}</li>`).join('') : ''}
+              </ul>
+            </div>
+          `;
+        });
+      }
+
+      // Projects
+      let projHTML = '';
+      if (data.projects && data.projects.length > 0) {
+        data.projects.forEach(proj => {
+          projHTML += `
+            <div style="border-left:3px solid ${steelBlue}; background:${bgCard}; padding:8px 12px; margin-bottom:8px; font-size:9.5px;">
+              <div style="display:flex; justify-content:space-between; font-weight:bold; color:${textMain}; margin-bottom:2px;">
+                <span>${proj.title || ""}</span>
+                <span style="color:${steelBlue}; font-family:monospace; font-size:8.5px;">${proj.technologies || ""}</span>
+              </div>
+              <p style="margin:0; color:${textSub};">${proj.description || ""}</p>
+            </div>
+          `;
+        });
+      }
+
+      // Education & Certifications
+      let eduHTML = '';
+      if (data.education && data.education.length > 0) {
+        data.education.forEach(edu => {
+          eduHTML += `
+            <div style="margin-bottom:6px; font-size:9.5px; border-bottom:1px dashed ${cardBorder}; padding-bottom:4px;">
+              <table style="width:100%; border-collapse:collapse; margin-bottom:1px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain};">${edu.degree || ""}</td>
+                  <td style="font-weight:bold; text-align:right; color:${steelBlue}">${edu.dates || ""}</td>
+                </tr>
+              </table>
+              <div style="color:${textSub}; font-size:9px;">${edu.institution || ""}, ${edu.location || ""} ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}</div>
+            </div>
+          `;
+        });
+      }
+
+      return `
+        <div style="background:#ffffff; color:${textMain}; font-family:${font}; min-height:100%; box-sizing:border-box; border-radius:4px; overflow:hidden; border:2px solid ${steelBlue}">
+          <!-- Top blueprint Block Banner -->
+          <div style="background:${steelBlue}; color:#ffffff; padding:20px; text-align:center; border-bottom:4px solid #172554;">
+            <h1 style="font-size:26px; font-weight:bold; text-transform:uppercase; margin:0 0 2px 0; letter-spacing:1px;">${data.personal.name || ""}</h1>
+            <p style="font-size:12px; font-weight:700; color:#93c5fd; text-transform:uppercase; letter-spacing:1.5px; margin:0 0 10px 0;">${data.personal.title || ""}</p>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px 12px; font-size:10px; color:#cbd5e1; line-height:1.4;">
+              ${email} ${phone} ${loc} ${web} ${linkedin}
+            </div>
+          </div>
+          
+          <!-- Inner blueprint split columns -->
+          <div style="display:grid; grid-template-columns:1fr 2fr; gap:16px; padding:18px;">
+            <!-- Left Side Grid Column (Summary, Skills, Education) -->
+            <div>
+              ${data.summary ? `
+                <div style="margin-bottom:14px;">
+                  <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Objective</h3>
+                  <p style="font-size:9.5px; color:${textSub}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
+                </div>
+              ` : ''}
+              
+              <div style="margin-bottom:14px;">
+                <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">CAD & FEA Toolkit</h3>
+                ${skillsHTML}
+              </div>
+
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Education</h3>
+                ${eduHTML}
+              </div>
+            </div>
+            
+            <!-- Right Side Grid Column (Experience & Projects) -->
+            <div>
+              <div style="margin-bottom:14px;">
+                <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Professional Design Timeline</h3>
+                ${expHTML}
+              </div>
+
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Key CAD & Prototype Projects</h3>
+                ${projHTML}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  },
+  civil_creative_split: {
+    id: "civil_creative_split",
+    name: "Creative Civil Split",
+    description: "Premium architectural design. Left 1/3 sidebar has a solid green block with white text for contact and circular progress competency indicators.",
+    industry: "civil",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Inter', sans-serif";
+      const greenAccent = "#14532d"; // Architectural Green
+      const cardBorder = "#cbd5e1";
+      const textMain = "#1e293b";
+      const textSub = "#4b5563";
+
+      // Render Contact Info
+      const email = data.personal.email ? `<div style="margin-bottom:8px;"><strong>Email:</strong><br>${data.personal.email}</div>` : "";
+      const phone = data.personal.phone ? `<div style="margin-bottom:8px;"><strong>Phone:</strong><br>${data.personal.phone}</div>` : "";
+      const loc = data.personal.location ? `<div style="margin-bottom:8px;"><strong>Location:</strong><br>${data.personal.location}</div>` : "";
+      const web = data.personal.website ? `<div style="margin-bottom:8px;"><strong>Web:</strong><br>${data.personal.website}</div>` : "";
+      const linkedin = data.personal.linkedin ? `<div style="margin-bottom:8px;"><strong>LinkedIn:</strong><br>${data.personal.linkedin}</div>` : "";
+
+      // Visual circles for Skills
+      let skillsHTML = '';
+      if (data.skills && data.skills.length > 0) {
+        skillsHTML = `<div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">`;
+        data.skills.forEach(skill => {
+          skillsHTML += `
+            <div style="font-size:9.5px; color:#dcfce7; display:flex; align-items:center; gap:6px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#86efac; display:inline-block; border:1px solid #ffffff;"></span>
+              <span>${skill}</span>
+            </div>
+          `;
+        });
+        skillsHTML += `</div>`;
+      }
+
+      // Experience Timeline
+      let expHTML = '';
+      if (data.experience && data.experience.length > 0) {
+        data.experience.forEach(exp => {
+          expHTML += `
+            <div style="position:relative; padding-left:18px; margin-bottom:12px; border-left:2px solid ${greenAccent};">
+              <div style="position:absolute; left:-6px; top:4px; width:10px; height:10px; border-radius:50%; background:#ffffff; border:2.5px solid ${greenAccent}"></div>
+              <table style="width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:2px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">at ${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; text-align:right; color:${greenAccent}">${exp.dates || ""}</td>
+                </tr>
+                <tr>
+                  <td style="font-style:italic; color:${textSub}; font-size:9.5px;">${exp.location || ""}</td>
+                  <td></td>
+                </tr>
+              </table>
+              <ul style="margin:0; padding-left:14px; font-size:10px; color:${textSub}; line-height:1.45;">
+                ${exp.descriptions ? exp.descriptions.map(desc => `<li style="margin-bottom:1px;">${desc}</li>`).join('') : ''}
+              </ul>
+            </div>
+          `;
+        });
+      }
+
+      // Projects
+      let projHTML = '';
+      if (data.projects && data.projects.length > 0) {
+        data.projects.forEach(proj => {
+          projHTML += `
+            <div style="border-left:3px solid ${greenAccent}; background:#f4fbf7; padding:8px 12px; margin-bottom:8px; font-size:9.5px;">
+              <div style="display:flex; justify-content:space-between; font-weight:bold; color:${textMain}; margin-bottom:2px;">
+                <span>${proj.title || ""}</span>
+                <span style="color:${greenAccent}; font-family:monospace; font-size:8.5px;">${proj.technologies || ""}</span>
+              </div>
+              <p style="margin:0; color:${textSub};">${proj.description || ""}</p>
+            </div>
+          `;
+        });
+      }
+
+      // Education & Certifications
+      let eduHTML = '';
+      if (data.education && data.education.length > 0) {
+        data.education.forEach(edu => {
+          eduHTML += `
+            <div style="margin-bottom:6px; font-size:9.5px; border-bottom:1px dashed ${cardBorder}; padding-bottom:4px;">
+              <table style="width:100%; border-collapse:collapse; margin-bottom:1px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain};">${edu.degree || ""}</td>
+                  <td style="font-weight:bold; text-align:right; color:${greenAccent}">${edu.dates || ""}</td>
+                </tr>
+              </table>
+              <div style="color:${textSub}; font-size:9px;">${edu.institution || ""}, ${edu.location || ""} ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}</div>
+            </div>
+          `;
+        });
+      }
+
+      return `
+        <div style="background:#ffffff; color:${textMain}; font-family:${font}; min-height:100%; display:grid; grid-template-columns:1fr 2.2fr; border-radius:4px; overflow:hidden;">
+          <!-- Left Visual Sidebar -->
+          <div style="background:${greenAccent}; color:#f1f5f9; padding:22px 16px; display:flex; flex-direction:column; gap:16px;">
+            <div style="text-align:center; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:14px; margin-bottom:4px;">
+              <h2 style="font-size:18px; font-weight:bold; margin:0 0 4px 0; color:#ffffff; text-transform:uppercase; letter-spacing:0.5px;">${data.personal.name || ""}</h2>
+              <span style="font-size:9.5px; font-weight:700; color:#86efac; text-transform:uppercase; letter-spacing:1px; background:rgba(134,239,172,0.15); padding:3px 8px; border-radius:4px;">${data.personal.title || ""}</span>
+            </div>
+            
+            <div style="font-size:9px; color:#dcfce7; display:flex; flex-direction:column; gap:8px;">
+              <h3 style="font-size:10px; font-weight:bold; color:#ffffff; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:3px; text-transform:uppercase; margin:0;">Contact Info</h3>
+              ${email} ${phone} ${loc} ${web} ${linkedin}
+            </div>
+
+            <div>
+              <h3 style="font-size:10px; font-weight:bold; color:#ffffff; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:3px; text-transform:uppercase; margin:0 0 6px 0;">Structural Competencies</h3>
+              ${skillsHTML}
+            </div>
+          </div>
+          
+          <!-- Right Grid Area -->
+          <div style="padding:22px; display:flex; flex-direction:column; gap:16px; background:#fafafa;">
+            ${data.summary ? `
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${greenAccent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Civil Profile Summary</h3>
+                <p style="font-size:10px; color:${textSub}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
+              </div>
+            ` : ''}
+
+            <div>
+              <h3 style="font-size:11px; font-weight:bold; color:${greenAccent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Infrastructure Timeline</h3>
+              ${expHTML}
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${greenAccent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Large Scale Works</h3>
+                ${projHTML}
+              </div>
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${greenAccent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Education & Degrees</h3>
+                ${eduHTML}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
   }
 };
 // Automatically wrap all template renderers to deep escape HTML inputs
