@@ -1037,7 +1037,8 @@ textarea.form-input {
     min-height: 0 !important;
   }
 
-  /* Specificity override to ensure the preview panel is ALWAYS displayed */
+  /* Specificity override to ensure the preview panel is ALWAYS displayed, squashing mobile responsive viewport specificity print bugs on all devices */
+  .builder-workspace:not(.show-preview) .preview-panel,
   .builder-workspace .preview-panel,
   .preview-panel {
     display: block !important;
