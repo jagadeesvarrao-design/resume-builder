@@ -1048,7 +1048,9 @@ function autoFitToSinglePage() {
       paper.classList.remove('compress-1', 'compress-2', 'compress-3', 'compress-4');
     }
   } 
-  // 2. If it is shorter than the single page, apply expansion classes step-by-step to fill the space
+  // 2. If it is shorter than a single page, apply expansion classes step-by-step to fill the space
+  // CRITICAL: The "fill page" (expansion) feature is ONLY triggered if the resume is a single-page document
+  // (i.e. is shorter than 1122px). It is never triggered for multi-page resumes.
   else if (naturalHeight < targetHeight - 80) {
     const expandClasses = ['expand-1', 'expand-2', 'expand-3'];
     for (let i = 0; i < expandClasses.length; i++) {
