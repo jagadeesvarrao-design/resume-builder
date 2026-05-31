@@ -628,1154 +628,576 @@ const RESUME_PROFILES = {
     ]
   }
 };
-
 /**
  * -------------------------------------------------------------
  * ATS TEMPLATE LAYOUT RENDERERS
  * -------------------------------------------------------------
  */
 
-const TEMPLATE_STYLES = {
-  classic: {
-    id: "classic",
-    name: "Minimalist Classic",
-    description: "Highly approved, standard single-column ATS resume layout with clean typography.",
-    render: (data) => {
-      // 1. Personal Header
-      let html = `
-        <div class="resume-header text-center" style="margin-bottom: 20px;">
-          <h1 class="resume-name" style="font-family: Arial, Helvetica, sans-serif; font-size: 26px; font-weight: bold; margin: 0 0 5px 0; color: #111;">${data.personal.name || ""}</h1>
-          <p class="resume-title" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-style: italic; font-weight: 600; color: #555; margin: 0 0 10px 0;">${data.personal.title || ""}</p>
-          <div class="resume-contact" style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #333; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 12px; margin-top: 5px;">
-            ${data.personal.email ? `<span>Email: ${data.personal.email}</span>` : ""}
-            ${data.personal.phone ? `<span>Phone: ${data.personal.phone}</span>` : ""}
-            ${data.personal.location ? `<span>Location: ${data.personal.location}</span>` : ""}
-            ${data.personal.website ? `<span>Portfolio: ${data.personal.website}</span>` : ""}
-            ${data.personal.linkedin ? `<span>LinkedIn: ${data.personal.linkedin}</span>` : ""}
-          </div>
+// Helper engine for modular ATS resume construction
+const RenderHelpers = {
+  header: (data, font, accentColor, centered = false) => {
+    return `
+      <div class="resume-header" style="margin-bottom: 18px; text-align: ${centered ? 'center' : 'left'}; border-bottom: 2px solid ${accentColor}; padding-bottom: 10px;">
+        <h1 class="resume-name" style="font-family: ${font}; font-size: 24px; font-weight: bold; margin: 0 0 4px 0; color: #111; text-transform: uppercase; letter-spacing: -0.5px;">${data.personal.name || ""}</h1>
+        <p class="resume-title" style="font-family: ${font}; font-size: 12px; font-weight: 700; color: ${accentColor}; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.8px;">${data.personal.title || ""}</p>
+        <div class="resume-contact" style="font-family: Arial, sans-serif; font-size: 10.5px; color: #333; display: flex; flex-wrap: wrap; justify-content: ${centered ? 'center' : 'flex-start'}; gap: 6px 12px; margin-top: 5px; line-height: 1.4;">
+          ${data.personal.email ? `<span><strong>Email:</strong> ${data.personal.email}</span>` : ""}
+          ${data.personal.phone ? `<span><strong>Phone:</strong> ${data.personal.phone}</span>` : ""}
+          ${data.personal.location ? `<span><strong>Location:</strong> ${data.personal.location}</span>` : ""}
+          ${data.personal.website ? `<span><strong>Web:</strong> ${data.personal.website}</span>` : ""}
+          ${data.personal.linkedin ? `<span><strong>LinkedIn:</strong> ${data.personal.linkedin}</span>` : ""}
         </div>
-      `;
-
-      // 2. Summary
-      if (data.summary) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #111; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">Professional Summary</h2>
-            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; line-height: 1.5; color: #333; margin: 0; text-align: justify;">${data.summary}</p>
-          </div>
-        `;
-      }
-
-      // 3. Skills
-      if (data.skills && data.skills.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #111; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">Skills</h2>
-            <p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; line-height: 1.5; color: #333; margin: 0;"><strong>Technical & Professional:</strong> ${data.skills.join(" &bull; ")}</p>
-          </div>
-        `;
-      }
-
-      // 4. Experience
-      if (data.experience && data.experience.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #111; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">Work Experience</h2>
-        `;
-        data.experience.forEach((exp) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 12px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; font-size: 11px; margin-bottom: 4px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${exp.role || ""} - <span style="font-weight: normal; color: #333;">${exp.company || ""}</span></td>
-                  <td style="font-weight: bold; text-align: right; color: #111;">${exp.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="font-style: italic; color: #555; text-align: left;">${exp.location || ""}</td>
-                  <td></td>
-                </tr>
-              </table>
-              <ul style="margin: 0; padding-left: 18px; font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #333; line-height: 1.45;">
-          `;
-          if (exp.descriptions) {
-            exp.descriptions.forEach((desc) => {
-              html += `<li style="margin-bottom: 3px; text-align: justify;">${desc}</li>`;
-            });
-          }
-          html += `
-              </ul>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 5. Projects
-      if (data.projects && data.projects.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #111; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">Key Projects</h2>
-        `;
-        data.projects.forEach((proj) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 10px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; font-size: 11px; margin-bottom: 3px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${proj.title || ""} ${proj.link ? `<span style="font-weight: normal; font-size: 10px; color: #555;">(${proj.link})</span>` : ""}</td>
-                  <td style="font-style: italic; text-align: right; color: #555;">${proj.technologies || ""}</td>
-                </tr>
-              </table>
-              <p style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #333; line-height: 1.4; margin: 0 0 0 5px; text-align: justify;">${proj.description || ""}</p>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 6. Education
-      if (data.education && data.education.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #111; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">Education</h2>
-        `;
-        data.education.forEach((edu) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 8px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif; font-size: 11px; margin-bottom: 2px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${edu.degree || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #111;">${edu.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="font-style: italic; color: #333; text-align: left;">${edu.institution || ""}, <span style="font-weight: normal; color: #555;">${edu.location || ""}</span></td>
-                  <td style="text-align: right; font-weight: bold; color: #111;">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
-                </tr>
-              </table>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 7. Certifications
-      if (data.certifications && data.certifications.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 0;">
-            <h2 class="section-title" style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #111; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">Certifications</h2>
-            <ul style="margin: 0; padding-left: 18px; font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #333; line-height: 1.45;">
-        `;
-        data.certifications.forEach((cert) => {
-          html += `<li style="margin-bottom: 2px;">${cert}</li>`;
-        });
-        html += `
-            </ul>
-          </div>
-        `;
-      }
-
-      return html;
-    }
+      </div>
+    `;
   },
-  modern: {
-    id: "modern",
-    name: "Serene Modern",
-    description: "Premium serif header with clean section rules, perfect for a striking elegant profile.",
-    render: (data) => {
-      // 1. Personal Header
-      let html = `
-        <div class="resume-header" style="margin-bottom: 25px; border-bottom: 2px solid #4A6B62; padding-bottom: 12px;">
-          <h1 class="resume-name" style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: bold; margin: 0 0 4px 0; color: #1b332d; text-align: left;">${data.personal.name || ""}</h1>
-          <p class="resume-title" style="font-family: Arial, sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; color: #4A6B62; margin: 0 0 10px 0; text-align: left;">${data.personal.title || ""}</p>
-          <div class="resume-contact" style="font-family: Arial, sans-serif; font-size: 11px; color: #444; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 6px 16px; margin-top: 5px;">
-            ${data.personal.email ? `<span><strong>Email:</strong> ${data.personal.email}</span>` : ""}
-            ${data.personal.phone ? `<span><strong>Phone:</strong> ${data.personal.phone}</span>` : ""}
-            ${data.personal.location ? `<span><strong>Location:</strong> ${data.personal.location}</span>` : ""}
-            ${data.personal.website ? `<span><strong>Web:</strong> ${data.personal.website}</span>` : ""}
-            ${data.personal.linkedin ? `<span><strong>LinkedIn:</strong> ${data.personal.linkedin}</span>` : ""}
-          </div>
-        </div>
-      `;
-
-      // 2. Summary
-      if (data.summary) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-weight: bold; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 8px 0; color: #1b332d;">About Me</h2>
-            <p style="font-family: Georgia, serif; font-size: 11px; line-height: 1.6; color: #333; margin: 0; text-align: justify; font-style: italic;">"${data.summary}"</p>
-          </div>
-        `;
-      }
-
-      // 3. Skills
-      if (data.skills && data.skills.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-weight: bold; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 8px 0; color: #1b332d;">Core Competencies</h2>
-            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
-        `;
-        data.skills.forEach((skill) => {
-          html += `<span style="font-family: Arial, sans-serif; font-size: 10px; padding: 3px 8px; background-color: #f1f5f3; border-radius: 4px; border: 1px solid #dbe5e1; color: #2e4c44; font-weight: 500;">${skill}</span>`;
-        });
-        html += `
-            </div>
-          </div>
-        `;
-      }
-
-      // 4. Experience
-      if (data.experience && data.experience.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-weight: bold; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 8px 0; color: #1b332d;">Professional Timeline</h2>
-        `;
-        data.experience.forEach((exp) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 15px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; margin-bottom: 4px;">
-                <tr>
-                  <td style="font-weight: bold; font-size: 12px; text-align: left; color: #1b332d;">${exp.role || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #4A6B62;">${exp.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="font-weight: 600; color: #555; text-align: left;">${exp.company || ""} <span style="font-weight: normal; font-style: italic;">- ${exp.location || ""}</span></td>
-                  <td></td>
-                </tr>
-              </table>
-              <ul style="margin: 0; padding-left: 15px; font-family: Arial, sans-serif; font-size: 11px; color: #333; line-height: 1.5;">
-          `;
-          if (exp.descriptions) {
-            exp.descriptions.forEach((desc) => {
-              html += `<li style="margin-bottom: 4px; text-align: justify;">${desc}</li>`;
-            });
-          }
-          html += `
-              </ul>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 5. Projects
-      if (data.projects && data.projects.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-weight: bold; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 8px 0; color: #1b332d;">Selected Projects</h2>
-        `;
-        data.projects.forEach((proj) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 12px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; margin-bottom: 3px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #1b332d;">${proj.title || ""}</td>
-                  <td style="font-style: italic; text-align: right; color: #4A6B62; font-weight: bold;">${proj.technologies || ""}</td>
-                </tr>
-              </table>
-              <p style="font-family: Arial, sans-serif; font-size: 11px; color: #333; line-height: 1.4; margin: 0 0 3px 0; text-align: justify;">${proj.description || ""}</p>
-              ${proj.link ? `<p style="font-family: Arial, sans-serif; font-size: 10px; color: #666; margin: 0;">Code/Demo: <a href="https://${proj.link}" target="_blank" style="color: #4A6B62; text-decoration: none;">${proj.link}</a></p>` : ""}
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 6. Education
-      if (data.education && data.education.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-weight: bold; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 8px 0; color: #1b332d;">Academic Credentials</h2>
-        `;
-        data.education.forEach((edu) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 10px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; margin-bottom: 2px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #1b332d;">${edu.degree || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #4A6B62;">${edu.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="color: #555; text-align: left;">${edu.institution || ""}, <span style="font-style: italic;">${edu.location || ""}</span></td>
-                  <td style="text-align: right; font-weight: bold; color: #111;">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
-                </tr>
-              </table>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 7. Certifications
-      if (data.certifications && data.certifications.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 0;">
-            <h2 class="section-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-weight: bold; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 8px 0; color: #1b332d;">Professional Licensing & Certifications</h2>
-            <ul style="margin: 0; padding-left: 15px; font-family: Arial, sans-serif; font-size: 11px; color: #333; line-height: 1.5;">
-        `;
-        data.certifications.forEach((cert) => {
-          html += `<li style="margin-bottom: 3px;">${cert}</li>`;
-        });
-        html += `
-            </ul>
-          </div>
-        `;
-      }
-
-      return html;
-    }
+  
+  summary: (data, font, title, accentColor, leftBorder = false) => {
+    if (!data.summary) return '';
+    return `
+      <div class="resume-section" style="margin-bottom: 16px;">
+        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; ${leftBorder ? 'border-left: 3px solid ' + accentColor + '; padding-left: 8px;' : 'border-bottom: 1px solid ' + accentColor + '; padding-bottom: 3px;'} margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        <p style="font-family: Arial, sans-serif; font-size: 10.5px; line-height: 1.5; color: #333; margin: 0; text-align: justify;">${data.summary}</p>
+      </div>
+    `;
   },
-  grid: {
-    id: "grid",
-    name: "Technical Grid",
-    description: "Highly structured engineering layout featuring slate lines, optimized for complex data.",
-    render: (data) => {
-      // 1. Personal Header
-      let html = `
-        <div class="resume-header" style="margin-bottom: 20px; border-bottom: 3px double #334e68; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end;">
-          <div>
-            <h1 class="resume-name" style="font-family: 'Trebuchet MS', sans-serif; font-size: 26px; font-weight: bold; margin: 0 0 3px 0; color: #102a43; letter-spacing: -0.5px;">${data.personal.name || ""}</h1>
-            <p class="resume-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: 13px; font-weight: bold; color: #334e68; margin: 0; text-transform: uppercase;">${data.personal.title || ""}</p>
-          </div>
-          <div class="resume-contact" style="font-family: 'Trebuchet MS', sans-serif; font-size: 10px; color: #334e68; text-align: right; line-height: 1.4;">
-            ${data.personal.email ? `<div><strong>Email:</strong> ${data.personal.email}</div>` : ""}
-            ${data.personal.phone ? `<div><strong>Phone:</strong> ${data.personal.phone}</div>` : ""}
-            ${data.personal.location ? `<div><strong>Loc:</strong> ${data.personal.location}</div>` : ""}
-            ${data.personal.website ? `<div><strong>Web:</strong> ${data.personal.website}</div>` : ""}
-            ${data.personal.linkedin ? `<div><strong>IN:</strong> ${data.personal.linkedin}</div>` : ""}
-          </div>
-        </div>
-      `;
 
-      // 2. Summary
-      if (data.summary) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; background-color: #f0f4f8; padding: 4px 8px; margin: 0 0 8px 0; color: #102a43; border-radius: 2px;">Professional Profile</h2>
-            <p style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.5; color: #333; margin: 0; text-align: justify;">${data.summary}</p>
-          </div>
-        `;
-      }
-
-      // 3. Skills
-      if (data.skills && data.skills.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; background-color: #f0f4f8; padding: 4px 8px; margin: 0 0 8px 0; color: #102a43; border-radius: 2px;">Technical Skills Directory</h2>
-            <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10.5px;">
-              <tr>
-                <td style="padding: 2px 0; line-height: 1.5; color: #333;">
-                  ${data.skills.map((skill, index) => {
-                    return `<strong>${skill}</strong>${index < data.skills.length - 1 ? ' <span style="color:#bcccdc;">|</span> ' : ''}`;
-                  }).join('')}
-                </td>
-              </tr>
-            </table>
-          </div>
-        `;
-      }
-
-      // 4. Experience
-      if (data.experience && data.experience.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; background-color: #f0f4f8; padding: 4px 8px; margin: 0 0 8px 0; color: #102a43; border-radius: 2px;">Engineering Experience</h2>
-        `;
-        data.experience.forEach((exp) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 12px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Trebuchet MS', sans-serif; font-size: 11px; margin-bottom: 3px;">
-                <tr style="background-color: #f9fafb;">
-                  <td style="font-weight: bold; padding: 3px; color: #102a43; text-align: left;">${exp.role || ""}</td>
-                  <td style="font-weight: bold; padding: 3px; color: #334e68; text-align: right;">${exp.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="font-style: italic; padding: 2px 3px; color: #486581; text-align: left;">${exp.company || ""} &bull; ${exp.location || ""}</td>
-                  <td></td>
-                </tr>
-              </table>
-              <ul style="margin: 0; padding-left: 18px; font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.45;">
-          `;
-          if (exp.descriptions) {
-            exp.descriptions.forEach((desc) => {
-              html += `<li style="margin-bottom: 3px; text-align: justify;">${desc}</li>`;
-            });
-          }
-          html += `
-              </ul>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 5. Projects
-      if (data.projects && data.projects.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; background-color: #f0f4f8; padding: 4px 8px; margin: 0 0 8px 0; color: #102a43; border-radius: 2px;">Technical Projects</h2>
-        `;
-        data.projects.forEach((proj) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 10px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Trebuchet MS', sans-serif; font-size: 11px; margin-bottom: 3px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #102a43;">${proj.title || ""}</td>
-                  <td style="font-style: italic; text-align: right; color: #486581;">${proj.technologies || ""}</td>
-                </tr>
-              </table>
-              <p style="font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.4; margin: 0 0 2px 4px; text-align: justify;">${proj.description || ""}</p>
-              ${proj.link ? `<div style="font-family: 'Trebuchet MS', sans-serif; font-size: 9.5px; margin-left: 4px; color: #627d98;">Repository: ${proj.link}</div>` : ""}
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 6. Education
-      if (data.education && data.education.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; background-color: #f0f4f8; padding: 4px 8px; margin: 0 0 8px 0; color: #102a43; border-radius: 2px;">Academic History</h2>
-        `;
-        data.education.forEach((edu) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 8px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Trebuchet MS', sans-serif; font-size: 11px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #102a43;">${edu.degree || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #334e68;">${edu.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="color: #486581; text-align: left;">${edu.institution || ""} &bull; <span style="font-size: 10px;">${edu.location || ""}</span></td>
-                  <td style="text-align: right; font-weight: bold; color: #102a43;">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
-                </tr>
-              </table>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 7. Certifications
-      if (data.certifications && data.certifications.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 0;">
-            <h2 class="section-title" style="font-family: 'Trebuchet MS', sans-serif; font-size: 13px; font-weight: bold; text-transform: uppercase; background-color: #f0f4f8; padding: 4px 8px; margin: 0 0 8px 0; color: #102a43; border-radius: 2px;">Professional Certifications</h2>
-            <ul style="margin: 0; padding-left: 18px; font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.45;">
-        `;
-        data.certifications.forEach((cert) => {
-          html += `<li style="margin-bottom: 2px;">${cert}</li>`;
-        });
-        html += `
-            </ul>
-          </div>
-        `;
-      }
-
-      return html;
+  skills: (data, font, title, accentColor, layoutType = 'bullets') => {
+    if (!data.skills || data.skills.length === 0) return '';
+    let skillsContent = '';
+    
+    if (layoutType === 'badges') {
+      skillsContent = `<div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px;">`;
+      data.skills.forEach(skill => {
+        skillsContent += `<span style="font-family: Arial, sans-serif; font-size: 9.5px; padding: 3px 8px; background-color: #f3f6f5; border-radius: 4px; border: 1px solid #dce4e1; color: #2e4c44; font-weight: 500;">${skill}</span>`;
+      });
+      skillsContent += `</div>`;
+    } else if (layoutType === 'grid') {
+      skillsContent = `<div style="font-family: Arial, sans-serif; font-size: 10px; color: #222; line-height: 1.5; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; margin-top: 4px;">`;
+      data.skills.forEach(skill => {
+        skillsContent += `<div>&bull; ${skill}</div>`;
+      });
+      skillsContent += `</div>`;
+    } else { // bullets
+      skillsContent = `<p style="font-family: Arial, sans-serif; font-size: 10.5px; line-height: 1.5; color: #333; margin: 0;"><strong>Core Skills:</strong> ${data.skills.join(" &bull; ")}</p>`;
     }
+
+    return `
+      <div class="resume-section" style="margin-bottom: 16px;">
+        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        ${skillsContent}
+      </div>
+    `;
   },
-  executive: {
-    id: "executive",
-    name: "Bold Executive",
-    description: "Sleek slate borders with deep navy highlights, optimized for established leaders.",
-    render: (data) => {
-      // 1. Personal Header
-      let html = `
-        <div class="resume-header text-center" style="margin-bottom: 22px; border-bottom: 2px solid #0f2d4a; padding-bottom: 12px;">
-          <h1 class="resume-name" style="font-family: 'Georgia', serif; font-size: 28px; font-weight: bold; margin: 0 0 4px 0; color: #0f2d4a; text-transform: uppercase; letter-spacing: 0.5px;">${data.personal.name || ""}</h1>
-          <p class="resume-title" style="font-family: 'Georgia', serif; font-size: 13px; font-weight: bold; color: #0f2d4a; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 1px;">${data.personal.title || ""}</p>
-          <div class="resume-contact" style="font-family: Arial, sans-serif; font-size: 10.5px; color: #333; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px;">
-            ${data.personal.email ? `<span><strong>EMAIL:</strong> ${data.personal.email}</span>` : ""}
-            ${data.personal.phone ? `<span><strong>TEL:</strong> ${data.personal.phone}</span>` : ""}
-            ${data.personal.location ? `<span><strong>LOC:</strong> ${data.personal.location}</span>` : ""}
-            ${data.personal.website ? `<span><strong>WEB:</strong> ${data.personal.website}</span>` : ""}
-            ${data.personal.linkedin ? `<span><strong>LI:</strong> ${data.personal.linkedin}</span>` : ""}
-          </div>
-        </div>
-      `;
 
-      // 2. Summary
-      if (data.summary) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Georgia', serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1.5px solid #0f2d4a; padding-bottom: 2px; margin: 0 0 8px 0; color: #0f2d4a; letter-spacing: 0.5px;">Executive Profile</h2>
-            <p style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.55; color: #222; margin: 0; text-align: justify;">${data.summary}</p>
-          </div>
-        `;
-      }
-
-      // 3. Skills
-      if (data.skills && data.skills.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Georgia', serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1.5px solid #0f2d4a; padding-bottom: 2px; margin: 0 0 8px 0; color: #0f2d4a; letter-spacing: 0.5px;">Expertise & Leadership</h2>
-            <div style="font-family: Arial, sans-serif; font-size: 10.5px; color: #222; line-height: 1.5; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px;">
-              ${data.skills.map(skill => `<div>&bull; ${skill}</div>`).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      // 4. Experience
-      if (data.experience && data.experience.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Georgia', serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1.5px solid #0f2d4a; padding-bottom: 2px; margin: 0 0 8px 0; color: #0f2d4a; letter-spacing: 0.5px;">Leadership & Professional Experience</h2>
-        `;
-        data.experience.forEach((exp) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 12px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; margin-bottom: 4px;">
-                <tr>
-                  <td style="font-weight: bold; font-size: 11.5px; text-align: left; color: #0f2d4a;">${exp.role || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #0f2d4a;">${exp.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="font-style: italic; font-weight: bold; color: #444; text-align: left;">${exp.company || ""} <span style="font-weight: normal; font-style: normal; color: #666;">- ${exp.location || ""}</span></td>
-                  <td></td>
-                </tr>
-              </table>
-              <ul style="margin: 0; padding-left: 15px; font-family: Arial, sans-serif; font-size: 10.5px; color: #222; line-height: 1.5;">
-          `;
-          if (exp.descriptions) {
-            exp.descriptions.forEach((desc) => {
-              html += `<li style="margin-bottom: 3.5px; text-align: justify;">${desc}</li>`;
-            });
-          }
-          html += `
-              </ul>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 5. Projects
-      if (data.projects && data.projects.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Georgia', serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1.5px solid #0f2d4a; padding-bottom: 2px; margin: 0 0 8px 0; color: #0f2d4a; letter-spacing: 0.5px;">Key Initiatives & Projects</h2>
-        `;
-        data.projects.forEach((proj) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 10px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; margin-bottom: 3px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #0f2d4a;">${proj.title || ""}</td>
-                  <td style="font-style: italic; text-align: right; color: #555;">${proj.technologies || ""}</td>
-                </tr>
-              </table>
-              <p style="font-family: Arial, sans-serif; font-size: 10.5px; color: #222; line-height: 1.45; margin: 0 0 2px 4px; text-align: justify;">${proj.description || ""}</p>
-              ${proj.link ? `<div style="font-family: Arial, sans-serif; font-size: 9.5px; margin-left: 4px; color: #666;">Web/Rep: ${proj.link}</div>` : ""}
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 6. Education
-      if (data.education && data.education.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 18px;">
-            <h2 class="section-title" style="font-family: 'Georgia', serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1.5px solid #0f2d4a; padding-bottom: 2px; margin: 0 0 8px 0; color: #0f2d4a; letter-spacing: 0.5px;">Education</h2>
-        `;
-        data.education.forEach((edu) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 8px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #0f2d4a;">${edu.degree || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #0f2d4a;">${edu.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="color: #444; text-align: left;">${edu.institution || ""} &bull; <span style="font-size: 10px;">${edu.location || ""}</span></td>
-                  <td style="text-align: right; font-weight: bold; color: #0f2d4a;">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
-                </tr>
-              </table>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 7. Certifications
-      if (data.certifications && data.certifications.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 0;">
-            <h2 class="section-title" style="font-family: 'Georgia', serif; font-size: 13px; font-weight: bold; text-transform: uppercase; border-bottom: 1.5px solid #0f2d4a; padding-bottom: 2px; margin: 0 0 8px 0; color: #0f2d4a; letter-spacing: 0.5px;">Professional Credentials</h2>
-            <ul style="margin: 0; padding-left: 15px; font-family: Arial, sans-serif; font-size: 10.5px; color: #222; line-height: 1.5;">
-        `;
-        data.certifications.forEach((cert) => {
-          html += `<li style="margin-bottom: 2px;">${cert}</li>`;
-        });
-        html += `
-            </ul>
-          </div>
-        `;
-      }
-
-      return html;
-    }
-  },
-  academic: {
-    id: "academic",
-    name: "Academic Scholar",
-    description: "Serif-focused, traditional, and elegant. Excellent for researchers, educators, and scholars.",
-    render: (data) => {
-      // 1. Personal Header
-      let html = `
-        <div class="resume-header text-center" style="margin-bottom: 24px; border-bottom: 1.5px solid #222; padding-bottom: 8px;">
-          <h1 class="resume-name" style="font-family: 'Times New Roman', Times, serif; font-size: 28px; font-weight: normal; margin: 0 0 4px 0; color: #111;">${data.personal.name || ""}</h1>
-          <p class="resume-title" style="font-family: 'Times New Roman', Times, serif; font-size: 13px; font-style: italic; color: #444; margin: 0 0 10px 0;">${data.personal.title || ""}</p>
-          <div class="resume-contact" style="font-family: 'Times New Roman', Times, serif; font-size: 11px; color: #222; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px;">
-            ${data.personal.email ? `<span>${data.personal.email}</span>` : ""}
-            ${data.personal.phone ? `<span>&bull; ${data.personal.phone}</span>` : ""}
-            ${data.personal.location ? `<span>&bull; ${data.personal.location}</span>` : ""}
-            ${data.personal.website ? `<span>&bull; ${data.personal.website}</span>` : ""}
-            ${data.personal.linkedin ? `<span>&bull; ${data.personal.linkedin}</span>` : ""}
-          </div>
-        </div>
-      `;
-
-      // 2. Summary
-      if (data.summary) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 2px; margin: 0 0 8px 0; color: #111; text-transform: uppercase; letter-spacing: 0.5px;">Biography</h2>
-            <p style="font-family: 'Times New Roman', Times, serif; font-size: 11.5px; line-height: 1.55; color: #222; margin: 0; text-align: justify;">${data.summary}</p>
-          </div>
-        `;
-      }
-
-      // 3. Skills
-      if (data.skills && data.skills.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 2px; margin: 0 0 8px 0; color: #111; text-transform: uppercase; letter-spacing: 0.5px;">Areas of Expertise</h2>
-            <p style="font-family: 'Times New Roman', Times, serif; font-size: 11.5px; line-height: 1.5; color: #222; margin: 0;">${data.skills.join(", ")}</p>
-          </div>
-        `;
-      }
-
-      // 4. Experience
-      if (data.experience && data.experience.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 2px; margin: 0 0 8px 0; color: #111; text-transform: uppercase; letter-spacing: 0.5px;">Professional Experience</h2>
-        `;
-        data.experience.forEach((exp) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 14px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Times New Roman', Times, serif; font-size: 11.5px; margin-bottom: 3px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${exp.role || ""}, <span style="font-weight: normal; font-style: italic;">${exp.company || ""}</span></td>
-                  <td style="font-weight: bold; text-align: right; color: #111;">${exp.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="color: #555; text-align: left; font-size: 11px;">${exp.location || ""}</td>
-                  <td></td>
-                </tr>
-              </table>
-              <ul style="margin: 0; padding-left: 18px; font-family: 'Times New Roman', Times, serif; font-size: 11.5px; color: #222; line-height: 1.5;">
-          `;
-          if (exp.descriptions) {
-            exp.descriptions.forEach((desc) => {
-              html += `<li style="margin-bottom: 3.5px; text-align: justify;">${desc}</li>`;
-            });
-          }
-          html += `
-              </ul>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 5. Projects
-      if (data.projects && data.projects.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 2px; margin: 0 0 8px 0; color: #111; text-transform: uppercase; letter-spacing: 0.5px;">Key Publications & Research</h2>
-        `;
-        data.projects.forEach((proj) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 12px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Times New Roman', Times, serif; font-size: 11.5px; margin-bottom: 2px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${proj.title || ""}</td>
-                  <td style="font-style: italic; text-align: right; color: #555;">${proj.technologies || ""}</td>
-                </tr>
-              </table>
-              <p style="font-family: 'Times New Roman', Times, serif; font-size: 11.5px; color: #222; line-height: 1.45; margin: 0 0 2px 4px; text-align: justify;">${proj.description || ""}</p>
-              ${proj.link ? `<div style="font-family: 'Times New Roman', Times, serif; font-size: 10.5px; margin-left: 4px; color: #555;">Reference: ${proj.link}</div>` : ""}
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 6. Education
-      if (data.education && data.education.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 20px;">
-            <h2 class="section-title" style="font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 2px; margin: 0 0 8px 0; color: #111; text-transform: uppercase; letter-spacing: 0.5px;">Academic Timeline</h2>
-        `;
-        data.education.forEach((edu) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 8px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Times New Roman', Times, serif; font-size: 11.5px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${edu.degree || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #111;">${edu.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="color: #444; text-align: left;">${edu.institution || ""} &bull; <span style="font-size: 11px;">${edu.location || ""}</span></td>
-                  <td style="text-align: right; font-weight: bold; color: #111;">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
-                </tr>
-              </table>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 7. Certifications
-      if (data.certifications && data.certifications.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 0;">
-            <h2 class="section-title" style="font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 2px; margin: 0 0 8px 0; color: #111; text-transform: uppercase; letter-spacing: 0.5px;">Academic Certifications</h2>
-            <ul style="margin: 0; padding-left: 18px; font-family: 'Times New Roman', Times, serif; font-size: 11.5px; color: #222; line-height: 1.5;">
-        `;
-        data.certifications.forEach((cert) => {
-          html += `<li style="margin-bottom: 2px;">${cert}</li>`;
-        });
-        html += `
-            </ul>
-          </div>
-        `;
-      }
-
-      return html;
-    }
-  },
-  minimalist: {
-    id: "minimalist",
-    name: "Minimalist Sans",
-    description: "Ultra-sleek, clean sans-serif layout. Maximizes clean negative space for creative tech fields.",
-    render: (data) => {
-      // 1. Personal Header
-      let html = `
-        <div class="resume-header" style="margin-bottom: 24px;">
-          <h1 class="resume-name" style="font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 300; letter-spacing: 1px; margin: 0 0 3px 0; color: #111; text-transform: uppercase;">${data.personal.name || ""}</h1>
-          <p class="resume-title" style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: #777; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 1.5px;">${data.personal.title || ""}</p>
-          <div class="resume-contact" style="font-family: 'Inter', sans-serif; font-size: 10px; color: #666; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 4px 16px;">
-            ${data.personal.email ? `<span>${data.personal.email}</span>` : ""}
-            ${data.personal.phone ? `<span>${data.personal.phone}</span>` : ""}
-            ${data.personal.location ? `<span>${data.personal.location}</span>` : ""}
-            ${data.personal.website ? `<span>${data.personal.website}</span>` : ""}
-            ${data.personal.linkedin ? `<span>${data.personal.linkedin}</span>` : ""}
-          </div>
-        </div>
-      `;
-
-      // 2. Summary
-      if (data.summary) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 22px;">
-            <p style="font-family: 'Inter', sans-serif; font-size: 11px; line-height: 1.6; color: #444; margin: 0; text-align: justify;">${data.summary}</p>
-          </div>
-        `;
-      }
-
-      // 3. Skills
-      if (data.skills && data.skills.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 22px;">
-            <h2 class="section-title" style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #111; border-bottom: 1px solid #eee; padding-bottom: 4px; margin: 0 0 10px 0;">Skills</h2>
-            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-              ${data.skills.map(skill => `<span style="font-family: 'Inter', sans-serif; font-size: 9.5px; color: #333; background: #f5f5f5; padding: 2px 8px; border-radius: 2px;">${skill}</span>`).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      // 4. Experience
-      if (data.experience && data.experience.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 22px;">
-            <h2 class="section-title" style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #111; border-bottom: 1px solid #eee; padding-bottom: 4px; margin: 0 0 12px 0;">Experience</h2>
-        `;
-        data.experience.forEach((exp) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 14px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 10.5px; margin-bottom: 4px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${exp.role || ""} <span style="font-weight: normal; color: #666;">at ${exp.company || ""}</span></td>
-                  <td style="font-weight: bold; text-align: right; color: #555; font-size: 10px;">${exp.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="color: #888; text-align: left; font-size: 9.5px;">${exp.location || ""}</td>
-                  <td></td>
-                </tr>
-              </table>
-              <ul style="margin: 0; padding-left: 14px; font-family: 'Inter', sans-serif; font-size: 10.5px; color: #444; line-height: 1.5;">
-          `;
-          if (exp.descriptions) {
-            exp.descriptions.forEach((desc) => {
-              html += `<li style="margin-bottom: 3px; text-align: justify;">${desc}</li>`;
-            });
-          }
-          html += `
-              </ul>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 5. Projects
-      if (data.projects && data.projects.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 22px;">
-            <h2 class="section-title" style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #111; border-bottom: 1px solid #eee; padding-bottom: 4px; margin: 0 0 12px 0;">Projects</h2>
-        `;
-        data.projects.forEach((proj) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 12px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 10.5px; margin-bottom: 3px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${proj.title || ""}</td>
-                  <td style="font-style: italic; text-align: right; color: #777; font-size: 10px;">${proj.technologies || ""}</td>
-                </tr>
-              </table>
-              <p style="font-family: 'Inter', sans-serif; font-size: 10.5px; color: #444; line-height: 1.45; margin: 0 0 2px 0; text-align: justify;">${proj.description || ""}</p>
-              ${proj.link ? `<div style="font-family: 'Inter', sans-serif; font-size: 9.5px; color: #777;">Link: ${proj.link}</div>` : ""}
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 6. Education
-      if (data.education && data.education.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 22px;">
-            <h2 class="section-title" style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #111; border-bottom: 1px solid #eee; padding-bottom: 4px; margin: 0 0 12px 0;">Education</h2>
-        `;
-        data.education.forEach((edu) => {
-          html += `
-            <div class="resume-item" style="margin-bottom: 8px; page-break-inside: avoid;">
-              <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 10.5px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #111;">${edu.degree || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #555; font-size: 10px;">${edu.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="color: #666; text-align: left;">${edu.institution || ""} &bull; <span style="font-size: 9.5px;">${edu.location || ""}</span></td>
-                  <td style="text-align: right; font-weight: bold; color: #333;">${edu.gpa ? `GPA: ${edu.gpa}` : ""}</td>
-                </tr>
-              </table>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-
-      // 7. Certifications
-      if (data.certifications && data.certifications.length > 0) {
-        html += `
-          <div class="resume-section" style="margin-bottom: 0;">
-            <h2 class="section-title" style="font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #111; border-bottom: 1px solid #eee; padding-bottom: 4px; margin: 0 0 10px 0;">Certifications</h2>
-            <ul style="margin: 0; padding-left: 14px; font-family: 'Inter', sans-serif; font-size: 10.5px; color: #444; line-height: 1.5;">
-        `;
-        data.certifications.forEach((cert) => {
-          html += `<li style="margin-bottom: 2px;">${cert}</li>`;
-        });
-        html += `
-            </ul>
-          </div>
-        `;
-      }
-
-      return html;
-    }
-  },
-  linear: {
-    id: "linear",
-    name: "Structured Linear",
-    description: "Asymmetrical elegant layout featuring a clean, column-balanced tabular flow. Highly readable.",
-    render: (data) => {
-      // 1. Personal Header
-      let html = `
-        <div class="resume-header" style="margin-bottom: 22px; border-bottom: 2px solid #555; padding-bottom: 10px;">
-          <h1 class="resume-name" style="font-family: Arial, sans-serif; font-size: 26px; font-weight: bold; margin: 0 0 4px 0; color: #222; text-transform: uppercase;">${data.personal.name || ""}</h1>
-          <p class="resume-title" style="font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; color: #4A6B62; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px;">${data.personal.title || ""}</p>
-          <div class="resume-contact" style="font-family: Arial, sans-serif; font-size: 10.5px; color: #444; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 6px 14px;">
-            ${data.personal.email ? `<span><strong>Email:</strong> ${data.personal.email}</span>` : ""}
-            ${data.personal.phone ? `<span><strong>Phone:</strong> ${data.personal.phone}</span>` : ""}
-            ${data.personal.location ? `<span><strong>Location:</strong> ${data.personal.location}</span>` : ""}
-            ${data.personal.website ? `<span><strong>Web:</strong> ${data.personal.website}</span>` : ""}
-            ${data.personal.linkedin ? `<span><strong>LI:</strong> ${data.personal.linkedin}</span>` : ""}
-          </div>
-        </div>
-      `;
-
-      const renderSectionTable = (title, contentHTML) => {
-        return `
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-inside: avoid;">
+  experience: (data, font, title, accentColor) => {
+    if (!data.experience || data.experience.length === 0) return '';
+    let html = `
+      <div class="resume-section" style="margin-bottom: 16px;">
+        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+    `;
+    data.experience.forEach(exp => {
+      html += `
+        <div class="resume-item" style="margin-bottom: 10px; page-break-inside: avoid;">
+          <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10.5px; margin-bottom: 3px;">
             <tr>
-              <td style="width: 25%; vertical-align: top; font-family: Arial, sans-serif; font-size: 11.5px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.8px; color: #4A6B62; padding-top: 2px;">
-                ${title}
-              </td>
-              <td style="width: 75%; vertical-align: top; padding-left: 20px; border-left: 1px solid #ddd;">
-                ${contentHTML}
-              </td>
+              <td style="font-weight: bold; text-align: left; color: #111; font-size: 11px;">${exp.role || ""} <span style="font-weight: normal; color: #555;">at ${exp.company || ""}</span></td>
+              <td style="font-weight: bold; text-align: right; color: ${accentColor};">${exp.dates || ""}</td>
+            </tr>
+            <tr>
+              <td style="font-style: italic; color: #666; text-align: left; font-size: 9.5px;">${exp.location || ""}</td>
+              <td></td>
             </tr>
           </table>
-        `;
-      };
-
-      // 2. Summary
-      if (data.summary) {
-        const content = `
-          <p style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.55; color: #333; margin: 0; text-align: justify;">${data.summary}</p>
-        `;
-        html += renderSectionTable("Profile", content);
-      }
-
-      // 3. Skills
-      if (data.skills && data.skills.length > 0) {
-        const content = `
-          <p style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.5; color: #333; margin: 0;">${data.skills.join(" &bull; ")}</p>
-        `;
-        html += renderSectionTable("Skills", content);
-      }
-
-      // 4. Experience
-      if (data.experience && data.experience.length > 0) {
-        let content = '';
-        data.experience.forEach((exp, index) => {
-          content += `
-            <div style="margin-bottom: ${index < data.experience.length - 1 ? '14px' : '0'};">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; margin-bottom: 4px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #222;">${exp.role || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #4A6B62;">${exp.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="font-style: italic; color: #555; text-align: left;">${exp.company || ""} &bull; ${exp.location || ""}</td>
-                  <td></td>
-                </tr>
-              </table>
-              <ul style="margin: 0; padding-left: 15px; font-family: Arial, sans-serif; font-size: 11px; color: #333; line-height: 1.5;">
-          `;
-          if (exp.descriptions) {
-            exp.descriptions.forEach((desc) => {
-              content += `<li style="margin-bottom: 3px; text-align: justify;">${desc}</li>`;
-            });
-          }
-          content += `
-              </ul>
-            </div>
-          `;
+          <ul style="margin: 0; padding-left: 16px; font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.45;">
+      `;
+      if (exp.descriptions) {
+        exp.descriptions.forEach(desc => {
+          html += `<li style="margin-bottom: 2px; text-align: justify;">${desc}</li>`;
         });
-        html += renderSectionTable("Experience", content);
       }
+      html += `
+          </ul>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    return html;
+  },
 
-      // 5. Projects
-      if (data.projects && data.projects.length > 0) {
-        let content = '';
-        data.projects.forEach((proj, index) => {
-          content += `
-            <div style="margin-bottom: ${index < data.projects.length - 1 ? '12px' : '0'};">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; margin-bottom: 3px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #222;">${proj.title || ""}</td>
-                  <td style="font-style: italic; text-align: right; color: #555; font-size: 10px;">${proj.technologies || ""}</td>
-                </tr>
-              </table>
-              <p style="font-family: Arial, sans-serif; font-size: 11px; color: #333; line-height: 1.45; margin: 0 0 2px 0; text-align: justify;">${proj.description || ""}</p>
-              ${proj.link ? `<div style="font-family: Arial, sans-serif; font-size: 9.5px; color: #666;">Link: ${proj.link}</div>` : ""}
-            </div>
-          `;
-        });
-        html += renderSectionTable("Projects", content);
-      }
+  projects: (data, font, title, accentColor, showMonoTech = false) => {
+    if (!data.projects || data.projects.length === 0) return '';
+    let html = `
+      <div class="resume-section" style="margin-bottom: 16px;">
+        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+    `;
+    data.projects.forEach(proj => {
+      html += `
+        <div class="resume-item" style="margin-bottom: 10px; page-break-inside: avoid;">
+          <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10.5px; margin-bottom: 3px;">
+            <tr>
+              <td style="font-weight: bold; text-align: left; color: #111;">${proj.title || ""} ${proj.link ? `<span style="font-weight: normal; font-size: 9.5px; color: #666;">(${proj.link})</span>` : ""}</td>
+              <td style="font-style: italic; text-align: right; color: ${accentColor}; font-weight: bold; ${showMonoTech ? 'font-family: monospace; font-size: 9.5px;' : ''}">${proj.technologies || ""}</td>
+            </tr>
+          </table>
+          <p style="font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.4; margin: 0 0 0 4px; text-align: justify;">${proj.description || ""}</p>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    return html;
+  },
 
-      // 6. Education
-      if (data.education && data.education.length > 0) {
-        let content = '';
-        data.education.forEach((edu, index) => {
-          content += `
-            <div style="margin-bottom: ${index < data.education.length - 1 ? '10px' : '0'};">
-              <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px;">
-                <tr>
-                  <td style="font-weight: bold; text-align: left; color: #222;">${edu.degree || ""}</td>
-                  <td style="font-weight: bold; text-align: right; color: #555;">${edu.dates || ""}</td>
-                </tr>
-                <tr>
-                  <td style="color: #666; text-align: left;">${edu.institution || ""} &bull; <span style="font-size: 10px;">${edu.location || ""}</span></td>
-                  <td style="text-align: right; font-weight: bold; color: #222;">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
-                </tr>
-              </table>
-            </div>
-          `;
-        });
-        html += renderSectionTable("Education", content);
-      }
+  education: (data, font, title, accentColor) => {
+    if (!data.education || data.education.length === 0) return '';
+    let html = `
+      <div class="resume-section" style="margin-bottom: 16px;">
+        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+    `;
+    data.education.forEach(edu => {
+      html += `
+        <div class="resume-item" style="margin-bottom: 8px; page-break-inside: avoid;">
+          <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10.5px; margin-bottom: 2px;">
+            <tr>
+              <td style="font-weight: bold; text-align: left; color: #111;">${edu.degree || ""}</td>
+              <td style="font-weight: bold; text-align: right; color: ${accentColor};">${edu.dates || ""}</td>
+            </tr>
+            <tr>
+              <td style="font-style: italic; color: #333; text-align: left;">${edu.institution || ""}, <span style="font-weight: normal; color: #555;">${edu.location || ""}</span></td>
+              <td style="text-align: right; font-weight: bold; color: #111;">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
+            </tr>
+          </table>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    return html;
+  },
 
-      // 7. Certifications
-      if (data.certifications && data.certifications.length > 0) {
-        let content = `
-          <ul style="margin: 0; padding-left: 15px; font-family: Arial, sans-serif; font-size: 11px; color: #333; line-height: 1.5;">
-        `;
-        data.certifications.forEach((cert) => {
-          content += `<li style="margin-bottom: 2px;">${cert}</li>`;
-        });
-        content += `</ul>`;
-        html += renderSectionTable("Credentials", content);
-      }
+  certifications: (data, font, title, accentColor) => {
+    if (!data.certifications || data.certifications.length === 0) return '';
+    let html = `
+      <div class="resume-section" style="margin-bottom: 0;">
+        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        <ul style="margin: 0; padding-left: 16px; font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.45;">
+    `;
+    data.certifications.forEach(cert => {
+      html += `<li style="margin-bottom: 2px;">${cert}</li>`;
+    });
+    html += `
+        </ul>
+      </div>
+    `;
+    return html;
+  }
+};
 
+const TEMPLATE_STYLES = {
+  // === SOFTWARE INDUSTRY ===
+  software_fresher_minimalist: {
+    id: "software_fresher_minimalist",
+    name: "Developer Minimalist",
+    description: "Ultra-clean single column layout showcasing technical skills and software engineering projects prominently.",
+    industry: "software",
+    experience: "fresher",
+    render: (data) => {
+      const font = "'Inter', Arial, sans-serif";
+      const accent = "#2d3748";
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true); // centered header
+      html += RenderHelpers.summary(data, font, "Professional Profile", accent);
+      html += RenderHelpers.skills(data, font, "Core Technologies & Skills", accent, "badges");
+      html += RenderHelpers.education(data, font, "Academic History", accent);
+      html += RenderHelpers.projects(data, font, "Technical Development Projects", accent, true);
+      html += RenderHelpers.experience(data, font, "Engineering Internships & Intern Work", accent);
+      html += RenderHelpers.certifications(data, font, "Verified Certifications & Credentials", accent);
       return html;
     }
   },
-  sidebar: {
-    id: "sidebar",
-    name: "Split Sidebar",
-    description: "Premium two-column layout with a sleek sage green sidebar and clean structured timeline.",
+  software_fresher_tech_mono: {
+    id: "software_fresher_tech_mono",
+    name: "Technical Mono Clean",
+    description: "Sleek software engineering style highlighting languages and open-source contributions. Compact text.",
+    industry: "software",
+    experience: "fresher",
     render: (data) => {
-      let html = `
-        <div class="sidebar-container" style="display: flex; min-height: 297mm; font-family: 'Inter', Arial, sans-serif; box-sizing: border-box; background: #ffffff;">
-          
-          <!-- LEFT SIDEBAR COLUMN (Sage Green) -->
-          <div class="left-sidebar" style="width: 32%; background-color: #4A6B62; color: #ffffff; padding: 25px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px;">
-            
-            <!-- Contact Details -->
-            <div>
-              <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 6px; margin: 0 0 12px 0; color: #ffffff; letter-spacing: 1px;">Contact</h2>
-              <div style="font-size: 10.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 6px;">
-                ${data.personal.email ? `<div style="word-break: break-all;"><strong>Email:</strong><br>${data.personal.email}</div>` : ""}
-                ${data.personal.phone ? `<div><strong>Phone:</strong><br>${data.personal.phone}</div>` : ""}
-                ${data.personal.location ? `<div><strong>Location:</strong><br>${data.personal.location}</div>` : ""}
-                ${data.personal.website ? `<div style="word-break: break-all;"><strong>Web:</strong><br>${data.personal.website}</div>` : ""}
-                ${data.personal.linkedin ? `<div style="word-break: break-all;"><strong>LinkedIn:</strong><br>${data.personal.linkedin}</div>` : ""}
-              </div>
-            </div>
+      const font = "Courier New, monospace";
+      const accent = "#334e68";
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.skills(data, font, "Skills Directory", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Code Repositories & Prototypes", accent, true);
+      html += RenderHelpers.education(data, font, "Education & Credentials", accent);
+      html += RenderHelpers.experience(data, font, "Experience History", accent);
+      html += RenderHelpers.certifications(data, font, "Technical Badges & Courses", accent);
+      return html;
+    }
+  },
+  software_experienced_enterprise: {
+    id: "software_experienced_enterprise",
+    name: "Enterprise Systems Architect",
+    description: "High-density single-column format emphasizing production scaling, microservices, cloud systems, and engineering metrics.",
+    industry: "software",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#0f2d4a"; // Deep navy
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Executive Summary", accent, true); // left border summary
+      html += RenderHelpers.experience(data, font, "Professional History & System Outcomes", accent);
+      html += RenderHelpers.skills(data, font, "Enterprise Technology Stack", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Key Software Engineering Initiatives", accent);
+      html += RenderHelpers.education(data, font, "Academic Credentials", accent);
+      html += RenderHelpers.certifications(data, font, "Professional Licenses & Cloud Badges", accent);
+      return html;
+    }
+  },
+  software_experienced_sleek: {
+    id: "software_experienced_sleek",
+    name: "Sleek Tech Director",
+    description: "Modern, professional design optimized for experienced managers and tech leads. Clean dividers and serif headers.",
+    industry: "software",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Georgia, serif";
+      const accent = "#2A3F3A"; // Charcoal/Sage
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Professional Statement", accent);
+      html += RenderHelpers.experience(data, font, "Employment Background", accent);
+      html += RenderHelpers.skills(data, font, "Domain Competencies", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Selected Architectural Projects", accent, true);
+      html += RenderHelpers.education(data, font, "Education", accent);
+      html += RenderHelpers.certifications(data, font, "Certifications", accent);
+      return html;
+    }
+  },
 
-            <!-- Skills -->
-            ${data.skills && data.skills.length > 0 ? `
-              <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 6px; margin: 0 0 12px 0; color: #ffffff; letter-spacing: 1px;">Skills</h2>
-                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                  ${data.skills.map(skill => `
-                    <span style="font-size: 9px; padding: 3px 6px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; color: #ffffff;">${skill}</span>
-                  `).join('')}
-                </div>
-              </div>
-            ` : ""}
+  // === DATA SCIENCE & AI ===
+  data_science_fresher_analytical: {
+    id: "data_science_fresher_analytical",
+    name: "Analytical Scholar",
+    description: "Designed for aspiring data scientists. Puts statistical tools, ML models, and Jupyter projects first.",
+    industry: "data_science",
+    experience: "fresher",
+    render: (data) => {
+      const font = "'Inter', Arial, sans-serif";
+      const accent = "#2A4E44"; // Forest accent
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Data Science Statement", accent);
+      html += RenderHelpers.skills(data, font, "Machine Learning & Quantitative Directory", accent, "badges");
+      html += RenderHelpers.projects(data, font, "Data Modeling & Analytical Projects", accent);
+      html += RenderHelpers.education(data, font, "Academic Record", accent);
+      html += RenderHelpers.experience(data, font, "Internships & Research Work", accent);
+      html += RenderHelpers.certifications(data, font, "Verified Analytics Credentials", accent);
+      return html;
+    }
+  },
+  data_science_fresher_quant: {
+    id: "data_science_fresher_quant",
+    name: "Quantitative Minimalist",
+    description: "Tabular, left-aligned standard math/statistics style highlighting programming skills first. Highly structured.",
+    industry: "data_science",
+    experience: "fresher",
+    render: (data) => {
+      const font = "Trebuchet MS, sans-serif";
+      const accent = "#486581";
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.skills(data, font, "Core Analytics Toolkit", accent, "bullets");
+      html += RenderHelpers.education(data, font, "Academic Foundations", accent);
+      html += RenderHelpers.projects(data, font, "Quantitative & Kaggle Portfolios", accent, true);
+      html += RenderHelpers.experience(data, font, "Relevant Internships", accent);
+      html += RenderHelpers.certifications(data, font, "Certifications", accent);
+      return html;
+    }
+  },
+  data_science_experienced_mlops: {
+    id: "data_science_experienced_mlops",
+    name: "MLOps Systems Principal",
+    description: "High-density MLOps lead layout detailing deep learning architectures, big data scaling, and business optimization.",
+    industry: "data_science",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#8a1515"; // Deep crimson
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Executive Summary", accent, true);
+      html += RenderHelpers.experience(data, font, "Professional AI & ML Experience", accent);
+      html += RenderHelpers.skills(data, font, "MLOps & Cloud Infrastructure Stack", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Deployments & Scaled Initiatives", accent);
+      html += RenderHelpers.education(data, font, "Education", accent);
+      html += RenderHelpers.certifications(data, font, "Professional AI Certifications", accent);
+      return html;
+    }
+  },
+  data_science_experienced_principal: {
+    id: "data_science_experienced_principal",
+    name: "AI Research Director",
+    description: "Traditional elegant layout designed for principal scientists. Incorporates paper publications and patents.",
+    industry: "data_science",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Georgia, serif";
+      const accent = "#4A6B62"; // Sage
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Executive Profile", accent);
+      html += RenderHelpers.experience(data, font, "Leading Research & Model Engineering History", accent);
+      html += RenderHelpers.skills(data, font, "Statistical & Scientific Competencies", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Key Scientific Publications & Patents", accent);
+      html += RenderHelpers.education(data, font, "Academic History", accent);
+      html += RenderHelpers.certifications(data, font, "Credentials", accent);
+      return html;
+    }
+  },
 
-            <!-- Education -->
-            ${data.education && data.education.length > 0 ? `
-              <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 6px; margin: 0 0 12px 0; color: #ffffff; letter-spacing: 1px;">Education</h2>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                  ${data.education.map(edu => `
-                    <div style="font-size: 10px; line-height: 1.4;">
-                      <div style="font-weight: bold; font-size: 10.5px;">${edu.degree}</div>
-                      <div style="opacity: 0.9;">${edu.institution}</div>
-                      <div style="opacity: 0.75; font-style: italic;">${edu.dates} &bull; ${edu.location}</div>
-                      ${edu.gpa ? `<div style="font-weight: 600; margin-top: 2px;">Grade: ${edu.gpa}</div>` : ""}
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            ` : ""}
+  // === ELECTRICAL INDUSTRY ===
+  electrical_fresher_hardware: {
+    id: "electrical_fresher_hardware",
+    name: "Hardware Prototyper",
+    description: "Highlights simulation tools, laboratory devices, microcontrollers, and university circuit projects.",
+    industry: "electrical",
+    experience: "fresher",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#a05a2c"; // Copper
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Career Summary", accent);
+      html += RenderHelpers.skills(data, font, "Hardware & Software Competencies", accent, "badges");
+      html += RenderHelpers.education(data, font, "Academic Education", accent);
+      html += RenderHelpers.projects(data, font, "Academic Circuit & IoT Projects", accent);
+      html += RenderHelpers.experience(data, font, "Industrial Training & Internships", accent);
+      html += RenderHelpers.certifications(data, font, "Verified Credentials & CAD Licences", accent);
+      return html;
+    }
+  },
+  electrical_fresher_lab: {
+    id: "electrical_fresher_lab",
+    name: "Lab Systems Clean",
+    description: "Minimalist formatting for electrical engineers, emphasizing board designs, sensors, and basic coursework.",
+    industry: "electrical",
+    experience: "fresher",
+    render: (data) => {
+      const font = "Trebuchet MS, sans-serif";
+      const accent = "#3182ce"; // Blue
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.skills(data, font, "Laboratory Instrument proficiencies", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Electrical Prototype Designs", accent);
+      html += RenderHelpers.education(data, font, "Education Foundations", accent);
+      html += RenderHelpers.experience(data, font, "Workshop Training History", accent);
+      html += RenderHelpers.certifications(data, font, "Courses & Licensing", accent);
+      return html;
+    }
+  },
+  electrical_experienced_grid: {
+    id: "electrical_experienced_grid",
+    name: "Power Grid Systems Specialist",
+    description: "Highly structured for senior power engineers. Details SCADA, switchgears, and utility-scale substation work.",
+    industry: "electrical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Georgia, serif";
+      const accent = "#0f3c5f"; // Royal
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Executive Profile", accent, true);
+      html += RenderHelpers.experience(data, font, "Power Grid Operations & Design History", accent);
+      html += RenderHelpers.skills(data, font, "HV Switchgear & Protection Systems", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Substation Design Projects & ETAP Analyses", accent);
+      html += RenderHelpers.education(data, font, "Education Credentials", accent);
+      html += RenderHelpers.certifications(data, font, "Professional Engineering (PE) Licensing", accent);
+      return html;
+    }
+  },
+  electrical_experienced_automation: {
+    id: "electrical_experienced_automation",
+    name: "Automation Project Director",
+    description: "Sleek industrial formatting optimized for site supervisors, PLC programmers, and electrical consultants.",
+    industry: "electrical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Inter', Arial, sans-serif";
+      const accent = "#1a202c"; // Charcoal
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Executive Summary", accent);
+      html += RenderHelpers.experience(data, font, "Automation Engineering & Site Management History", accent);
+      html += RenderHelpers.skills(data, font, "PLC & SCADA Programming Directories", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Key Automated Deployments & Commissions", accent);
+      html += RenderHelpers.education(data, font, "Formal Education", accent);
+      html += RenderHelpers.certifications(data, font, "Certifications & Standard Compliances", accent);
+      return html;
+    }
+  },
 
-            <!-- Certifications -->
-            ${data.certifications && data.certifications.length > 0 ? `
-              <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 6px; margin: 0 0 12px 0; color: #ffffff; letter-spacing: 1px;">Credentials</h2>
-                <ul style="margin: 0; padding-left: 12px; font-size: 10px; line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
-                  ${data.certifications.map(cert => `<li>${cert}</li>`).join('')}
-                </ul>
-              </div>
-            ` : ""}
+  // === MECHANICAL INDUSTRY ===
+  mechanical_fresher_cad: {
+    id: "mechanical_fresher_cad",
+    name: "CAD Design Engineer",
+    description: "Perfect for entry-level mechanical designs. Emphasizes SolidWorks 3D drafting, GD&T, and FSAE racing work.",
+    industry: "mechanical",
+    experience: "fresher",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#2c5282"; // Deep blue
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Professional Objective", accent);
+      html += RenderHelpers.skills(data, font, "SolidWorks, CAD & Modeling tools", accent, "badges");
+      html += RenderHelpers.education(data, font, "Mechanical Education History", accent);
+      html += RenderHelpers.projects(data, font, "Academic Design & FSAE Racing Projects", accent);
+      html += RenderHelpers.experience(data, font, "Internships & Industrial Apprenticeships", accent);
+      html += RenderHelpers.certifications(data, font, "Verified CAD Credentials", accent);
+      return html;
+    }
+  },
+  mechanical_fresher_machining: {
+    id: "mechanical_fresher_machining",
+    name: "Manufacturing & CNC Clean",
+    description: "Focuses on shopfloor machining, CNC tooling, thermodynamics, and physical prototypes.",
+    industry: "mechanical",
+    experience: "fresher",
+    render: (data) => {
+      const font = "'Inter', sans-serif";
+      const accent = "#4a5568";
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.skills(data, font, "CNC Tooling & Lab Skills", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Prototype Assemblies & Machining Lab Projects", accent);
+      html += RenderHelpers.education(data, font, "Academic Foundations", accent);
+      html += RenderHelpers.experience(data, font, "Workshop Training History", accent);
+      html += RenderHelpers.certifications(data, font, "Six Sigma & Engineering Courses", accent);
+      return html;
+    }
+  },
+  mechanical_experienced_rd: {
+    id: "mechanical_experienced_rd",
+    name: "R&D Product Design Director",
+    description: "Optimized for consumer and automotive product designers. High density detail for injection molding and DFMEA.",
+    industry: "mechanical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#2d3748";
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Executive Statement", accent, true);
+      html += RenderHelpers.experience(data, font, "Product Development & R&D Design History", accent);
+      html += RenderHelpers.skills(data, font, "DFMEA & Injection Tooling Design directories", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Core Design Initiatives & Product Deployments", accent);
+      html += RenderHelpers.education(data, font, "Academic Qualifications", accent);
+      html += RenderHelpers.certifications(data, font, "Professional CAD Specialist Credentials", accent);
+      return html;
+    }
+  },
+  mechanical_experienced_automotive: {
+    id: "mechanical_experienced_automotive",
+    name: "Automotive Engineering Lead",
+    description: "Premium automotive design layout emphasizing crash test analyses, fatigue diagnostics, and factory tooling.",
+    industry: "mechanical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Trebuchet MS, sans-serif";
+      const accent = "#9b2c2c"; // Automotive Red
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Professional Executive Summary", accent);
+      html += RenderHelpers.experience(data, font, "Automotive Engineering & Vehicle Testing History", accent);
+      html += RenderHelpers.skills(data, font, "Fatigue Diagnostics & GD&T Competencies", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Key Vehicle Design & Tooling Programs", accent);
+      html += RenderHelpers.education(data, font, "Education History", accent);
+      html += RenderHelpers.certifications(data, font, "Specialty Engineering Certifications", accent);
+      return html;
+    }
+  },
 
-          </div>
-
-          <!-- RIGHT CONTENT COLUMN (Clean Slate/White) -->
-          <div class="right-content" style="width: 68%; padding: 30px 25px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px;">
-            
-            <!-- Header Block -->
-            <div style="border-bottom: 2px solid #eef2f0; padding-bottom: 15px;">
-              <h1 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: #2A3F3A; margin: 0 0 4px 0; letter-spacing: -0.5px;">${data.personal.name || ""}</h1>
-              <p style="font-size: 13px; font-weight: 600; text-transform: uppercase; color: #4A6B62; margin: 0; letter-spacing: 1px;">${data.personal.title || ""}</p>
-            </div>
-
-            <!-- Professional Summary -->
-            ${data.summary ? `
-              <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #2A3F3A; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 10px 0; letter-spacing: 0.8px;">Professional Profile</h2>
-                <p style="font-size: 11px; line-height: 1.55; color: #333; margin: 0; text-align: justify;">${data.summary}</p>
-              </div>
-            ` : ""}
-
-            <!-- Work Experience -->
-            ${data.experience && data.experience.length > 0 ? `
-              <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #2A3F3A; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 14px 0; letter-spacing: 0.8px;">Work History</h2>
-                <div style="display: flex; flex-direction: column; gap: 16px;">
-                  ${data.experience.map(exp => `
-                    <div style="page-break-inside: avoid;">
-                      <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 4px;">
-                        <tr>
-                          <td style="font-weight: bold; text-align: left; color: #2A3F3A; font-size: 11.5px;">${exp.role} <span style="font-weight: normal; color: #666;">at ${exp.company}</span></td>
-                          <td style="font-weight: bold; text-align: right; color: #4A6B62; font-size: 10.5px;">${exp.dates}</td>
-                        </tr>
-                        <tr>
-                          <td style="font-style: italic; color: #777; font-size: 10px;">${exp.location}</td>
-                          <td></td>
-                        </tr>
-                      </table>
-                      <ul style="margin: 0; padding-left: 15px; font-size: 10.5px; color: #333; line-height: 1.45;">
-                        ${(exp.descriptions || []).map(desc => `<li style="margin-bottom: 3px; text-align: justify;">${desc}</li>`).join('')}
-                      </ul>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            ` : ""}
-
-            <!-- Key Projects -->
-            ${data.projects && data.projects.length > 0 ? `
-              <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #2A3F3A; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 14px 0; letter-spacing: 0.8px;">Projects</h2>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                  ${data.projects.map(proj => `
-                    <div style="page-break-inside: avoid;">
-                      <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 3px;">
-                        <tr>
-                          <td style="font-weight: bold; text-align: left; color: #2A3F3A;">${proj.title}</td>
-                          <td style="font-style: italic; text-align: right; color: #4A6B62; font-weight: bold; font-size: 10.5px;">${proj.technologies}</td>
-                        </tr>
-                      </table>
-                      <p style="font-size: 10.5px; color: #333; line-height: 1.4; margin: 0 0 2px 0; text-align: justify;">${proj.description}</p>
-                      ${proj.link ? `<div style="font-size: 9.5px; color: #666;">Code/Demo: <a href="https://${proj.link}" target="_blank" style="color: #4A6B62; text-decoration: none;">${proj.link}</a></div>` : ""}
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            ` : ""}
-
-          </div>
-
-        </div>
-      `;
+  // === CIVIL INDUSTRY ===
+  civil_fresher_surveyor: {
+    id: "civil_fresher_surveyor",
+    name: "Site Surveyor & Estimator",
+    description: "Great for site work. Highlights concrete mix labs, surveying instruments, and site reports.",
+    industry: "civil",
+    experience: "fresher",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#22543d"; // Deep Green
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Professional Summary", accent);
+      html += RenderHelpers.skills(data, font, "Site & Estimating Competencies", accent, "badges");
+      html += RenderHelpers.education(data, font, "Civil Education", accent);
+      html += RenderHelpers.projects(data, font, "Concrete Technology & Surveying Projects", accent);
+      html += RenderHelpers.experience(data, font, "Civil Site Internships", accent);
+      html += RenderHelpers.certifications(data, font, "AutoCAD & Revit Certifications", accent);
+      return html;
+    }
+  },
+  civil_fresher_structural: {
+    id: "civil_fresher_structural",
+    name: "Concrete & Revit Scholar",
+    description: "Emphasizes Revit modeling, structural analysis calculations, concrete logs, and site training.",
+    industry: "civil",
+    experience: "fresher",
+    render: (data) => {
+      const font = "'Inter', sans-serif";
+      const accent = "#4a5568";
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.skills(data, font, "Revit & Revit modeling tools", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "Structural Analysis Capstone designs", accent);
+      html += RenderHelpers.education(data, font, "Foundational Education", accent);
+      html += RenderHelpers.experience(data, font, "Apprenticeship & On-site logs", accent);
+      html += RenderHelpers.certifications(data, font, "STAAD.Pro & Surveying Credentials", accent);
+      return html;
+    }
+  },
+  civil_experienced_pm: {
+    id: "civil_experienced_pm",
+    name: "Infrastructure Project Manager",
+    description: "Slate green accents optimized for high-rise commercial structures, municipal flyovers, and building safety.",
+    industry: "civil",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#2f5c4b"; // Sage Green
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Executive Summary", accent, true);
+      html += RenderHelpers.experience(data, font, "Infrastructure Construction & Project Management History", accent);
+      html += RenderHelpers.skills(data, font, "Building Safety & Estimating Competencies", accent, "grid");
+      html += RenderHelpers.projects(data, font, "Key Infrastructure & Building Completions", accent);
+      html += RenderHelpers.education(data, font, "Academic History", accent);
+      html += RenderHelpers.certifications(data, font, "Chartered Engineering Licenses", accent);
+      return html;
+    }
+  },
+  civil_experienced_structural: {
+    id: "civil_experienced_structural",
+    name: "Principal Structural Specialist",
+    description: "Traditional styling focusing on seismic dynamic checks, SAFE slab analysis, and bridge foundations.",
+    industry: "civil",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Times New Roman, serif";
+      const accent = "#1a202c"; // Black
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true);
+      html += RenderHelpers.summary(data, font, "Professional Profile", accent);
+      html += RenderHelpers.experience(data, font, "Seismic Analysis & Structural Design History", accent);
+      html += RenderHelpers.skills(data, font, "Structural Standards & SAFE Analysis directories", accent, "bullets");
+      html += RenderHelpers.projects(data, font, "High-Rise modeling & Bridge Foundation Projects", accent);
+      html += RenderHelpers.education(data, font, "Academic Timeline", accent);
+      html += RenderHelpers.certifications(data, font, "Professional Structural Registrations", accent);
       return html;
     }
   }
 };
-
 // Automatically wrap all template renderers to deep escape HTML inputs
 Object.keys(TEMPLATE_STYLES).forEach(key => {
   const originalRender = TEMPLATE_STYLES[key].render;

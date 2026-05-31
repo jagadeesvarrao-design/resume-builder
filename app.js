@@ -8,7 +8,7 @@
 const state = {
   selectedExp: 'fresher',        // 'fresher' | 'experienced'
   selectedInd: 'software',       // 'software' | 'electrical' | 'mechanical' | 'civil'
-  selectedTemplateId: 'classic',  // 'classic' | 'modern' | 'grid' | 'executive'
+  selectedTemplateId: 'software_fresher_minimalist',
   currentStep: 1,
   totalSteps: 7,
   hasLoadedProfile: false
@@ -95,6 +95,9 @@ function renderTemplatesCatalog() {
   
   Object.keys(TEMPLATE_STYLES).forEach(key => {
     const template = TEMPLATE_STYLES[key];
+    if (template.industry !== state.selectedInd || template.experience !== state.selectedExp) {
+      return; // Skip templates that don't match the active filters
+    }
     const card = document.createElement('div');
     card.className = 'template-card';
     card.dataset.id = template.id;
@@ -131,16 +134,31 @@ function selectTemplateStyle(templateId) {
     const profileData = RESUME_PROFILES[profileKey];
     
     if (profileData) {
-      loadProfileIntoForm(profileData);
-      state.hasLoadedProfile = true;
+      // If there's already some custom text in the name or other inputs, ask before overwriting
+      const currentName = document.getElementById('input-name').value.trim();
+      const isDefaultName = currentName === "" || Object.values(RESUME_PROFILES).some(p => p.personal.name === currentName);
+      
+      if (currentName && !isDefaultName) {
+        const friendlyInd = state.selectedInd.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
+        const friendlyExp = state.selectedExp.charAt(0).toUpperCase() + state.selectedExp.slice(1);
+        const confirmOverwrite = confirm(`You have customized details in your resume.\n\nWould you like to overwrite them with the default pre-populated content for "${friendlyInd} - ${friendlyExp}"?\n\nClick OK to load defaults, or Cancel to keep your custom text.`);
+        if (confirmOverwrite) {
+          loadProfileIntoForm(profileData);
+          state.hasLoadedProfile = true;
+        } else {
+          // Keep their custom data but mark loaded so we don't prompt again unless they change filters again
+          state.hasLoadedProfile = true;
+        }
+      } else {
+        // Safe to overwrite (empty or default name)
+        loadProfileIntoForm(profileData);
+        state.hasLoadedProfile = true;
+      }
     }
   }
 
-  // Synchronize inline layout switcher select dropdown
-  const selectLayoutInline = document.getElementById('select-layout-inline');
-  if (selectLayoutInline) {
-    selectLayoutInline.value = templateId;
-  }
+  // Synchronize inline layout switcher select dropdown dynamically
+  updateInlineLayoutSwitcher();
   
   // Transition Screens
   selectionScreen.style.display = 'none';
@@ -522,7 +540,18 @@ function loadSavedResume() {
     // Restore state variables
     state.selectedExp = savedState.selectedExp || 'fresher';
     state.selectedInd = savedState.selectedInd || 'software';
-    state.selectedTemplateId = savedState.selectedTemplateId || 'classic';
+    
+    // Validate template ID and fallback if invalid
+    const matchingKeys = Object.keys(TEMPLATE_STYLES).filter(key => {
+      const t = TEMPLATE_STYLES[key];
+      return t.industry === state.selectedInd && t.experience === state.selectedExp;
+    });
+    if (matchingKeys.includes(savedState.selectedTemplateId)) {
+      state.selectedTemplateId = savedState.selectedTemplateId;
+    } else {
+      state.selectedTemplateId = matchingKeys[0] || 'software_fresher_minimalist';
+    }
+    
     state.currentStep = savedState.currentStep || 1;
     state.hasLoadedProfile = savedState.hasLoadedProfile !== undefined ? savedState.hasLoadedProfile : true;
     
@@ -535,11 +564,8 @@ function loadSavedResume() {
     const indBtn = industryFilters.querySelector(`[data-ind="${state.selectedInd}"]`);
     if (indBtn) indBtn.classList.add('active');
     
-    // Sync inline quick layout selector
-    const selectLayoutInline = document.getElementById('select-layout-inline');
-    if (selectLayoutInline) {
-      selectLayoutInline.value = state.selectedTemplateId;
-    }
+    // Sync inline quick layout selector dynamically
+    updateInlineLayoutSwitcher();
     
     // Load profile data directly into the DOM fields
     loadProfileIntoForm(savedState.formData);
@@ -631,14 +657,8 @@ function importResumeJSON(e) {
       loadProfileIntoForm(resumeData);
       
       // Update application configurations from metadata if available
+      // Update application configurations from metadata if available
       if (imported.meta) {
-        if (imported.meta.templateId) {
-          state.selectedTemplateId = imported.meta.templateId;
-          const selectLayoutInline = document.getElementById('select-layout-inline');
-          if (selectLayoutInline) {
-            selectLayoutInline.value = state.selectedTemplateId;
-          }
-        }
         if (imported.meta.industry) {
           state.selectedInd = imported.meta.industry;
           industryFilters.querySelector('.active').classList.remove('active');
@@ -651,7 +671,23 @@ function importResumeJSON(e) {
           const expBtn = expFilters.querySelector(`[data-exp="${state.selectedExp}"]`);
           if (expBtn) expBtn.classList.add('active');
         }
+        
+        // Resolve and validate template ID
+        if (imported.meta.templateId) {
+          const matchingKeys = Object.keys(TEMPLATE_STYLES).filter(key => {
+            const t = TEMPLATE_STYLES[key];
+            return t.industry === state.selectedInd && t.experience === state.selectedExp;
+          });
+          if (matchingKeys.includes(imported.meta.templateId)) {
+            state.selectedTemplateId = imported.meta.templateId;
+          } else {
+            state.selectedTemplateId = matchingKeys[0] || 'software_fresher_minimalist';
+          }
+        }
       }
+      
+      // Update the switcher select element dynamically
+      updateInlineLayoutSwitcher();
       
       state.hasLoadedProfile = true;
       
@@ -709,6 +745,28 @@ function syncFormToPreview() {
   if (state.currentStep === 2) {
     generateSummarySuggestions();
   }
+}
+
+// Rebuilds the inline layout switcher dropdown options to list only templates matching current profile category
+function updateInlineLayoutSwitcher() {
+  const selectLayoutInline = document.getElementById('select-layout-inline');
+  if (!selectLayoutInline) return;
+
+  // Clear existing options
+  selectLayoutInline.innerHTML = '';
+
+  // Get matching templates
+  const matching = Object.values(TEMPLATE_STYLES).filter(t => t.industry === state.selectedInd && t.experience === state.selectedExp);
+  
+  matching.forEach(template => {
+    const opt = document.createElement('option');
+    opt.value = template.id;
+    opt.textContent = template.name;
+    selectLayoutInline.appendChild(opt);
+  });
+
+  // Set the current selected value
+  selectLayoutInline.value = state.selectedTemplateId;
 }
 
 /* ==========================================================================
@@ -821,8 +879,12 @@ function executeSystemPrint() {
   // Close the instructions modal overlay
   closePrintModal();
   
-  // Trigger system-native vector print
-  window.print();
+  // Give the browser a brief moment to update the DOM, close the modal completely,
+  // and paint the page cleanly before opening the native print dialog. This fixes
+  // the blank/black PDF issue caused by backdrop-filter and synchronous main-thread blocking.
+  setTimeout(() => {
+    window.print();
+  }, 150);
 }
 
 /* ==========================================================================
@@ -948,43 +1010,10 @@ function generateSummarySuggestions() {
    ========================================================================== */
 function autoFitToSinglePage() {
   const paper = document.getElementById('resume-print-area');
-  const badge = document.getElementById('autofit-badge');
-  
   if (!paper) return;
   
-  // Clear any existing compression classes first
+  // Clear any existing compression classes so layout is natural
   paper.classList.remove('compress-1', 'compress-2', 'compress-3', 'compress-4');
-  if (badge) badge.style.display = 'none';
-  
-  // A4 Standard Heights check (297mm converts to 1122.5px at standard 96dpi browser rendering)
-  const a4MaxHeight = 1122;
-  
-  // Real-time incremental compression convergence loop
-  if (paper.scrollHeight > a4MaxHeight) {
-    paper.classList.add('compress-1');
-    if (badge) {
-      badge.style.display = 'inline-block';
-      badge.textContent = '🌿 Auto-Fit Level 1';
-    }
-    
-    if (paper.scrollHeight > a4MaxHeight) {
-      paper.classList.remove('compress-1');
-      paper.classList.add('compress-2');
-      if (badge) badge.textContent = '🌿 Auto-Fit Level 2';
-      
-      if (paper.scrollHeight > a4MaxHeight) {
-        paper.classList.remove('compress-2');
-        paper.classList.add('compress-3');
-        if (badge) badge.textContent = '🌿 Auto-Fit Level 3';
-        
-        if (paper.scrollHeight > a4MaxHeight) {
-          paper.classList.remove('compress-3');
-          paper.classList.add('compress-4');
-          if (badge) badge.textContent = '🌿 Max Auto-Fit';
-        }
-      }
-    }
-  }
 }
 
 /* ==========================================================================
@@ -1078,6 +1107,7 @@ function attachEvents() {
   const btnExportJson = document.getElementById('btn-export-json');
   const btnImportJson = document.getElementById('btn-import-json');
   const inputImportFile = document.getElementById('input-import-file');
+  const btnResetDefaults = document.getElementById('btn-reset-defaults');
 
   if (btnExportJson) {
     btnExportJson.addEventListener('click', exportResumeJSON);
@@ -1088,6 +1118,24 @@ function attachEvents() {
       inputImportFile.click();
     });
     inputImportFile.addEventListener('change', importResumeJSON);
+  }
+
+  if (btnResetDefaults) {
+    btnResetDefaults.addEventListener('click', () => {
+      const friendlyInd = state.selectedInd.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
+      const friendlyExp = state.selectedExp.charAt(0).toUpperCase() + state.selectedExp.slice(1);
+      const confirmReset = confirm(`Are you sure you want to reset all details to the default pre-populated content for "${friendlyInd} - ${friendlyExp}"?\n\nThis will completely overwrite all your current custom inputs!`);
+      if (confirmReset) {
+        const profileKey = `${state.selectedInd}_${state.selectedExp}`;
+        const profileData = RESUME_PROFILES[profileKey];
+        if (profileData) {
+          loadProfileIntoForm(profileData);
+          state.hasLoadedProfile = true;
+          syncFormToPreview();
+          alert("Resume details successfully reset to defaults!");
+        }
+      }
+    });
   }
 
   // Mobile Workspace Tabs switcher
