@@ -37,6 +37,7 @@
             <span class="filter-label">2. Select Your Industry</span>
             <div class="filter-buttons" id="industry-filters">
               <button class="btn-filter active" data-ind="software">Software Industry</button>
+              <button class="btn-filter" data-ind="data_science">Data Science & AI</button>
               <button class="btn-filter" data-ind="electrical">Electrical Industry</button>
               <button class="btn-filter" data-ind="mechanical">Mechanical Industry</button>
               <button class="btn-filter" data-ind="civil">Civil Industry</button>
@@ -148,6 +149,19 @@
                 <label class="form-label" for="input-summary">Summary Statement</label>
                 <textarea id="input-summary" class="form-input" placeholder="Highly motivated engineer with expertise in..."></textarea>
               </div>
+
+              <div class="summary-suggestions-panel" id="summary-suggestions-panel" style="display: none;">
+                <div class="suggestions-header">
+                  <span class="suggestion-label">🌿 Suggested Summaries (Click to Select)</span>
+                  <button type="button" class="btn-regenerate-suggestions" id="btn-regenerate-suggestions">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    Refresh
+                  </button>
+                </div>
+                <div class="suggestions-list" id="summary-suggestions-list">
+                  <!-- Rendered dynamically by JS -->
+                </div>
+              </div>
             </div>
 
             <!-- Step 3: Core Competencies / Skills -->
@@ -238,6 +252,7 @@
               <span class="status-pulse"></span>
               Live Syncing Preview
             </span>
+            <span class="autofit-badge" id="autofit-badge" style="display: none; font-size: 10px; padding: 3px 8px; background: rgba(74, 107, 98, 0.08); border: 1px solid rgba(74, 107, 98, 0.2); border-radius: 4px; color: var(--primary-calm); font-weight: 700; letter-spacing: 0.3px; margin-left: 8px; vertical-align: middle;">🌿 Auto-Fit Active</span>
             
             <div class="quick-layout-switch">
               <label for="select-layout-inline" class="quick-switch-label">Style:</label>
@@ -249,6 +264,7 @@
                 <option value="academic">Academic Scholar</option>
                 <option value="minimalist">Minimalist Sans</option>
                 <option value="linear">Structured Linear</option>
+                <option value="sidebar">Split Sidebar</option>
               </select>
             </div>
 

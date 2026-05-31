@@ -3,6 +3,46 @@
  * Contains pre-populated realistic datasets and HTML rendering layouts
  */
 
+// Helper to escape HTML to prevent parsing issues & HTML injection
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Helper to recursively escape all string values inside a nested object/array structure
+function deepEscapeHTML(obj) {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+  
+  if (typeof obj === 'string') {
+    return escapeHTML(obj);
+  }
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => deepEscapeHTML(item));
+  }
+  
+  if (typeof obj === 'object') {
+    return new Proxy(obj, {
+      get(target, prop) {
+        const val = target[prop];
+        if (typeof val === 'function') {
+          return val.bind(target);
+        }
+        return deepEscapeHTML(val);
+      }
+    });
+  }
+  
+  return obj;
+}
+
 const RESUME_PROFILES = {
   software_fresher: {
     personal: {
@@ -467,6 +507,124 @@ const RESUME_PROFILES = {
     certifications: [
       "Chartered Structural Engineer – Institution of Engineers (India)",
       "Certified Project Management Associate (IPMA Level D)"
+    ]
+  },
+  data_science_fresher: {
+    personal: {
+      name: "Aditya Sharma",
+      title: "Aspiring Data Scientist & Analyst",
+      email: "aditya.sharma@email.com",
+      phone: "+91 98760 12345",
+      location: "Mumbai, India",
+      website: "adityasharma.info",
+      linkedin: "linkedin.com/in/aditya-ds"
+    },
+    summary: "Detail-oriented and analytical Graduate Data Scientist with strong foundational skills in statistical analysis, machine learning algorithms, and data visualization. Proficient in Python, SQL, and data science libraries like Pandas, NumPy, and Scikit-Learn. Passionate about uncovering data-driven insights and building predictive models to solve complex real-world business challenges.",
+    skills: ["Python (Pandas, NumPy, Scikit-Learn)", "SQL (MySQL, PostgreSQL)", "Data Visualization (Tableau, PowerBI)", "Machine Learning (Regression, Classification)", "Statistical Modeling & Hypothesis Testing", "Git & Version Control", "Data Wrangling & Cleaning", "Jupyter Notebooks"],
+    experience: [
+      {
+        role: "Data Analyst Intern",
+        company: "Quantum Analytics Lab",
+        location: "Mumbai, India",
+        dates: "Dec 2025 - Apr 2026",
+        descriptions: [
+          "Cleaned and pre-processed over 50,000 rows of customer transaction data using Python, reducing analysis preparation time by 25%.",
+          "Built interactive Tableau dashboards tracking key operational KPIs, enabling executive teams to identify $15k in monthly overhead savings.",
+          "Wrote optimized SQL queries to extract data from relational databases, boosting reporting efficiency by 15%."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "E-Commerce Customer Segmentation Analysis",
+        technologies: "Python, Scikit-Learn, K-Means, Matplotlib",
+        description: "Applied unsupervised K-Means clustering algorithm on customer behavior datasets to segment users into distinct purchasing personas for targeted marketing campaigns.",
+        link: "github.com/aditya/customer-segmentation"
+      },
+      {
+        title: "House Price Predictive Model",
+        technologies: "Python, Pandas, Linear Regression, XGBoost",
+        description: "Developed and optimized a regression model forecasting housing market valuations with an R-squared metric of 0.89.",
+        link: "github.com/aditya/house-price-prediction"
+      }
+    ],
+    education: [
+      {
+        degree: "B.Tech in Computer Science & Data Science",
+        institution: "NMIMS University",
+        location: "Mumbai, India",
+        dates: "2022 - 2026",
+        gpa: "8.9/10.0 CGPA"
+      }
+    ],
+    certifications: [
+      "Google Advanced Data Analytics Professional Certificate",
+      "IBM Data Science Professional Certificate (Coursera)"
+    ]
+  },
+  data_science_experienced: {
+    personal: {
+      name: "Dr. Meera Krishnan",
+      title: "Senior Data Scientist & ML Engineer",
+      email: "meera.krishnan@email.com",
+      phone: "+91 99000 88000",
+      location: "Bangalore, India",
+      website: "meerakrishnan.ai",
+      linkedin: "linkedin.com/in/meera-k-ds"
+    },
+    summary: "Senior Data Scientist with 6+ years of expertise delivering high-impact machine learning systems, deep learning architectures, and analytics strategies. Highly skilled in Python, PyTorch, SQL, Spark, and AWS cloud solutions. Proven track record of scaling predictive modeling systems to millions of active users, mentoring data science teams, and driving significant business KPI improvements.",
+    skills: ["Machine Learning & Deep Learning", "Python (PyTorch, TensorFlow)", "Big Data (Apache Spark, Hadoop)", "AWS Cloud (S3, SageMaker, EC2)", "SQL & NoSQL (MongoDB, Cassandra)", "Large Language Models (LLMs) & NLP", "A/B Testing & Statistical Analysis", "MLOps & CI/CD Pipelines"],
+    experience: [
+      {
+        role: "Senior Data Scientist",
+        company: "TargetIntel Global",
+        location: "Bangalore, India",
+        dates: "Jan 2023 - Present",
+        descriptions: [
+          "Architected and deployed a deep-learning recommendation engine using PyTorch and AWS SageMaker, lifting sales conversion rates by 22%.",
+          "Designed robust ML pipelines processing 5TB+ of daily log data using Apache Spark, slashing query latency by 45%.",
+          "Spearheaded comprehensive A/B testing methodologies on primary user flows, directly increasing customer retention metrics by 14%."
+        ]
+      },
+      {
+        role: "Machine Learning Engineer",
+        company: "Fintech Decisions Inc.",
+        location: "Bangalore, India",
+        dates: "Oct 2020 - Dec 2022",
+        descriptions: [
+          "Developed and launched real-time fraud detection classification models, preventing an estimated $120,000 in monthly transaction losses.",
+          "Containerized ML models using Docker and Kubernetes, reducing model deployment cycles from 2 weeks to under 3 hours.",
+          "Collaborated directly with product teams to design credit-risk scoring algorithms matching strict regulatory requirements."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "Enterprise LLM Sentiment Analyst",
+        technologies: "HuggingFace Transformers, PyTorch, Docker, AWS",
+        description: "Fine-tuned open-source Llama-3 models on customer feedback data to automate sentiment routing for support tickets with 96% accuracy.",
+        link: "github.com/mkrishnan/llm-sentiment"
+      }
+    ],
+    education: [
+      {
+        degree: "M.S. in Data Science & Machine Learning",
+        institution: "IIIT Bangalore",
+        location: "Bangalore, India",
+        dates: "2018 - 2020",
+        gpa: "9.5/10.0 CGPA"
+      },
+      {
+        degree: "B.Tech in Computer Science Engineering",
+        institution: "VIT Vellore",
+        location: "Vellore, India",
+        dates: "2014 - 2018",
+        gpa: "9.1/10.0 CGPA"
+      }
+    ],
+    certifications: [
+      "AWS Certified Machine Learning – Specialty",
+      "TensorFlow Developer Certificate (Google)"
     ]
   }
 };
@@ -1480,6 +1638,149 @@ const TEMPLATE_STYLES = {
 
       return html;
     }
+  },
+  sidebar: {
+    id: "sidebar",
+    name: "Split Sidebar",
+    description: "Premium two-column layout with a sleek sage green sidebar and clean structured timeline.",
+    render: (data) => {
+      let html = `
+        <div class="sidebar-container" style="display: flex; min-height: 297mm; font-family: 'Inter', Arial, sans-serif; box-sizing: border-box; background: #ffffff;">
+          
+          <!-- LEFT SIDEBAR COLUMN (Sage Green) -->
+          <div class="left-sidebar" style="width: 32%; background-color: #4A6B62; color: #ffffff; padding: 25px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- Contact Details -->
+            <div>
+              <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 6px; margin: 0 0 12px 0; color: #ffffff; letter-spacing: 1px;">Contact</h2>
+              <div style="font-size: 10.5px; line-height: 1.6; display: flex; flex-direction: column; gap: 6px;">
+                ${data.personal.email ? `<div style="word-break: break-all;"><strong>Email:</strong><br>${data.personal.email}</div>` : ""}
+                ${data.personal.phone ? `<div><strong>Phone:</strong><br>${data.personal.phone}</div>` : ""}
+                ${data.personal.location ? `<div><strong>Location:</strong><br>${data.personal.location}</div>` : ""}
+                ${data.personal.website ? `<div style="word-break: break-all;"><strong>Web:</strong><br>${data.personal.website}</div>` : ""}
+                ${data.personal.linkedin ? `<div style="word-break: break-all;"><strong>LinkedIn:</strong><br>${data.personal.linkedin}</div>` : ""}
+              </div>
+            </div>
+
+            <!-- Skills -->
+            ${data.skills && data.skills.length > 0 ? `
+              <div>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 6px; margin: 0 0 12px 0; color: #ffffff; letter-spacing: 1px;">Skills</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  ${data.skills.map(skill => `
+                    <span style="font-size: 9px; padding: 3px 6px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; color: #ffffff;">${skill}</span>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ""}
+
+            <!-- Education -->
+            ${data.education && data.education.length > 0 ? `
+              <div>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 6px; margin: 0 0 12px 0; color: #ffffff; letter-spacing: 1px;">Education</h2>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  ${data.education.map(edu => `
+                    <div style="font-size: 10px; line-height: 1.4;">
+                      <div style="font-weight: bold; font-size: 10.5px;">${edu.degree}</div>
+                      <div style="opacity: 0.9;">${edu.institution}</div>
+                      <div style="opacity: 0.75; font-style: italic;">${edu.dates} &bull; ${edu.location}</div>
+                      ${edu.gpa ? `<div style="font-weight: 600; margin-top: 2px;">Grade: ${edu.gpa}</div>` : ""}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ""}
+
+            <!-- Certifications -->
+            ${data.certifications && data.certifications.length > 0 ? `
+              <div>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 6px; margin: 0 0 12px 0; color: #ffffff; letter-spacing: 1px;">Credentials</h2>
+                <ul style="margin: 0; padding-left: 12px; font-size: 10px; line-height: 1.45; display: flex; flex-direction: column; gap: 4px;">
+                  ${data.certifications.map(cert => `<li>${cert}</li>`).join('')}
+                </ul>
+              </div>
+            ` : ""}
+
+          </div>
+
+          <!-- RIGHT CONTENT COLUMN (Clean Slate/White) -->
+          <div class="right-content" style="width: 68%; padding: 30px 25px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- Header Block -->
+            <div style="border-bottom: 2px solid #eef2f0; padding-bottom: 15px;">
+              <h1 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: #2A3F3A; margin: 0 0 4px 0; letter-spacing: -0.5px;">${data.personal.name || ""}</h1>
+              <p style="font-size: 13px; font-weight: 600; text-transform: uppercase; color: #4A6B62; margin: 0; letter-spacing: 1px;">${data.personal.title || ""}</p>
+            </div>
+
+            <!-- Professional Summary -->
+            ${data.summary ? `
+              <div>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #2A3F3A; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 10px 0; letter-spacing: 0.8px;">Professional Profile</h2>
+                <p style="font-size: 11px; line-height: 1.55; color: #333; margin: 0; text-align: justify;">${data.summary}</p>
+              </div>
+            ` : ""}
+
+            <!-- Work Experience -->
+            ${data.experience && data.experience.length > 0 ? `
+              <div>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #2A3F3A; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 14px 0; letter-spacing: 0.8px;">Work History</h2>
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                  ${data.experience.map(exp => `
+                    <div style="page-break-inside: avoid;">
+                      <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 4px;">
+                        <tr>
+                          <td style="font-weight: bold; text-align: left; color: #2A3F3A; font-size: 11.5px;">${exp.role} <span style="font-weight: normal; color: #666;">at ${exp.company}</span></td>
+                          <td style="font-weight: bold; text-align: right; color: #4A6B62; font-size: 10.5px;">${exp.dates}</td>
+                        </tr>
+                        <tr>
+                          <td style="font-style: italic; color: #777; font-size: 10px;">${exp.location}</td>
+                          <td></td>
+                        </tr>
+                      </table>
+                      <ul style="margin: 0; padding-left: 15px; font-size: 10.5px; color: #333; line-height: 1.45;">
+                        ${(exp.descriptions || []).map(desc => `<li style="margin-bottom: 3px; text-align: justify;">${desc}</li>`).join('')}
+                      </ul>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ""}
+
+            <!-- Key Projects -->
+            ${data.projects && data.projects.length > 0 ? `
+              <div>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; color: #2A3F3A; border-left: 3px solid #4A6B62; padding-left: 8px; margin: 0 0 14px 0; letter-spacing: 0.8px;">Projects</h2>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  ${data.projects.map(proj => `
+                    <div style="page-break-inside: avoid;">
+                      <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 3px;">
+                        <tr>
+                          <td style="font-weight: bold; text-align: left; color: #2A3F3A;">${proj.title}</td>
+                          <td style="font-style: italic; text-align: right; color: #4A6B62; font-weight: bold; font-size: 10.5px;">${proj.technologies}</td>
+                        </tr>
+                      </table>
+                      <p style="font-size: 10.5px; color: #333; line-height: 1.4; margin: 0 0 2px 0; text-align: justify;">${proj.description}</p>
+                      ${proj.link ? `<div style="font-size: 9.5px; color: #666;">Code/Demo: <a href="https://${proj.link}" target="_blank" style="color: #4A6B62; text-decoration: none;">${proj.link}</a></div>` : ""}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ""}
+
+          </div>
+
+        </div>
+      `;
+      return html;
+    }
   }
 };
+
+// Automatically wrap all template renderers to deep escape HTML inputs
+Object.keys(TEMPLATE_STYLES).forEach(key => {
+  const originalRender = TEMPLATE_STYLES[key].render;
+  TEMPLATE_STYLES[key].render = function(data) {
+    return originalRender(deepEscapeHTML(data));
+  };
+});
 

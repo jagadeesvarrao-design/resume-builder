@@ -233,28 +233,35 @@ function addExperienceCard(data = null) {
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Job Title / Role</label>
-        <input type="text" class="form-input input-exp-role" value="${role}" placeholder="e.g. Lead Engineer">
+        <input type="text" class="form-input input-exp-role" placeholder="e.g. Lead Engineer">
       </div>
       <div class="form-group">
         <label class="form-label">Company Name</label>
-        <input type="text" class="form-input input-exp-company" value="${company}" placeholder="e.g. Systems Ltd.">
+        <input type="text" class="form-input input-exp-company" placeholder="e.g. Systems Ltd.">
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Dates / Duration</label>
-        <input type="text" class="form-input input-exp-dates" value="${dates}" placeholder="e.g. Jun 2024 - Present">
+        <input type="text" class="form-input input-exp-dates" placeholder="e.g. Jun 2024 - Present">
       </div>
       <div class="form-group">
         <label class="form-label">Location</label>
-        <input type="text" class="form-input input-exp-location" value="${location}" placeholder="e.g. Pune, India">
+        <input type="text" class="form-input input-exp-location" placeholder="e.g. Pune, India">
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Key Achievements (One bullet per line)</label>
-      <textarea class="form-input input-exp-desc" style="min-height: 90px;" placeholder="Optimized system bandwidth...&#10;Supervised team of junior...">${desc}</textarea>
+      <textarea class="form-input input-exp-desc" style="min-height: 90px;" placeholder="Optimized system bandwidth...&#10;Supervised team of junior..."></textarea>
     </div>
   `;
+  
+  // Set values programmatically to avoid quote breaks & HTML injection
+  card.querySelector('.input-exp-role').value = role;
+  card.querySelector('.input-exp-company').value = company;
+  card.querySelector('.input-exp-dates').value = dates;
+  card.querySelector('.input-exp-location').value = location;
+  card.querySelector('.input-exp-desc').value = desc;
   
   // Attach change listeners to live preview
   card.querySelectorAll('.form-input').forEach(input => {
@@ -284,24 +291,30 @@ function addProjectCard(data = null) {
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Project Title</label>
-        <input type="text" class="form-input input-proj-title" value="${title}" placeholder="e.g. Smart Grid System">
+        <input type="text" class="form-input input-proj-title" placeholder="e.g. Smart Grid System">
       </div>
       <div class="form-group">
         <label class="form-label">Technologies / Tools Used</label>
-        <input type="text" class="form-input input-proj-tech" value="${technologies}" placeholder="e.g. MATLAB, SolidWorks">
+        <input type="text" class="form-input input-proj-tech" placeholder="e.g. MATLAB, SolidWorks">
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Project Details / Link</label>
       <div class="form-row">
-        <input type="text" class="form-input input-proj-link" value="${link}" placeholder="e.g. github.com/username/project">
+        <input type="text" class="form-input input-proj-link" placeholder="e.g. github.com/username/project">
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Short Description</label>
-      <textarea class="form-input input-proj-desc" style="min-height: 70px;" placeholder="Describe what you built and the core objectives reached...">${description}</textarea>
+      <textarea class="form-input input-proj-desc" style="min-height: 70px;" placeholder="Describe what you built and the core objectives reached..."></textarea>
     </div>
   `;
+  
+  // Set values programmatically to avoid quote breaks & HTML injection
+  card.querySelector('.input-proj-title').value = title;
+  card.querySelector('.input-proj-tech').value = technologies;
+  card.querySelector('.input-proj-link').value = link;
+  card.querySelector('.input-proj-desc').value = description;
   
   card.querySelectorAll('.form-input').forEach(input => {
     input.addEventListener('input', syncFormToPreview);
@@ -331,28 +344,35 @@ function addEducationCard(data = null) {
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Degree & Specialization</label>
-        <input type="text" class="form-input input-edu-degree" value="${degree}" placeholder="e.g. B.Tech in CSE">
+        <input type="text" class="form-input input-edu-degree" placeholder="e.g. B.Tech in CSE">
       </div>
       <div class="form-group">
         <label class="form-label">University / Institution</label>
-        <input type="text" class="form-input input-edu-institution" value="${institution}" placeholder="e.g. VIT University">
+        <input type="text" class="form-input input-edu-institution" placeholder="e.g. VIT University">
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Completion Year / Dates</label>
-        <input type="text" class="form-input input-edu-dates" value="${dates}" placeholder="e.g. 2022 - 2026">
+        <input type="text" class="form-input input-edu-dates" placeholder="e.g. 2022 - 2026">
       </div>
       <div class="form-group">
         <label class="form-label">Location</label>
-        <input type="text" class="form-input input-edu-location" value="${location}" placeholder="e.g. Vellore, India">
+        <input type="text" class="form-input input-edu-location" placeholder="e.g. Vellore, India">
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Grade / CGPA</label>
-      <input type="text" class="form-input input-edu-gpa" value="${gpa}" placeholder="e.g. 9.1/10.0 CGPA">
+      <input type="text" class="form-input input-edu-gpa" placeholder="e.g. 9.1/10.0 CGPA">
     </div>
   `;
+  
+  // Set values programmatically to avoid quote breaks & HTML injection
+  card.querySelector('.input-edu-degree').value = degree;
+  card.querySelector('.input-edu-institution').value = institution;
+  card.querySelector('.input-edu-dates').value = dates;
+  card.querySelector('.input-edu-location').value = location;
+  card.querySelector('.input-edu-gpa').value = gpa;
   
   card.querySelectorAll('.form-input').forEach(input => {
     input.addEventListener('input', syncFormToPreview);
@@ -376,9 +396,12 @@ function addCertificationCard(text = '') {
   card.style.gap = '12px';
   
   card.innerHTML = `
-    <input type="text" class="form-input input-cert-text" value="${text}" placeholder="e.g. AWS Solutions Architect Associate" style="flex: 1;">
+    <input type="text" class="form-input input-cert-text" placeholder="e.g. AWS Solutions Architect Associate" style="flex: 1;">
     <button type="button" class="btn-remove-item" style="position: static; margin-left: auto;">Remove</button>
   `;
+  
+  // Set value programmatically to avoid quote breaks & HTML injection
+  card.querySelector('.input-cert-text').value = text;
   
   card.querySelector('.form-input').addEventListener('input', syncFormToPreview);
   
@@ -539,7 +562,17 @@ function loadSavedResume() {
     const template = TEMPLATE_STYLES[state.selectedTemplateId];
     if (template) {
       const renderedHTML = template.render(savedState.formData);
-      document.getElementById('resume-print-area').innerHTML = renderedHTML;
+      const paper = document.getElementById('resume-print-area');
+      paper.innerHTML = renderedHTML;
+      if (state.selectedTemplateId === 'sidebar') {
+        paper.classList.add('sidebar-layout');
+      } else {
+        paper.classList.remove('sidebar-layout');
+      }
+      
+      // Compress and scale dynamically on load
+      autoFitToSinglePage();
+      adjustPreviewScale();
     }
     
     return true;
@@ -652,14 +685,30 @@ function syncFormToPreview() {
   const template = TEMPLATE_STYLES[state.selectedTemplateId];
   if (template) {
     const renderedHTML = template.render(currentData);
-    document.getElementById('resume-print-area').innerHTML = renderedHTML;
+    const paper = document.getElementById('resume-print-area');
+    paper.innerHTML = renderedHTML;
+    
+    // Toggle sidebar layout padding overrides
+    if (state.selectedTemplateId === 'sidebar') {
+      paper.classList.add('sidebar-layout');
+    } else {
+      paper.classList.remove('sidebar-layout');
+    }
   }
 
   // Trigger LocalStorage Auto-Save
   autoSaveResume();
 
+  // Run dynamic single-page auto-fit convergence engine
+  autoFitToSinglePage();
+
   // Adjust preview scaling dynamically if on mobile
   adjustPreviewScale();
+
+  // Regenerate summary suggestions reactively if on the Summary step
+  if (state.currentStep === 2) {
+    generateSummarySuggestions();
+  }
 }
 
 /* ==========================================================================
@@ -711,6 +760,11 @@ function showStep(stepNum) {
     
     // Smooth scroll top on form container
     document.querySelector('.form-panel').scrollTop = 0;
+    
+    // Generate dynamic summary suggestions when step 2 is active
+    if (stepNum === 2) {
+      generateSummarySuggestions();
+    }
   }
   
   // Update Navigation Controls Visibility
@@ -803,28 +857,133 @@ function adjustPreviewScale() {
   
   if (!wrapper || !paper) return;
   
-  // Apply changes ONLY when opened in mobile/tablet screens (width <= 1024px)
-  if (window.innerWidth <= 1024) {
-    const wrapperWidth = wrapper.clientWidth;
-    const paperWidth = 794; // 210mm in pixels at 96 dpi is 793.7px
+  const wrapperWidth = wrapper.clientWidth;
+  const paperWidth = 794; // 210mm in pixels at 96 dpi is 793.7px
+  
+  // Apply dynamic scaling if wrapper is smaller than the paper width
+  if (wrapperWidth > 0 && wrapperWidth < paperWidth) {
+    const scale = wrapperWidth / paperWidth;
     
-    // If the preview panel is active/visible, calculate scale
-    if (wrapperWidth > 0) {
-      const scale = wrapperWidth / paperWidth;
-      
-      // Apply exact fluid scale
-      paper.style.transform = `scale(${scale})`;
-      paper.style.transformOrigin = 'top center';
-      
-      // Update parent wrapper height so scroll bars and containers match exactly
-      const paperHeight = paper.scrollHeight || 1122; // 297mm standard height fallback
-      wrapper.style.height = `${paperHeight * scale}px`;
-    }
+    // Apply exact fluid scale
+    paper.style.transform = `scale(${scale})`;
+    paper.style.transformOrigin = 'top center';
+    
+    // Update parent wrapper height so scroll bars and containers match exactly
+    const paperHeight = paper.scrollHeight || 1122; // 297mm standard height fallback
+    wrapper.style.height = `${paperHeight * scale}px`;
   } else {
-    // Completely clear dynamic mobile changes when on a laptop screen (desktop width > 1024px)
+    // Clear dynamic changes when wrapper has full space
     paper.style.transform = '';
     paper.style.transformOrigin = '';
     wrapper.style.height = '';
+  }
+}
+
+/* ==========================================================================
+   7D. DYNAMIC SUMMARY GENERATOR
+   ========================================================================== */
+function generateSummarySuggestions() {
+  const titleInput = document.getElementById('input-title');
+  const skillsInput = document.getElementById('input-skills');
+  const summaryInput = document.getElementById('input-summary');
+  
+  if (!titleInput || !skillsInput || !summaryInput) return;
+  
+  const title = titleInput.value.trim() || 'Professional';
+  const skillsText = skillsInput.value.trim();
+  const skills = skillsText ? skillsText.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+  
+  const panel = document.getElementById('summary-suggestions-panel');
+  const list = document.getElementById('summary-suggestions-list');
+  
+  if (!panel || !list) return;
+  
+  // Show suggestions panel
+  panel.style.display = 'block';
+  
+  // Define variables for phrase compilation
+  const techSkills = skills.length > 0 ? skills : ['industry standard frameworks', 'modern architectures', 'industry methodologies'];
+  const keyTech = techSkills.slice(0, 3).join(', ');
+  const secondaryTech = techSkills.slice(3, 6).join(', ') || techSkills[0];
+  const primarySkill = techSkills[0] || 'innovative problem solving';
+  
+  // Suggestion Option 1: Action & Business Results Oriented
+  const var1 = `Result-oriented ${title} with a proven record of driving operational efficiency and high-fidelity project execution. Expert in leveraging ${keyTech} to optimize system throughput, minimize operational scrap, and streamline deployment workflows. Collaborative team player skilled at translating cross-functional business requirements into secure, high-impact technical systems.`;
+  
+  // Suggestion Option 2: Deep Technical & Tool Focused
+  const var2 = `Highly analytical ${title} specializing in advanced systems development, automated data workflows, and structured modeling frameworks. Proficient in a robust engineering toolset including ${skills.length > 0 ? skills.slice(0, 5).join(', ') : keyTech}, with hands-on credentials applying modern engineering design standards. Focused on deploying clean, modular architectures that guarantee long-term stability.`;
+  
+  // Suggestion Option 3: Modern, Growth & Collaborative
+  const var3 = `Adaptable and growth-minded ${title} with deep expertise across ${primarySkill} and modern engineering methodologies. Passionate about continuous professional development, agile project delivery, and implementing scalable solutions in collaborative environments. Adept at leveraging ${secondaryTech} to design user-focused features and spearhead technical innovation.`;
+  
+  const suggestions = [var1, var2, var3];
+  
+  // Render suggestions
+  list.innerHTML = '';
+  suggestions.forEach((text) => {
+    const card = document.createElement('div');
+    card.className = 'suggestion-card';
+    card.textContent = text;
+    
+    // Highlight if selected
+    if (summaryInput.value === text) {
+      card.classList.add('selected');
+    }
+    
+    // Select dynamic option on click
+    card.addEventListener('click', () => {
+      list.querySelectorAll('.suggestion-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      
+      summaryInput.value = text;
+      syncFormToPreview();
+    });
+    
+    list.appendChild(card);
+  });
+}
+
+/* ==========================================================================
+   7E. DYNAMIC SINGLE-PAGE AUTO-FIT ENGINE
+   ========================================================================== */
+function autoFitToSinglePage() {
+  const paper = document.getElementById('resume-print-area');
+  const badge = document.getElementById('autofit-badge');
+  
+  if (!paper) return;
+  
+  // Clear any existing compression classes first
+  paper.classList.remove('compress-1', 'compress-2', 'compress-3', 'compress-4');
+  if (badge) badge.style.display = 'none';
+  
+  // A4 Standard Heights check (297mm converts to 1122.5px at standard 96dpi browser rendering)
+  const a4MaxHeight = 1122;
+  
+  // Real-time incremental compression convergence loop
+  if (paper.scrollHeight > a4MaxHeight) {
+    paper.classList.add('compress-1');
+    if (badge) {
+      badge.style.display = 'inline-block';
+      badge.textContent = '🌿 Auto-Fit Level 1';
+    }
+    
+    if (paper.scrollHeight > a4MaxHeight) {
+      paper.classList.remove('compress-1');
+      paper.classList.add('compress-2');
+      if (badge) badge.textContent = '🌿 Auto-Fit Level 2';
+      
+      if (paper.scrollHeight > a4MaxHeight) {
+        paper.classList.remove('compress-2');
+        paper.classList.add('compress-3');
+        if (badge) badge.textContent = '🌿 Auto-Fit Level 3';
+        
+        if (paper.scrollHeight > a4MaxHeight) {
+          paper.classList.remove('compress-3');
+          paper.classList.add('compress-4');
+          if (badge) badge.textContent = '🌿 Max Auto-Fit';
+        }
+      }
+    }
   }
 }
 
@@ -885,6 +1044,26 @@ function attachEvents() {
   // Modal Actions
   btnModalClose.addEventListener('click', closePrintModal);
   btnModalConfirm.addEventListener('click', executeSystemPrint);
+
+  // Regenerate Summary suggestions manually on Refresh click
+  const btnRegenerate = document.getElementById('btn-regenerate-suggestions');
+  if (btnRegenerate) {
+    btnRegenerate.addEventListener('click', generateSummarySuggestions);
+  }
+  
+  // Close modal when clicking outside of modal card (on the background overlay)
+  printModal.addEventListener('click', (e) => {
+    if (e.target === printModal) {
+      closePrintModal();
+    }
+  });
+
+  // Close modal when pressing Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && printModal.style.display === 'flex') {
+      closePrintModal();
+    }
+  });
 
   // Layout inline switcher dropdown select listener
   const selectLayoutInline = document.getElementById('select-layout-inline');
