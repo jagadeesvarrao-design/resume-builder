@@ -983,7 +983,11 @@ textarea.form-input {
     color: #000000 !important;
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
     font-size: 11pt !important;
+    overflow: visible !important;
   }
 
   @page {
@@ -991,7 +995,7 @@ textarea.form-input {
     margin: 15mm !important;
   }
 
-  /* 2. Hide all non-printable elements */
+  /* 2. Hide all non-printable elements with extreme specificity */
   .no-print,
   .app-header,
   .filters-panel,
@@ -999,13 +1003,20 @@ textarea.form-input {
   .form-panel,
   .preview-bar,
   .modal-overlay,
+  .mobile-tabs,
   button,
   .btn-filter,
   .btn-select,
   .selection-screen,
   .data-actions,
-  .quick-layout-switch {
+  .quick-layout-switch,
+  #print-modal {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
   }
 
   /* 3. Re-structure page wrapper specifically for the print container */
@@ -1013,28 +1024,46 @@ textarea.form-input {
     padding: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
 
   .builder-workspace {
     display: block !important;
     grid-template-columns: none !important;
     gap: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
 
+  /* Specificity override to ensure the preview panel is ALWAYS displayed */
+  .builder-workspace .preview-panel,
   .preview-panel {
-    position: static !important;
     display: block !important;
+    visibility: visible !important;
     width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .resume-paper-wrapper {
+    display: block !important;
+    visibility: visible !important;
     overflow: visible !important;
     width: 100% !important;
-    height: auto !important;
+    height: auto !important; /* Overrides inline pixel height from JS scaling */
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* 4. Format the A4 / US Letter paper exactly with no padding or margins */
   .resume-paper {
+    display: block !important;
+    visibility: visible !important;
     width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
@@ -1045,12 +1074,17 @@ textarea.form-input {
     border: none !important;
     color: #000000 !important;
     background: #ffffff !important;
+    
+    /* Reset any dynamic transform scale and origin set by JS */
+    transform: none !important;
+    transform-origin: initial !important;
   }
 
   /* Force display of tables & background-colors for tags, if any */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    box-shadow: none !important;
   }
 }
 

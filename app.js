@@ -884,7 +884,7 @@ function executeSystemPrint() {
   // the blank/black PDF issue caused by backdrop-filter and synchronous main-thread blocking.
   setTimeout(() => {
     window.print();
-  }, 150);
+  }, 250);
 }
 
 /* ==========================================================================
