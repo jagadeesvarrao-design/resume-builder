@@ -11,7 +11,8 @@ const state = {
   selectedTemplateId: 'software_fresher_minimalist',
   currentStep: 1,
   totalSteps: 7,
-  hasLoadedProfile: false
+  hasLoadedProfile: false,
+  sectionOrder: ['experience', 'projects', 'education', 'certifications']
 };
 
 // DOM References
@@ -524,9 +525,15 @@ function autoSaveResume() {
     selectedInd: state.selectedInd,
     selectedTemplateId: state.selectedTemplateId,
     currentStep: state.currentStep,
-    hasLoadedProfile: state.hasLoadedProfile
+    hasLoadedProfile: state.hasLoadedProfile,
+    sectionOrder: state.sectionOrder
   };
   localStorage.setItem('zenresume_state', JSON.stringify(stateToSave));
+
+  // Also save to cloud if logged in
+  if (typeof saveResumeToFirestore === 'function') {
+    saveResumeToFirestore(stateToSave);
+  }
 }
 
 function loadSavedResume() {
@@ -535,6 +542,15 @@ function loadSavedResume() {
   
   try {
     const savedState = JSON.parse(savedStateJson);
+    return hydrateStateFromData(savedState);
+  } catch (err) {
+    console.error('Error loading saved state:', err);
+    return false;
+  }
+}
+
+function hydrateStateFromData(savedState) {
+  try {
     if (!savedState || !savedState.formData) return false;
     
     // Restore state variables
@@ -554,13 +570,23 @@ function loadSavedResume() {
     
     state.currentStep = savedState.currentStep || 1;
     state.hasLoadedProfile = savedState.hasLoadedProfile !== undefined ? savedState.hasLoadedProfile : true;
+    state.sectionOrder = savedState.sectionOrder || ['experience', 'projects', 'education', 'certifications'];
+    
+    // Sync Sortable List visually with the loaded order
+    const list = document.getElementById('reorder-list');
+    if (list) {
+      state.sectionOrder.forEach(id => {
+        const li = list.querySelector(`[data-id="${id}"]`);
+        if (li) list.appendChild(li); // move to bottom, reordering the list
+      });
+    }
     
     // Set UI filters active state
-    expFilters.querySelector('.active').classList.remove('active');
+    if (expFilters.querySelector('.active')) expFilters.querySelector('.active').classList.remove('active');
     const expBtn = expFilters.querySelector(`[data-exp="${state.selectedExp}"]`);
     if (expBtn) expBtn.classList.add('active');
     
-    industryFilters.querySelector('.active').classList.remove('active');
+    if (industryFilters.querySelector('.active')) industryFilters.querySelector('.active').classList.remove('active');
     const indBtn = industryFilters.querySelector(`[data-ind="${state.selectedInd}"]`);
     if (indBtn) indBtn.classList.add('active');
     
@@ -579,7 +605,7 @@ function loadSavedResume() {
     if (mobileWorkspaceTabs) {
       mobileWorkspaceTabs.style.display = 'flex';
     }
-    setMobileTab('edit');
+    if (typeof setMobileTab === 'function') setMobileTab('edit');
     
     showStep(state.currentStep);
     updateProgressDots();
@@ -597,13 +623,13 @@ function loadSavedResume() {
       }
       
       // Compress and scale dynamically on load
-      autoFitToSinglePage();
-      adjustPreviewScale();
+      if (typeof autoFitToSinglePage === 'function') autoFitToSinglePage();
+      if (typeof adjustPreviewScale === 'function') adjustPreviewScale();
     }
     
     return true;
   } catch (err) {
-    console.error('Error loading saved state:', err);
+    console.error('Error hydrating state:', err);
     return false;
   }
 }
@@ -720,9 +746,34 @@ function syncFormToPreview() {
   // Retrieve selected template rendering layout
   const template = TEMPLATE_STYLES[state.selectedTemplateId];
   if (template) {
-    const renderedHTML = template.render(currentData);
+    const rawHTML = template.render(currentData);
     const paper = document.getElementById('resume-print-area');
-    paper.innerHTML = renderedHTML;
+    
+    // Create temporary wrapper to parse and reorder dynamic sections
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = rawHTML;
+    
+    const sectionMap = {};
+    const sections = tempDiv.querySelectorAll('[data-section]');
+    
+    sections.forEach(sec => {
+      const sectionName = sec.getAttribute('data-section');
+      if (['experience', 'projects', 'education', 'certifications'].includes(sectionName)) {
+        sectionMap[sectionName] = sec;
+        sec.parentNode.removeChild(sec);
+      }
+    });
+    
+    // Re-append in user-defined order
+    if (state.sectionOrder) {
+      state.sectionOrder.forEach(secName => {
+        if (sectionMap[secName]) {
+          tempDiv.appendChild(sectionMap[secName]);
+        }
+      });
+    }
+    
+    paper.innerHTML = tempDiv.innerHTML;
     
     // Toggle sidebar layout padding overrides
     if (state.selectedTemplateId === 'sidebar') {
@@ -865,9 +916,22 @@ function handleWizardPrev() {
 }
 
 /* ==========================================================================
-   7. PRINT DIALOG & PDF EXPORT
+   7. PRINT DIALOG, AI UPGRADE, & PDF EXPORT
    ========================================================================== */
 function openPrintModal() {
+  const step1 = document.getElementById('ai-upgrade-step-1');
+  const step2 = document.getElementById('ai-upgrade-step-2');
+  const btnStep1 = document.getElementById('ai-buttons-step-1');
+  const btnStep2 = document.getElementById('ai-buttons-step-2');
+  
+  if (step1) step1.style.display = 'block';
+  if (btnStep1) btnStep1.style.display = 'flex';
+  if (step2) step2.style.display = 'none';
+  if (btnStep2) btnStep2.style.display = 'none';
+  
+  const jdInput = document.getElementById('input-job-description');
+  if (jdInput) jdInput.value = '';
+  
   printModal.style.display = 'flex';
 }
 
@@ -876,15 +940,45 @@ function closePrintModal() {
 }
 
 function executeSystemPrint() {
-  // Close the instructions modal overlay
   closePrintModal();
   
-  // Give the browser a brief moment to update the DOM, close the modal completely,
-  // and paint the page cleanly before opening the native print dialog. This fixes
-  // the blank/black PDF issue caused by backdrop-filter and synchronous main-thread blocking.
-  setTimeout(() => {
-    window.print();
-  }, 250);
+  const element = document.getElementById('resume-print-area');
+  
+  // Save original transform to restore later
+  const originalTransform = element.style.transform;
+  const originalOrigin = element.style.transformOrigin;
+  
+  // Remove scaling so PDF renders at full 1:1 resolution
+  element.style.transform = 'none';
+  element.style.transformOrigin = 'unset';
+
+  // Get user's name for the filename
+  const userName = document.getElementById('input-name').value.trim() || 'Professional';
+  const fileName = `ZenResume_${userName.replace(/\s+/g, '_')}.pdf`;
+
+  const opt = {
+    margin:       0,
+    filename:     fileName,
+    image:        { type: 'jpeg', quality: 1.0 },
+    html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+  
+  const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
+  if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating PDF...';
+
+  html2pdf().set(opt).from(element).save().then(() => {
+    // Restore original transform for the live preview
+    element.style.transform = originalTransform;
+    element.style.transformOrigin = originalOrigin;
+    if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
+  }).catch(err => {
+    console.error("PDF Generation failed", err);
+    element.style.transform = originalTransform;
+    element.style.transformOrigin = originalOrigin;
+    if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
+    alert("Failed to generate PDF. Please try again.");
+  });
 }
 
 /* ==========================================================================
@@ -1071,9 +1165,71 @@ function autoFitToSinglePage() {
 }
 
 /* ==========================================================================
+   7F. MAGIC IMPORT HEURISTICS
+   ========================================================================== */
+function parseHeuristics(text) {
+  // Extract Email (basic regex)
+  const emailMatch = text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/);
+  if (emailMatch) document.getElementById('input-email').value = emailMatch[1];
+  
+  // Extract Phone (basic regex for international / US formats)
+  const phoneMatch = text.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
+  if (phoneMatch) document.getElementById('input-phone').value = phoneMatch[0];
+  
+  // Try to grab name from the first few words
+  const lines = text.split('\n').filter(l => l.trim().length > 0);
+  if (lines.length > 0) {
+    const firstLine = lines[0].trim();
+    if (firstLine.length < 40) {
+      document.getElementById('input-name').value = firstLine;
+    }
+  }
+
+  // Dump the rest into Summary so user can copy-paste from it
+  const summaryField = document.getElementById('input-summary');
+  if (summaryField) {
+    summaryField.value = "--- AUTO EXTRACTED RAW TEXT ---\n(Copy & Paste into the fields below)\n\n" + text;
+  }
+  
+  alert("Magic Import completed! Basic contact info was auto-filled.\n\nThe rest of the extracted text has been placed in your Summary section so you can easily copy and paste it into the correct sections.");
+  syncFormToPreview();
+}
+
+/* ==========================================================================
    8. ATTACH GENERAL EVENT LISTENERS
    ========================================================================== */
 function attachEvents() {
+  
+  // Reorder Layout Modal & SortableJS logic
+  const reorderModal = document.getElementById('reorder-modal');
+  const btnReorderLayout = document.getElementById('btn-reorder-layout');
+  const btnCloseReorder = document.getElementById('btn-close-reorder');
+  const reorderList = document.getElementById('reorder-list');
+  
+  if (btnReorderLayout && reorderModal) {
+    btnReorderLayout.addEventListener('click', () => {
+      reorderModal.style.display = 'flex';
+    });
+    btnCloseReorder.addEventListener('click', () => {
+      reorderModal.style.display = 'none';
+    });
+    
+    if (typeof Sortable !== 'undefined' && reorderList) {
+      new Sortable(reorderList, {
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        onEnd: function () {
+          const newOrder = [];
+          reorderList.querySelectorAll('li').forEach(li => {
+            newOrder.push(li.getAttribute('data-id'));
+          });
+          state.sectionOrder = newOrder;
+          syncFormToPreview();
+        }
+      });
+    }
+  }
+
   // Go back to the Greeting & Catalog screen
   btnBackToTemplates.addEventListener('click', () => {
     builderWorkspace.style.display = 'none';
@@ -1124,9 +1280,118 @@ function attachEvents() {
   // Quick Action download button in Live Preview
   btnTriggerDownload.addEventListener('click', openPrintModal);
   
-  // Modal Actions
-  btnModalClose.addEventListener('click', closePrintModal);
-  btnModalConfirm.addEventListener('click', executeSystemPrint);
+  // AI Upgrade & Modal Actions
+  const btnModalClose = document.getElementById('btn-modal-close');
+  if (btnModalClose) btnModalClose.addEventListener('click', closePrintModal);
+  
+  const btnSkipAi = document.getElementById('btn-skip-ai');
+  if (btnSkipAi) btnSkipAi.addEventListener('click', executeSystemPrint);
+  
+  const btnYesAi = document.getElementById('btn-yes-ai');
+  const btnBackAi = document.getElementById('btn-back-ai');
+  const btnGenerateAi = document.getElementById('btn-generate-ai');
+  
+  if (btnYesAi) {
+    btnYesAi.addEventListener('click', () => {
+      document.getElementById('ai-upgrade-step-1').style.display = 'none';
+      document.getElementById('ai-buttons-step-1').style.display = 'none';
+      document.getElementById('ai-upgrade-step-2').style.display = 'block';
+      document.getElementById('ai-buttons-step-2').style.display = 'flex';
+    });
+  }
+  
+  if (btnBackAi) {
+    btnBackAi.addEventListener('click', openPrintModal);
+  }
+  
+  if (btnGenerateAi) {
+    btnGenerateAi.addEventListener('click', async () => {
+      const jd = document.getElementById('input-job-description').value.trim();
+      if (!jd) {
+        alert("Please paste a job description first.");
+        return;
+      }
+      
+      let apiKey = localStorage.getItem('GEMINI_API_KEY');
+      if (!apiKey) {
+        apiKey = prompt("To tailor your resume using AI, please enter your Gemini API Key:");
+        if (!apiKey) {
+          alert("Gemini API key is required to tailor the resume.");
+          return;
+        }
+        localStorage.setItem('GEMINI_API_KEY', apiKey.trim());
+      }
+      
+      const originalBtnText = btnGenerateAi.textContent;
+      btnGenerateAi.textContent = "Analyzing & Tailoring...";
+      btnGenerateAi.disabled = true;
+      
+      try {
+        const currentSummary = document.getElementById('input-summary').value;
+        const currentSkills = document.getElementById('input-skills').value;
+        
+        const promptText = `
+        You are an expert resume writer. I will give you a candidate's current Summary and Skills, and a Job Description.
+        Rewrite the Summary and Skills to perfectly align with the Job Description keywords and tone, while staying truthful to the original.
+        
+        Original Summary:
+        ${currentSummary}
+        
+        Original Skills:
+        ${currentSkills}
+        
+        Job Description:
+        ${jd}
+        
+        Respond ONLY with a valid JSON object in this exact format, with no markdown code blocks or extra text:
+        {
+          "summary": "new summary here...",
+          "skills": "Skill 1, Skill 2, Skill 3..."
+        }
+        `;
+        
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }]
+          })
+        });
+        
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error.message);
+        }
+        
+        const rawResponse = data.candidates[0].content.parts[0].text;
+        const jsonString = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+        const result = JSON.parse(jsonString);
+        
+        if (result.summary) document.getElementById('input-summary').value = result.summary;
+        if (result.skills) document.getElementById('input-skills').value = result.skills;
+        
+        syncFormToPreview();
+        
+        btnGenerateAi.textContent = "Done! Downloading...";
+        
+        setTimeout(() => {
+          executeSystemPrint();
+          btnGenerateAi.textContent = originalBtnText;
+          btnGenerateAi.disabled = false;
+        }, 800);
+        
+      } catch (err) {
+        console.error("AI Error:", err);
+        alert("Error tailoring resume: " + err.message + "\n\nPlease check if your API key is valid.");
+        btnGenerateAi.textContent = originalBtnText;
+        btnGenerateAi.disabled = false;
+        // Optionally allow them to reset the key if it failed
+        if (err.message.includes('API_KEY_INVALID')) {
+           localStorage.removeItem('GEMINI_API_KEY');
+        }
+      }
+    });
+  }
 
   // Regenerate Summary suggestions manually on Refresh click
   const btnRegenerate = document.getElementById('btn-regenerate-suggestions');
@@ -1162,6 +1427,59 @@ function attachEvents() {
   const btnImportJson = document.getElementById('btn-import-json');
   const inputImportFile = document.getElementById('input-import-file');
   const btnResetDefaults = document.getElementById('btn-reset-defaults');
+
+  // Magic Import (PDF)
+  const btnMagicImport = document.getElementById('btn-magic-import');
+  const inputMagicPdf = document.getElementById('input-magic-pdf');
+
+  if (btnMagicImport && inputMagicPdf) {
+    btnMagicImport.addEventListener('click', () => {
+      inputMagicPdf.click();
+    });
+    
+    inputMagicPdf.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.type !== 'application/pdf') {
+        alert("Please select a PDF file.");
+        return;
+      }
+
+      const originalHTML = btnMagicImport.innerHTML;
+      btnMagicImport.innerHTML = "Importing...";
+      btnMagicImport.disabled = true;
+
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        
+        let fullText = "";
+        
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          // Extract text items, separated by spaces
+          const pageText = textContent.items.map(item => item.str).join(" ");
+          fullText += pageText + "\n";
+        }
+        
+        parseHeuristics(fullText);
+        
+      } catch (err) {
+        console.error("PDF Parsing Error:", err);
+        alert("Could not read this PDF file. It might be an image-based PDF without selectable text.");
+      } finally {
+        btnMagicImport.innerHTML = originalHTML;
+        btnMagicImport.disabled = false;
+        inputMagicPdf.value = ''; // Reset input
+      }
+    });
+  }
 
   if (btnExportJson) {
     btnExportJson.addEventListener('click', exportResumeJSON);

@@ -655,7 +655,7 @@ const RenderHelpers = {
   summary: (data, font, title, accentColor, leftBorder = false) => {
     if (!data.summary) return '';
     return `
-      <div class="resume-section" style="margin-bottom: 16px;">
+      <div class="resume-section" data-section="summary" style="margin-bottom: 16px;">
         <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; ${leftBorder ? 'border-left: 3px solid ' + accentColor + '; padding-left: 8px;' : 'border-bottom: 1px solid ' + accentColor + '; padding-bottom: 3px;'} margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
         <p style="font-family: Arial, sans-serif; font-size: 10.5px; line-height: 1.5; color: #333; margin: 0; text-align: justify;">${data.summary}</p>
       </div>
@@ -683,7 +683,7 @@ const RenderHelpers = {
     }
 
     return `
-      <div class="resume-section" style="margin-bottom: 16px;">
+      <div class="resume-section" data-section="skills" style="margin-bottom: 16px;">
         <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
         ${skillsContent}
       </div>
@@ -693,7 +693,7 @@ const RenderHelpers = {
   experience: (data, font, title, accentColor) => {
     if (!data.experience || data.experience.length === 0) return '';
     let html = `
-      <div class="resume-section" style="margin-bottom: 16px;">
+      <div class="resume-section" data-section="experience" style="margin-bottom: 16px;">
         <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
     `;
     data.experience.forEach(exp => {
@@ -728,7 +728,7 @@ const RenderHelpers = {
   projects: (data, font, title, accentColor, showMonoTech = false) => {
     if (!data.projects || data.projects.length === 0) return '';
     let html = `
-      <div class="resume-section" style="margin-bottom: 16px;">
+      <div class="resume-section" data-section="projects" style="margin-bottom: 16px;">
         <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
     `;
     data.projects.forEach(proj => {
@@ -751,7 +751,7 @@ const RenderHelpers = {
   education: (data, font, title, accentColor) => {
     if (!data.education || data.education.length === 0) return '';
     let html = `
-      <div class="resume-section" style="margin-bottom: 16px;">
+      <div class="resume-section" data-section="education" style="margin-bottom: 16px;">
         <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
     `;
     data.education.forEach(edu => {
@@ -777,7 +777,7 @@ const RenderHelpers = {
   certifications: (data, font, title, accentColor) => {
     if (!data.certifications || data.certifications.length === 0) return '';
     let html = `
-      <div class="resume-section" style="margin-bottom: 0;">
+      <div class="resume-section" data-section="certifications" style="margin-bottom: 0;">
         <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
         <ul style="margin: 0; padding-left: 16px; font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.45;">
     `;
