@@ -21,13 +21,11 @@ let currentUser = null;
 auth.onAuthStateChanged(user => {
   currentUser = user;
   const loginOptions = document.getElementById('login-options');
-  const phonePanel = document.getElementById('phone-login-panel');
   const profileDiv = document.getElementById('user-profile');
   
   if (user) {
     // User is signed in
     if (loginOptions) loginOptions.style.display = 'none';
-    if (phonePanel) phonePanel.style.display = 'none';
     if (profileDiv) {
       profileDiv.style.display = 'flex';
       // Use phone number if display name is missing
@@ -62,98 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       auth.signOut();
-    });
-  }
-
-  // --- PHONE AUTHENTICATION LOGIC ---
-  const phonePanel = document.getElementById('phone-login-panel');
-  const loginOptions = document.getElementById('login-options');
-  const btnShowPhone = document.getElementById('btn-show-phone');
-  const btnCancelPhone = document.getElementById('btn-cancel-phone');
-  const btnSendCode = document.getElementById('btn-send-code');
-  const btnVerifyCode = document.getElementById('btn-verify-code');
-
-  if (btnShowPhone) {
-    btnShowPhone.addEventListener('click', () => {
-      loginOptions.style.display = 'none';
-      phonePanel.style.display = 'flex';
-      
-      // Initialize recaptcha if it hasn't been initialized yet
-      if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-          'size': 'normal',
-          'callback': (response) => {
-            // reCAPTCHA solved
-          }
-        });
-        window.recaptchaVerifier.render();
-      }
-    });
-  }
-
-  if (btnCancelPhone) {
-    btnCancelPhone.addEventListener('click', () => {
-      phonePanel.style.display = 'none';
-      loginOptions.style.display = 'flex';
-      document.getElementById('phone-input-step').style.display = 'block';
-      document.getElementById('code-input-step').style.display = 'none';
-    });
-  }
-
-  if (btnSendCode) {
-    btnSendCode.addEventListener('click', () => {
-      const phoneNumber = document.getElementById('input-phone-number').value.trim();
-      if (!phoneNumber) {
-        alert("Please enter a phone number with country code (e.g. +1).");
-        return;
-      }
-      
-      btnSendCode.textContent = "Sending...";
-      btnSendCode.disabled = true;
-      
-      auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
-        .then((confirmationResult) => {
-          // SMS sent
-          window.confirmationResult = confirmationResult;
-          document.getElementById('phone-input-step').style.display = 'none';
-          document.getElementById('code-input-step').style.display = 'block';
-          btnSendCode.textContent = "Send SMS Code";
-          btnSendCode.disabled = false;
-        }).catch((error) => {
-          console.error("SMS Error:", error);
-          alert("Error sending SMS: " + error.message);
-          btnSendCode.textContent = "Send SMS Code";
-          btnSendCode.disabled = false;
-          
-          // Reset recaptcha on failure
-          if (window.recaptchaVerifier) {
-            window.recaptchaVerifier.render().then(function(widgetId) {
-              grecaptcha.reset(widgetId);
-            });
-          }
-        });
-    });
-  }
-
-  if (btnVerifyCode) {
-    btnVerifyCode.addEventListener('click', () => {
-      const code = document.getElementById('input-verification-code').value.trim();
-      if (!code || !window.confirmationResult) return;
-      
-      btnVerifyCode.textContent = "Verifying...";
-      btnVerifyCode.disabled = true;
-      
-      window.confirmationResult.confirm(code).then((result) => {
-        // User signed in successfully
-        phonePanel.style.display = 'none';
-        btnVerifyCode.textContent = "Verify & Login";
-        btnVerifyCode.disabled = false;
-      }).catch((error) => {
-        console.error("Verification Error:", error);
-        alert("Invalid code: " + error.message);
-        btnVerifyCode.textContent = "Verify & Login";
-        btnVerifyCode.disabled = false;
-      });
     });
   }
 });
