@@ -951,6 +951,12 @@ function executeSystemPrint() {
   // Remove scaling so PDF renders at full 1:1 resolution
   element.style.transform = 'none';
   element.style.transformOrigin = 'unset';
+  
+  // Force strict A4 proportions during print to prevent blank second pages
+  const originalHeight = element.style.height;
+  const originalOverflow = element.style.overflow;
+  element.style.height = '297mm';
+  element.style.overflow = 'hidden';
 
   // Get user's name for the filename
   const userName = document.getElementById('input-name').value.trim() || 'Professional';
@@ -961,7 +967,8 @@ function executeSystemPrint() {
     filename:     fileName,
     image:        { type: 'jpeg', quality: 1.0 },
     html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak:    { mode: ['avoid-all'] }
   };
   
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
@@ -971,11 +978,15 @@ function executeSystemPrint() {
     // Restore original transform for the live preview
     element.style.transform = originalTransform;
     element.style.transformOrigin = originalOrigin;
+    element.style.height = originalHeight;
+    element.style.overflow = originalOverflow;
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
   }).catch(err => {
     console.error("PDF Generation failed", err);
     element.style.transform = originalTransform;
     element.style.transformOrigin = originalOrigin;
+    element.style.height = originalHeight;
+    element.style.overflow = originalOverflow;
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     alert("Failed to generate PDF. Please try again.");
   });

@@ -324,33 +324,36 @@
   </div>
 
   <!-- AI Upgrade / Download Modal Overlay -->
-  <div class="modal-overlay no-print" id="print-modal">
-    <div class="modal-card">
-      <h3 style="margin-top: 0; color: #2c3e50;">Tailor Your Resume?</h3>
+  <div class="modal-overlay no-print" id="print-modal" style="backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.75);">
+    <div class="modal-card" style="background: linear-gradient(145deg, #ffffff, #f8f9fa); border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.4); padding: 32px; max-width: 440px; transform: scale(1); transition: all 0.3s ease;">
+      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <div style="background: linear-gradient(135deg, #8b5cf6, #d946ef); padding: 12px; border-radius: 16px; box-shadow: 0 8px 16px rgba(217, 70, 239, 0.25);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
+        </div>
+      </div>
+      <h3 style="margin-top: 0; color: #1e293b; font-size: 24px; font-weight: 800; text-align: center; letter-spacing: -0.5px;">Tailor Your Resume?</h3>
         
-        <div class="modal-instruction" id="ai-upgrade-step-1">
-          <p>Would you like our AI to automatically tailor your <strong>Summary</strong> and <strong>Skills</strong> to match a specific Job Description before downloading?</p>
+        <div class="modal-instruction" id="ai-upgrade-step-1" style="text-align: center;">
+          <p style="color: #64748b; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">Would you like our AI to automatically tailor your <strong style="color: #334155;">Summary</strong> and <strong style="color: #334155;">Skills</strong> to perfectly match a specific Job Description before downloading?</p>
         </div>
 
         <div class="modal-instruction" id="ai-upgrade-step-2" style="display: none;">
-          <p>Paste the Job Description below:</p>
-          <textarea id="input-job-description" rows="5" style="width: 100%; border: 1px solid #ddd; border-radius: 4px; padding: 8px; font-family: inherit; font-size: 13px; margin-top: 8px;" placeholder="Paste the job description here..."></textarea>
+          <p style="color: #475569; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Paste the Job Description below:</p>
+          <textarea id="input-job-description" rows="6" style="width: 100%; border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px; font-family: inherit; font-size: 14px; color: #334155; transition: border-color 0.2s ease; resize: none; box-sizing: border-box;" placeholder="Paste the job description here to let Gemini 2.5 work its magic..."></textarea>
         </div>
 
-        <div class="modal-buttons" id="ai-buttons-step-1">
-          <button class="btn-modal btn-cancel" id="btn-modal-close">Cancel</button>
-          <div style="display: flex; gap: 10px;">
-            <button class="btn-modal btn-confirm" id="btn-skip-ai" style="background: #95a5a6; border-bottom: 3px solid #7f8c8d;">No, Just Download</button>
-            <button class="btn-modal btn-confirm" id="btn-yes-ai" style="background: #8e44ad; border-bottom: 3px solid #732d91;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
-              Yes, Tailor it
-            </button>
-          </div>
+        <div class="modal-buttons" id="ai-buttons-step-1" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+          <button class="btn-modal btn-confirm" id="btn-yes-ai" style="background: linear-gradient(135deg, #8b5cf6, #d946ef); border: none; border-radius: 12px; color: white; padding: 14px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(217, 70, 239, 0.3); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; width: 100%;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: text-bottom; margin-right: 6px;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
+            Yes, Tailor my Resume
+          </button>
+          <button class="btn-modal btn-confirm" id="btn-skip-ai" style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; color: #475569; padding: 14px; font-weight: 600; font-size: 15px; cursor: pointer; width: 100%; transition: background 0.2s ease;">No, Just Download</button>
+          <button class="btn-modal btn-cancel" id="btn-modal-close" style="background: transparent; border: none; color: #94a3b8; font-size: 14px; cursor: pointer; padding: 8px; margin-top: 4px;">Cancel</button>
         </div>
 
-        <div class="modal-buttons" id="ai-buttons-step-2" style="display: none;">
-          <button class="btn-modal btn-cancel" id="btn-back-ai">Back</button>
-          <button class="btn-modal btn-confirm" id="btn-generate-ai" style="background: #8e44ad; border-bottom: 3px solid #732d91;">Tailor & Download</button>
+        <div class="modal-buttons" id="ai-buttons-step-2" style="display: none; flex-direction: column; gap: 12px; margin-top: 24px;">
+          <button class="btn-modal btn-confirm" id="btn-generate-ai" style="background: linear-gradient(135deg, #8b5cf6, #d946ef); border: none; border-radius: 12px; color: white; padding: 14px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(217, 70, 239, 0.3); cursor: pointer; width: 100%;">Tailor & Download</button>
+          <button class="btn-modal btn-cancel" id="btn-back-ai" style="background: transparent; border: 1px solid #e2e8f0; border-radius: 12px; color: #64748b; padding: 12px; font-weight: 600; font-size: 15px; cursor: pointer; width: 100%;">Back</button>
         </div>
       </div>
     </div>
