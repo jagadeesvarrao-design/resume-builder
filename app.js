@@ -951,6 +951,12 @@ function executeSystemPrint() {
   // Remove scaling so PDF renders at full 1:1 resolution
   element.style.transform = 'none';
   element.style.transformOrigin = 'unset';
+
+  // Fix: html2canvas captures window scroll offset as blank space at the top.
+  // We must save the scroll position and scroll to top before capturing.
+  const originalScrollY = window.scrollY;
+  const originalScrollX = window.scrollX;
+  window.scrollTo(0, 0);
   
   // Force strict A4 proportions during print to prevent blank second pages
   const originalHeight = element.style.height;
@@ -966,7 +972,7 @@ function executeSystemPrint() {
     margin:       0,
     filename:     fileName,
     image:        { type: 'jpeg', quality: 1.0 },
-    html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+    html2canvas:  { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
     pagebreak:    { mode: ['avoid-all'] }
   };
@@ -975,11 +981,12 @@ function executeSystemPrint() {
   if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating PDF...';
 
   html2pdf().set(opt).from(element).save().then(() => {
-    // Restore original transform for the live preview
+    // Restore original transform and scroll position for the live preview
     element.style.transform = originalTransform;
     element.style.transformOrigin = originalOrigin;
     element.style.height = originalHeight;
     element.style.overflow = originalOverflow;
+    window.scrollTo(originalScrollX, originalScrollY);
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
   }).catch(err => {
     console.error("PDF Generation failed", err);
@@ -987,6 +994,7 @@ function executeSystemPrint() {
     element.style.transformOrigin = originalOrigin;
     element.style.height = originalHeight;
     element.style.overflow = originalOverflow;
+    window.scrollTo(originalScrollX, originalScrollY);
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     alert("Failed to generate PDF. Please try again.");
   });
