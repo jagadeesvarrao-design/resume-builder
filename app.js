@@ -1138,10 +1138,11 @@ function generateSummarySuggestions() {
     card.addEventListener('click', () => {
       list.querySelectorAll('.suggestion-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
+      const summaryInput = document.getElementById('input-summary');
       summaryInput.value = text;
-      summaryInput.innerHTML = text;
-      summaryInput.dispatchEvent(new Event('input', { bubbles: true }));
+      summaryInput.textContent = text;
       syncFormToPreview();
+      setTimeout(syncFormToPreview, 50);
     });
     
     list.appendChild(card);
