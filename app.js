@@ -406,23 +406,44 @@ function addEducationCard(data = null) {
 }
 
 // --- D. CERTIFICATION CARD ---
-function addCertificationCard(text = '') {
+function addCertificationCard(data = null) {
   const card = document.createElement('div');
   card.className = 'list-item-card certification-item-card';
-  card.style.padding = '12px 18px';
-  card.style.flexDirection = 'row';
-  card.style.alignItems = 'center';
-  card.style.gap = '12px';
+  
+  const name = (typeof data === 'string') ? data : (data ? data.name : '');
+  const issuer = (data && typeof data === 'object') ? data.issuer : '';
+  const date = (data && typeof data === 'object') ? data.date : '';
+  const desc = (data && typeof data === 'object') ? data.desc : '';
   
   card.innerHTML = `
-    <input type="text" class="form-input input-cert-text" placeholder="e.g. AWS Solutions Architect Associate" style="flex: 1;">
-    <button type="button" class="btn-remove-item" style="position: static; margin-left: auto;">Remove</button>
+    <button type="button" class="btn-remove-item">Remove</button>
+    <div class="form-group-row">
+      <div class="form-group" style="flex: 2;">
+        <label class="form-label">Certification Name</label>
+        <input type="text" class="form-input input-cert-name" placeholder="e.g. AWS Solutions Architect">
+      </div>
+      <div class="form-group" style="flex: 1;">
+        <label class="form-label">Issuer</label>
+        <input type="text" class="form-input input-cert-issuer" placeholder="e.g. Amazon Web Services">
+      </div>
+      <div class="form-group" style="flex: 1;">
+        <label class="form-label">Date</label>
+        <input type="text" class="form-input input-cert-date" placeholder="e.g. 2025">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description / ID</label>
+      <input type="text" class="form-input input-cert-desc" placeholder="e.g. Credential ID: 123456">
+    </div>
   `;
   
-  // Set value programmatically to avoid quote breaks & HTML injection
-  card.querySelector('.input-cert-text').value = text;
+  card.querySelector('.input-cert-name').value = name || '';
+  card.querySelector('.input-cert-issuer').value = issuer || '';
+  card.querySelector('.input-cert-date').value = date || '';
+  card.querySelector('.input-cert-desc').value = desc || '';
   
-  card.querySelector('.form-input').addEventListener('input', syncFormToPreview);
+  const inputs = card.querySelectorAll('.form-input');
+  inputs.forEach(input => input.addEventListener('input', syncFormToPreview));
   
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
     card.remove();
@@ -508,9 +529,12 @@ function extractCurrentFormData() {
 
   // Extract dynamic Certifications
   document.querySelectorAll('.certification-item-card').forEach(card => {
-    const text = card.querySelector('.input-cert-text').value.trim();
-    if (text) {
-      currentData.certifications.push(text);
+    const name = card.querySelector('.input-cert-name').value.trim();
+    const issuer = card.querySelector('.input-cert-issuer').value.trim();
+    const date = card.querySelector('.input-cert-date').value.trim();
+    const desc = card.querySelector('.input-cert-desc').value.trim();
+    if (name || issuer || date || desc) {
+      currentData.certifications.push({ name, issuer, date, desc });
     }
   });
 
@@ -1241,7 +1265,9 @@ async function parseHeuristics(text) {
           "gpa": "string"
         }
       ],
-      "certifications": ["string", "string"]
+      "certifications": [
+        { "name": "string", "issuer": "string", "date": "string", "desc": "string" }
+      ]
     }
     
     Raw PDF Text:

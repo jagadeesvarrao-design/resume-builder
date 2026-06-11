@@ -782,7 +782,23 @@ const RenderHelpers = {
         <ul style="margin: 0; padding-left: 16px; font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.45;">
     `;
     data.certifications.forEach(cert => {
-      html += `<li style="margin-bottom: 2px;">${cert}</li>`;
+      if (typeof cert === 'string') {
+        html += `<li style="margin-bottom: 2px;">${cert}</li>`;
+      } else {
+        html += `<li style="margin-bottom: 6px;">`;
+        if (cert.name) html += `<div style="font-weight: bold; color: #111;">${cert.name}</div>`;
+        if (cert.issuer || cert.date) {
+          html += `<div style="font-size: 9.5px; color: ${accentColor}; font-weight: 500; margin-bottom: 2px;">`;
+          if (cert.issuer) html += `${cert.issuer}`;
+          if (cert.issuer && cert.date) html += ` &bull; `;
+          if (cert.date) html += `${cert.date}`;
+          html += `</div>`;
+        }
+        if (cert.desc) {
+          html += `<div style="color: #444; margin-top: 1px;">${cert.desc}</div>`;
+        }
+        html += `</li>`;
+      }
     });
     html += `
         </ul>
@@ -1859,7 +1875,7 @@ const TEMPLATE_STYLES = {
                 <div>
                   <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Safety & PE Accreditations</h3>
                   <ul style="margin:0; padding-left:14px; font-size:10px; color:${textSub}; line-height:1.45;">
-                    ${data.certifications.map(cert => `<li style="margin-bottom:2px;">${cert}</li>`).join('')}
+                    ${data.certifications.map(cert => typeof cert === 'string' ? `<li style="margin-bottom:2px;">${cert}</li>` : `<li style="margin-bottom:6px;">${cert.name ? `<strong>${cert.name}</strong>` : ''}${cert.issuer ? ` <span style="opacity:0.8">(${cert.issuer})</span>` : ''}${cert.desc ? `<br><span style="opacity:0.7">${cert.desc}</span>` : ''}</li>`).join('')}
                   </ul>
                 </div>
               ` : ''}
