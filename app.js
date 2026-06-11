@@ -1138,8 +1138,9 @@ function generateSummarySuggestions() {
     card.addEventListener('click', () => {
       list.querySelectorAll('.suggestion-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
-      
       summaryInput.value = text;
+      summaryInput.innerHTML = text;
+      summaryInput.dispatchEvent(new Event('input', { bubbles: true }));
       syncFormToPreview();
     });
     
