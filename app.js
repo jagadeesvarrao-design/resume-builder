@@ -996,9 +996,14 @@ function executeSystemPrint() {
     margin:       0,
     filename:     fileName,
     image:        { type: 'jpeg', quality: 1.0 },
-    html2canvas:  { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
-    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak:    { mode: ['avoid-all'] }
+    html2canvas:  { 
+      scale: 2, 
+      useCORS: true, 
+      letterRendering: true, 
+      scrollY: 0,
+      height: element.offsetHeight
+    },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
   
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
