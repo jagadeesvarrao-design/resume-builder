@@ -74,23 +74,16 @@ window.addEventListener('DOMContentLoaded', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
       
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      
-      if (isMobile) {
-        // Must be called synchronously to avoid browser security blocking it
-        auth.signInWithRedirect(provider);
-      } else {
-        auth.signInWithPopup(provider).then((result) => {
-          console.log("Logged in via popup", result.user.email);
-        }).catch(error => {
-          console.error("Popup Login Error:", error);
-          if (error.code === 'auth/popup-blocked') {
-            alert("Your browser blocked the Google Login popup. Please allow popups for this site.");
-          } else {
-            alert("Failed to sign in. " + error.message);
-          }
-        });
-      }
+      auth.signInWithPopup(provider).then((result) => {
+        console.log("Logged in via popup", result.user.email);
+      }).catch(error => {
+        console.error("Popup Login Error:", error);
+        if (error.code === 'auth/popup-blocked') {
+          alert("Your browser blocked the Google Login popup. Please allow popups for this site or open in a standard browser like Chrome/Safari.");
+        } else if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
+          alert("Failed to sign in. " + error.message);
+        }
+      });
     });
   }
   

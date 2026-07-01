@@ -1226,10 +1226,10 @@ function autoFitToSinglePage() {
 /* ==========================================================================
    7F. MAGIC IMPORT HEURISTICS
    ========================================================================== */
-async function parseHeuristics(text) {
+async function parseHeuristics(inputData, isPdf = false) {
   const btnMagicImport = document.getElementById('btn-magic-import');
   if (btnMagicImport) {
-    btnMagicImport.innerHTML = "AI Analyzing PDF...";
+    btnMagicImport.innerHTML = "AI Analyzing Resume...";
   }
 
   const k1 = "AQ.Ab8RN6Jqz5Var";
@@ -1239,7 +1239,7 @@ async function parseHeuristics(text) {
   
   try {
     const promptText = `
-    You are an expert resume parser. I will provide raw text extracted from a PDF resume.
+    You are an expert resume parser. I have provided a resume. 
     Extract the information and perfectly map it to this strict JSON schema. If any field is missing, leave it blank or empty array.
     
     JSON Schema to return ONLY (no markdown or code blocks):
@@ -1285,16 +1285,29 @@ async function parseHeuristics(text) {
         { "name": "string", "issuer": "string", "date": "string", "desc": "string" }
       ]
     }
-    
-    Raw PDF Text:
-    ${text}
     `;
+
+    // Construct the payload dynamically depending on if it's raw text or a PDF Base64 string
+    const parts = [{ text: promptText }];
+    
+    if (isPdf) {
+      parts.push({
+        inline_data: {
+          mime_type: "application/pdf",
+          data: inputData
+        }
+      });
+    } else {
+      parts.push({
+        text: `\n\nRaw Resume Text:\n${inputData}`
+      });
+    }
 
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: promptText }] }]
+        contents: [{ parts: parts }]
       })
     });
     
@@ -1574,39 +1587,30 @@ function attachEvents() {
       btnMagicImport.innerHTML = "Importing...";
       btnMagicImport.disabled = true;
 
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        
-        // Remove cross-origin worker definition to force main-thread fallback.
-        // This makes PDF.js 100% reliable on mobile browsers (iOS/Android WebViews) 
-        // which block cross-origin Web Workers.
-        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-        const pdf = await loadingTask.promise;
-        
-        let fullText = "";
-        
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const textContent = await page.getTextContent();
-          // Extract text items, separated by spaces
-          const pageText = textContent.items.map(item => item.str).join(" ");
-          fullText += pageText + "\n";
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        try {
+          // Extract base64 part of the data URL
+          const base64Pdf = reader.result.split(',')[1];
+          await parseHeuristics(base64Pdf, true);
+        } catch (err) {
+          console.error("PDF Parsing Error:", err);
+          alert("Could not process this PDF file. Please ensure it is a valid resume.");
+        } finally {
+          btnMagicImport.innerHTML = originalHTML;
+          btnMagicImport.disabled = false;
+          inputMagicPdf.value = ''; // Reset input
         }
-        
-        if (fullText.trim().length < 20) {
-          throw new Error("Could not extract text from PDF. It may be an image-based scan or secured.");
-        }
-        
-        await parseHeuristics(fullText);
-        
-      } catch (err) {
-        console.error("PDF Parsing Error:", err);
-        alert("Could not read this PDF file. It might be an image-based PDF without selectable text.");
-      } finally {
+      };
+      reader.onerror = () => {
+        alert("Failed to read the file.");
         btnMagicImport.innerHTML = originalHTML;
         btnMagicImport.disabled = false;
-        inputMagicPdf.value = ''; // Reset input
-      }
+        inputMagicPdf.value = '';
+      };
+      
+      // Read file as Data URL to easily get the Base64 encoding
+      reader.readAsDataURL(file);
     });
   }
 
