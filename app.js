@@ -1577,9 +1577,9 @@ function attachEvents() {
       try {
         const arrayBuffer = await file.arrayBuffer();
         
-        // Configure PDF.js worker
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-        
+        // Remove cross-origin worker definition to force main-thread fallback.
+        // This makes PDF.js 100% reliable on mobile browsers (iOS/Android WebViews) 
+        // which block cross-origin Web Workers.
         const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
         const pdf = await loadingTask.promise;
         
@@ -1591,6 +1591,10 @@ function attachEvents() {
           // Extract text items, separated by spaces
           const pageText = textContent.items.map(item => item.str).join(" ");
           fullText += pageText + "\n";
+        }
+        
+        if (fullText.trim().length < 20) {
+          throw new Error("Could not extract text from PDF. It may be an image-based scan or secured.");
         }
         
         await parseHeuristics(fullText);
