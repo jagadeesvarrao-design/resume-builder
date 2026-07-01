@@ -46,6 +46,11 @@
       <!-- SCREEN 1: GREETING & SELECTING TEMPLATES (NO-PRINT) -->
       <section class="selection-screen no-print" id="selection-screen">
         
+        <!-- AdSense Placeholder: Top Leaderboard -->
+        <div id="ad-banner-top" style="width: 100%; max-width: 728px; height: 90px; margin: 0 auto 20px auto; background: rgba(255,255,255,0.4); border: 2px dashed rgba(0,0,0,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-sub); font-size: 14px; font-weight: 500;">
+          [ Google AdSense 728x90 Placeholder ]
+        </div>
+        
         <!-- Interactive Category Filters -->
         <div class="filters-panel">
           
@@ -280,6 +285,10 @@
 
           </form>
 
+          <!-- AdSense Placeholder: Sidebar -->
+          <div id="ad-banner-sidebar" style="width: 100%; max-width: 300px; height: 250px; margin: 30px auto 0 auto; background: rgba(255,255,255,0.4); border: 2px dashed rgba(0,0,0,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-sub); font-size: 14px; font-weight: 500;">
+            [ AdSense 300x250 Placeholder ]
+          </div>
         </div>
 
         <!-- Right Panel: Live Synchronized Preview -->
@@ -421,6 +430,26 @@
       </div>
       
       <button id="btn-close-email-modal" class="btn-select" style="margin-top: 25px; width: 100%; justify-content: center; border: 1px solid var(--border-glass);">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Affiliate Post-Download Modal -->
+  <div id="affiliate-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
+    <div class="modal-content" style="padding: 40px 30px; width: 90%; max-width: 450px; text-align: center; border-top: 4px solid var(--primary-calm);">
+      <div style="font-size: 40px; color: #2ecc71; margin-bottom: 15px;"><i class="fas fa-check-circle"></i></div>
+      <h3 style="margin-top: 0; color: var(--primary-dark); font-weight: 700; font-size: 22px; margin-bottom: 10px;">Resume Downloaded!</h3>
+      <p style="color: var(--text-sub); font-size: 14px; line-height: 1.5; margin-bottom: 25px;">Your ATS-friendly PDF is ready. Before you apply, did you know that candidates with a certified course are <b style="color:var(--text-main);">3x more likely</b> to get hired?</p>
+      
+      <!-- Affiliate Banner Area -->
+      <div style="background: linear-gradient(135deg, #f6f8fb, #eef2f7); padding: 20px; border-radius: 12px; border: 1px solid var(--border-glass); margin-bottom: 20px;">
+        <h4 style="margin: 0 0 10px 0; color: var(--primary-dark); font-size: 16px;">Guaranteed Placement Course</h4>
+        <p style="margin: 0 0 15px 0; font-size: 12px; color: var(--text-sub);">Upskill with our EdTech partner and get guaranteed interviews.</p>
+        <button id="btn-affiliate-link" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);">
+          Claim Exclusive Offer
+        </button>
+      </div>
+      
+      <button id="btn-close-affiliate-modal" style="background: none; border: none; color: #95a5a6; font-size: 13px; cursor: pointer; text-decoration: underline;">No thanks, I'll risk it</button>
     </div>
   </div>
 

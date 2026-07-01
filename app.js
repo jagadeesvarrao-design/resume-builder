@@ -1003,6 +1003,36 @@ function executeSystemPrint() {
     element.style.overflow = originalOverflow;
     window.scrollTo(originalScrollX, originalScrollY);
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
+    
+    // Close the Print/AI Modal if it's open
+    const printModal = document.getElementById('print-modal');
+    if (printModal) {
+      printModal.style.display = 'none';
+      printModal.style.opacity = '0';
+    }
+
+    // Trigger Post-Download Affiliate Modal
+    const affiliateModal = document.getElementById('affiliate-modal');
+    if (affiliateModal) {
+      affiliateModal.style.display = 'flex';
+      
+      const btnCloseAffiliate = document.getElementById('btn-close-affiliate-modal');
+      const btnAffiliateLink = document.getElementById('btn-affiliate-link');
+      
+      if (btnCloseAffiliate) {
+        btnCloseAffiliate.onclick = () => {
+          affiliateModal.style.display = 'none';
+        };
+      }
+      
+      if (btnAffiliateLink) {
+        btnAffiliateLink.onclick = () => {
+          // Replace with real affiliate link later
+          window.open('https://internshala.com', '_blank');
+          affiliateModal.style.display = 'none';
+        };
+      }
+    }
   }).catch(err => {
     console.error("PDF Generation failed", err);
     element.style.transform = originalTransform;
