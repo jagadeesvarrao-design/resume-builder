@@ -12,7 +12,8 @@ const state = {
   currentStep: 1,
   totalSteps: 7,
   hasLoadedProfile: false,
-  sectionOrder: ['experience', 'projects', 'education', 'certifications']
+  sectionOrder: ['experience', 'projects', 'education', 'certifications'],
+  isFitToScreen: false
 };
 
 // DOM References
@@ -1063,17 +1064,25 @@ function adjustPreviewScale() {
   
   const wrapperWidth = wrapper.clientWidth;
   const paperWidth = 794; // 210mm in pixels at 96 dpi is 793.7px
+  const paperHeight = paper.scrollHeight || 1122; // 297mm standard height fallback
   
-  // Apply dynamic scaling if wrapper is smaller than the paper width
-  if (wrapperWidth > 0 && wrapperWidth < paperWidth) {
-    const scale = wrapperWidth / paperWidth;
+  // Apply dynamic scaling if wrapper is smaller than the paper width or if Fit to Screen is active
+  if ((wrapperWidth > 0 && wrapperWidth < paperWidth) || state.isFitToScreen) {
+    let scale = wrapperWidth / paperWidth;
+    
+    if (state.isFitToScreen) {
+      // Calculate scale to fit the entire height of the paper into the viewport, with a small padding
+      const availableHeight = window.innerHeight - 100; // Account for mobile tabs and preview bar
+      const heightScale = availableHeight / paperHeight;
+      // Use the smaller scale so both width and height fit
+      scale = Math.min(scale, heightScale);
+    }
     
     // Apply exact fluid scale
     paper.style.transform = `scale(${scale})`;
     paper.style.transformOrigin = 'top center';
     
     // Update parent wrapper height so scroll bars and containers match exactly
-    const paperHeight = paper.scrollHeight || 1122; // 297mm standard height fallback
     wrapper.style.height = `${paperHeight * scale}px`;
   } else {
     // Clear dynamic changes when wrapper has full space
@@ -1636,6 +1645,16 @@ function attachEvents() {
 
   // Handle window resizing for responsive dynamic fluid preview scaling
   window.addEventListener('resize', adjustPreviewScale);
+
+  // Mobile "Fit to Screen" Zoom Toggle
+  const btnZoomToggle = document.getElementById('btn-zoom-toggle');
+  if (btnZoomToggle) {
+    btnZoomToggle.addEventListener('click', () => {
+      state.isFitToScreen = !state.isFitToScreen;
+      btnZoomToggle.classList.toggle('active', state.isFitToScreen);
+      adjustPreviewScale();
+    });
+  }
 }
 
 /* ==========================================================================

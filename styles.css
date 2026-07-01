@@ -820,6 +820,30 @@ textarea.form-input {
   animation: pulse 1.5s infinite;
 }
 
+.btn-zoom-toggle {
+  display: none; /* Hidden on desktop */
+  background: transparent;
+  border: 1px solid var(--border-glass-strong);
+  color: var(--primary-calm);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.btn-zoom-toggle.active {
+  background: var(--primary-calm);
+  color: var(--white);
+}
+
+@media (max-width: 1024px) {
+  .btn-zoom-toggle {
+    display: flex;
+  }
+}
+
 /* Standard A4 Paper-like layout on Screen */
 .resume-paper-wrapper {
   overflow-x: auto;
