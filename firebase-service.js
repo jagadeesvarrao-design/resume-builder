@@ -17,6 +17,34 @@ const db = firebase.firestore();
 // Global user state
 let currentUser = null;
 
+function updateGreetingBanner(user) {
+  const banner = document.getElementById('greeting-banner');
+  if (!banner) return;
+  
+  const hour = new Date().getHours();
+  let timeOfDay = 'Good morning';
+  if (hour >= 12 && hour < 17) {
+    timeOfDay = 'Good afternoon';
+  } else if (hour >= 17) {
+    timeOfDay = 'Good evening';
+  }
+  
+  let name = 'Professional';
+  if (user) {
+    if (user.displayName) {
+      name = user.displayName;
+    } else if (user.email) {
+      const emailName = user.email.split('@')[0];
+      name = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+    }
+  }
+  
+  banner.textContent = `${timeOfDay}, ${name}`;
+}
+
+// Call initially for the time of day
+updateGreetingBanner(null);
+
 // Handle redirect result for mobile logins robustly
 auth.getRedirectResult().then((result) => {
   if (result && result.user) {
@@ -29,10 +57,16 @@ auth.getRedirectResult().then((result) => {
     if (loginOptions) loginOptions.style.display = 'none';
     if (profileDiv) {
       profileDiv.style.display = 'flex';
-      if (userName) userName.textContent = result.user.displayName || result.user.phoneNumber || 'Professional';
+      let displayName = result.user.displayName || result.user.phoneNumber;
+      if (!displayName && result.user.email) {
+        const emailName = result.user.email.split('@')[0];
+        displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+      }
+      if (userName) userName.textContent = displayName || 'Professional';
       const avatar = document.getElementById('user-avatar');
       if (avatar) avatar.src = result.user.photoURL || 'https://via.placeholder.com/150';
     }
+    updateGreetingBanner(result.user);
     alert("Login Successful! Welcome, " + (result.user.displayName || result.user.email));
   }
 
@@ -50,12 +84,18 @@ auth.onAuthStateChanged(user => {
   const profileDiv = document.getElementById('user-profile');
   const userName = document.getElementById('user-name');
   
+  updateGreetingBanner(user);
+  
   if (user) {
     if (loginOptions) loginOptions.style.display = 'none';
     if (profileDiv) {
       profileDiv.style.display = 'flex';
-      // Use phone number if display name is missing
-      if (userName) userName.textContent = user.displayName || user.phoneNumber || 'Professional';
+      let displayName = user.displayName || user.phoneNumber;
+      if (!displayName && user.email) {
+        const emailName = user.email.split('@')[0];
+        displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+      }
+      if (userName) userName.textContent = displayName || 'Professional';
       const avatar = document.getElementById('user-avatar');
       if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
     }
