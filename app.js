@@ -997,7 +997,7 @@ function executeSystemPrint() {
     filename:     fileName,
     image:        { type: 'jpeg', quality: 1.0 },
     html2canvas:  { 
-      scale: 2, 
+      scale: 4, 
       useCORS: true, 
       letterRendering: true, 
       scrollY: 0,

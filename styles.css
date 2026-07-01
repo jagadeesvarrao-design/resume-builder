@@ -157,11 +157,13 @@ body {
   transition: var(--transition-smooth);
 }
 
-.btn-filter:hover {
-  background: var(--primary-glow);
-  color: var(--primary-calm);
-  border-color: var(--primary-light);
-  transform: translateY(-1px);
+@media (hover: hover) and (pointer: fine) {
+  .btn-filter:hover {
+    background: var(--primary-glow);
+    color: var(--primary-calm);
+    border-color: var(--primary-light);
+    transform: translateY(-1px);
+  }
 }
 
 .btn-filter.active {
@@ -206,14 +208,16 @@ body {
   transition: var(--transition-smooth);
 }
 
-.template-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
-  border-color: var(--primary-light);
-}
+@media (hover: hover) and (pointer: fine) {
+  .template-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary-light);
+  }
 
-.template-card:hover::before {
-  opacity: 1;
+  .template-card:hover::before {
+    opacity: 1;
+  }
 }
 
 .template-card-title {
@@ -629,7 +633,7 @@ body {
   gap: 16px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .form-row {
     grid-template-columns: 1fr;
   }
@@ -1167,11 +1171,13 @@ textarea.form-input {
   box-shadow: var(--shadow-peaceful);
 }
 
-.suggestion-card:hover {
-  border-color: var(--primary-calm);
-  background: var(--primary-glow);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(74, 107, 98, 0.06);
+@media (hover: hover) and (pointer: fine) {
+  .suggestion-card:hover {
+    border-color: var(--primary-calm);
+    background: var(--primary-glow);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 107, 98, 0.06);
+  }
 }
 
 .suggestion-card.selected {
