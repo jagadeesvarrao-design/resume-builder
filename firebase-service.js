@@ -50,10 +50,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if (loginBtn) {
     loginBtn.addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).catch(error => {
-        console.error("Login Error:", error);
-        alert("Failed to sign in. " + error.message);
-      });
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        auth.signInWithRedirect(provider);
+      } else {
+        auth.signInWithPopup(provider).catch(error => {
+          console.error("Login Error:", error);
+          if (error.code === 'auth/popup-blocked') {
+            auth.signInWithRedirect(provider);
+          } else {
+            alert("Failed to sign in. " + error.message);
+          }
+        });
+      }
     });
   }
   
