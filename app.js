@@ -48,23 +48,8 @@ const btnModalConfirm = document.getElementById('btn-modal-confirm');
 const resumeForm = document.getElementById('resume-form');
 
 /* ==========================================================================
-   1. GREETING MANAGER
+   1. GREETING MANAGER (Removed, handled by firebase-service.js)
    ========================================================================== */
-function updateGreeting() {
-  const hours = new Date().getHours();
-  let timeGreeting = "Welcome, Professional";
-  
-  if (hours >= 5 && hours < 12) {
-    timeGreeting = "Good Morning, Professional";
-  } else if (hours >= 12 && hours < 17) {
-    timeGreeting = "Good Afternoon, Professional";
-  } else {
-    timeGreeting = "Good Evening, Professional";
-  }
-  
-  greetingBanner.textContent = timeGreeting;
-}
-
 /* ==========================================================================
    2. FILTER & CATALOG RENDERER
    ========================================================================== */
@@ -1383,8 +1368,6 @@ function attachEvents() {
     if (mobileWorkspaceTabs) {
       mobileWorkspaceTabs.style.display = 'none';
     }
-    
-    updateGreeting();
   });
 
   // Attach Static Form Listeners (Top level details)
@@ -1669,7 +1652,6 @@ function attachEvents() {
    9. APPLICATION BOOTSTRAP
    ========================================================================== */
 function bootstrap() {
-  updateGreeting();
   initFilters();
   renderTemplatesCatalog();
   setupWizardDots();
