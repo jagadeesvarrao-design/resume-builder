@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jagadeesvarrao-design.github.io/resume-builder/sitemap.xml
