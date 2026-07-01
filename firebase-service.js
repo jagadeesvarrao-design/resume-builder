@@ -17,10 +17,17 @@ const db = firebase.firestore();
 // Global user state
 let currentUser = null;
 
-// Handle redirect result for mobile logins
-auth.getRedirectResult().catch((error) => {
+// Handle redirect result for mobile logins robustly
+auth.getRedirectResult().then((result) => {
+  if (result && result.user) {
+    console.log("Successfully logged in via redirect");
+    // onAuthStateChanged will naturally pick this up
+  }
+}).catch((error) => {
   console.error("Redirect Auth Error:", error);
-  alert("Login failed: " + error.message);
+  if (error.code !== 'auth/redirect-cancelled-by-user') {
+    alert("Login failed: " + error.message);
+  }
 });
 
 // Authentication State Observer
@@ -28,48 +35,61 @@ auth.onAuthStateChanged(user => {
   currentUser = user;
   const loginOptions = document.getElementById('login-options');
   const profileDiv = document.getElementById('user-profile');
+  const userName = document.getElementById('user-name');
   
   if (user) {
-    // User is signed in
     if (loginOptions) loginOptions.style.display = 'none';
     if (profileDiv) {
       profileDiv.style.display = 'flex';
       // Use phone number if display name is missing
-      document.getElementById('user-name').textContent = user.displayName || user.phoneNumber || 'Professional';
-      document.getElementById('user-avatar').src = user.photoURL || 'https://via.placeholder.com/150';
+      if (userName) userName.textContent = user.displayName || user.phoneNumber || 'Professional';
+      const avatar = document.getElementById('user-avatar');
+      if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
     }
     
     // Attempt to load their resume from Firestore
-    loadResumeFromFirestore();
+    if (typeof loadResumeFromFirestore === 'function') {
+      loadResumeFromFirestore();
+    }
+    
+    // Automatically load data when user logs in
+    if (!state.hasLoadedProfile && typeof loadSavedResume === 'function') {
+      loadSavedResume();
+      state.hasLoadedProfile = true;
+    }
   } else {
-    // No user is signed in
-    if (loginOptions) loginOptions.style.display = 'flex';
+    if (loginOptions) loginOptions.style.display = 'block';
     if (profileDiv) profileDiv.style.display = 'none';
+    if (userName) userName.textContent = '';
+    state.hasLoadedProfile = false;
   }
 });
 
-// Login/Logout Handlers
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
   const loginBtn = document.getElementById('btn-google-login');
   const logoutBtn = document.getElementById('btn-logout');
   
   if (loginBtn) {
     loginBtn.addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      provider.setCustomParameters({ prompt: 'select_account' }); // Force account selection to avoid getting stuck
       
-      if (isMobile) {
-        auth.signInWithRedirect(provider);
-      } else {
-        auth.signInWithPopup(provider).catch(error => {
-          console.error("Login Error:", error);
-          if (error.code === 'auth/popup-blocked') {
+      // We will try popup first, as it is the most reliable if it isn't blocked.
+      // If the browser (like iOS Safari) blocks the popup, it throws 'auth/popup-blocked',
+      // at which point we gracefully fall back to a full page redirect.
+      auth.signInWithPopup(provider).then((result) => {
+        console.log("Logged in via popup", result.user.email);
+      }).catch(error => {
+        console.warn("Popup blocked or failed, attempting redirect...", error);
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+          // Add a small delay so the browser doesn't block the redirect too
+          setTimeout(() => {
             auth.signInWithRedirect(provider);
-          } else {
-            alert("Failed to sign in. " + error.message);
-          }
-        });
-      }
+          }, 100);
+        } else {
+          alert("Failed to sign in. " + error.message);
+        }
+      });
     });
   }
   
