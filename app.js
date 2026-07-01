@@ -1239,8 +1239,40 @@ function autoFitToSinglePage() {
 }
 
 /* ==========================================================================
-   7F. MAGIC IMPORT HEURISTICS
+   7. AI MAGIC IMPORT & TAILORING (Gemini Integration)
    ========================================================================== */
+
+/**
+ * Executes a fetch request with exponential backoff for 429 Too Many Requests.
+ */
+async function fetchWithRetry(url, options, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    const response = await fetch(url, options);
+    
+    // If it's a 429 Error, wait and retry
+    if (response.status === 429) {
+      console.warn(`[AI Rate Limit] Hit 429 Too Many Requests. Retrying in ${Math.pow(2, i) * 2} seconds... (Attempt ${i+1}/${maxRetries})`);
+      
+      // Update UI if possible
+      const importBtn = document.getElementById('btn-magic-import');
+      if (importBtn && importBtn.innerHTML.includes('Processing')) {
+        importBtn.innerHTML = `<i class="fas fa-hourglass-half fa-spin"></i> AI busy, holding line...`;
+      }
+      
+      const tailorBtn = document.getElementById('btn-generate-ai');
+      if (tailorBtn && tailorBtn.innerHTML.includes('Tailor & Download')) {
+        tailorBtn.innerHTML = `AI busy, holding line...`;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 2000)); // 2s, 4s, 8s
+      continue;
+    }
+    
+    return response;
+  }
+  throw new Error("AI is currently experiencing extremely high demand. Please try again in 1 minute.");
+}
+
 async function parseHeuristics(inputData, isPdf = false) {
   const btnMagicImport = document.getElementById('btn-magic-import');
   if (btnMagicImport) {
@@ -1318,7 +1350,7 @@ async function parseHeuristics(inputData, isPdf = false) {
       });
     }
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+    const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1501,7 +1533,7 @@ function attachEvents() {
         }
         `;
         
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
