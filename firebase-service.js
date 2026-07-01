@@ -17,7 +17,13 @@ const db = firebase.firestore();
 // Global user state
 let currentUser = null;
 
-// Setup auth listeners
+// Handle redirect result for mobile logins
+auth.getRedirectResult().catch((error) => {
+  console.error("Redirect Auth Error:", error);
+  alert("Login failed: " + error.message);
+});
+
+// Authentication State Observer
 auth.onAuthStateChanged(user => {
   currentUser = user;
   const loginOptions = document.getElementById('login-options');
