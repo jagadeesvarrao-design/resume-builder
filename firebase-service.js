@@ -115,6 +115,85 @@ window.addEventListener('DOMContentLoaded', () => {
       auth.signOut();
     });
   }
+
+  // Email/Password Auth Logic
+  const btnShowEmailLogin = document.getElementById('btn-show-email-login');
+  const emailModal = document.getElementById('email-login-modal');
+  const btnCloseEmailModal = document.getElementById('btn-close-email-modal');
+  const btnToggleEmailMode = document.getElementById('btn-toggle-email-mode');
+  const btnSubmitEmail = document.getElementById('btn-submit-email');
+  const emailInput = document.getElementById('email-input');
+  const passwordInput = document.getElementById('password-input');
+  const emailError = document.getElementById('email-auth-error');
+  const emailTitle = document.getElementById('email-modal-title');
+  const emailToggleText = document.getElementById('email-toggle-text');
+  
+  let isCreateMode = false;
+
+  if (btnShowEmailLogin && emailModal) {
+    btnShowEmailLogin.addEventListener('click', () => {
+      emailModal.style.display = 'flex';
+      emailError.style.display = 'none';
+      emailInput.value = '';
+      passwordInput.value = '';
+    });
+
+    btnCloseEmailModal.addEventListener('click', () => {
+      emailModal.style.display = 'none';
+    });
+
+    btnToggleEmailMode.addEventListener('click', (e) => {
+      e.preventDefault();
+      isCreateMode = !isCreateMode;
+      emailError.style.display = 'none';
+      
+      if (isCreateMode) {
+        emailTitle.textContent = 'Create an Account';
+        btnSubmitEmail.textContent = 'Sign Up';
+        emailToggleText.textContent = 'Already have an account?';
+        btnToggleEmailMode.textContent = 'Log in';
+      } else {
+        emailTitle.textContent = 'Sign in to ZenResume';
+        btnSubmitEmail.textContent = 'Sign In';
+        emailToggleText.textContent = "Don't have an account?";
+        btnToggleEmailMode.textContent = 'Create one';
+      }
+    });
+
+    btnSubmitEmail.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      
+      if (!email || !password) {
+        emailError.textContent = 'Please enter both email and password.';
+        emailError.style.display = 'block';
+        return;
+      }
+      
+      try {
+        btnSubmitEmail.disabled = true;
+        btnSubmitEmail.textContent = 'Please wait...';
+        emailError.style.display = 'none';
+        
+        if (isCreateMode) {
+          await auth.createUserWithEmailAndPassword(email, password);
+        } else {
+          await auth.signInWithEmailAndPassword(email, password);
+        }
+        
+        emailModal.style.display = 'none';
+        alert("Login Successful! Welcome, " + email);
+        
+      } catch (error) {
+        console.error("Email Auth Error:", error);
+        emailError.textContent = error.message;
+        emailError.style.display = 'block';
+      } finally {
+        btnSubmitEmail.disabled = false;
+        btnSubmitEmail.textContent = isCreateMode ? 'Sign Up' : 'Sign In';
+      }
+    });
+  }
 });
 
 // Firestore functions
