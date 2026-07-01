@@ -72,24 +72,25 @@ window.addEventListener('DOMContentLoaded', () => {
   if (loginBtn) {
     loginBtn.addEventListener('click', () => {
       const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' }); // Force account selection to avoid getting stuck
+      provider.setCustomParameters({ prompt: 'select_account' });
       
-      // We will try popup first, as it is the most reliable if it isn't blocked.
-      // If the browser (like iOS Safari) blocks the popup, it throws 'auth/popup-blocked',
-      // at which point we gracefully fall back to a full page redirect.
-      auth.signInWithPopup(provider).then((result) => {
-        console.log("Logged in via popup", result.user.email);
-      }).catch(error => {
-        console.warn("Popup blocked or failed, attempting redirect...", error);
-        if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-          // Add a small delay so the browser doesn't block the redirect too
-          setTimeout(() => {
-            auth.signInWithRedirect(provider);
-          }, 100);
-        } else {
-          alert("Failed to sign in. " + error.message);
-        }
-      });
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Must be called synchronously to avoid browser security blocking it
+        auth.signInWithRedirect(provider);
+      } else {
+        auth.signInWithPopup(provider).then((result) => {
+          console.log("Logged in via popup", result.user.email);
+        }).catch(error => {
+          console.error("Popup Login Error:", error);
+          if (error.code === 'auth/popup-blocked') {
+            alert("Your browser blocked the Google Login popup. Please allow popups for this site.");
+          } else {
+            alert("Failed to sign in. " + error.message);
+          }
+        });
+      }
     });
   }
   
