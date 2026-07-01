@@ -21,8 +21,21 @@ let currentUser = null;
 auth.getRedirectResult().then((result) => {
   if (result && result.user) {
     console.log("Successfully logged in via redirect");
-    // onAuthStateChanged will naturally pick this up
+    // Force UI update manually in case onAuthStateChanged is delayed on mobile
+    currentUser = result.user;
+    const loginOptions = document.getElementById('login-options');
+    const profileDiv = document.getElementById('user-profile');
+    const userName = document.getElementById('user-name');
+    if (loginOptions) loginOptions.style.display = 'none';
+    if (profileDiv) {
+      profileDiv.style.display = 'flex';
+      if (userName) userName.textContent = result.user.displayName || result.user.phoneNumber || 'Professional';
+      const avatar = document.getElementById('user-avatar');
+      if (avatar) avatar.src = result.user.photoURL || 'https://via.placeholder.com/150';
+    }
+    alert("Login Successful! Welcome, " + (result.user.displayName || result.user.email));
   }
+
 }).catch((error) => {
   console.error("Redirect Auth Error:", error);
   if (error.code !== 'auth/redirect-cancelled-by-user') {
