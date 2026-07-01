@@ -78,7 +78,10 @@ window.addEventListener('DOMContentLoaded', () => {
       
       if (isMobile) {
         // Must be called synchronously to avoid browser security blocking it
-        auth.signInWithRedirect(provider);
+        auth.signInWithRedirect(provider).catch(err => {
+          alert("REDIRECT BLOCKED: " + err.code + " - " + err.message);
+          console.error("Redirect start error:", err);
+        });
       } else {
         auth.signInWithPopup(provider).then((result) => {
           console.log("Logged in via popup", result.user.email);
