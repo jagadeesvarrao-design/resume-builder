@@ -525,6 +525,90 @@
     </div>
   </div>
 
+  <!-- FAQ Section for AdSense Content Depth -->
+  <section class="faq-section no-print">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <div class="faq-question">What is an ATS-friendly resume? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-answer">An ATS (Applicant Tracking System) friendly resume is specifically formatted to be easily read by the automated software employers use to screen candidates. It avoids complex tables, graphics, and unreadable fonts that cause tracking systems to reject your application automatically. Our builder creates pure vector-text PDFs that parse perfectly every time.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Is ZenResume really free to use? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-answer">Yes, ZenResume is completely free. Unlike other platforms that ask for a credit card right when you hit the download button, we provide high-quality PDF downloads at no cost. We are supported by optional advertisements and affiliate links.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Is my personal data secure? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-answer">Absolutely. All resume processing and AI importing happens securely. We do not sell your personal resume data to third-party recruiters. You have full control over your data and can delete your account at any time.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Can I import my existing resume? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-answer">Yes! Using our Gemini AI Magic Import feature, you can upload any messy PDF resume or copy-paste a text document. Our AI will automatically extract your experience, education, and skills and place them perfectly into our templates.</div>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer no-print">
+    <div class="footer-links">
+      <a onclick="openModal('privacy-modal')">Privacy Policy</a>
+      <a onclick="openModal('tos-modal')">Terms of Service</a>
+      <a href="mailto:support@zenresume.com">Contact Us</a>
+    </div>
+    <div class="footer-text">
+      &copy; 2024 ZenResume. All rights reserved.<br>
+      Built for professionals, by professionals.
+    </div>
+  </footer>
+
+  <!-- Privacy Policy Modal -->
+  <div id="privacy-modal" class="modal-overlay legal-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
+    <div class="modal-content" style="padding: 40px; width: 90%; background: white; border-radius: 16px; position: relative;">
+      <button class="btn-close" onclick="closeModal('privacy-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #95a5a6;">&times;</button>
+      <h2>Privacy Policy</h2>
+      <p>Last updated: October 2023</p>
+      <p>At ZenResume, accessible from our website, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by ZenResume and how we use it.</p>
+      <h3>Information we collect</h3>
+      <p>We collect information you provide directly to us when you create an account, build a resume, or contact us. This includes your name, email address, and the professional data you enter into your resume.</p>
+      <h3>How we use your information</h3>
+      <ul>
+        <li>Provide, operate, and maintain our website</li>
+        <li>Improve, personalize, and expand our website</li>
+        <li>Process transactions and send related information</li>
+      </ul>
+      <h3>Cookies and Web Beacons</h3>
+      <p>Like any other website, ZenResume uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. We also use third-party advertising companies to serve ads when you visit our website (e.g., Google AdSense).</p>
+      <h3>Consent</h3>
+      <p>By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+    </div>
+  </div>
+
+  <!-- Terms of Service Modal -->
+  <div id="tos-modal" class="modal-overlay legal-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
+    <div class="modal-content" style="padding: 40px; width: 90%; background: white; border-radius: 16px; position: relative;">
+      <button class="btn-close" onclick="closeModal('tos-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #95a5a6;">&times;</button>
+      <h2>Terms of Service</h2>
+      <p>Welcome to ZenResume!</p>
+      <p>These terms and conditions outline the rules and regulations for the use of ZenResume's Website.</p>
+      <h3>1. Terms</h3>
+      <p>By accessing this Website, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws.</p>
+      <h3>2. Use License</h3>
+      <p>Permission is granted to temporarily download one copy of the materials (information or software) on ZenResume's Website for personal, non-commercial transitory viewing only.</p>
+      <h3>3. Disclaimer</h3>
+      <p>All the materials on ZenResume's Website are provided "as is". ZenResume makes no warranties, may it be expressed or implied, therefore negates all other warranties.</p>
+      <h3>4. Limitations</h3>
+      <p>ZenResume or its suppliers will not be hold accountable for any damages that will arise with the use or inability to use the materials on ZenResume's Website.</p>
+    </div>
+  </div>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookie-banner" class="cookie-banner no-print">
+    <div class="cookie-text">
+      We use cookies to improve your experience, analyze traffic, and serve personalized ads. By using this site, you agree to our <a onclick="openModal('privacy-modal')" style="cursor: pointer;">Privacy Policy</a>.
+    </div>
+    <div class="cookie-buttons">
+      <button id="btn-accept-cookies" class="btn-primary" style="padding: 8px 16px; font-size: 13px;">Accept All</button>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="templates-data.js"></script>
   <script src="firebase-service.js"></script>

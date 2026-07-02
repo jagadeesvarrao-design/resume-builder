@@ -1724,3 +1724,41 @@ function bootstrap() {
 
 // Fire up ZenResume!
 window.addEventListener('DOMContentLoaded', bootstrap);
+
+/* ==========================================================================
+   10. ADSENSE UI COMPLIANCE (FAQ, COOKIES, MODALS)
+   ========================================================================== */
+
+function initAdSenseUI() {
+  // FAQ Accordion
+  const faqQuestions = document.querySelectorAll('.faq-question');
+  faqQuestions.forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    });
+  });
+
+  // Cookie Banner
+  const cookieBanner = document.getElementById('cookie-banner');
+  const btnAcceptCookies = document.getElementById('btn-accept-cookies');
+  if (cookieBanner && btnAcceptCookies) {
+    if (!localStorage.getItem('cookiesAccepted')) {
+      // Delay showing it slightly for smooth UX
+      setTimeout(() => {
+        cookieBanner.classList.add('show');
+      }, 1000);
+    }
+    btnAcceptCookies.addEventListener('click', () => {
+      localStorage.setItem('cookiesAccepted', 'true');
+      cookieBanner.classList.remove('show');
+    });
+  }
+}
+
+// Fire it on DOMContentLoaded separately
+window.addEventListener('DOMContentLoaded', initAdSenseUI);
