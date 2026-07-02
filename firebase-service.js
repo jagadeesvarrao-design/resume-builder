@@ -114,10 +114,10 @@ auth.onAuthStateChanged(user => {
       if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
     }
     
-    // Show greeting toast if on mobile and hasn't been shown this session
-    if (window.innerWidth <= 600 && !sessionStorage.getItem('mobileGreetingShown')) {
-      window.showToast(`Welcome back, ${displayName || 'Professional'}!`);
-      sessionStorage.setItem('mobileGreetingShown', 'true');
+    // Show greeting toast if hasn't been shown this session
+    if (!sessionStorage.getItem('loginGreetingShown')) {
+      window.showToast(`Login Successful! Welcome, ${displayName || 'Professional'}`);
+      sessionStorage.setItem('loginGreetingShown', 'true');
     }
     
     // Attempt to load their resume from Firestore
@@ -172,7 +172,7 @@ window.addEventListener('DOMContentLoaded', () => {
   
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      sessionStorage.removeItem('mobileGreetingShown');
+      sessionStorage.removeItem('loginGreetingShown');
       auth.signOut();
     });
   }
