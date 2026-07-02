@@ -1028,7 +1028,7 @@ function executeSystemPrint() {
       if (btnAffiliateLink) {
         btnAffiliateLink.onclick = () => {
           // Amazon Affiliate Link for Cracking the Coding Interview
-          window.open('https://www.amazon.in/dp/0984782869?tag=zenresume01-21', '_blank');
+          window.open('https://www.amazon.in/Gayle-Laakmann-McDowell-Programming-Solutions-Paperback/dp/B08CDHYF5D?dib=eyJ2IjoiMSJ9.9XzaqyXBhFL5Gf6bhDB4KFPawNIFDAZZc4mryrovwpuRF1wVPRHjmDv22-HvspwDPs7TQ6qIYajbFPeE_UonDPBo352mYPsBg6ZCpgiQDw0P9fVofTC4umZm8DPG9z7W-anWeKrVjEAzzAzj_sGC62HaL5DxGAi9UUDRNGpLU4PdfNfW53EM3s-FdoRnHYjZaNKa00UWBWFsdbMOYZAsYlDBCdzPiDZNh1rPeDRylJg.I-yvM3vNziTP3ns-zzIqdtdVTV4duaJFSaXJhjpZVWI&dib_tag=se&keywords=cracking+the+code+interview&qid=1782971021&sr=8-1&linkCode=ll2&tag=zenresume01-21&linkId=f96e4d6b195eccbaf632ecf501569508&ref_=as_li_ss_tl', '_blank');
           affiliateModal.style.display = 'none';
         };
       }
