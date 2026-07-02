@@ -1027,8 +1027,8 @@ function executeSystemPrint() {
       
       if (btnAffiliateLink) {
         btnAffiliateLink.onclick = () => {
-          // Replace with real affiliate link later
-          window.open('https://internshala.com', '_blank');
+          // Amazon Affiliate Link for Cracking the Coding Interview
+          window.open('https://www.amazon.in/dp/0984782869?tag=zenresume01-21', '_blank');
           affiliateModal.style.display = 'none';
         };
       }
