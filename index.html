@@ -445,16 +445,10 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-  <!-- Mobile Login Greeting Modal -->
-  <div id="mobile-greeting-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
-    <div class="modal-content" style="padding: 30px; width: 90%; max-width: 350px; text-align: center; border-top: 4px solid var(--primary-calm); border-radius: 16px;">
-      <div style="font-size: 40px; margin-bottom: 15px;">👋</div>
-      <h3 style="margin-top: 0; color: var(--primary-dark); font-weight: 700; font-size: 20px; margin-bottom: 10px;" id="mobile-greeting-title">Welcome back!</h3>
-      <p style="color: var(--text-sub); font-size: 14px; line-height: 1.5; margin-bottom: 25px;">You are successfully logged in. Let's build a stunning ATS resume.</p>
-      <button id="btn-close-mobile-greeting" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);">
-        Start Building
-      </button>
-    </div>
+  <!-- Global Toast Notification -->
+  <div id="toast-notification" class="no-print" style="position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #2ecc71; color: white; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); z-index: 9999; display: flex; align-items: center; gap: 8px; transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-message">Login Successful!</span>
   </div>
 
   <!-- Email Login Modal -->

@@ -67,7 +67,9 @@ auth.getRedirectResult().then((result) => {
       if (avatar) avatar.src = result.user.photoURL || 'https://via.placeholder.com/150';
     }
     updateGreetingBanner(result.user);
-    alert("Login Successful! Welcome, " + (result.user.displayName || result.user.email));
+    if (typeof showToast === 'function') {
+      showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email));
+    }
   }
 
 }).catch((error) => {
@@ -100,22 +102,12 @@ auth.onAuthStateChanged(user => {
       if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
     }
     
-    // Show mobile greeting modal if on mobile and hasn't been shown this session
+    // Show mobile greeting toast if on mobile and hasn't been shown this session
     if (window.innerWidth <= 600 && !sessionStorage.getItem('mobileGreetingShown')) {
-      const mobileModal = document.getElementById('mobile-greeting-modal');
-      const mobileTitle = document.getElementById('mobile-greeting-title');
-      if (mobileModal && mobileTitle) {
-        mobileTitle.textContent = `Welcome, ${displayName || 'Professional'}!`;
-        mobileModal.style.display = 'flex';
-        sessionStorage.setItem('mobileGreetingShown', 'true');
-        
-        const btnCloseMobile = document.getElementById('btn-close-mobile-greeting');
-        if (btnCloseMobile) {
-          btnCloseMobile.onclick = () => {
-            mobileModal.style.display = 'none';
-          };
-        }
+      if (typeof showToast === 'function') {
+        showToast(`Welcome back, ${displayName || 'Professional'}!`);
       }
+      sessionStorage.setItem('mobileGreetingShown', 'true');
     }
     
     // Attempt to load their resume from Firestore
@@ -240,7 +232,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         
         emailModal.style.display = 'none';
-        alert("Login Successful! Welcome, " + email);
+        if (typeof showToast === 'function') {
+          showToast("Login Successful! Welcome, " + email);
+        }
         
       } catch (error) {
         console.error("Email Auth Error:", error);
@@ -286,9 +280,23 @@ async function loadResumeFromFirestore() {
       const data = doc.data();
       if (data.resumeData && typeof hydrateStateFromData === 'function') {
         hydrateStateFromData(data.resumeData);
+        console.log("Resume loaded successfully");
       }
     }
   } catch (error) {
-    console.error("Error loading from Firestore:", error);
+    console.error("Error loading resume:", error);
   }
 }
+
+// Global Toast Helper
+window.showToast = function(message) {
+  const toast = document.getElementById('toast-notification');
+  const msgSpan = document.getElementById('toast-message');
+  if (toast && msgSpan) {
+    msgSpan.textContent = message;
+    toast.style.top = '20px';
+    setTimeout(() => {
+      toast.style.top = '-100px';
+    }, 3000);
+  }
+};
