@@ -1,4 +1,18 @@
 // firebase-service.js
+
+// Global Toast Helper
+window.showToast = function(message) {
+  const toast = document.getElementById('toast-notification');
+  const msgSpan = document.getElementById('toast-message');
+  if (toast && msgSpan) {
+    msgSpan.textContent = message;
+    toast.style.top = '20px';
+    setTimeout(() => {
+      toast.style.top = '-100px';
+    }, 3000);
+  }
+};
+
 const firebaseConfig = {
   apiKey: "AIzaSyAb1ZRnxECLu7ANU3of1zUEKLqgzsvGNq0",
   authDomain: "resume-builder-5e101.firebaseapp.com",
@@ -67,9 +81,7 @@ auth.getRedirectResult().then((result) => {
       if (avatar) avatar.src = result.user.photoURL || 'https://via.placeholder.com/150';
     }
     updateGreetingBanner(result.user);
-    if (typeof showToast === 'function') {
-      showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email));
-    }
+    window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email));
   }
 
 }).catch((error) => {
@@ -102,11 +114,9 @@ auth.onAuthStateChanged(user => {
       if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
     }
     
-    // Show mobile greeting toast if on mobile and hasn't been shown this session
+    // Show greeting toast if on mobile and hasn't been shown this session
     if (window.innerWidth <= 600 && !sessionStorage.getItem('mobileGreetingShown')) {
-      if (typeof showToast === 'function') {
-        showToast(`Welcome back, ${displayName || 'Professional'}!`);
-      }
+      window.showToast(`Welcome back, ${displayName || 'Professional'}!`);
       sessionStorage.setItem('mobileGreetingShown', 'true');
     }
     
@@ -162,6 +172,7 @@ window.addEventListener('DOMContentLoaded', () => {
   
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('mobileGreetingShown');
       auth.signOut();
     });
   }
@@ -232,9 +243,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         
         emailModal.style.display = 'none';
-        if (typeof showToast === 'function') {
-          showToast("Login Successful! Welcome, " + email);
-        }
+        window.showToast("Login Successful! Welcome, " + email);
         
       } catch (error) {
         console.error("Email Auth Error:", error);
@@ -288,15 +297,3 @@ async function loadResumeFromFirestore() {
   }
 }
 
-// Global Toast Helper
-window.showToast = function(message) {
-  const toast = document.getElementById('toast-notification');
-  const msgSpan = document.getElementById('toast-message');
-  if (toast && msgSpan) {
-    msgSpan.textContent = message;
-    toast.style.top = '20px';
-    setTimeout(() => {
-      toast.style.top = '-100px';
-    }, 3000);
-  }
-};
