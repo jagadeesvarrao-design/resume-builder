@@ -445,6 +445,18 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
+  <!-- Mobile Login Greeting Modal -->
+  <div id="mobile-greeting-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
+    <div class="modal-content" style="padding: 30px; width: 90%; max-width: 350px; text-align: center; border-top: 4px solid var(--primary-calm); border-radius: 16px;">
+      <div style="font-size: 40px; margin-bottom: 15px;">👋</div>
+      <h3 style="margin-top: 0; color: var(--primary-dark); font-weight: 700; font-size: 20px; margin-bottom: 10px;" id="mobile-greeting-title">Welcome back!</h3>
+      <p style="color: var(--text-sub); font-size: 14px; line-height: 1.5; margin-bottom: 25px;">You are successfully logged in. Let's build a stunning ATS resume.</p>
+      <button id="btn-close-mobile-greeting" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);">
+        Start Building
+      </button>
+    </div>
+  </div>
+
   <!-- Email Login Modal -->
   <div id="email-login-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 1000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);">
     <div class="modal-content" style="padding: 30px; width: 90%; max-width: 400px; text-align: left;">

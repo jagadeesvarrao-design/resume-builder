@@ -100,6 +100,24 @@ auth.onAuthStateChanged(user => {
       if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
     }
     
+    // Show mobile greeting modal if on mobile and hasn't been shown this session
+    if (window.innerWidth <= 600 && !sessionStorage.getItem('mobileGreetingShown')) {
+      const mobileModal = document.getElementById('mobile-greeting-modal');
+      const mobileTitle = document.getElementById('mobile-greeting-title');
+      if (mobileModal && mobileTitle) {
+        mobileTitle.textContent = `Welcome, ${displayName || 'Professional'}!`;
+        mobileModal.style.display = 'flex';
+        sessionStorage.setItem('mobileGreetingShown', 'true');
+        
+        const btnCloseMobile = document.getElementById('btn-close-mobile-greeting');
+        if (btnCloseMobile) {
+          btnCloseMobile.onclick = () => {
+            mobileModal.style.display = 'none';
+          };
+        }
+      }
+    }
+    
     // Attempt to load their resume from Firestore
     if (typeof loadResumeFromFirestore === 'function') {
       loadResumeFromFirestore();
