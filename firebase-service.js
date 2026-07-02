@@ -6,9 +6,9 @@ window.showToast = function(message) {
   const msgSpan = document.getElementById('toast-message');
   if (toast && msgSpan) {
     msgSpan.textContent = message;
-    toast.style.top = '20px';
+    toast.style.bottom = '30px';
     setTimeout(() => {
-      toast.style.top = '-100px';
+      toast.style.bottom = '-100px';
     }, 3000);
   }
 };
