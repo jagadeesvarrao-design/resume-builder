@@ -1858,3 +1858,14 @@ function initAdSenseUI() {
 // Fire it on DOMContentLoaded separately
 window.addEventListener('DOMContentLoaded', initAdSenseUI);
 
+// Lazy load Google AdSense script 1.5 seconds after page loads to boost PageSpeed performance score
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const script = document.createElement('script');
+    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1993051486567311";
+    script.crossOrigin = "anonymous";
+    script.async = true;
+    document.head.appendChild(script);
+  }, 1500);
+});
+
