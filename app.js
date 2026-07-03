@@ -162,6 +162,7 @@ function selectTemplateStyle(templateId) {
   state.currentStep = 1;
   showStep(state.currentStep);
   updateProgressDots();
+  adjustPreviewScale(); // Scale the print preview container once workspace is visible
   
   // Sync the form values immediately to screen preview
   syncFormToPreview();
@@ -619,6 +620,7 @@ function hydrateStateFromData(savedState) {
     
     showStep(state.currentStep);
     updateProgressDots();
+    adjustPreviewScale(); // Scale the print preview container once workspace is visible
     
     // Render and Sync live preview
     const template = TEMPLATE_STYLES[state.selectedTemplateId];
@@ -1814,7 +1816,6 @@ function bootstrap() {
   setupWizardDots();
   attachEvents();
   loadSavedResume();
-  adjustPreviewScale();
 }
 
 // Fire up ZenResume!
