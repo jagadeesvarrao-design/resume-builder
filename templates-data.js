@@ -2179,6 +2179,156 @@ const TEMPLATE_STYLES = {
         </div>
       `;
     }
+  },
+  software_experienced_split: {
+    id: "software_experienced_split",
+    name: "Modern Double-Column Split",
+    description: "Sleek double-column layout designed for experienced developers. Places contact details, skills, and credentials in a left-accented column, leaving maximum vertical space for work experience in the main section.",
+    industry: "software",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Outfit', 'Inter', Arial, sans-serif";
+      const primaryDark = "#0f172a";
+      const secondaryDark = "#1e293b";
+      const accent = "#2563eb"; // blue accent
+      const sidebarBg = "#f8fafc";
+      const textMain = "#334155";
+      const textLight = "#64748b";
+
+      // A. Sidebar Items (Left)
+      const email = data.personal.email ? `<div style="margin-bottom:6px;"><strong>Email:</strong><div style="font-size:9.5px; word-break:break-all;">${data.personal.email}</div></div>` : "";
+      const phone = data.personal.phone ? `<div style="margin-bottom:6px;"><strong>Phone:</strong><div style="font-size:9.5px;">${data.personal.phone}</div></div>` : "";
+      const loc = data.personal.location ? `<div style="margin-bottom:6px;"><strong>Location:</strong><div style="font-size:9.5px;">${data.personal.location}</div></div>` : "";
+      const web = data.personal.website ? `<div style="margin-bottom:6px;"><strong>Website:</strong><div style="font-size:9.5px; word-break:break-all;"><a href="${data.personal.website}" target="_blank" style="color:${accent}; text-decoration:none;">${data.personal.website.replace(/^https?:\/\//, '')}</a></div></div>` : "";
+      const linkedin = data.personal.linkedin ? `<div style="margin-bottom:6px;"><strong>LinkedIn:</strong><div style="font-size:9.5px; word-break:break-all;"><a href="${data.personal.linkedin}" target="_blank" style="color:${accent}; text-decoration:none;">${data.personal.linkedin.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '')}</a></div></div>` : "";
+
+      // Skills HTML as elegant tags
+      let skillsHTML = '';
+      if (data.skills && data.skills.length > 0) {
+        skillsHTML = `
+          <div style="margin-top:16px;">
+            <h3 style="font-size:10.5px; font-weight:bold; color:${primaryDark}; border-bottom:1.5px solid #cbd5e1; padding-bottom:3px; text-transform:uppercase; margin:0 0 8px 0; letter-spacing:0.5px;">Skills</h3>
+            <div style="display:flex; flex-wrap:wrap; gap:4px;">
+              ${data.skills.map(skill => `<span style="font-size:9px; background:#e2e8f0; color:${secondaryDark}; padding:3px 6px; border-radius:4px; font-weight:500;">${skill}</span>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Certifications List
+      let certsHTML = '';
+      if (data.certifications && data.certifications.length > 0) {
+        certsHTML = `
+          <div style="margin-top:16px;">
+            <h3 style="font-size:10.5px; font-weight:bold; color:${primaryDark}; border-bottom:1.5px solid #cbd5e1; padding-bottom:3px; text-transform:uppercase; margin:0 0 8px 0; letter-spacing:0.5px;">Certifications</h3>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              ${data.certifications.map(c => `
+                <div style="font-size:9px; color:${textMain}; line-height:1.3;">
+                  <strong style="color:${secondaryDark};">${c.name || ''}</strong>
+                  ${c.issuer ? `<div style="color:${textLight};">${c.issuer}</div>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // Education List (Sidebar)
+      let eduHTML = '';
+      if (data.education && data.education.length > 0) {
+        eduHTML = `
+          <div style="margin-top:16px;">
+            <h3 style="font-size:10.5px; font-weight:bold; color:${primaryDark}; border-bottom:1.5px solid #cbd5e1; padding-bottom:3px; text-transform:uppercase; margin:0 0 8px 0; letter-spacing:0.5px;">Education</h3>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              ${data.education.map(e => `
+                <div style="font-size:9px; color:${textMain}; line-height:1.3;">
+                  <strong style="color:${secondaryDark};">${e.degree || ''}</strong>
+                  <div style="color:${textLight};">${e.school || ''}</div>
+                  <div style="font-style:italic; color:${textLight};">${e.year || ''}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // B. Main Area Items (Right)
+      // Work Experience Timeline
+      let expHTML = '';
+      if (data.experience && data.experience.length > 0) {
+        expHTML = data.experience.map(exp => `
+          <div style="margin-bottom:12px; page-break-inside:avoid;">
+            <div style="display:flex; justify-content:between; align-items:start; margin-bottom:2px;">
+              <strong style="font-size:11px; color:${primaryDark};">${exp.role || ''} @ ${exp.company || ''}</strong>
+              <span style="font-size:9.5px; font-weight:600; color:${accent}; white-space:nowrap; margin-left:auto;">${exp.duration || ''}</span>
+            </div>
+            ${exp.location ? `<div style="font-size:9px; color:${textLight}; margin-bottom:4px; font-style:italic;">${exp.location}</div>` : ''}
+            <ul style="margin:0; padding-left:12px; font-size:9.5px; color:${textMain}; line-height:1.45;">
+              ${(exp.description || '').split('\n').filter(Boolean).map(bullet => `<li style="margin-bottom:2px;">${bullet.replace(/^-\s*/, '')}</li>`).join('')}
+            </ul>
+          </div>
+        `).join('');
+      }
+
+      // Key Projects
+      let projHTML = '';
+      if (data.projects && data.projects.length > 0) {
+        projHTML = data.projects.map(proj => `
+          <div style="margin-bottom:10px; page-break-inside:avoid;">
+            <div style="display:flex; justify-content:between; align-items:start; margin-bottom:2px;">
+              <strong style="font-size:11px; color:${primaryDark};">${proj.name || ''}</strong>
+              ${proj.link ? `<a href="${proj.link}" target="_blank" style="font-size:9px; color:${accent}; text-decoration:none; margin-left:auto;">Project Link &rarr;</a>` : ''}
+            </div>
+            <p style="margin:0; font-size:9.5px; color:${textMain}; line-height:1.45; text-align:justify;">${proj.description || ''}</p>
+          </div>
+        `).join('');
+      }
+
+      return `
+        <div style="font-family:${font}; width:794px; min-height:1122px; box-sizing:border-box; display:grid; grid-template-columns:230px 1fr; background:#ffffff; color:${textMain};">
+          <!-- Sidebar column -->
+          <div style="background:${sidebarBg}; border-right:1px solid #e2e8f0; padding:25px 20px; box-sizing:border-box; display:flex; flex-direction:column; gap:16px;">
+            <div>
+              <h1 style="font-size:18px; font-weight:800; color:${primaryDark}; margin:0 0 4px 0; line-height:1.2; letter-spacing:-0.5px;">${data.personal.name || ''}</h1>
+              <div style="font-size:10px; font-weight:700; color:${accent}; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">${data.personal.title || ''}</div>
+            </div>
+            
+            <div style="font-size:9px; color:${textMain}; display:flex; flex-direction:column; gap:6px;">
+              <h3 style="font-size:10.5px; font-weight:bold; color:${primaryDark}; border-bottom:1.5px solid #cbd5e1; padding-bottom:3px; text-transform:uppercase; margin:0 0 4px 0; letter-spacing:0.5px;">Contact</h3>
+              ${email} ${phone} ${loc} ${web} ${linkedin}
+            </div>
+            
+            ${skillsHTML}
+            ${eduHTML}
+            ${certsHTML}
+          </div>
+
+          <!-- Main column -->
+          <div style="padding:30px 25px; box-sizing:border-box; display:flex; flex-direction:column; gap:16px;">
+            ${data.summary ? `
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${primaryDark}; border-bottom:2px solid ${primaryDark}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase; letter-spacing:0.5px;">Professional Summary</h3>
+                <p style="font-size:9.5px; color:${textMain}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
+              </div>
+            ` : ''}
+
+            ${expHTML ? `
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${primaryDark}; border-bottom:2px solid ${primaryDark}; padding-bottom:3px; margin:0 0 10px 0; text-transform:uppercase; letter-spacing:0.5px;">Work Experience</h3>
+                ${expHTML}
+              </div>
+            ` : ''}
+
+            ${projHTML ? `
+              <div>
+                <h3 style="font-size:11px; font-weight:bold; color:${primaryDark}; border-bottom:2px solid ${primaryDark}; padding-bottom:3px; margin:0 0 10px 0; text-transform:uppercase; letter-spacing:0.5px;">Key Projects</h3>
+                ${projHTML}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
   }
 };
 // Automatically wrap all template renderers to deep escape HTML inputs
