@@ -958,6 +958,42 @@ function closePrintModal() {
 function executeSystemPrint() {
   closePrintModal();
   
+  if (typeof html2pdf === 'undefined') {
+    // Show temporary loading status on the button
+    const btnSkip = document.getElementById('btn-skip-ai');
+    const originalText = btnSkip ? btnSkip.innerHTML : '';
+    if (btnSkip) {
+      btnSkip.innerHTML = 'Loading PDF Engine...';
+      btnSkip.disabled = true;
+    }
+    
+    // Dynamically inject html2pdf script
+    const script = document.createElement('script');
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.integrity = "sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==";
+    script.crossOrigin = "anonymous";
+    script.referrerPolicy = "no-referrer";
+    script.onload = () => {
+      if (btnSkip) {
+        btnSkip.innerHTML = originalText;
+        btnSkip.disabled = false;
+      }
+      runPdfGeneration();
+    };
+    script.onerror = () => {
+      if (btnSkip) {
+        btnSkip.innerHTML = originalText;
+        btnSkip.disabled = false;
+      }
+      alert("Could not load PDF library. Please check your internet connection and try again.");
+    };
+    document.head.appendChild(script);
+  } else {
+    runPdfGeneration();
+  }
+}
+
+function runPdfGeneration() {
   const element = document.getElementById('resume-print-area');
   
   // Save original transform to restore later
