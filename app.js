@@ -1859,14 +1859,29 @@ function initAdSenseUI() {
 // Fire it on DOMContentLoaded separately
 window.addEventListener('DOMContentLoaded', initAdSenseUI);
 
-// Lazy load Google AdSense script 1.5 seconds after page loads to boost PageSpeed performance score
+// Lazy load Google AdSense script only on first user interaction to boost PageSpeed performance score
+let adSenseLoaded = false;
+const interactionEvents = ['mouseover', 'keydown', 'touchstart', 'scroll'];
+
+function lazyLoadAdSense() {
+  if (adSenseLoaded) return;
+  adSenseLoaded = true;
+  
+  const script = document.createElement('script');
+  script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1993051486567311";
+  script.crossOrigin = "anonymous";
+  script.async = true;
+  document.head.appendChild(script);
+  
+  // Clean up listeners
+  interactionEvents.forEach(evt => {
+    window.removeEventListener(evt, lazyLoadAdSense);
+  });
+}
+
 window.addEventListener('load', () => {
-  setTimeout(() => {
-    const script = document.createElement('script');
-    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1993051486567311";
-    script.crossOrigin = "anonymous";
-    script.async = true;
-    document.head.appendChild(script);
-  }, 1500);
+  interactionEvents.forEach(evt => {
+    window.addEventListener(evt, lazyLoadAdSense, { passive: true });
+  });
 });
 
