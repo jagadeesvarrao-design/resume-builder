@@ -178,6 +178,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
+  min-height: 380px; /* Reserves space while catalog renders dynamically, fixing CLS */
 }
 
 .template-card {
