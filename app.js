@@ -43,7 +43,7 @@ const btnAddCertification = document.getElementById('btn-add-certification');
 const printModal = document.getElementById('print-modal');
 const btnTriggerDownload = document.getElementById('btn-trigger-download');
 const btnModalClose = document.getElementById('btn-modal-close');
-const btnModalConfirm = document.getElementById('btn-modal-confirm');
+const btnModalConfirm = document.getElementById('btn-skip-ai');
 
 const resumeForm = document.getElementById('resume-form');
 
