@@ -1017,13 +1017,48 @@ function executeSystemPrint() {
       printModal.style.opacity = '0';
     }
 
-    // Trigger Post-Download Affiliate Modal
+    // Trigger Post-Download Affiliate & Share Modal
     const affiliateModal = document.getElementById('affiliate-modal');
     if (affiliateModal) {
       affiliateModal.style.display = 'flex';
       
       const btnCloseAffiliate = document.getElementById('btn-close-affiliate-modal');
       const btnAffiliateLink = document.getElementById('btn-affiliate-link');
+      
+      const btnWhatsapp = document.getElementById('btn-share-whatsapp');
+      const btnLinkedin = document.getElementById('btn-share-linkedin');
+      const btnCopy = document.getElementById('btn-share-copy');
+      
+      const shareUrl = "https://resume-builder-swart-sigma-93.vercel.app/";
+      const shareText = "I just built a perfect ATS-compliant resume for free using ZenResume. No paywalls or subscriptions. Build yours here:";
+      
+      if (btnWhatsapp) {
+        btnWhatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+      }
+      
+      if (btnLinkedin) {
+        btnLinkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+      }
+      
+      if (btnCopy) {
+        btnCopy.onclick = () => {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            const originalText = btnCopy.innerHTML;
+            btnCopy.innerHTML = `<i class="fas fa-check"></i> Copied!`;
+            btnCopy.style.background = "#2ecc71";
+            btnCopy.style.color = "white";
+            btnCopy.style.borderColor = "#2ecc71";
+            setTimeout(() => {
+              btnCopy.innerHTML = originalText;
+              btnCopy.style.background = "";
+              btnCopy.style.color = "";
+              btnCopy.style.borderColor = "";
+            }, 2000);
+          }).catch(err => {
+            console.error("Clipboard copy failed", err);
+          });
+        };
+      }
       
       if (btnCloseAffiliate) {
         btnCloseAffiliate.onclick = () => {
