@@ -270,7 +270,7 @@ function addExperienceCard(data = null) {
   
   // Attach change listeners to live preview
   card.querySelectorAll('.form-input').forEach(input => {
-    input.addEventListener('input', syncFormToPreview);
+    input.addEventListener('input', debouncedSyncFormToPreview);
   });
   
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
@@ -322,7 +322,7 @@ function addProjectCard(data = null) {
   card.querySelector('.input-proj-desc').value = description;
   
   card.querySelectorAll('.form-input').forEach(input => {
-    input.addEventListener('input', syncFormToPreview);
+    input.addEventListener('input', debouncedSyncFormToPreview);
   });
   
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
@@ -380,7 +380,7 @@ function addEducationCard(data = null) {
   card.querySelector('.input-edu-gpa').value = gpa;
   
   card.querySelectorAll('.form-input').forEach(input => {
-    input.addEventListener('input', syncFormToPreview);
+    input.addEventListener('input', debouncedSyncFormToPreview);
   });
   
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
@@ -429,7 +429,7 @@ function addCertificationCard(data = null) {
   card.querySelector('.input-cert-desc').value = desc || '';
   
   const inputs = card.querySelectorAll('.form-input');
-  inputs.forEach(input => input.addEventListener('input', syncFormToPreview));
+  inputs.forEach(input => input.addEventListener('input', debouncedSyncFormToPreview));
   
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
     card.remove();
@@ -748,6 +748,12 @@ function importResumeJSON(e) {
     }
   };
   reader.readAsText(file);
+}
+
+let syncTimeout = null;
+function debouncedSyncFormToPreview() {
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(syncFormToPreview, 250);
 }
 
 function syncFormToPreview() {
@@ -1451,15 +1457,15 @@ function attachEvents() {
   });
 
   // Attach Static Form Listeners (Top level details)
-  document.getElementById('input-name').addEventListener('input', syncFormToPreview);
-  document.getElementById('input-title').addEventListener('input', syncFormToPreview);
-  document.getElementById('input-email').addEventListener('input', syncFormToPreview);
-  document.getElementById('input-phone').addEventListener('input', syncFormToPreview);
-  document.getElementById('input-location').addEventListener('input', syncFormToPreview);
-  document.getElementById('input-website').addEventListener('input', syncFormToPreview);
-  document.getElementById('input-linkedin').addEventListener('input', syncFormToPreview);
-  document.getElementById('input-summary').addEventListener('input', syncFormToPreview);
-  document.getElementById('input-skills').addEventListener('input', syncFormToPreview);
+  document.getElementById('input-name').addEventListener('input', debouncedSyncFormToPreview);
+  document.getElementById('input-title').addEventListener('input', debouncedSyncFormToPreview);
+  document.getElementById('input-email').addEventListener('input', debouncedSyncFormToPreview);
+  document.getElementById('input-phone').addEventListener('input', debouncedSyncFormToPreview);
+  document.getElementById('input-location').addEventListener('input', debouncedSyncFormToPreview);
+  document.getElementById('input-website').addEventListener('input', debouncedSyncFormToPreview);
+  document.getElementById('input-linkedin').addEventListener('input', debouncedSyncFormToPreview);
+  document.getElementById('input-summary').addEventListener('input', debouncedSyncFormToPreview);
+  document.getElementById('input-skills').addEventListener('input', debouncedSyncFormToPreview);
 
   // Dynamic Add item listeners
   btnAddExperience.addEventListener('click', () => {
@@ -1780,3 +1786,4 @@ function initAdSenseUI() {
 
 // Fire it on DOMContentLoaded separately
 window.addEventListener('DOMContentLoaded', initAdSenseUI);
+
