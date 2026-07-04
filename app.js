@@ -164,7 +164,7 @@ function selectTemplateStyle(templateId) {
   showStep(state.currentStep);
   updateProgressDots();
   adjustPreviewScale(); // Scale the print preview container once workspace is visible
-  setTimeout(pushSidebarAd, 200);
+  setTimeout(pushAllVisibleAds, 250);
   
   // Sync the form values immediately to screen preview
   syncFormToPreview();
@@ -623,7 +623,7 @@ function hydrateStateFromData(savedState) {
     showStep(state.currentStep);
     updateProgressDots();
     adjustPreviewScale(); // Scale the print preview container once workspace is visible
-    setTimeout(pushSidebarAd, 200);
+    setTimeout(pushAllVisibleAds, 250);
     
     // Render and Sync live preview
     const template = TEMPLATE_STYLES[state.selectedTemplateId];
@@ -877,16 +877,32 @@ function updateProgressDots() {
   });
 }
 
+let horizontalAdPushed = false;
 let sidebarAdPushed = false;
-function pushSidebarAd() {
-  if (sidebarAdPushed) return;
-  const adElement = document.querySelector('#promo-banner-sidebar .adsbygoogle');
-  if (adElement && adElement.offsetWidth > 0) {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-      sidebarAdPushed = true;
-    } catch (e) {
-      console.warn("AdSense push failed:", e);
+function pushAllVisibleAds() {
+  // 1. Horizontal banner (on selection screen)
+  if (!horizontalAdPushed) {
+    const horizontalAd = document.querySelector('.ad-container-horizontal .adsbygoogle');
+    if (horizontalAd && horizontalAd.offsetWidth > 0) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        horizontalAdPushed = true;
+      } catch (e) {
+        console.warn("Horizontal ad push failed:", e);
+      }
+    }
+  }
+
+  // 2. Sidebar banner (on workspace)
+  if (!sidebarAdPushed) {
+    const sidebarAd = document.querySelector('#promo-banner-sidebar .adsbygoogle');
+    if (sidebarAd && sidebarAd.offsetWidth > 0) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        sidebarAdPushed = true;
+      } catch (e) {
+        console.warn("Sidebar ad push failed:", e);
+      }
     }
   }
 }
@@ -1862,6 +1878,7 @@ function bootstrap() {
   setupWizardDots();
   attachEvents();
   loadSavedResume();
+  setTimeout(pushAllVisibleAds, 250);
 }
 
 // Fire up ZenResume!
