@@ -238,6 +238,10 @@
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
                 Reset Defaults
               </button>
+              <button type="button" class="btn-data-action" id="btn-help-guide" onclick="openModal('guide-modal')" title="View Help & Tips Guide" style="color: #16a085; border-color: rgba(22, 160, 133, 0.25);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Help Guide
+              </button>
               <input type="file" id="input-import-file" accept=".json" style="display: none;">
             </div>
             <div class="wizard-progress" id="wizard-progress-dots">
@@ -676,6 +680,71 @@
       </div>
       
       <button class="btn-primary" onclick="closeModal('contact-modal')" style="width: 100%; padding: 12px; font-size: 14px; border-radius: 8px;">Close Dialog</button>
+    </div>
+  </div>
+
+  <!-- User Guide & Help Modal -->
+  <div id="guide-modal" class="modal-overlay legal-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
+    <div class="modal-content" style="padding: 30px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; background: white; border-radius: 16px; position: relative; box-shadow: var(--shadow-hover);">
+      <button class="btn-close" onclick="closeModal('guide-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #95a5a6;">&times;</button>
+      
+      <h2 style="font-family: 'Outfit', sans-serif; color: var(--primary-dark); margin-bottom: 6px; font-size: 20px; display: flex; align-items: center; gap: 8px;">
+        💡 ZenResume User Guide & Tips
+      </h2>
+      <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px; margin-top: 0;">Get the most out of your resume building process with these tips and features.</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 18px; margin-bottom: 24px; text-align: left;">
+        
+        <!-- Step 1: Magic Import -->
+        <div>
+          <h3 style="font-size: 14px; font-weight: 700; color: var(--primary-calm); margin: 0 0 6px 0; display: flex; align-items: center; gap: 6px;">
+            ✨ 1. Gemini AI Magic Import (PDF/Text)
+          </h3>
+          <p style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; margin: 0;">
+            Click the **Magic Import** button to upload your existing resume (PDF) or paste raw text. The built-in Gemini AI parser will automatically extract your contact details, work history, projects, and skills to pre-populate all form fields in one click!
+          </p>
+        </div>
+
+        <!-- Step 2: Auto-save & backups -->
+        <div>
+          <h3 style="font-size: 14px; font-weight: 700; color: var(--primary-calm); margin: 0 0 6px 0; display: flex; align-items: center; gap: 6px;">
+            💾 2. Auto-Save & Local Backup Files
+          </h3>
+          <p style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; margin: 0;">
+            *   **Auto-Save:** ZenResume saves your progress automatically on every key press in your browser's local cache.
+            *   **Backup (JSON):** Click **Backup** to export a lightweight file of your resume data. Keep this file safe!
+            *   **Restore:** Click **Restore** and upload your backup file to instantly load your resume details on any device.
+          </p>
+        </div>
+
+        <!-- Step 3: PDF Print Settings -->
+        <div>
+          <h3 style="font-size: 14px; font-weight: 700; color: var(--primary-calm); margin: 0 0 6px 0; display: flex; align-items: center; gap: 6px;">
+            🖨️ 3. How to Export a Perfect PDF
+          </h3>
+          <p style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; margin: 0;">
+            When you click **Download PDF** at the final step, the browser's native print preview window will pop up. For the cleanest layout:
+            *   Set **Destination** to *Save as PDF*.
+            *   Set **Margins** to *Default* or *None* (margins are handled natively by templates).
+            *   **Uncheck** *Headers and footers* (this removes the browser's date/URL text from the page edges).
+          </p>
+        </div>
+
+        <!-- Step 4: ATS optimization tips -->
+        <div>
+          <h3 style="font-size: 14px; font-weight: 700; color: var(--primary-calm); margin: 0 0 6px 0; display: flex; align-items: center; gap: 6px;">
+            📈 4. ATS-Friendly Formatting Rules
+          </h3>
+          <p style="font-size: 12.5px; color: var(--text-sub); line-height: 1.5; margin: 0;">
+            *   Use standard, readable fonts (like *Inter* or *Roboto*).
+            *   Keep bullet points clear, concise, and focused on accomplishments.
+            *   Avoid inserting custom images, emojis, or charts directly inside text fields, as ATS bots cannot crawl them.
+          </p>
+        </div>
+
+      </div>
+      
+      <button class="btn-primary" onclick="closeModal('guide-modal')" style="width: 100%; padding: 12px; font-size: 14px; border-radius: 8px;">Got it, thanks!</button>
     </div>
   </div>
 
