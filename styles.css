@@ -1780,21 +1780,23 @@ textarea.form-input {
     display: block !important;
     position: relative !important;
     top: auto !important;
+    height: auto !important;
     max-height: none !important;
     overflow-y: visible !important;
     padding: 20px !important;
   }
 
   .form-panel-content {
-    flex-direction: column;
+    display: block !important;
     gap: 16px;
-    height: auto;
-    overflow: visible;
+    height: auto !important;
+    overflow: visible !important;
   }
   
   .sidebar-stepper {
     width: 100%;
-    flex-direction: row;
+    display: flex !important;
+    flex-direction: row !important;
     border-right: none;
     border-bottom: 1px solid var(--border-glass);
     padding-right: 0;
@@ -1802,6 +1804,7 @@ textarea.form-input {
     overflow-x: auto;
     white-space: nowrap;
     scrollbar-width: none;
+    margin-bottom: 16px;
   }
   
   .sidebar-stepper::-webkit-scrollbar {
@@ -1815,7 +1818,9 @@ textarea.form-input {
   }
   
   .form-steps-container {
-    overflow-y: visible;
-    max-height: none;
+    display: block !important;
+    overflow-y: visible !important;
+    max-height: none !important;
+    height: auto !important;
   }
 }
