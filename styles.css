@@ -477,7 +477,7 @@ body {
   box-shadow: var(--shadow-peaceful);
   position: sticky;
   top: 40px;
-  max-height: calc(100vh - 80px);
+  height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1615,7 +1615,7 @@ textarea.form-input {
   gap: 24px;
   flex-grow: 1;
   overflow: hidden;
-  height: calc(100% - 64px);
+  min-height: 0;
 }
 
 .sidebar-stepper {
