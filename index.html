@@ -247,14 +247,54 @@
             <div class="wizard-progress" id="wizard-progress-dots">
               <!-- Dots added dynamically -->
             </div>
-          </div>
+          <div class="form-panel-content">
+            <!-- Stepper Sidebar -->
+            <div class="sidebar-stepper no-print">
+              <button type="button" class="stepper-item active" data-stepper-step="1">
+                <span class="stepper-icon">1</span>
+                Contact
+              </button>
+              <button type="button" class="stepper-item" data-stepper-step="2">
+                <span class="stepper-icon">2</span>
+                Summary
+              </button>
+              <button type="button" class="stepper-item" data-stepper-step="3">
+                <span class="stepper-icon">3</span>
+                Skills
+              </button>
+              <button type="button" class="stepper-item" data-stepper-step="4">
+                <span class="stepper-icon">4</span>
+                Experience
+              </button>
+              <button type="button" class="stepper-item" data-stepper-step="5">
+                <span class="stepper-icon">5</span>
+                Projects
+              </button>
+              <button type="button" class="stepper-item" data-stepper-step="6">
+                <span class="stepper-icon">6</span>
+                Education
+              </button>
+              <button type="button" class="stepper-item" data-stepper-step="7">
+                <span class="stepper-icon">7</span>
+                Certs
+              </button>
+            </div>
 
-          <!-- Wizard Form Container -->
-          <form id="resume-form" onsubmit="event.preventDefault();">
-            
-            <!-- Step 1: Personal Details -->
-            <div class="form-step active" data-step="1">
-              <h2 class="step-title">Contact & Profiles</h2>
+            <!-- Scrollable Form Container -->
+            <div class="form-steps-container">
+              <!-- Wizard Form Container -->
+              <form id="resume-form" onsubmit="event.preventDefault();">
+                
+                <!-- Step 1: Personal Details -->
+                <div class="form-step active" data-step="1">
+                  <div class="form-step-header" onclick="selectFormStep(1)">
+                    <div class="form-step-header-title">
+                      <span class="form-step-header-number">1</span>
+                      Contact & Profiles
+                    </div>
+                    <svg class="form-step-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <div class="form-step-body">
               <p class="step-desc">Provide your contact details. Keep titles clear and emails professional.</p>
               
               <div class="form-group">
@@ -293,11 +333,19 @@
                   <input type="text" id="input-linkedin" class="form-input" placeholder="e.g. linkedin.com/in/rohan">
                 </div>
               </div>
-            </div>
+                  </div>
+                </div>
 
-            <!-- Step 2: Professional Summary -->
-            <div class="form-step" data-step="2">
-              <h2 class="step-title">Professional Summary</h2>
+                <!-- Step 2: Professional Summary -->
+                <div class="form-step" data-step="2">
+                  <div class="form-step-header" onclick="selectFormStep(2)">
+                    <div class="form-step-header-title">
+                      <span class="form-step-header-number">2</span>
+                      Professional Summary
+                    </div>
+                    <svg class="form-step-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <div class="form-step-body">
               <p class="step-desc">Write a concise, 3-4 sentence paragraph highlighting your core capabilities, technical goals, and credentials.</p>
               
               <div class="form-group">
@@ -317,22 +365,38 @@
                   <!-- Rendered dynamically by JS -->
                 </div>
               </div>
-            </div>
+                  </div>
+                </div>
 
-            <!-- Step 3: Core Competencies / Skills -->
-            <div class="form-step" data-step="3">
-              <h2 class="step-title">Skills & Keywords</h2>
+                <!-- Step 3: Core Competencies / Skills -->
+                <div class="form-step" data-step="3">
+                  <div class="form-step-header" onclick="selectFormStep(3)">
+                    <div class="form-step-header-title">
+                      <span class="form-step-header-number">3</span>
+                      Skills & Keywords
+                    </div>
+                    <svg class="form-step-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <div class="form-step-body">
               <p class="step-desc">List your technical skills and domain expertise. Separating them with commas makes it easy for the ATS to parse.</p>
               
               <div class="form-group">
                 <label class="form-label" for="input-skills">Skills (Comma-separated)</label>
                 <textarea id="input-skills" class="form-input" style="min-height: 120px;" placeholder="e.g. AutoCAD, SolidWorks, FEA, GD&T, CNC, Project Planning"></textarea>
               </div>
-            </div>
+                  </div>
+                </div>
 
-            <!-- Step 4: Professional Timeline (Experience) -->
-            <div class="form-step" data-step="4">
-              <h2 class="step-title">Work Experience</h2>
+                <!-- Step 4: Professional Timeline (Experience) -->
+                <div class="form-step" data-step="4">
+                  <div class="form-step-header" onclick="selectFormStep(4)">
+                    <div class="form-step-header-title">
+                      <span class="form-step-header-number">4</span>
+                      Work Experience
+                    </div>
+                    <svg class="form-step-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <div class="form-step-body">
               <p class="step-desc">Detail your recent professional history, internships, or leadership positions.</p>
               
               <div class="list-container" id="experience-list-container">
@@ -342,11 +406,19 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 Add Experience Entry
               </button>
-            </div>
+                  </div>
+                </div>
 
-            <!-- Step 5: Key Projects -->
-            <div class="form-step" data-step="5">
-              <h2 class="step-title">Technical Projects</h2>
+                <!-- Step 5: Key Projects -->
+                <div class="form-step" data-step="5">
+                  <div class="form-step-header" onclick="selectFormStep(5)">
+                    <div class="form-step-header-title">
+                      <span class="form-step-header-number">5</span>
+                      Technical Projects
+                    </div>
+                    <svg class="form-step-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <div class="form-step-body">
               <p class="step-desc">List key academic capstone works, personal engineering repositories, or major prototypes built.</p>
               
               <div class="list-container" id="projects-list-container">
@@ -356,11 +428,19 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 Add Project Entry
               </button>
-            </div>
+                  </div>
+                </div>
 
-            <!-- Step 6: Education -->
-            <div class="form-step" data-step="6">
-              <h2 class="step-title">Education</h2>
+                <!-- Step 6: Education -->
+                <div class="form-step" data-step="6">
+                  <div class="form-step-header" onclick="selectFormStep(6)">
+                    <div class="form-step-header-title">
+                      <span class="form-step-header-number">6</span>
+                      Education Details
+                    </div>
+                    <svg class="form-step-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <div class="form-step-body">
               <p class="step-desc">Add your formal degrees, universities, graduation timelines, and grade credentials.</p>
               
               <div class="list-container" id="education-list-container">
@@ -370,11 +450,19 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 Add Education Entry
               </button>
-            </div>
+                  </div>
+                </div>
 
-            <!-- Step 7: Certifications -->
-            <div class="form-step" data-step="7">
-              <h2 class="step-title">Certifications</h2>
+                <!-- Step 7: Certifications -->
+                <div class="form-step" data-step="7">
+                  <div class="form-step-header" onclick="selectFormStep(7)">
+                    <div class="form-step-header-title">
+                      <span class="form-step-header-number">7</span>
+                      Certifications
+                    </div>
+                    <svg class="form-step-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <div class="form-step-body">
               <p class="step-desc">Add professional licensing, training courses, and verified developer badges to strengthen your profile.</p>
               
               <div class="list-container" id="certifications-list-container">
@@ -384,18 +472,21 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 Add Certification
               </button>
-            </div>
+                  </div>
+                </div>
 
-            <!-- Navigation Actions -->
-            <div class="wizard-nav no-print">
-              <button type="button" class="btn-nav-prev" id="btn-wizard-prev" style="visibility: hidden;">Previous Step</button>
-              <button type="button" class="btn-nav-next" id="btn-wizard-next">
-                Next Step
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-              </button>
-            </div>
+                <!-- Navigation Actions -->
+                <div class="wizard-nav no-print">
+                  <button type="button" class="btn-nav-prev" id="btn-wizard-prev" style="visibility: hidden;">Previous Step</button>
+                  <button type="button" class="btn-nav-next" id="btn-wizard-next">
+                    Next Step
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </button>
+                </div>
 
-          </form>
+              </form>
+            </div> <!-- closing form-steps-container -->
+          </div> <!-- closing form-panel-content -->
           <!-- Amazon Affiliate Widget -->
           <div class="affiliate-widget no-print" style="width: 100%; max-width: 300px; margin: 30px auto 0 auto; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
             <div style="font-size: 24px; margin-bottom: 10px;">📚</div>

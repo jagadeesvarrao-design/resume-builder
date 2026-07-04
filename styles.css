@@ -478,7 +478,9 @@ body {
   position: sticky;
   top: 40px;
   max-height: calc(100vh - 80px);
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .workspace-actions {
@@ -1602,4 +1604,218 @@ textarea.form-input {
   font-size: 12.5px;
   color: var(--text-sub);
   line-height: 1.6;
+}
+
+/* ==========================================================================
+   13. HYBRID FORM PANEL STYLES (STEPPER & ACCORDIONS)
+   ========================================================================== */
+.form-panel-content {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  flex-grow: 1;
+  overflow: hidden;
+  height: calc(100% - 64px);
+}
+
+.sidebar-stepper {
+  width: 175px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-right: 1px solid var(--border-glass);
+  padding-right: 16px;
+  overflow-y: auto;
+}
+
+.stepper-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  background: transparent;
+  border: none;
+  text-align: left;
+  width: 100%;
+}
+
+.stepper-item:hover {
+  background: rgba(74, 107, 98, 0.05);
+  color: var(--primary-dark);
+}
+
+.stepper-item.active {
+  background: rgba(74, 107, 98, 0.1);
+  color: var(--primary-dark);
+  box-shadow: inset 3px 0 0 var(--primary-calm);
+}
+
+.stepper-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(74, 107, 98, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-light);
+  transition: var(--transition-smooth);
+  flex-shrink: 0;
+}
+
+.stepper-item.active .stepper-icon {
+  background: var(--primary-calm);
+  color: var(--white);
+}
+
+.form-steps-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 100%;
+}
+
+/* Accordion Form Step Styling */
+.form-step {
+  display: flex !important; /* Force all headers to stay visible in list */
+  flex-direction: column;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.form-step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  background: #fafbfc;
+  transition: var(--transition-smooth);
+  user-select: none;
+  border-bottom: 1px solid transparent;
+}
+
+.form-step-header:hover {
+  background: rgba(74, 107, 98, 0.04);
+}
+
+.form-step.active {
+  box-shadow: var(--shadow-peaceful);
+  border-color: rgba(74, 107, 98, 0.25);
+}
+
+.form-step.active .form-step-header {
+  background: rgba(74, 107, 98, 0.06);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.form-step-header-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-step-header-number {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(74, 107, 98, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary-calm);
+}
+
+.form-step.active .form-step-header-number {
+  background: var(--primary-calm);
+  color: var(--white);
+}
+
+.form-step-chevron {
+  transition: transform var(--transition-smooth);
+  color: var(--text-light);
+}
+
+.form-step.active .form-step-chevron {
+  transform: rotate(180deg);
+}
+
+.form-step-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0 18px;
+}
+
+.form-step.active .form-step-body {
+  max-height: 3000px;
+  padding: 20px 18px;
+}
+
+/* Tablet & Mobile Stepper Responsive rules */
+@media (max-width: 1024px) {
+  .form-panel {
+    display: block !important;
+    position: relative !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding: 20px !important;
+  }
+
+  .form-panel-content {
+    flex-direction: column;
+    gap: 16px;
+    height: auto;
+    overflow: visible;
+  }
+  
+  .sidebar-stepper {
+    width: 100%;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid var(--border-glass);
+    padding-right: 0;
+    padding-bottom: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  
+  .sidebar-stepper::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .stepper-item {
+    flex-shrink: 0;
+    width: auto;
+    padding: 6px 12px;
+  }
+  
+  .form-steps-container {
+    overflow-y: visible;
+    max-height: none;
+  }
 }

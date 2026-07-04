@@ -874,7 +874,15 @@ function updateProgressDots() {
   });
 }
 
+window.selectFormStep = function(stepNum) {
+  showStep(stepNum);
+  updateProgressDots();
+};
+
 function showStep(stepNum) {
+  // Update state active step
+  state.currentStep = stepNum;
+
   // Hide all steps
   document.querySelectorAll('.form-step').forEach(step => {
     step.classList.remove('active');
@@ -885,14 +893,27 @@ function showStep(stepNum) {
   if (activeStep) {
     activeStep.classList.add('active');
     
-    // Smooth scroll top on form container
-    document.querySelector('.form-panel').scrollTop = 0;
+    // Smooth scroll the active accordion step into view inside container
+    const stepsContainer = document.querySelector('.form-steps-container');
+    if (stepsContainer) {
+      const topOffset = activeStep.offsetTop - stepsContainer.offsetTop;
+      stepsContainer.scrollTo({
+        top: topOffset - 10,
+        behavior: 'smooth'
+      });
+    }
     
     // Generate dynamic summary suggestions when step 2 is active
     if (stepNum === 2) {
       generateSummarySuggestions();
     }
   }
+
+  // Update Stepper Sidebar active state
+  document.querySelectorAll('.stepper-item').forEach(item => {
+    const itemStep = parseInt(item.getAttribute('data-stepper-step'));
+    item.classList.toggle('active', itemStep === stepNum);
+  });
   
   // Update Navigation Controls Visibility
   if (stepNum === 1) {
@@ -1561,6 +1582,14 @@ function attachEvents() {
   // Navigation steps
   btnWizardNext.addEventListener('click', handleWizardNext);
   btnWizardPrev.addEventListener('click', handleWizardPrev);
+
+  // Stepper Sidebar item clicks
+  document.querySelectorAll('.stepper-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const stepNum = parseInt(item.getAttribute('data-stepper-step'));
+      selectFormStep(stepNum);
+    });
+  });
 
   // Quick Action download button in Live Preview
   btnTriggerDownload.addEventListener('click', openPrintModal);
