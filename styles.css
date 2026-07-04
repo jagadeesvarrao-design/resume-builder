@@ -1544,3 +1544,62 @@ textarea.form-input {
     justify-content: center;
   }
 }
+
+/* ==========================================================================
+   11. SEO FAQ SECTION
+   ========================================================================== */
+.faq-container {
+  margin-top: 48px;
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-peaceful);
+}
+
+.faq-main-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+  .faq-container {
+    padding: 24px 16px;
+    margin-top: 32px;
+  }
+}
+
+.faq-item {
+  background: var(--white);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-peaceful);
+}
+
+.faq-question {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-calm);
+  margin-bottom: 8px;
+}
+
+.faq-answer {
+  font-size: 12.5px;
+  color: var(--text-sub);
+  line-height: 1.6;
+}
