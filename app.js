@@ -5,7 +5,7 @@
  */
 
 // Application State
-window.state = {
+const state = {
   selectedExp: 'fresher',        // 'fresher' | 'experienced'
   selectedInd: 'software',       // 'software' | 'electrical' | 'mechanical' | 'civil'
   selectedTemplateId: 'software_fresher_minimalist',
@@ -15,7 +15,6 @@ window.state = {
   sectionOrder: ['experience', 'projects', 'education', 'certifications'],
   isFitToScreen: false
 };
-const state = window.state;
 
 // DOM References
 const greetingBanner = document.getElementById('greeting-banner');
@@ -164,7 +163,6 @@ function selectTemplateStyle(templateId) {
   showStep(state.currentStep);
   updateProgressDots();
   adjustPreviewScale(); // Scale the print preview container once workspace is visible
-  setTimeout(pushAllVisibleAds, 250);
   
   // Sync the form values immediately to screen preview
   syncFormToPreview();
@@ -623,7 +621,6 @@ function hydrateStateFromData(savedState) {
     showStep(state.currentStep);
     updateProgressDots();
     adjustPreviewScale(); // Scale the print preview container once workspace is visible
-    setTimeout(pushAllVisibleAds, 250);
     
     // Render and Sync live preview
     const template = TEMPLATE_STYLES[state.selectedTemplateId];
@@ -877,45 +874,7 @@ function updateProgressDots() {
   });
 }
 
-let horizontalAdPushed = false;
-let sidebarAdPushed = false;
-function pushAllVisibleAds() {
-  // 1. Horizontal banner (on selection screen)
-  if (!horizontalAdPushed) {
-    const horizontalAd = document.querySelector('.ad-container-horizontal .adsbygoogle');
-    if (horizontalAd && horizontalAd.offsetWidth > 0) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        horizontalAdPushed = true;
-      } catch (e) {
-        console.warn("Horizontal ad push failed:", e);
-      }
-    }
-  }
-
-  // 2. Sidebar banner (on workspace)
-  if (!sidebarAdPushed) {
-    const sidebarAd = document.querySelector('#promo-banner-sidebar .adsbygoogle');
-    if (sidebarAd && sidebarAd.offsetWidth > 0) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        sidebarAdPushed = true;
-      } catch (e) {
-        console.warn("Sidebar ad push failed:", e);
-      }
-    }
-  }
-}
-
-window.selectFormStep = function(stepNum) {
-  showStep(stepNum);
-  updateProgressDots();
-};
-
 function showStep(stepNum) {
-  // Update state active step
-  state.currentStep = stepNum;
-
   // Hide all steps
   document.querySelectorAll('.form-step').forEach(step => {
     step.classList.remove('active');
@@ -926,27 +885,14 @@ function showStep(stepNum) {
   if (activeStep) {
     activeStep.classList.add('active');
     
-    // Smooth scroll the active accordion step into view inside container
-    const stepsContainer = document.querySelector('.form-steps-container');
-    if (stepsContainer) {
-      const topOffset = activeStep.offsetTop - stepsContainer.offsetTop;
-      stepsContainer.scrollTo({
-        top: topOffset - 10,
-        behavior: 'smooth'
-      });
-    }
+    // Smooth scroll top on form container
+    document.querySelector('.form-panel').scrollTop = 0;
     
     // Generate dynamic summary suggestions when step 2 is active
     if (stepNum === 2) {
       generateSummarySuggestions();
     }
   }
-
-  // Update Stepper Sidebar active state
-  document.querySelectorAll('.stepper-item').forEach(item => {
-    const itemStep = parseInt(item.getAttribute('data-stepper-step'));
-    item.classList.toggle('active', itemStep === stepNum);
-  });
   
   // Update Navigation Controls Visibility
   if (stepNum === 1) {
@@ -1616,14 +1562,6 @@ function attachEvents() {
   btnWizardNext.addEventListener('click', handleWizardNext);
   btnWizardPrev.addEventListener('click', handleWizardPrev);
 
-  // Stepper Sidebar item clicks
-  document.querySelectorAll('.stepper-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const stepNum = parseInt(item.getAttribute('data-stepper-step'));
-      selectFormStep(stepNum);
-    });
-  });
-
   // Quick Action download button in Live Preview
   btnTriggerDownload.addEventListener('click', openPrintModal);
   
@@ -1878,7 +1816,6 @@ function bootstrap() {
   setupWizardDots();
   attachEvents();
   loadSavedResume();
-  setTimeout(pushAllVisibleAds, 250);
 }
 
 // Fire up ZenResume!
