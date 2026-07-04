@@ -435,6 +435,11 @@ body {
   .filters-panel {
     padding: 16px 16px !important;
   }
+
+  .templates-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
   
   .greeting-text {
     font-size: 26px !important;
