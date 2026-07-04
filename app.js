@@ -5,7 +5,7 @@
  */
 
 // Application State
-const state = {
+window.state = {
   selectedExp: 'fresher',        // 'fresher' | 'experienced'
   selectedInd: 'software',       // 'software' | 'electrical' | 'mechanical' | 'civil'
   selectedTemplateId: 'software_fresher_minimalist',
@@ -15,6 +15,7 @@ const state = {
   sectionOrder: ['experience', 'projects', 'education', 'certifications'],
   isFitToScreen: false
 };
+const state = window.state;
 
 // DOM References
 const greetingBanner = document.getElementById('greeting-banner');

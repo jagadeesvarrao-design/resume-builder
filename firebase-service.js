@@ -94,15 +94,17 @@ auth.onAuthStateChanged(user => {
     }
     
     // Automatically load data when user logs in
-    if (!state.hasLoadedProfile && typeof loadSavedResume === 'function') {
+    if (window.state && !window.state.hasLoadedProfile && typeof loadSavedResume === 'function') {
       loadSavedResume();
-      state.hasLoadedProfile = true;
+      window.state.hasLoadedProfile = true;
     }
   } else {
     if (loginOptions) loginOptions.style.display = 'block';
     if (profileDiv) profileDiv.style.display = 'none';
     if (userName) userName.textContent = '';
-    state.hasLoadedProfile = false;
+    if (window.state) {
+      window.state.hasLoadedProfile = false;
+    }
   }
 });
 
