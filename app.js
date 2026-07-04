@@ -164,6 +164,7 @@ function selectTemplateStyle(templateId) {
   showStep(state.currentStep);
   updateProgressDots();
   adjustPreviewScale(); // Scale the print preview container once workspace is visible
+  setTimeout(pushSidebarAd, 200);
   
   // Sync the form values immediately to screen preview
   syncFormToPreview();
@@ -622,6 +623,7 @@ function hydrateStateFromData(savedState) {
     showStep(state.currentStep);
     updateProgressDots();
     adjustPreviewScale(); // Scale the print preview container once workspace is visible
+    setTimeout(pushSidebarAd, 200);
     
     // Render and Sync live preview
     const template = TEMPLATE_STYLES[state.selectedTemplateId];
@@ -873,6 +875,20 @@ function updateProgressDots() {
       dot.classList.add('completed');
     }
   });
+}
+
+let sidebarAdPushed = false;
+function pushSidebarAd() {
+  if (sidebarAdPushed) return;
+  const adElement = document.querySelector('#promo-banner-sidebar .adsbygoogle');
+  if (adElement && adElement.offsetWidth > 0) {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      sidebarAdPushed = true;
+    } catch (e) {
+      console.warn("AdSense push failed:", e);
+    }
+  }
 }
 
 window.selectFormStep = function(stepNum) {
