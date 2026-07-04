@@ -631,7 +631,7 @@
     <div class="footer-links">
       <a onclick="openModal('privacy-modal')">Privacy Policy</a>
       <a onclick="openModal('tos-modal')">Terms of Service</a>
-      <a href="mailto:support@zenresume.com">Contact Us</a>
+      <a onclick="openModal('contact-modal')">Contact Us</a>
     </div>
     <div class="footer-text">
       &copy; 2024 ZenResume. All rights reserved.<br>
@@ -676,6 +676,27 @@
       <p>All the materials on ZenResume's Website are provided "as is". ZenResume makes no warranties, may it be expressed or implied, therefore negates all other warranties.</p>
       <h3>4. Limitations</h3>
       <p>ZenResume or its suppliers will not be hold accountable for any damages that will arise with the use or inability to use the materials on ZenResume's Website.</p>
+    </div>
+  </div>
+
+  <!-- Contact Us Modal -->
+  <div id="contact-modal" class="modal-overlay legal-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
+    <div class="modal-content" style="padding: 40px; width: 90%; max-width: 500px; background: white; border-radius: 16px; position: relative;">
+      <button class="btn-close" onclick="closeModal('contact-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #95a5a6;">&times;</button>
+      <h2 style="font-family: 'Outfit', sans-serif; color: var(--primary-dark); margin-bottom: 12px;">Contact Us</h2>
+      <p style="font-size: 13.5px; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px;">Have questions, feedback, or need help? We'd love to hear from you. Get in touch with our team!</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 12px; background: var(--bg-card); padding: 14px; border-radius: 8px; border: 1px solid var(--border-glass);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-calm)" stroke-width="2.5" style="flex-shrink: 0; margin-right: 6px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <div>
+            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.5px; margin-bottom: 2px;">Email Support</div>
+            <a href="mailto:support@zenresume.com" style="font-size: 14px; color: var(--primary-calm); text-decoration: none; font-weight: 600;">support@zenresume.com</a>
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn-primary" onclick="closeModal('contact-modal')" style="width: 100%; padding: 12px; font-size: 14px; border-radius: 8px;">Close Dialog</button>
     </div>
   </div>
 

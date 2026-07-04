@@ -1885,3 +1885,27 @@ window.addEventListener('load', () => {
   });
 });
 
+/* ==========================================================================
+   12. LEGAL MODALS (PRIVACY, TOS, CONTACT)
+   ========================================================================== */
+window.openModal = function(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.style.display = 'flex';
+  }
+};
+
+window.closeModal = function(id) {
+  const modal = document.getElementById(id);
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
+
+// Close modal dynamically if user clicks on the background overlay
+window.addEventListener('click', (e) => {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.style.display = 'none';
+  }
+});
+
