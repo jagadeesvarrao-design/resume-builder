@@ -1,6 +1,8 @@
 # ZenResume 🌿
 > **Peaceful, Premium, and 100% ATS-Compliant Resume Builder**
 
+🚀 **Live Website:** [https://resume-builder-swart-sigma-93.vercel.app/](https://resume-builder-swart-sigma-93.vercel.app/)
+
 ZenResume is an elegant, client-side web application designed to help professionals build highly-approved, ATS-friendly resumes with a soothing user experience. Crafted with a beautiful **Sage & Slate HSL design palette**, ZenResume provides an interactive workspace, robust data management, and dynamic template engines.
 
 ---
