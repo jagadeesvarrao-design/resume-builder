@@ -163,6 +163,7 @@ function selectTemplateStyle(templateId) {
   showStep(state.currentStep);
   updateProgressDots();
   adjustPreviewScale(); // Scale the print preview container once workspace is visible
+  setTimeout(pushAllVisibleAds, 250);
   
   // Sync the form values immediately to screen preview
   syncFormToPreview();
@@ -621,6 +622,7 @@ function hydrateStateFromData(savedState) {
     showStep(state.currentStep);
     updateProgressDots();
     adjustPreviewScale(); // Scale the print preview container once workspace is visible
+    setTimeout(pushAllVisibleAds, 250);
     
     // Render and Sync live preview
     const template = TEMPLATE_STYLES[state.selectedTemplateId];
@@ -1863,6 +1865,47 @@ window.addEventListener('DOMContentLoaded', initAdSenseUI);
 let adSenseLoaded = false;
 const interactionEvents = ['mouseover', 'keydown', 'touchstart', 'scroll'];
 
+let topAdPushed = false;
+let horizontalAdPushed = false;
+let sidebarAdPushed = false;
+
+function pushAllVisibleAds() {
+  if (typeof window.adsbygoogle === 'undefined') return;
+  
+  // 1. Top banner
+  if (!topAdPushed) {
+    const ad = document.querySelector('#promo-banner-top .adsbygoogle');
+    if (ad && ad.offsetWidth > 0) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        topAdPushed = true;
+      } catch (e) { console.warn(e); }
+    }
+  }
+
+  // 2. Horizontal banner
+  if (!horizontalAdPushed) {
+    const ad = document.querySelector('.ad-container-horizontal .adsbygoogle');
+    if (ad && ad.offsetWidth > 0) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        horizontalAdPushed = true;
+      } catch (e) { console.warn(e); }
+    }
+  }
+
+  // 3. Sidebar banner
+  if (!sidebarAdPushed) {
+    const ad = document.querySelector('#promo-banner-sidebar .adsbygoogle');
+    if (ad && ad.offsetWidth > 0) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        sidebarAdPushed = true;
+      } catch (e) { console.warn(e); }
+    }
+  }
+}
+
 function lazyLoadAdSense() {
   if (adSenseLoaded) return;
   adSenseLoaded = true;
@@ -1871,6 +1914,9 @@ function lazyLoadAdSense() {
   script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1993051486567311";
   script.crossOrigin = "anonymous";
   script.async = true;
+  script.onload = () => {
+    setTimeout(pushAllVisibleAds, 250);
+  };
   document.head.appendChild(script);
   
   // Clean up listeners
