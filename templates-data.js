@@ -626,6 +626,228 @@ const RESUME_PROFILES = {
       "AWS Certified Machine Learning – Specialty",
       "TensorFlow Developer Certificate (Google)"
     ]
+  },
+  medical_fresher: {
+    personal: {
+      name: "Dr. Ananya Reddy",
+      title: "Junior Resident Medical Officer",
+      email: "ananya.reddy@email.com",
+      phone: "+91 98765 09876",
+      location: "Hyderabad, India",
+      website: "ananyareddy.med",
+      linkedin: "linkedin.com/in/ananya-reddy-md"
+    },
+    summary: "Dedicated and compassionate medical graduate (MBBS) with hands-on clinical training during internship at major teaching hospitals. Strong foundations in patient triage, emergency care, and diagnostic analysis. Adept at collaborating in multidisciplinary medical teams to deliver high-quality patient care.",
+    skills: ["Clinical Diagnostics", "Patient Care & Triage", "Emergency Medicine", "Basic Life Support (BLS)", "Electronic Health Records (EHR)", "Pharmacology Foundations", "Medical Documentation", "Suturing & Wound Care"],
+    experience: [
+      {
+        role: "Medical Intern",
+        company: "Osmania General Hospital",
+        location: "Hyderabad, India",
+        dates: "Mar 2025 - Mar 2026",
+        descriptions: [
+          "Completed rotations in General Medicine, Pediatrics, Surgery, and Obstetrics/Gynecology under consultant supervision.",
+          "Triaged and assisted in treating 50+ patients daily in the emergency room, ensuring swift stabilizer care.",
+          "Maintained detailed and accurate electronic patient charts and records (EHR) for daily consultant rounds."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "Community Health Outreach Campaign",
+        technologies: "Preventive Care, Public Health",
+        description: "Organized a rural health screening camp that provided primary checkups and diabetes screening to 300+ underserved villagers.",
+        link: ""
+      }
+    ],
+    education: [
+      {
+        degree: "Bachelor of Medicine, Bachelor of Surgery (MBBS)",
+        institution: "Osmania Medical College",
+        location: "Hyderabad, India",
+        dates: "2020 - 2025",
+        gpa: "7.8/10.0 Grade"
+      }
+    ],
+    certifications: [
+      "Basic Life Support (BLS) - American Heart Association (AHA)",
+      "Advanced Cardiovascular Life Support (ACLS) - AHA"
+    ]
+  },
+  medical_experienced: {
+    personal: {
+      name: "Dr. Arshad Khan",
+      title: "Consultant Cardiologist",
+      email: "arshad.khan@email.com",
+      phone: "+91 99000 88000",
+      location: "Hyderabad, India",
+      website: "arshadkhan-cardio.in",
+      linkedin: "linkedin.com/in/arshad-khan-cardio"
+    },
+    summary: "Board-certified Cardiologist with 8+ years of extensive clinical and interventional cardiology experience. Proven track record in managing acute cardiac emergencies, performing diagnostic angiograms, and directing cardiac ICU departments. Dedicated to patient-centric care and clinical excellence.",
+    skills: ["Interventional Cardiology", "Echocardiography (2D/3D)", "Acute Coronary Care", "Clinical Research & Trials", "Patient Diagnostics", "Medical Team Leadership", "ECG Interpretation"],
+    experience: [
+      {
+        role: "Senior Consultant Cardiologist",
+        company: "Care Hospitals",
+        location: "Hyderabad, India",
+        dates: "Jun 2021 - Present",
+        descriptions: [
+          "Lead the clinical cardiology department, overseeing 20+ resident doctors, nurses, and technicians.",
+          "Perform 300+ diagnostic coronary angiograms and non-invasive cardiac procedures annually with 99.4% safety rates.",
+          "Designed and implemented a rapid-response protocol for acute myocardial infarction, reducing door-to-balloon times by 15%."
+        ]
+      },
+      {
+        role: "Associate Cardiologist",
+        company: "Apollo Hospitals",
+        location: "Hyderabad, India",
+        dates: "Aug 2018 - May 2021",
+        descriptions: [
+          "Managed daily outpatient clinics seeing 40+ cardiac patients per day and oversaw the 15-bed Cardiac ICU.",
+          "Conducted non-invasive testing including stress tests (TMT), Holter monitoring, and transesophageal echoes."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "Cardiac Rehabilitation Initiative",
+        technologies: "Patient Care Protocols",
+        description: "Created a comprehensive post-surgery rehabilitation program that lowered 30-day patient readmission rates by 12%.",
+        link: ""
+      }
+    ],
+    education: [
+      {
+        degree: "DM in Cardiology",
+        institution: "Nizam's Institute of Medical Sciences (NIMS)",
+        location: "Hyderabad, India",
+        dates: "2015 - 2018",
+        gpa: "Gold Medalist"
+      },
+      {
+        degree: "MD in General Medicine",
+        institution: "Kasturba Medical College",
+        location: "Manipal, India",
+        dates: "2012 - 2015",
+        gpa: ""
+      }
+    ],
+    certifications: [
+      "Fellow of the Cardiological Society of India (FCSI)",
+      "Board Certified in Internal Medicine and Cardiology"
+    ]
+  },
+  law_fresher: {
+    personal: {
+      name: "Meera Sen",
+      title: "Associate Attorney & Legal Researcher",
+      email: "meera.sen@email.com",
+      phone: "+91 91122 33445",
+      location: "New Delhi, India",
+      website: "meerasen-legal.in",
+      linkedin: "linkedin.com/in/meera-sen-law"
+    },
+    summary: "Highly motivated Law Graduate (BA LLB Hons.) with strong legal research, drafting, and analytical writing skills. Practical internship experience in corporate legal departments and High Court litigation. Active participant in moot courts and chief editor of the university law journal.",
+    skills: ["Legal Research (Manupatra, Westlaw)", "Drafting Contracts & Pleadings", "Corporate Law", "Litigation Support", "Case Analysis & Briefing", "Written & Verbal Advocacy", "Constitutional Law"],
+    experience: [
+      {
+        role: "Legal Intern",
+        company: "Shardul Amarchand Mangaldas & Co",
+        location: "New Delhi, India",
+        dates: "Jan 2026 - Mar 2026",
+        descriptions: [
+          "Drafted commercial lease agreements, NDA contracts, and vendor terms under corporate partner supervision.",
+          "Conducted legal research on cross-border corporate mergers, compiling 10+ case-law advisory memos.",
+          "Assisted in reviewing due diligence documents for a major Rs. 500 Crore acquisition deal."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "Editor-in-Chief, NALSAR Law Review",
+        technologies: "Legal Editing & Writing",
+        description: "Managed the peer-review and editing process for 15+ academic articles on constitutional and environmental law.",
+        link: ""
+      }
+    ],
+    education: [
+      {
+        degree: "B.A. LL.B. (Hons.)",
+        institution: "NALSAR University of Law",
+        location: "Hyderabad, India",
+        dates: "2021 - 2026",
+        gpa: "8.2/10.0 CGPA"
+      }
+    ],
+    certifications: [
+      "All India Bar Examination (AIBE) Candidate",
+      "Certificate Course in Intellectual Property Rights (WIPO)"
+    ]
+  },
+  law_experienced: {
+    personal: {
+      name: "Rajesh Malhotra",
+      title: "Senior Corporate Counsel",
+      email: "rajesh.malhotra@email.com",
+      phone: "+91 98888 77777",
+      location: "Bangalore, India",
+      website: "rajesh-law.io",
+      linkedin: "linkedin.com/in/rajesh-malhotra-law"
+    },
+    summary: "Accomplished Corporate Attorney with 8+ years of experience advising Fortune 500 clients on complex mergers and acquisitions, compliance structures, and commercial contracts. Extensive background in negotiating joint ventures, handling corporate litigation, and managing cross-border transactions.",
+    skills: ["Mergers & Acquisitions (M&A)", "Corporate Governance", "Contract Negotiation & Drafting", "Cross-Border Transactions", "Regulatory Compliance (FEMA, SEBI)", "Intellectual Property Management", "Commercial Litigation"],
+    experience: [
+      {
+        role: "Senior Legal Counsel",
+        company: "Infosys Legal Department",
+        location: "Bangalore, India",
+        dates: "Jul 2021 - Present",
+        descriptions: [
+          "Lead the international commercial contracting division, negotiating contracts valued at over $150M in value.",
+          "Advise senior executives on SEBI regulations, compliance updates, and corporate dispute strategies.",
+          "Standardized the company's NDA and software licensing templates, reducing average contract review cycles by 25%."
+        ]
+      },
+      {
+        role: "Associate Attorney",
+        company: "AZB & Partners",
+        location: "Mumbai, India",
+        dates: "May 2018 - Jun 2021",
+        descriptions: [
+          "Drafted primary transaction documents for 12+ corporate M&A deals, conducting extensive due diligence reports.",
+          "Represented corporate clients in regulatory hearings before the National Company Law Tribunal (NCLT)."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "Global Compliance Framework Redesign",
+        technologies: "Regulatory Compliance",
+        description: "Oversaw the implementation of GDPR and data privacy compliance structures across 5 international business units.",
+        link: ""
+      }
+    ],
+    education: [
+      {
+        degree: "Master of Laws (LL.M.) in Corporate Law",
+        institution: "New York University School of Law",
+        location: "New York, USA",
+        dates: "2017 - 2018",
+        gpa: "Deans List"
+      },
+      {
+        degree: "B.A. LL.B. (Hons.)",
+        institution: "National Law School of India University (NLSIU)",
+        location: "Bangalore, India",
+        dates: "2012 - 2017",
+        gpa: "Gold Medalist"
+      }
+    ],
+    certifications: [
+      "Admitted to the Bar Council of Maharashtra & Goa (2017)",
+      "Admitted to the New York State Bar (2018)"
+    ]
   }
 };
 /**
@@ -2328,6 +2550,86 @@ const TEMPLATE_STYLES = {
           </div>
         </div>
       `;
+    }
+  },
+  medical_fresher_minimalist: {
+    id: "medical_fresher_minimalist",
+    name: "Clinical Resident Minimalist",
+    description: "Traditional single-column layout highlighting clinical rotations, patient triage experience, and emergency medical certifications.",
+    industry: "medical",
+    experience: "fresher",
+    render: (data) => {
+      const font = "'Inter', Arial, sans-serif";
+      const accent = "#0f766e"; // Teal Medical Accent
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Professional Profile", accent);
+      html += RenderHelpers.skills(data, font, "Clinical Competencies & Skills", accent, "badges");
+      html += RenderHelpers.experience(data, font, "Clinical Rotations & Internship Details", accent);
+      html += RenderHelpers.projects(data, font, "Community Outreach & Research", accent);
+      html += RenderHelpers.education(data, font, "Medical Education", accent);
+      html += RenderHelpers.certifications(data, font, "Medical Certifications & Licensing", accent);
+      return html;
+    }
+  },
+  medical_experienced_clinical: {
+    id: "medical_experienced_clinical",
+    name: "Consultant Physician Classic",
+    description: "Highly structural design emphasizing specialty departments, board certifications, patient safety records, and clinical leadership outcomes.",
+    industry: "medical",
+    experience: "experienced",
+    render: (data) => {
+      const font = "Arial, sans-serif";
+      const accent = "#0e7490"; // Deep Cyan Medical Accent
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true); // Centered
+      html += RenderHelpers.summary(data, font, "Clinical Summary", accent);
+      html += RenderHelpers.skills(data, font, "Specialty & Clinical Skills", accent, "grid");
+      html += RenderHelpers.experience(data, font, "Professional Medical Appointments & Practice", accent);
+      html += RenderHelpers.projects(data, font, "Medical Initiatives & Research Contributions", accent);
+      html += RenderHelpers.education(data, font, "Medical Qualifications", accent);
+      html += RenderHelpers.certifications(data, font, "Board Certifications & Memberships", accent);
+      return html;
+    }
+  },
+  law_fresher_legal: {
+    id: "law_fresher_legal",
+    name: "Classic Legal Apprentice",
+    description: "Traditional black-and-white layout utilizing serif fonts, highlighting legal internships, moot court honors, and publication editing.",
+    industry: "law",
+    experience: "fresher",
+    render: (data) => {
+      const font = "'Times New Roman', Times, serif"; // Law standard
+      const accent = "#111827"; // Formal Charcoal
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, true); // Centered
+      html += RenderHelpers.summary(data, font, "Professional Statement", accent);
+      html += RenderHelpers.education(data, font, "Legal Education", accent);
+      html += RenderHelpers.experience(data, font, "Legal Internships & Practice", accent);
+      html += RenderHelpers.projects(data, font, "Moot Court & Publications", accent);
+      html += RenderHelpers.skills(data, font, "Core Competencies", accent, "bullets");
+      html += RenderHelpers.certifications(data, font, "Bar Status & Memberships", accent);
+      return html;
+    }
+  },
+  law_experienced_corporate: {
+    id: "law_experienced_corporate",
+    name: "Senior Counsel Traditional",
+    description: "High-density legal layout optimized for corporate attorneys to detail bar admissions, deal highlights, and compliance experience.",
+    industry: "law",
+    experience: "experienced",
+    render: (data) => {
+      const font = "'Times New Roman', Times, serif"; // Law standard
+      const accent = "#1e3a8a"; // Deep Navy
+      let html = '';
+      html += RenderHelpers.header(data, font, accent, false);
+      html += RenderHelpers.summary(data, font, "Executive Scope", accent);
+      html += RenderHelpers.experience(data, font, "Legal & Corporate Practice History", accent);
+      html += RenderHelpers.education(data, font, "Education & Academics", accent);
+      html += RenderHelpers.projects(data, font, "Selected M&A / Transaction Records", accent);
+      html += RenderHelpers.skills(data, font, "Legal Competencies & Specialties", accent, "grid");
+      html += RenderHelpers.certifications(data, font, "Bar Admissions & Credentials", accent);
+      return html;
     }
   }
 };
