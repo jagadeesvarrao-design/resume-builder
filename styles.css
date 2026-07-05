@@ -1039,6 +1039,7 @@ textarea.form-input {
   .selection-screen,
   .data-actions,
   .quick-layout-switch,
+  .quick-size-switch,
   #print-modal {
     display: none !important;
     visibility: hidden !important;
@@ -1603,3 +1604,45 @@ textarea.form-input {
   color: var(--text-sub);
   line-height: 1.6;
 }
+
+/* ==========================================================================
+   ADDED CSS FOR LETTER SIZE OVERRIDES & AI BUTTONS
+   ========================================================================== */
+.resume-paper.paper-letter {
+  width: 215.9mm !important;
+  min-height: 279.4mm !important;
+}
+
+.quick-size-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-input);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-glass);
+}
+
+.btn-ai-optimize {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: #8e44ad;
+  border: 1px solid rgba(142, 68, 173, 0.2);
+  background: none;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.btn-ai-optimize:hover {
+  background: rgba(142, 68, 173, 0.08);
+  border-color: #8e44ad;
+  transform: translateY(-0.5px);
+}
+

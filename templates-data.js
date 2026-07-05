@@ -869,6 +869,8 @@ const RenderHelpers = {
           ${data.personal.location ? `<span><strong>Location:</strong> ${data.personal.location}</span>` : ""}
           ${data.personal.website ? `<span><strong>Web:</strong> ${data.personal.website}</span>` : ""}
           ${data.personal.linkedin ? `<span><strong>LinkedIn:</strong> ${data.personal.linkedin}</span>` : ""}
+          ${data.personal.github ? `<span><strong>GitHub:</strong> ${data.personal.github}</span>` : ""}
+          ${data.personal.customSocial ? `<span><strong>Portfolio:</strong> ${data.personal.customSocial}</span>` : ""}
         </div>
       </div>
     `;
@@ -1676,6 +1678,8 @@ const TEMPLATE_STYLES = {
       const loc = data.personal.location ? `<span><strong style="color:${neonTeal}">Location:</strong> ${data.personal.location}</span>` : "";
       const web = data.personal.website ? `<span><strong style="color:${neonTeal}">Web:</strong> ${data.personal.website}</span>` : "";
       const linkedin = data.personal.linkedin ? `<span><strong style="color:${neonTeal}">LinkedIn:</strong> ${data.personal.linkedin}</span>` : "";
+      const github = data.personal.github ? `<span><strong style="color:${neonTeal}">GitHub:</strong> ${data.personal.github}</span>` : "";
+      const customSocial = data.personal.customSocial ? `<span><strong style="color:${neonTeal}">Portfolio:</strong> ${data.personal.customSocial}</span>` : "";
 
       // Skills Visual Progress Bars
       let skillsHTML = '';
@@ -1768,7 +1772,7 @@ const TEMPLATE_STYLES = {
             <h1 style="font-size:26px; font-weight:bold; color:${textLight}; text-transform:uppercase; margin:0 0 2px 0; letter-spacing:1px; text-shadow: 0 0 10px rgba(6,182,212,0.3);">${data.personal.name || ""}</h1>
             <p style="font-size:12px; font-weight:700; color:${neonTeal}; text-transform:uppercase; letter-spacing:1.5px; margin:0 0 10px 0;">${data.personal.title || ""}</p>
             <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px 12px; font-size:10px; color:${textSub}; line-height:1.4;">
-              ${email} ${phone} ${loc} ${web} ${linkedin}
+              ${email} ${phone} ${loc} ${web} ${linkedin} ${github} ${customSocial}
             </div>
           </div>
           
@@ -1831,6 +1835,8 @@ const TEMPLATE_STYLES = {
       const loc = data.personal.location ? `<div style="margin-bottom:6px;"><strong>Location:</strong><br>${data.personal.location}</div>` : "";
       const web = data.personal.website ? `<div style="margin-bottom:6px;"><strong>Web:</strong><br>${data.personal.website}</div>` : "";
       const linkedin = data.personal.linkedin ? `<div style="margin-bottom:6px;"><strong>LinkedIn:</strong><br>${data.personal.linkedin}</div>` : "";
+      const github = data.personal.github ? `<div style="margin-bottom:6px;"><strong>GitHub:</strong><br>${data.personal.github}</div>` : "";
+      const customSocial = data.personal.customSocial ? `<div style="margin-bottom:6px;"><strong>Portfolio:</strong><br>${data.personal.customSocial}</div>` : "";
 
       // Visual Bullet points for Skills
       let skillsHTML = '';
@@ -1917,7 +1923,7 @@ const TEMPLATE_STYLES = {
             
             <div style="font-size:9px; color:#94a3b8; display:flex; flex-direction:column; gap:8px;">
               <h3 style="font-size:10px; font-weight:bold; color:#ffffff; border-bottom:1px solid #334155; padding-bottom:3px; text-transform:uppercase; margin:0;">Contact Info</h3>
-              ${email} ${phone} ${loc} ${web} ${linkedin}
+              ${email} ${phone} ${loc} ${web} ${linkedin} ${github} ${customSocial}
             </div>
 
             <div>
@@ -1975,6 +1981,8 @@ const TEMPLATE_STYLES = {
       const loc = data.personal.location ? `<span><strong>Location:</strong> ${data.personal.location}</span>` : "";
       const web = data.personal.website ? `<span><strong>Web:</strong> ${data.personal.website}</span>` : "";
       const linkedin = data.personal.linkedin ? `<span><strong>LinkedIn:</strong> ${data.personal.linkedin}</span>` : "";
+      const github = data.personal.github ? `<span><strong>GitHub:</strong> ${data.personal.github}</span>` : "";
+      const customSocial = data.personal.customSocial ? `<span><strong>Portfolio:</strong> ${data.personal.customSocial}</span>` : "";
 
       // Skills Visual Progress Badges
       let skillsHTML = '';
@@ -2060,7 +2068,7 @@ const TEMPLATE_STYLES = {
                 <p style="font-size:12px; font-weight:700; color:${copper}; text-transform:uppercase; letter-spacing:1px; margin:0;">${data.personal.title || ""}</p>
               </div>
               <div style="display:flex; flex-wrap:wrap; gap:4px 10px; font-size:10px; color:${textSub}; text-align:right;">
-                ${email} ${phone} ${loc} ${web} ${linkedin}
+                ${email} ${phone} ${loc} ${web} ${linkedin} ${github} ${customSocial}
               </div>
             </div>
           </div>
@@ -2133,6 +2141,8 @@ const TEMPLATE_STYLES = {
       const loc = data.personal.location ? `<span><strong>Location:</strong> ${data.personal.location}</span>` : "";
       const web = data.personal.website ? `<span><strong>Web:</strong> ${data.personal.website}</span>` : "";
       const linkedin = data.personal.linkedin ? `<span><strong>LinkedIn:</strong> ${data.personal.linkedin}</span>` : "";
+      const github = data.personal.github ? `<span><strong>GitHub:</strong> ${data.personal.github}</span>` : "";
+      const customSocial = data.personal.customSocial ? `<span><strong>Portfolio:</strong> ${data.personal.customSocial}</span>` : "";
 
       // Visual rating stars for Skills
       let skillsHTML = '';
@@ -2216,7 +2226,7 @@ const TEMPLATE_STYLES = {
             <h1 style="font-size:26px; font-weight:bold; text-transform:uppercase; margin:0 0 2px 0; letter-spacing:1px;">${data.personal.name || ""}</h1>
             <p style="font-size:12px; font-weight:700; color:#93c5fd; text-transform:uppercase; letter-spacing:1.5px; margin:0 0 10px 0;">${data.personal.title || ""}</p>
             <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:6px 12px; font-size:10px; color:#cbd5e1; line-height:1.4;">
-              ${email} ${phone} ${loc} ${web} ${linkedin}
+              ${email} ${phone} ${loc} ${web} ${linkedin} ${github} ${customSocial}
             </div>
           </div>
           
@@ -2278,6 +2288,8 @@ const TEMPLATE_STYLES = {
       const loc = data.personal.location ? `<div style="margin-bottom:8px;"><strong>Location:</strong><br>${data.personal.location}</div>` : "";
       const web = data.personal.website ? `<div style="margin-bottom:8px;"><strong>Web:</strong><br>${data.personal.website}</div>` : "";
       const linkedin = data.personal.linkedin ? `<div style="margin-bottom:8px;"><strong>LinkedIn:</strong><br>${data.personal.linkedin}</div>` : "";
+      const github = data.personal.github ? `<div style="margin-bottom:8px;"><strong>GitHub:</strong><br>${data.personal.github}</div>` : "";
+      const customSocial = data.personal.customSocial ? `<div style="margin-bottom:8px;"><strong>Portfolio:</strong><br>${data.personal.customSocial}</div>` : "";
 
       // Visual circles for Skills
       let skillsHTML = '';
@@ -2364,7 +2376,7 @@ const TEMPLATE_STYLES = {
             
             <div style="font-size:9px; color:#dcfce7; display:flex; flex-direction:column; gap:8px;">
               <h3 style="font-size:10px; font-weight:bold; color:#ffffff; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:3px; text-transform:uppercase; margin:0;">Contact Info</h3>
-              ${email} ${phone} ${loc} ${web} ${linkedin}
+              ${email} ${phone} ${loc} ${web} ${linkedin} ${github} ${customSocial}
             </div>
 
             <div>
@@ -2423,6 +2435,8 @@ const TEMPLATE_STYLES = {
       const loc = data.personal.location ? `<div style="margin-bottom:6px;"><strong>Location:</strong><div style="font-size:9.5px;">${data.personal.location}</div></div>` : "";
       const web = data.personal.website ? `<div style="margin-bottom:6px;"><strong>Website:</strong><div style="font-size:9.5px; word-break:break-all;"><a href="${data.personal.website}" target="_blank" style="color:${accent}; text-decoration:none;">${data.personal.website.replace(/^https?:\/\//, '')}</a></div></div>` : "";
       const linkedin = data.personal.linkedin ? `<div style="margin-bottom:6px;"><strong>LinkedIn:</strong><div style="font-size:9.5px; word-break:break-all;"><a href="${data.personal.linkedin}" target="_blank" style="color:${accent}; text-decoration:none;">${data.personal.linkedin.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '')}</a></div></div>` : "";
+      const github = data.personal.github ? `<div style="margin-bottom:6px;"><strong>GitHub:</strong><div style="font-size:9.5px; word-break:break-all;"><a href="${data.personal.github}" target="_blank" style="color:${accent}; text-decoration:none;">${data.personal.github.replace(/^https?:\/\/(www\.)?github\.com\//, '')}</a></div></div>` : "";
+      const customSocial = data.personal.customSocial ? `<div style="margin-bottom:6px;"><strong>Portfolio:</strong><div style="font-size:9.5px; word-break:break-all;">${data.personal.customSocial}</div></div>` : "";
 
       // Skills HTML as elegant tags
       let skillsHTML = '';
@@ -2517,7 +2531,7 @@ const TEMPLATE_STYLES = {
             
             <div style="font-size:9px; color:${textMain}; display:flex; flex-direction:column; gap:6px;">
               <h3 style="font-size:10.5px; font-weight:bold; color:${primaryDark}; border-bottom:1.5px solid #cbd5e1; padding-bottom:3px; text-transform:uppercase; margin:0 0 4px 0; letter-spacing:0.5px;">Contact</h3>
-              ${email} ${phone} ${loc} ${web} ${linkedin}
+              ${email} ${phone} ${loc} ${web} ${linkedin} ${github} ${customSocial}
             </div>
             
             ${skillsHTML}
