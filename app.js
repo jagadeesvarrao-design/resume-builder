@@ -269,10 +269,7 @@ function addExperienceCard(data = null) {
       </div>
     </div>
     <div class="form-group">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <label class="form-label" style="margin-bottom: 0;">Key Achievements (One bullet per line)</label>
-        <button type="button" class="btn-ai-optimize"><i class="fas fa-magic"></i> AI Enhance</button>
-      </div>
+      <label class="form-label">Key Achievements (One bullet per line)</label>
       <textarea class="form-input input-exp-desc" style="min-height: 90px;" placeholder="Optimized system bandwidth...&#10;Supervised team of junior..."></textarea>
     </div>
   `;
@@ -283,13 +280,6 @@ function addExperienceCard(data = null) {
   card.querySelector('.input-exp-dates').value = dates;
   card.querySelector('.input-exp-location').value = location;
   card.querySelector('.input-exp-desc').value = desc;
-  
-  const btnAi = card.querySelector('.btn-ai-optimize');
-  if (btnAi) {
-    btnAi.addEventListener('click', async () => {
-      await optimizeTextareaWithAI(card.querySelector('.input-exp-desc'), btnAi);
-    });
-  }
   
   // Attach change listeners to live preview
   card.querySelectorAll('.form-input').forEach(input => {
@@ -333,10 +323,7 @@ function addProjectCard(data = null) {
       </div>
     </div>
     <div class="form-group">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-        <label class="form-label" style="margin-bottom: 0;">Short Description</label>
-        <button type="button" class="btn-ai-optimize"><i class="fas fa-magic"></i> AI Enhance</button>
-      </div>
+      <label class="form-label">Short Description</label>
       <textarea class="form-input input-proj-desc" style="min-height: 70px;" placeholder="Describe what you built and the core objectives reached..."></textarea>
     </div>
   `;
@@ -346,13 +333,6 @@ function addProjectCard(data = null) {
   card.querySelector('.input-proj-tech').value = technologies;
   card.querySelector('.input-proj-link').value = link;
   card.querySelector('.input-proj-desc').value = description;
-  
-  const btnAi = card.querySelector('.btn-ai-optimize');
-  if (btnAi) {
-    btnAi.addEventListener('click', async () => {
-      await optimizeTextareaWithAI(card.querySelector('.input-proj-desc'), btnAi);
-    });
-  }
   
   card.querySelectorAll('.form-input').forEach(input => {
     input.addEventListener('input', debouncedSyncFormToPreview);
@@ -1406,68 +1386,6 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
     return response;
   }
   throw new Error("AI is currently experiencing extremely high demand. Please try again in 1 minute.");
-}
-
-/**
- * AI Bullet Point Optimizer using Gemini
- */
-async function optimizeTextareaWithAI(textarea, button) {
-  const originalText = textarea.value.trim();
-  if (!originalText) {
-    alert("Please enter some achievements or text to enhance first.");
-    return;
-  }
-  
-  const originalHtml = button.innerHTML;
-  button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Enhancing...`;
-  button.disabled = true;
-  
-  const k1 = "AQ.Ab8RN6Jqz5Var";
-  const k2 = "yIbPhyy_I--chTecP";
-  const k3 = "ZXp8BBJnhcWrIip9JHuw";
-  let apiKey = localStorage.getItem('GEMINI_API_KEY') || (k1 + k2 + k3);
-  
-  try {
-    const promptText = `
-    You are an expert professional resume editor. Optimize the following resume accomplishments/bullet points to be highly impactful, active, and ATS-friendly using the STAR method (Action Verb + Situation/Task + Action + Quantifiable Result).
-    
-    Accomplishments to optimize:
-    """
-    ${originalText}
-    """
-    
-    Strict Rules:
-    1. Rewrite each line to start with a strong action verb (e.g. Optimized, Developed, Led, Architected).
-    2. Maintain the same number of lines/bullet points.
-    3. Keep the output as plain text. Do NOT add bullet characters (like '*', '-', or '•') at the start of the lines, just return the text.
-    4. Do not include any intro, outro, explanations, or quotes. Return only the optimized bullet points.
-    `;
-    
-    const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: promptText }] }]
-      })
-    });
-    
-    const result = await response.json();
-    if (result.candidates && result.candidates[0].content.parts[0].text) {
-      let enhancedText = result.candidates[0].content.parts[0].text.trim();
-      // Remove any leading bullet characters just in case the model ignored the instructions
-      enhancedText = enhancedText.split('\n').map(line => line.replace(/^[\s•\-\*\d\.]+\s*/, '')).join('\n');
-      textarea.value = enhancedText;
-      syncFormToPreview();
-    } else {
-      throw new Error("No response parts received from Gemini");
-    }
-  } catch (err) {
-    console.error("AI Bullet point optimization failed:", err);
-    alert("AI enhancement failed. Please verify your internet connection or try again later.");
-  } finally {
-    button.innerHTML = originalHtml;
-    button.disabled = false;
-  }
 }
 
 async function parseHeuristics(inputData, isPdf = false) {
