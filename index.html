@@ -74,6 +74,21 @@
   <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 <body>
+  
+  <!-- Global Top Header -->
+  <header class="no-print" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 30px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(74, 107, 98, 0.1); position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 20px rgba(74,107,98,0.05);">
+    <a href="/" style="display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer;">
+      <div style="background: linear-gradient(135deg, var(--primary-calm), var(--primary-light)); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-family: 'Outfit', sans-serif;">
+        Z
+      </div>
+      <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; color: var(--primary-dark); letter-spacing: -0.5px;">ZenResume</span>
+    </a>
+    
+    <div style="display: flex; gap: 20px; align-items: center;">
+      <a href="/" style="font-size: 14px; font-weight: 600; color: var(--primary-calm); text-decoration: none; transition: color 0.2s;">App</a>
+      <a href="/blog/" style="font-size: 14px; font-weight: 600; color: var(--text-main); text-decoration: none;">Resources</a>
+    </div>
+  </header>
 
   <div class="app-container">
     
@@ -646,6 +661,7 @@
   <!-- Site Footer -->
   <footer class="site-footer no-print">
     <div class="footer-links">
+      <a href="/blog/">Resources</a>
       <a onclick="openModal('privacy-modal')">Privacy Policy</a>
       <a onclick="openModal('tos-modal')">Terms of Service</a>
       <a onclick="openModal('contact-modal')">Contact Us</a>
