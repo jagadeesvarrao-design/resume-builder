@@ -1987,3 +1987,105 @@ window.addEventListener('click', (e) => {
   }
 });
 
+/* ==========================================================================
+   13. CONTACT FORM — STAR RATING, SUBMIT & RESET
+   ========================================================================== */
+
+let _contactRating = 0;
+const _ratingLabels = ['', 'Poor 😞', 'Fair 😐', 'Good 🙂', 'Great 😊', 'Excellent! 🌟'];
+
+function initContactForm() {
+  const stars = document.querySelectorAll('.contact-star');
+  const ratingInput = document.getElementById('contact-rating-val');
+  const ratingLabel = document.getElementById('contact-rating-label');
+  if (!stars.length) return;
+
+  const updateStarDisplay = (highlightUpTo) => {
+    stars.forEach(s => {
+      const v = parseInt(s.dataset.val);
+      s.style.color = v <= highlightUpTo ? '#f59e0b' : '#d1d5db';
+      s.style.transform = v <= highlightUpTo ? 'scale(1.2)' : 'scale(1)';
+    });
+  };
+
+  stars.forEach(star => {
+    const val = parseInt(star.dataset.val);
+
+    star.addEventListener('mouseover', () => updateStarDisplay(val));
+
+    star.addEventListener('mouseout', () => updateStarDisplay(_contactRating));
+
+    star.addEventListener('click', () => {
+      _contactRating = val;
+      ratingInput.value = val;
+      ratingLabel.textContent = _ratingLabels[val];
+      ratingLabel.style.color = '#f59e0b';
+      ratingLabel.style.fontStyle = 'normal';
+      ratingLabel.style.fontWeight = '600';
+      updateStarDisplay(_contactRating);
+    });
+  });
+}
+
+window.handleContactSubmit = function(e) {
+  e.preventDefault();
+
+  const email   = document.getElementById('contact-email').value.trim();
+  const message = document.getElementById('contact-message').value.trim();
+  const rating  = parseInt(document.getElementById('contact-rating-val').value) || 0;
+
+  const ratingText = rating > 0
+    ? `Rating: ${rating}/5 — ${_ratingLabels[rating]}`
+    : 'Rating: Not provided';
+
+  const subject = `ZenResume Feedback${rating > 0 ? ' (' + rating + ' Stars)' : ''}`;
+  const body =
+    `From: ${email}\n` +
+    `${ratingText}\n\n` +
+    `--- Message ---\n` +
+    `${message}\n\n` +
+    `---\nSent via ZenResume Contact Form`;
+
+  // Open email client with pre-filled data
+  window.location.href =
+    'mailto:support.zenresume@gmail.com' +
+    '?subject=' + encodeURIComponent(subject) +
+    '&body='    + encodeURIComponent(body);
+
+  // Show success state
+  const form    = document.getElementById('contact-form');
+  const success = document.getElementById('contact-success-msg');
+  if (form)    form.style.display    = 'none';
+  if (success) success.style.display = 'block';
+};
+
+window.resetContactForm = function() {
+  const form    = document.getElementById('contact-form');
+  const success = document.getElementById('contact-success-msg');
+
+  if (form) {
+    form.reset();
+    form.style.display = 'flex';
+  }
+  if (success) success.style.display = 'none';
+
+  // Reset rating state
+  _contactRating = 0;
+  const ratingInput = document.getElementById('contact-rating-val');
+  const ratingLabel = document.getElementById('contact-rating-label');
+  if (ratingInput) ratingInput.value = 0;
+  if (ratingLabel) {
+    ratingLabel.textContent  = 'Click to rate';
+    ratingLabel.style.color  = '#94a3b8';
+    ratingLabel.style.fontStyle  = 'italic';
+    ratingLabel.style.fontWeight = 'normal';
+  }
+  document.querySelectorAll('.contact-star').forEach(s => {
+    s.style.color     = '#d1d5db';
+    s.style.transform = 'scale(1)';
+  });
+};
+
+// Initialise contact form interactivity on DOM ready
+window.addEventListener('DOMContentLoaded', initContactForm);
+

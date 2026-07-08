@@ -698,22 +698,75 @@
 
   <!-- Contact Us Modal -->
   <div id="contact-modal" class="modal-overlay legal-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
-    <div class="modal-content" style="padding: 40px; width: 90%; max-width: 500px; background: white; border-radius: 16px; position: relative;">
-      <button class="btn-close" onclick="closeModal('contact-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #95a5a6;">&times;</button>
-      <h2 style="font-family: 'Outfit', sans-serif; color: var(--primary-dark); margin-bottom: 12px;">Contact Us</h2>
-      <p style="font-size: 13.5px; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px;">Have questions, feedback, or need help? We'd love to hear from you. Get in touch with our team!</p>
-      
-      <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px;">
-        <div style="display: flex; align-items: center; gap: 12px; background: var(--bg-card); padding: 14px; border-radius: 8px; border: 1px solid var(--border-glass);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-calm)" stroke-width="2.5" style="flex-shrink: 0; margin-right: 6px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <div>
-            <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-light); letter-spacing: 0.5px; margin-bottom: 2px;">Email Support</div>
-            <a href="mailto:support.zenresume@gmail.com" style="font-size: 14px; color: var(--primary-calm); text-decoration: none; font-weight: 600;">support.zenresume@gmail.com</a>
-          </div>
+    <div class="modal-content" style="padding: 36px 32px; width: 90%; max-width: 480px; background: white; border-radius: 20px; position: relative; box-shadow: 0 25px 60px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;">
+      <button class="btn-close" onclick="closeModal('contact-modal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #95a5a6; z-index: 1;">&times;</button>
+
+      <!-- Header -->
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="background: linear-gradient(135deg, #16a085, #3498db); width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 8px 20px rgba(22,160,133,0.3);">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
+        <h2 style="font-family: 'Outfit', sans-serif; color: var(--primary-dark); margin: 0 0 6px 0; font-size: 22px; font-weight: 700;">Get in Touch</h2>
+        <p style="font-size: 13px; color: var(--text-sub); margin: 0; line-height: 1.5;">We'd love to hear from you. Fill out the form below or email us directly.</p>
       </div>
-      
-      <button class="btn-primary" onclick="closeModal('contact-modal')" style="width: 100%; padding: 12px; font-size: 14px; border-radius: 8px;">Close Dialog</button>
+
+      <!-- Contact Form -->
+      <form id="contact-form" onsubmit="handleContactSubmit(event)" style="display: flex; flex-direction: column; gap: 16px;">
+
+        <!-- Email -->
+        <div>
+          <label class="form-label" style="display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">Your Email Address <span style="color:#e74c3c;">*</span></label>
+          <input type="email" id="contact-email" class="form-input" placeholder="you@example.com" required style="width: 100%; box-sizing: border-box;">
+        </div>
+
+        <!-- Star Rating -->
+        <div>
+          <label class="form-label" style="display: block; margin-bottom: 10px; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">Rate Your Experience</label>
+          <div id="star-rating-container" style="display: flex; align-items: center; gap: 4px;">
+            <span class="contact-star" data-val="1" style="font-size: 32px; cursor: pointer; transition: transform 0.15s ease, color 0.15s ease; color: #d1d5db; line-height: 1; user-select: none;">&#9733;</span>
+            <span class="contact-star" data-val="2" style="font-size: 32px; cursor: pointer; transition: transform 0.15s ease, color 0.15s ease; color: #d1d5db; line-height: 1; user-select: none;">&#9733;</span>
+            <span class="contact-star" data-val="3" style="font-size: 32px; cursor: pointer; transition: transform 0.15s ease, color 0.15s ease; color: #d1d5db; line-height: 1; user-select: none;">&#9733;</span>
+            <span class="contact-star" data-val="4" style="font-size: 32px; cursor: pointer; transition: transform 0.15s ease, color 0.15s ease; color: #d1d5db; line-height: 1; user-select: none;">&#9733;</span>
+            <span class="contact-star" data-val="5" style="font-size: 32px; cursor: pointer; transition: transform 0.15s ease, color 0.15s ease; color: #d1d5db; line-height: 1; user-select: none;">&#9733;</span>
+            <span id="contact-rating-label" style="margin-left: 10px; font-size: 13px; color: #94a3b8; font-style: italic; transition: color 0.2s;">Click to rate</span>
+          </div>
+          <input type="hidden" id="contact-rating-val" value="0">
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label class="form-label" style="display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">Your Message <span style="color:#e74c3c;">*</span></label>
+          <textarea id="contact-message" class="form-input" rows="4" placeholder="Tell us what's on your mind — feedback, bug report, feature request, or just a hello!" required style="width: 100%; box-sizing: border-box; resize: none; min-height: 110px;"></textarea>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" id="btn-contact-submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 15px; border-radius: 12px; margin-top: 4px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(22,160,133,0.3);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Message
+        </button>
+      </form>
+
+      <!-- Success State -->
+      <div id="contact-success-msg" style="display: none; text-align: center; padding: 10px 0 4px 0;">
+        <div style="font-size: 52px; margin-bottom: 14px;">&#9989;</div>
+        <h3 style="color: #16a085; margin: 0 0 10px 0; font-size: 19px; font-weight: 700;">Message Ready to Send!</h3>
+        <p style="color: #64748b; font-size: 13.5px; margin: 0 0 6px 0; line-height: 1.6;">Your email client has opened with your message pre-filled.<br>Just click <strong>Send</strong> in your email app to deliver it!</p>
+        <p style="color: #94a3b8; font-size: 12px; margin: 0 0 22px 0;">No email client? Use the direct link below.</p>
+        <button onclick="resetContactForm()" class="btn-primary" style="padding: 10px 28px; border-radius: 10px; font-size: 14px;">Send Another Message</button>
+      </div>
+
+      <!-- Divider -->
+      <div style="display: flex; align-items: center; gap: 12px; margin: 22px 0 14px 0;">
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+        <span style="font-size: 11px; color: #94a3b8; white-space: nowrap; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;">Or email directly</span>
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+      </div>
+
+      <!-- Direct Email Fallback -->
+      <a href="mailto:support.zenresume@gmail.com" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; text-decoration: none; color: #475569; font-size: 13px; font-weight: 600; transition: background 0.2s;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a085" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        support.zenresume@gmail.com
+      </a>
     </div>
   </div>
 
