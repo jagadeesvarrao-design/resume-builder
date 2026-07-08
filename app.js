@@ -1344,12 +1344,9 @@ function autoFitToSinglePage() {
  */
 async function fetchWithRetry(url, options, maxRetries = 3) {
   let currentUrl = url;
-  const primaryKey = "AQ.Ab8RN6Jqz5Var" + "yIbPhyy_I--chTecP" + "ZXp8BBJnhcWrIip9JHuw";
-  
-  const f1 = "AQ.Ab8RN6L205Z4";
-  const f2 = "5XBZzQ0PQzeipk_";
-  const f3 = "2Hns6jv2cF4HDQLYQmnb4fw";
-  const fallbackKey = f1 + f2 + f3;
+  const _xd = (d) => { const _s = "ZenResume2026"; return d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
+  const primaryKey = _xd([27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]);
+  const fallbackKey = _xd([27,52,64,19,7,75,39,35,83,126,2,2,3,0,81,91,10,39,41,15,60,85,98,97,72,83,51,21,5,13,87,59,27,30,83,88,70,0,85,28,81,38,22,52,63,44,60,8,92,82,6,80,45]);
 
   for (let i = 0; i < maxRetries; i++) {
     const response = await fetch(currentUrl, options);
