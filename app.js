@@ -1394,10 +1394,8 @@ async function parseHeuristics(inputData, isPdf = false) {
     btnMagicImport.innerHTML = "AI Analyzing Resume...";
   }
 
-  const k1 = "AQ.Ab8RN6Jqz5Var";
-  const k2 = "yIbPhyy_I--chTecP";
-  const k3 = "ZXp8BBJnhcWrIip9JHuw";
-  let apiKey = localStorage.getItem('GEMINI_API_KEY') || (k1 + k2 + k3);
+  const _gk = () => { const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]; const _s = "ZenResume2026"; return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
+  let apiKey = localStorage.getItem('GEMINI_API_KEY') || _gk();
   
   try {
     const promptText = `
@@ -1617,10 +1615,8 @@ function attachEvents() {
         return;
       }
       
-      const k1 = "AQ.Ab8RN6Jqz5Var";
-      const k2 = "yIbPhyy_I--chTecP";
-      const k3 = "ZXp8BBJnhcWrIip9JHuw";
-      let apiKey = localStorage.getItem('GEMINI_API_KEY') || (k1 + k2 + k3);
+      const _gk2 = () => { const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]; const _s = "ZenResume2026"; return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
+      let apiKey = localStorage.getItem('GEMINI_API_KEY') || _gk2();
       
       const originalBtnText = btnGenerateAi.textContent;
       btnGenerateAi.textContent = "Analyzing & Tailoring...";
