@@ -672,6 +672,24 @@
     </div>
   </footer>
 
+  <!-- Safari/Firefox Print Warning Modal -->
+  <div id="print-warning-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 4000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+    <div class="modal-content" style="padding: 40px 30px; width: 90%; max-width: 450px; text-align: center; border-top: 4px solid var(--primary-calm); background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);">
+      <div style="font-size: 32px; color: #e67e22; margin-bottom: 15px;"><i class="fas fa-exclamation-triangle"></i></div>
+      <h3 style="margin-top: 0; color: #0f172a; font-weight: 800; font-size: 20px; margin-bottom: 12px; font-family: 'Outfit', sans-serif;">Almost ready! 🚀</h3>
+      <p style="color: #334155; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">It looks like you are using Safari 🧭, Firefox 🦊, or a mobile browser 📱.</p>
+      
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 24px; text-align: left;">
+        <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 600; color: var(--primary-dark);">⚠️ Important Step:</p>
+        <p style="margin: 0; font-size: 13px; color: #475569;">To ensure your resume looks absolutely perfect ✨, please make sure <strong>"Headers and Footers"</strong> is unchecked ❌ in the print settings window that is about to open.</p>
+      </div>
+      
+      <button onclick="triggerActualPrint()" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-weight: 600; border-radius: 10px; font-size: 15px;">
+        <i class="fas fa-check"></i> I understand, Open PDF 📄
+      </button>
+    </div>
+  </div>
+
   <!-- Privacy Policy Modal -->
   <div id="privacy-modal" class="modal-overlay legal-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
     <div class="modal-content" style="padding: 40px; width: 90%; background: white; border-radius: 16px; position: relative;">

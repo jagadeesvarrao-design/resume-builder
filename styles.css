@@ -1021,7 +1021,7 @@ textarea.form-input {
 
   @page {
     size: A4;
-    margin: 15mm !important;
+    margin: 0 !important; /* Forces hiding of browser headers/footers */
   }
 
   /* 2. Hide all non-printable elements with extreme specificity */

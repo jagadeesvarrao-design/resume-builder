@@ -972,6 +972,12 @@ function closePrintModal() {
   printModal.style.display = 'none';
 }
 
+window.triggerActualPrint = function() {
+  const modal = document.getElementById('print-warning-modal');
+  if (modal) modal.style.display = 'none';
+  executeSystemPrint();
+};
+
 function executeSystemPrint() {
   closePrintModal();
   
@@ -1585,7 +1591,21 @@ function attachEvents() {
   if (btnModalClose) btnModalClose.addEventListener('click', closePrintModal);
   
   const btnSkipAi = document.getElementById('btn-skip-ai');
-  if (btnSkipAi) btnSkipAi.addEventListener('click', executeSystemPrint);
+  if (btnSkipAi) {
+    btnSkipAi.addEventListener('click', () => {
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
+      if (isSafari || isFirefox || isMobile) {
+        closePrintModal();
+        const warningModal = document.getElementById('print-warning-modal');
+        if (warningModal) warningModal.style.display = 'flex';
+      } else {
+        executeSystemPrint();
+      }
+    });
+  }
   
   const btnYesAi = document.getElementById('btn-yes-ai');
   const btnBackAi = document.getElementById('btn-back-ai');
