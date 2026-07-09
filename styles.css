@@ -1680,17 +1680,17 @@ textarea.form-input {
     width: 100% !important;
   }
   
-  header.no-print a {
+  header.no-print .header-logo-link {
     gap: 6px !important;
   }
   
-  header.no-print a div {
+  header.no-print .header-logo-icon {
     width: 28px !important;
     height: 28px !important;
     font-size: 14px !important;
   }
   
-  header.no-print a span {
+  header.no-print .header-logo-link span {
     font-size: 16px !important; /* Prevent brand squishing */
     letter-spacing: -0.3px !important;
   }
