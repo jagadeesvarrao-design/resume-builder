@@ -888,7 +888,7 @@ textarea.form-input {
 }
 
 .resume-paper {
-  background: var(--white);
+  background: #ffffff !important; /* Always white to mimic real paper */
   width: 210mm; /* A4 Standard Width */
   min-height: 297mm; /* A4 Standard Height */
   padding: 20mm; /* Proper standard margins */
@@ -897,7 +897,7 @@ textarea.form-input {
   border-radius: 4px;
   position: relative;
   box-sizing: border-box;
-  color: #111;
+  color: #111111 !important; /* Always dark text for high readability */
 }
 
 
