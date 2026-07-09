@@ -419,13 +419,17 @@ body {
   }
   
   .workspace-actions .data-actions {
-    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    justify-content: center !important;
     width: 100% !important;
   }
 
   .workspace-actions .data-actions .btn-data-action {
-    flex: 1 !important;
+    flex: 1 1 calc(50% - 8px) !important;
     justify-content: center !important;
+    font-size: 10px !important;
+    padding: 8px 10px !important;
   }
   
   .workspace-actions .btn-back {
@@ -1658,4 +1662,112 @@ textarea.form-input {
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-glass);
 }
+
+/* ==========================================================================
+   MOBILE LAYOUT BUG FIXES & OVERFLOW PREVENTION
+   ========================================================================== */
+@media (max-width: 600px) {
+  /* Prevent horizontal scrolling globally */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  /* 1. Global Header Navigation Optimization */
+  header.no-print {
+    padding: 12px 14px !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  header.no-print a {
+    gap: 6px !important;
+  }
+  
+  header.no-print a div {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 14px !important;
+  }
+  
+  header.no-print a span {
+    font-size: 16px !important; /* Prevent brand squishing */
+    letter-spacing: -0.3px !important;
+  }
+  
+  header.no-print .header-nav-menu,
+  header.no-print div[style*="display: flex; gap: 20px"] {
+    gap: 10px !important; /* Make App/Resources links closer */
+  }
+
+  header.no-print .header-nav-menu a,
+  header.no-print div[style*="display: flex; gap: 20px"] a {
+    font-size: 13px !important;
+  }
+
+  .btn-theme-toggle {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 14px !important;
+  }
+
+  /* 2. Welcome Greeting & Login Panel Centering */
+  .app-header .greeting-text {
+    font-size: 26px !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  
+  .app-header .sub-greeting {
+    font-size: 13.5px !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .app-header div[style*="display: flex; justify-content: space-between"] {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 16px !important;
+    text-align: center !important;
+  }
+
+  .app-header div[style*="display: flex; justify-content: space-between"] > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  #auth-container {
+    width: 100% !important;
+    min-width: 0 !important;
+    text-align: center !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 8px !important;
+  }
+  
+  #login-options {
+    width: 100% !important;
+    max-width: 260px !important;
+    margin: 0 auto !important;
+  }
+
+  #user-profile {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  /* 3. Footer Alignment */
+  .site-footer {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 30px 16px !important;
+  }
+
+  /* 4. Product Hunt Banner centering */
+  .app-header a[href*="producthunt"] {
+    margin: 14px auto 0 auto !important;
+  }
+}
+
 
