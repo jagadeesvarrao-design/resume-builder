@@ -35,6 +35,42 @@
   --radius-sm: 8px;
 }
 
+[data-theme="dark"] {
+  --primary-calm: #81A197;
+  --primary-light: #9BBAAF;
+  --primary-dark: #E2E8F0;
+  --primary-glow: rgba(129, 161, 151, 0.15);
+  --primary-glow-strong: rgba(129, 161, 151, 0.3);
+  
+  --bg-serene: #0F172A;
+  --bg-serene-gradient: linear-gradient(135deg, #0F172A 0%, #020617 100%);
+  --bg-card: rgba(30, 41, 59, 0.7);
+  --bg-input: rgba(15, 23, 42, 0.6);
+  
+  --text-main: #CBD5E1;
+  --text-sub: #94A3B8;
+  --text-light: #64748B;
+  --white: #1E293B;
+  
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-strong: rgba(255, 255, 255, 0.16);
+  --shadow-peaceful: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+  --shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* Enable smooth transitions for theme switching */
+body, header, footer, .app-container, .modal-content, .filters-panel, .form-section, .preview-panel, .resume-paper, .btn-theme-toggle, input, textarea, select {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-theme-toggle:hover {
+  background: rgba(74, 107, 98, 0.1);
+}
+[data-theme="dark"] .btn-theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
 /* Base Styles & Resets */
 *, *::before, *::after {
   box-sizing: border-box;

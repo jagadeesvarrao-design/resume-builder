@@ -1870,6 +1870,38 @@ function bootstrap() {
   setupWizardDots();
   attachEvents();
   loadSavedResume();
+  initTheme();
+}
+
+function initTheme() {
+  const btnThemeToggle = document.getElementById('btn-theme-toggle');
+  if (!btnThemeToggle) return;
+
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  updateThemeIcon(btnThemeToggle, currentTheme);
+
+  btnThemeToggle.addEventListener('click', () => {
+    const activeTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(btnThemeToggle, newTheme);
+  });
+}
+
+function updateThemeIcon(btn, theme) {
+  const icon = btn.querySelector('i');
+  if (icon) {
+    if (theme === 'dark') {
+      icon.className = 'fas fa-sun';
+      icon.style.color = '#F59E0B'; // warm sun color
+    } else {
+      icon.className = 'fas fa-moon';
+      icon.style.color = '';
+    }
+  }
 }
 
 // Fire up ZenResume!

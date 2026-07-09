@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>How to Write a Top-Tier Software Engineer Resume in 2026 | ZenResume</title>
@@ -79,6 +85,9 @@
     <div style="display: flex; gap: 20px; align-items: center;">
       <a href="/" style="font-size: 14px; font-weight: 600; color: var(--text-main); text-decoration: none; transition: color 0.2s;">App</a>
       <a href="/blog/" style="font-size: 14px; font-weight: 600; color: var(--primary-calm); text-decoration: none;">Resources</a>
+      <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--text-main); font-size: 16px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
+        <i class="fas fa-moon"></i>
+      </button>
     </div>
   </header>
 
@@ -149,5 +158,31 @@
     </div>
   </footer>
 
+  <script>
+    const btn = document.getElementById('btn-theme-toggle');
+    if (btn) {
+      const icon = btn.querySelector('i');
+      const updateIcon = (theme) => {
+        if (theme === 'dark') {
+          icon.className = 'fas fa-sun';
+          icon.style.color = '#F59E0B';
+        } else {
+          icon.className = 'fas fa-moon';
+          icon.style.color = '';
+        }
+      };
+      
+      // Initialize icon
+      updateIcon(document.documentElement.getAttribute('data-theme'));
+      
+      btn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
+      });
+    }
+  </script>
 </body>
 </html>
