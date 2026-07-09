@@ -357,7 +357,7 @@ body {
   box-shadow: 0 4px 12px var(--primary-glow-strong);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 800px) {
   .mobile-tabs {
     display: flex !important;
     animation: fadeInDown 0.6s var(--transition-smooth);
@@ -879,7 +879,7 @@ textarea.form-input {
   color: var(--white);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 800px) {
   .btn-zoom-toggle {
     display: flex;
   }
