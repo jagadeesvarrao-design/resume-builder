@@ -1034,11 +1034,12 @@ function runPdfGeneration() {
   const originalScrollX = window.scrollX;
   window.scrollTo(0, 0);
   
-  // Force strict proportions during print to prevent blank second pages
+  // Force strict proportions during print, slightly smaller than standard dimensions
+  // to prevent decimal pixel rounding errors from spilling over into a blank second page.
   const isLetter = state.paperSize === 'letter';
   const originalHeight = element.style.height;
   const originalOverflow = element.style.overflow;
-  element.style.height = isLetter ? '279.4mm' : '297mm';
+  element.style.height = isLetter ? '278mm' : '295.5mm';
   element.style.overflow = 'hidden';
 
   // Get user's name for the filename
@@ -1048,13 +1049,13 @@ function runPdfGeneration() {
   const opt = {
     margin:       0,
     filename:     fileName,
-    image:        { type: 'jpeg', quality: 1.0 },
+    image:        { type: 'jpeg', quality: 0.98 },
     html2canvas:  { 
-      scale: 4, 
+      scale: 3, // scale 3 is optimal for print quality and file size/memory safety
       useCORS: true, 
       letterRendering: true, 
       scrollY: 0,
-      height: element.offsetHeight
+      height: element.offsetHeight - 1 // trim 1 pixel from the bottom to prevent overflow page break
     },
     jsPDF:        { unit: 'mm', format: isLetter ? 'letter' : 'a4', orientation: 'portrait' }
   };
