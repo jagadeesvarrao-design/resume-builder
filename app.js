@@ -159,6 +159,8 @@ function selectTemplateStyle(templateId) {
   
   // Transition Screens
   selectionScreen.style.display = 'none';
+  const welcomeHeader = document.getElementById('app-header-welcome');
+  if (welcomeHeader) welcomeHeader.style.display = 'none';
   builderWorkspace.style.display = 'grid';
   
   // Show mobile tabs and default to 'edit' tab on entry
@@ -562,20 +564,20 @@ function autoSaveResume() {
   }
 }
 
-function loadSavedResume() {
+function loadSavedResume(preventDisplayTransition = false) {
   const savedStateJson = localStorage.getItem('zenresume_state');
   if (!savedStateJson) return false;
   
   try {
     const savedState = JSON.parse(savedStateJson);
-    return hydrateStateFromData(savedState);
+    return hydrateStateFromData(savedState, preventDisplayTransition);
   } catch (err) {
     console.error('Error loading saved state:', err);
     return false;
   }
 }
 
-function hydrateStateFromData(savedState) {
+function hydrateStateFromData(savedState, preventDisplayTransition = false) {
   try {
     if (!savedState || !savedState.formData) return false;
     
@@ -622,16 +624,29 @@ function hydrateStateFromData(savedState) {
     // Load profile data directly into the DOM fields
     loadProfileIntoForm(savedState.formData);
     
-    // Transition Screen UI directly to workspace
-    selectionScreen.style.display = 'none';
-    builderWorkspace.style.display = 'grid';
-    
-    // Show mobile tabs and default to 'edit' tab
-    const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
-    if (mobileWorkspaceTabs) {
-      mobileWorkspaceTabs.style.display = 'flex';
+    // Transition Screen UI directly to workspace if not prevented (e.g. startup)
+    if (!preventDisplayTransition) {
+      selectionScreen.style.display = 'none';
+      builderWorkspace.style.display = 'grid';
+      
+      // Show mobile tabs and default to 'edit' tab
+      const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+      if (mobileWorkspaceTabs) {
+        mobileWorkspaceTabs.style.display = 'flex';
+      }
+      if (typeof setMobileTab === 'function') setMobileTab('edit');
+    } else {
+      // Ensure landing screen is shown, and other screens are hidden
+      const landingScreen = document.getElementById('landing-screen');
+      if (landingScreen) landingScreen.style.display = 'block';
+      
+      selectionScreen.style.display = 'none';
+      builderWorkspace.style.display = 'none';
+      const welcomeHeader = document.getElementById('app-header-welcome');
+      if (welcomeHeader) welcomeHeader.style.display = 'none';
+      const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+      if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
     }
-    if (typeof setMobileTab === 'function') setMobileTab('edit');
     
     showStep(state.currentStep);
     updateProgressDots();
@@ -1549,6 +1564,10 @@ function attachEvents() {
     builderWorkspace.style.display = 'none';
     selectionScreen.style.display = 'flex';
     
+    // Show welcome header when selecting templates
+    const welcomeHeader = document.getElementById('app-header-welcome');
+    if (welcomeHeader) welcomeHeader.style.display = 'block';
+    
     // Hide mobile tabs bar when back to templates
     const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
     if (mobileWorkspaceTabs) {
@@ -1922,8 +1941,15 @@ function bootstrap() {
   renderTemplatesCatalog();
   setupWizardDots();
   attachEvents();
-  loadSavedResume();
+  
+  const hasSaved = loadSavedResume(true); // Hydrate data in background but keep landing screen displayed on startup
+  if (!hasSaved) {
+    const landingScreen = document.getElementById('landing-screen');
+    if (landingScreen) landingScreen.style.display = 'block';
+  }
+  
   initTheme();
+  setupLandingPageNavigation();
 }
 
 function initTheme() {
@@ -2193,4 +2219,82 @@ window.resetContactForm = function() {
 
 // Initialise contact form interactivity on DOM ready
 window.addEventListener('DOMContentLoaded', initContactForm);
+
+/* ==========================================================================
+   11. SPA ROUTING & LANDING PAGE TRANSITIONS
+   ========================================================================== */
+function showLandingPage() {
+  const landingScreen = document.getElementById('landing-screen');
+  const selectionScreen = document.getElementById('selection-screen');
+  const builderWorkspace = document.getElementById('builder-workspace');
+  const welcomeHeader = document.getElementById('app-header-welcome');
+  const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+  
+  if (selectionScreen) selectionScreen.style.display = 'none';
+  if (builderWorkspace) builderWorkspace.style.display = 'none';
+  if (welcomeHeader) welcomeHeader.style.display = 'none';
+  if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
+  if (landingScreen) landingScreen.style.display = 'block';
+  
+  // Smooth scroll to top when returning
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function enterApp() {
+  const landingScreen = document.getElementById('landing-screen');
+  const selectionScreen = document.getElementById('selection-screen');
+  const builderWorkspace = document.getElementById('builder-workspace');
+  const welcomeHeader = document.getElementById('app-header-welcome');
+  const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+  
+  if (landingScreen) landingScreen.style.display = 'none';
+  
+  // Check if they have an active resume session (saved data)
+  const savedStateJson = localStorage.getItem('zenresume_state');
+  if (savedStateJson) {
+    // Transition straight to builder workspace
+    if (selectionScreen) selectionScreen.style.display = 'none';
+    if (welcomeHeader) welcomeHeader.style.display = 'none';
+    if (builderWorkspace) builderWorkspace.style.display = 'grid';
+    if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'flex';
+    if (typeof setMobileTab === 'function') setMobileTab('edit');
+    adjustPreviewScale();
+  } else {
+    // Show template selection screen
+    if (builderWorkspace) builderWorkspace.style.display = 'none';
+    if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
+    if (welcomeHeader) welcomeHeader.style.display = 'block';
+    if (selectionScreen) selectionScreen.style.display = 'flex';
+  }
+  
+  // Smooth scroll to top when entering
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setupLandingPageNavigation() {
+  const btnStartBuilding = document.getElementById('btn-start-building');
+  const logoLink = document.getElementById('logo-link');
+  const navAppLink = document.getElementById('nav-app-link');
+  
+  if (btnStartBuilding) {
+    btnStartBuilding.addEventListener('click', (e) => {
+      e.preventDefault();
+      enterApp();
+    });
+  }
+  
+  if (logoLink) {
+    logoLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showLandingPage();
+    });
+  }
+  
+  if (navAppLink) {
+    navAppLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      enterApp();
+    });
+  }
+}
 
