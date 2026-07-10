@@ -14,6 +14,7 @@ const state = {
   hasLoadedProfile: false,
   sectionOrder: ['experience', 'projects', 'education', 'certifications'],
   isFitToScreen: false,
+  zoomScale: null,               // null means auto-scale to width on small screens
   paperSize: 'a4'
 };
 
@@ -1175,6 +1176,7 @@ function setMobileTab(activeTab) {
 function adjustPreviewScale() {
   const wrapper = document.querySelector('.resume-paper-wrapper');
   const paper = document.getElementById('resume-print-area');
+  const zoomPercentageEl = document.getElementById('zoom-percentage');
   
   if (!wrapper || !paper) return;
   
@@ -1183,29 +1185,34 @@ function adjustPreviewScale() {
   const paperWidth = isLetter ? 816 : 794;
   const paperHeight = paper.scrollHeight || (isLetter ? 1056 : 1122);
   
-  // Apply dynamic scaling if wrapper is smaller than the paper width or if Fit to Screen is active
-  if ((wrapperWidth > 0 && wrapperWidth < paperWidth) || state.isFitToScreen) {
-    let scale = wrapperWidth / paperWidth;
-    
-    if (state.isFitToScreen) {
-      // Calculate scale to fit the entire height of the paper into the viewport, with a small padding
-      const availableHeight = window.innerHeight - 100; // Account for mobile tabs and preview bar
-      const heightScale = availableHeight / paperHeight;
-      // Use the smaller scale so both width and height fit
-      scale = Math.min(scale, heightScale);
-    }
-    
-    // Apply exact fluid scale
-    paper.style.transform = `scale(${scale})`;
-    paper.style.transformOrigin = 'top center';
-    
-    // Update parent wrapper height so scroll bars and containers match exactly
-    wrapper.style.height = `${paperHeight * scale}px`;
-  } else {
-    // Clear dynamic changes when wrapper has full space
-    paper.style.transform = '';
-    paper.style.transformOrigin = '';
-    wrapper.style.height = '';
+  let scale = 1.0;
+  
+  // Calculate automatic fit-to-width scale
+  const fitWidthScale = wrapperWidth > 0 ? (wrapperWidth / paperWidth) : 1.0;
+  
+  if (state.zoomScale !== undefined && state.zoomScale !== null) {
+    scale = state.zoomScale;
+  } else if (state.isFitToScreen) {
+    // Calculate scale to fit the entire height of the paper into the viewport, with a small padding
+    const availableHeight = window.innerHeight - 100; // Account for mobile tabs and preview bar
+    const heightScale = availableHeight / paperHeight;
+    // Use the smaller scale so both width and height fit
+    scale = Math.min(fitWidthScale, heightScale);
+  } else if (wrapperWidth > 0 && wrapperWidth < paperWidth) {
+    // Default: Fit to width
+    scale = fitWidthScale;
+  }
+  
+  // Apply exact scale
+  paper.style.transform = `scale(${scale})`;
+  paper.style.transformOrigin = 'top center';
+  
+  // Update parent wrapper height so scroll bars and containers match exactly
+  wrapper.style.height = `${paperHeight * scale}px`;
+  
+  // Update UI zoom label
+  if (zoomPercentageEl) {
+    zoomPercentageEl.textContent = `${Math.round(scale * 100)}%`;
   }
 }
 
@@ -1850,11 +1857,46 @@ function attachEvents() {
   // Handle window resizing for responsive dynamic fluid preview scaling
   window.addEventListener('resize', adjustPreviewScale);
 
-  // Mobile "Fit to Screen" Zoom Toggle
+  // Zoom controller handlers (Zoom In, Zoom Out, Fit to Screen)
   const btnZoomToggle = document.getElementById('btn-zoom-toggle');
+  const btnZoomIn = document.getElementById('btn-zoom-in');
+  const btnZoomOut = document.getElementById('btn-zoom-out');
+
+  function getCurrentScale() {
+    if (state.zoomScale !== null) return state.zoomScale;
+    const wrapper = document.querySelector('.resume-paper-wrapper');
+    if (wrapper) {
+      const isLetter = state.paperSize === 'letter';
+      const paperWidth = isLetter ? 816 : 794;
+      return wrapper.clientWidth / paperWidth;
+    }
+    return 1.0;
+  }
+
+  if (btnZoomIn) {
+    btnZoomIn.addEventListener('click', () => {
+      const current = getCurrentScale();
+      state.zoomScale = Math.min(2.0, Math.round((current + 0.1) * 10) / 10);
+      state.isFitToScreen = false;
+      if (btnZoomToggle) btnZoomToggle.classList.remove('active');
+      adjustPreviewScale();
+    });
+  }
+
+  if (btnZoomOut) {
+    btnZoomOut.addEventListener('click', () => {
+      const current = getCurrentScale();
+      state.zoomScale = Math.max(0.2, Math.round((current - 0.1) * 10) / 10);
+      state.isFitToScreen = false;
+      if (btnZoomToggle) btnZoomToggle.classList.remove('active');
+      adjustPreviewScale();
+    });
+  }
+
   if (btnZoomToggle) {
     btnZoomToggle.addEventListener('click', () => {
       state.isFitToScreen = !state.isFitToScreen;
+      state.zoomScale = null;
       btnZoomToggle.classList.toggle('active', state.isFitToScreen);
       adjustPreviewScale();
     });

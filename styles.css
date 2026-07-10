@@ -390,17 +390,21 @@ body {
     top: auto !important;
     gap: 20px;
     width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
   }
 
   /* Dynamic scale container adjustments for mobile-only JavaScript fluid scaling */
   .resume-paper-wrapper {
     overflow: hidden !important;
     width: 100% !important;
+    max-width: 100% !important;
     position: relative !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: flex-start !important;
+    min-width: 0 !important;
   }
 
   .resume-paper {
@@ -861,28 +865,58 @@ textarea.form-input {
   animation: pulse 1.5s infinite;
 }
 
-.btn-zoom-toggle {
-  display: none; /* Hidden on desktop */
-  background: transparent;
-  border: 1px solid var(--border-glass-strong);
-  color: var(--primary-calm);
-  border-radius: 4px;
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(74, 107, 98, 0.05);
+  padding: 2px 6px;
+  border-radius: 20px;
+  border: 1px solid var(--border-glass);
+}
+
+.btn-zoom-action {
+  background: none;
+  border: none;
   cursor: pointer;
-  padding: 4px;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: bold;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: var(--transition-smooth);
+}
+
+.btn-zoom-action:hover {
+  background: rgba(74, 107, 98, 0.1);
+  color: var(--primary-calm);
+}
+
+.btn-zoom-toggle {
+  display: flex;
+  background: transparent;
+  border: none;
+  color: var(--primary-calm);
+  border-radius: 50%;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
   align-items: center;
   justify-content: center;
   transition: var(--transition-smooth);
 }
 
-.btn-zoom-toggle.active {
-  background: var(--primary-calm);
-  color: var(--white);
+.btn-zoom-toggle:hover {
+  background: rgba(74, 107, 98, 0.1);
 }
 
-@media (max-width: 800px) {
-  .btn-zoom-toggle {
-    display: flex;
-  }
+.btn-zoom-toggle.active {
+  background: var(--primary-calm);
+  color: var(--white) !important;
 }
 
 /* Standard A4 Paper-like layout on Screen */
