@@ -1219,9 +1219,22 @@ function adjustPreviewScale() {
     scale = fitWidthScale;
   }
   
-  // Apply exact scale
+  // Apply dynamic scaling and alignment based on viewport boundary fit
+  const visualPaperWidth = paperWidth * scale;
+  
   paper.style.transform = `scale(${scale})`;
-  paper.style.transformOrigin = 'top center';
+  
+  if (wrapperWidth > 0 && visualPaperWidth > wrapperWidth) {
+    // Overflows viewport: align to top-left to enable positive scrolling without negative cut-offs
+    paper.style.transformOrigin = 'top left';
+    paper.style.margin = '0';
+    wrapper.style.alignItems = 'flex-start';
+  } else {
+    // Fits inside viewport: center for optimal layout presentation
+    paper.style.transformOrigin = 'top center';
+    paper.style.margin = '0 auto';
+    wrapper.style.alignItems = 'center';
+  }
   
   // Update parent wrapper height so scroll bars and containers match exactly
   wrapper.style.height = `${paperHeight * scale}px`;

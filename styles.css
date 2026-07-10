@@ -396,7 +396,7 @@ body {
 
   /* Dynamic scale container adjustments for mobile-only JavaScript fluid scaling */
   .resume-paper-wrapper {
-    overflow: hidden !important;
+    overflow: auto !important; /* Allow touch scrolling / panning on mobile */
     width: 100% !important;
     max-width: 100% !important;
     position: relative !important;
@@ -405,11 +405,12 @@ body {
     align-items: center !important;
     justify-content: flex-start !important;
     min-width: 0 !important;
+    -webkit-overflow-scrolling: touch; /* Momentum scrolling for smooth swiping */
   }
 
   .resume-paper {
-    transform-origin: top center !important;
-    margin: 0 auto !important;
+    transform-origin: top center; /* Default fallback, JS will override on zoom */
+    margin: 0 auto;             /* Default fallback, JS will override on zoom */
     box-shadow: none !important; /* Flat look on mobile screens */
   }
 }
