@@ -1166,8 +1166,8 @@ function setMobileTab(activeTab) {
     btnEdit.classList.remove('active');
     builderWorkspace.classList.add('show-preview');
     
-    // Trigger dynamic fluid preview scaling on mobile view tab switch
-    setTimeout(adjustPreviewScale, 50);
+    // Trigger dynamic fluid preview scaling on mobile view tab switch (fallback for non-observer browsers)
+    setTimeout(adjustPreviewScale, 150);
   }
 }
 
@@ -1855,8 +1855,18 @@ function attachEvents() {
     btnTabPreview.addEventListener('click', () => setMobileTab('preview'));
   }
 
-  // Handle window resizing for responsive dynamic fluid preview scaling
-  window.addEventListener('resize', adjustPreviewScale);
+  // Handle layout and resizing reactively for fluid preview scaling
+  if (typeof ResizeObserver !== 'undefined') {
+    const wrapperElement = document.querySelector('.resume-paper-wrapper');
+    if (wrapperElement) {
+      const observer = new ResizeObserver(() => {
+        adjustPreviewScale();
+      });
+      observer.observe(wrapperElement);
+    }
+  } else {
+    window.addEventListener('resize', adjustPreviewScale);
+  }
 
   // Zoom controller handlers (Zoom In, Zoom Out, Fit to Screen)
   const btnZoomToggle = document.getElementById('btn-zoom-toggle');
