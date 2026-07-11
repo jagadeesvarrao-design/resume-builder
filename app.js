@@ -790,6 +790,17 @@ function debouncedSyncFormToPreview() {
 }
 
 function syncFormToPreview() {
+  // Always trigger LocalStorage Auto-Save synchronously to avoid losing inputs
+  autoSaveResume();
+
+  const isMobile = window.innerWidth <= 800;
+  const isPreviewHidden = isMobile && (!builderWorkspace || !builderWorkspace.classList.contains('show-preview'));
+  
+  // If preview is hidden, skip expensive DOM compilation and layout iterations
+  if (isPreviewHidden) {
+    return;
+  }
+
   const currentData = extractCurrentFormData();
   
   // Retrieve selected template rendering layout
@@ -832,19 +843,19 @@ function syncFormToPreview() {
     }
   }
 
-  // Trigger LocalStorage Auto-Save
-  autoSaveResume();
+  // Defer expensive height-fitting loops and scaling to yield main thread and minimize INP score
+  setTimeout(() => {
+    // Run dynamic single-page auto-fit convergence engine
+    autoFitToSinglePage();
 
-  // Run dynamic single-page auto-fit convergence engine
-  autoFitToSinglePage();
+    // Adjust preview scaling dynamically if on mobile
+    adjustPreviewScale();
 
-  // Adjust preview scaling dynamically if on mobile
-  adjustPreviewScale();
-
-  // Regenerate summary suggestions reactively if on the Summary step
-  if (state.currentStep === 2) {
-    generateSummarySuggestions();
-  }
+    // Regenerate summary suggestions reactively if on the Summary step
+    if (state.currentStep === 2) {
+      generateSummarySuggestions();
+    }
+  }, 0);
 }
 
 // Rebuilds the inline layout switcher dropdown options to list only templates matching current profile category
@@ -1180,6 +1191,9 @@ function setMobileTab(activeTab) {
     btnPreview.classList.add('active');
     btnEdit.classList.remove('active');
     builderWorkspace.classList.add('show-preview');
+    
+    // Trigger full preview rendering and layout fitting on tab entry
+    syncFormToPreview();
     
     // Trigger dynamic fluid preview scaling on mobile view tab switch (fallback for non-observer browsers)
     setTimeout(adjustPreviewScale, 150);
