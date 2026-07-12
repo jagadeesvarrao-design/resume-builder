@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - ZenResume</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2316a085' d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2zm0 8H7v-2h10v2z'/%3E%3C/svg%3E" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #16a085;
+      --primary-dark: #117864;
+      --bg: #f8fafc;
+      --bg-card: #ffffff;
+      --text: #334155;
+      --text-sub: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --font-sans: 'Inter', sans-serif;
+      --font-title: 'Outfit', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --primary: #1abc9c;
+      --primary-dark: #16a085;
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --text: #f1f5f9;
+      --text-sub: #94a3b8;
+      --border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 40px 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 30px;
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-family: var(--font-title);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-home:hover {
+      background: var(--primary-dark);
+    }
+
+    h1 {
+      font-family: var(--font-title);
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    h2 {
+      font-family: var(--font-title);
+      font-size: 20px;
+      margin: 30px 0 12px 0;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    p, ul {
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-sub);
+      transition: color 0.2s;
+    }
+
+    .theme-toggle:hover {
+      color: var(--text);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 10px;
+      }
+      .container {
+        padding: 24px 16px;
+      }
+      h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <a href="/" class="logo-link">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--primary);"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2zm0 8H7v-2h10v2z"/></svg>
+        <span>ZenResume</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="theme-toggle" class="theme-toggle"><i class="fas fa-moon"></i></button>
+        <a href="/" class="btn-home"><i class="fas fa-arrow-left"></i> Home</a>
+      </div>
+    </div>
+
+    <h1>About Us</h1>
+    <div class="subtitle">Empowering job seekers to build high-quality, professional resumes—100% free and private.</div>
+
+    <p>ZenResume was created in 2026 with a simple mission: to build a premium, fast, and completely free alternative to expensive subscription-locked resume editors. Most builders lure users in with "free templates" only to place their download button behind a monthly billing gateway. We believe that job seekers should have access to professional tools without financial barriers.</p>
+
+    <h2>Our Core Philosophy</h2>
+    <ul>
+      <li><strong>100% Free & No Signups:</strong> We do not collect your email address, push monthly subscriptions, or charge for premium template styling. The application is completely open and free to use.</li>
+      <li><strong>Privacy First:</strong> Your resume data belongs to you. ZenResume has no backend databases; all your entered values are stored strictly in your browser's local cache (localStorage). No files are uploaded to servers, ensuring complete client-side data safety.</li>
+      <li><strong>ATS-Compliant Structure:</strong> Our templates are designed strictly to pass automated Applicant Tracking Systems (ATS). They use standard, clean typography, single-column frameworks, and valid HTML/CSS that parser spiders can crawl effortlessly.</li>
+    </ul>
+
+    <h2>Who We Are</h2>
+    <p>We are a small team of software developers and recruiting experts dedicated to demystifying the job application process. By combining recruiter-approved styling formats with modern web performance practices (including integration with Gemini AI for Magic Imports), we hope to save you time and help you secure interviews.</p>
+
+    <h2>Contact Us</h2>
+    <p>Have suggestions, feedback, or need help? We would love to hear from you!</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:support.zenresume@gmail.com">support.zenresume@gmail.com</a></li>
+      <li><strong>Developer Portal:</strong> <a href="https://github.com/jagadeesvarrao-design/resume-builder" target="_blank" rel="noopener noreferrer">ZenResume GitHub Project</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    &copy; 2026 ZenResume. All rights reserved.
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const icon = themeToggle.querySelector('i');
+    
+    // Initialize theme based on localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateIcon(savedTheme);
+
+    function updateIcon(theme) {
+      if (theme === 'dark') {
+        icon.className = 'fas fa-sun';
+        icon.style.color = '#F59E0B';
+      } else {
+        icon.className = 'fas fa-moon';
+        icon.style.color = '';
+      }
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateIcon(newTheme);
+    });
+  </script>
+</body>
+</html>
