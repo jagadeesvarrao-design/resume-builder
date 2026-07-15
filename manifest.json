@@ -1,0 +1,25 @@
+{
+  "name": "ZenResume - Free ATS Resume Builder",
+  "short_name": "ZenResume",
+  "description": "Build premium, highly-approved, ATS-friendly resumes with ease. Featuring Gemini AI Magic Import.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#16a085",
+  "orientation": "portrait",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}
