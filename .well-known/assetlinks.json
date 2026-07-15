@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.vercel.resume_builder_swart_sigma_93.twa",
+    "sha256_cert_fingerprints": ["4F:4E:6F:58:7D:42:1D:1D:2F:B5:E3:1A:13:0F:A6:D7:22:6D:C7:AB:48:C6:A6:90:C4:DF:23:4A:41:47:6A:BB"]
+  }
+}]
