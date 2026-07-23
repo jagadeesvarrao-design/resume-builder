@@ -1091,13 +1091,28 @@ function runPdfGeneration() {
     builderWorkspace.classList.add('show-preview');
   }
 
-  // Save original transform to restore later
+  // Save original transform and layout states to restore later
   const originalTransform = element.style.transform;
   const originalOrigin = element.style.transformOrigin;
+  const originalWidth = element.style.width;
   
+  const wrapper = document.querySelector('.resume-paper-wrapper');
+  const originalWrapperHeight = wrapper ? wrapper.style.height : '';
+  const originalWrapperDisplay = wrapper ? wrapper.style.display : '';
+  const originalWrapperOverflow = wrapper ? wrapper.style.overflow : '';
+
   // Remove scaling so PDF renders at full 1:1 resolution
   element.style.transform = 'none';
   element.style.transformOrigin = 'unset';
+
+  // Fix flex shrinking on mobile viewports by setting display block on parent and absolute pixel width
+  const isLetter = state.paperSize === 'letter';
+  element.style.width = isLetter ? '816px' : '794px';
+  if (wrapper) {
+    wrapper.style.display = 'block';
+    wrapper.style.height = 'auto';
+    wrapper.style.overflow = 'visible';
+  }
 
   // Fix: html2canvas captures window scroll offset as blank space at the top.
   // We must save the scroll position and scroll to top before capturing.
@@ -1107,7 +1122,6 @@ function runPdfGeneration() {
   
   // Force strict proportions during print, slightly smaller than standard dimensions
   // to prevent decimal pixel rounding errors from spilling over into a blank second page.
-  const isLetter = state.paperSize === 'letter';
   const originalHeight = element.style.height;
   const originalOverflow = element.style.overflow;
   element.style.height = isLetter ? '278mm' : '295.5mm';
@@ -1117,12 +1131,17 @@ function runPdfGeneration() {
   const userName = document.getElementById('input-name').value.trim() || 'Professional';
   const fileName = `ZenResume_${userName.replace(/\s+/g, '_')}.pdf`;
 
+  // Scale 3 causes canvas size limits to be exceeded in mobile safari/chrome, yielding blank pages.
+  // We dynamically use scale 2 on mobile (which is plenty sharp) and scale 3 on desktop.
+  const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const pdfScale = isMobileDevice ? 2 : 3;
+
   const opt = {
     margin:       0,
     filename:     fileName,
     image:        { type: 'jpeg', quality: 0.98 },
     html2canvas:  { 
-      scale: 3, // scale 3 is optimal for print quality and file size/memory safety
+      scale: pdfScale,
       useCORS: true, 
       letterRendering: true, 
       scrollY: 0,
@@ -1138,8 +1157,14 @@ function runPdfGeneration() {
     // Restore original transform and scroll position for the live preview
     element.style.transform = originalTransform;
     element.style.transformOrigin = originalOrigin;
+    element.style.width = originalWidth;
     element.style.height = originalHeight;
     element.style.overflow = originalOverflow;
+    if (wrapper) {
+      wrapper.style.height = originalWrapperHeight;
+      wrapper.style.display = originalWrapperDisplay;
+      wrapper.style.overflow = originalWrapperOverflow;
+    }
     window.scrollTo(originalScrollX, originalScrollY);
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     
