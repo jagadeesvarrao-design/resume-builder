@@ -1007,40 +1007,7 @@ window.triggerActualPrint = function() {
 
 function executeSystemPrint() {
   closePrintModal();
-  
-  if (typeof html2pdf === 'undefined') {
-    // Show temporary loading status on the button
-    const btnSkip = document.getElementById('btn-skip-ai');
-    const originalText = btnSkip ? btnSkip.innerHTML : '';
-    if (btnSkip) {
-      btnSkip.innerHTML = 'Loading PDF Engine...';
-      btnSkip.disabled = true;
-    }
-    
-    // Dynamically inject html2pdf script
-    const script = document.createElement('script');
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-    script.integrity = "sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==";
-    script.crossOrigin = "anonymous";
-    script.referrerPolicy = "no-referrer";
-    script.onload = () => {
-      if (btnSkip) {
-        btnSkip.innerHTML = originalText;
-        btnSkip.disabled = false;
-      }
-      runPdfGeneration();
-    };
-    script.onerror = () => {
-      if (btnSkip) {
-        btnSkip.innerHTML = originalText;
-        btnSkip.disabled = false;
-      }
-      alert("Could not load PDF library. Please check your internet connection and try again.");
-    };
-    document.head.appendChild(script);
-  } else {
-    runPdfGeneration();
-  }
+  runPdfGeneration();
 }
 
 function runPdfGeneration() {
@@ -1114,12 +1081,6 @@ function runPdfGeneration() {
     wrapper.style.overflow = 'visible';
   }
 
-  // Fix: html2canvas captures window scroll offset as blank space at the top.
-  // We must save the scroll position and scroll to top before capturing.
-  const originalScrollY = window.scrollY;
-  const originalScrollX = window.scrollX;
-  window.scrollTo(0, 0);
-  
   // Force strict proportions during print, slightly smaller than standard dimensions
   // to prevent decimal pixel rounding errors from spilling over into a blank second page.
   const originalHeight = element.style.height;
@@ -1153,6 +1114,8 @@ function runPdfGeneration() {
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
   if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating PDF...';
 
+  // CRITICAL MOBILE FIX: Wait 350ms for the browser to complete layout reflow and repaint.
+  // Mobile browsers defer rendering cycles; without this delay, the preview is captured before it is shown, resulting in blank pages.
   setTimeout(() => {
     const paperHeightPx = isLetter ? 1056 : 1122;
     const captureHeight = (element.offsetHeight && element.offsetHeight > 100) ? (element.offsetHeight - 1) : (paperHeightPx - 1);
@@ -1160,19 +1123,18 @@ function runPdfGeneration() {
     opt.html2canvas.scrollX = 0;
     
     html2pdf().set(opt).from(element).save().then(() => {
-    // Restore original transform and scroll position for the live preview
-    element.style.transform = originalTransform;
-    element.style.transformOrigin = originalOrigin;
-    element.style.width = originalWidth;
-    element.style.height = originalHeight;
-    element.style.overflow = originalOverflow;
-    if (wrapper) {
-      wrapper.style.height = originalWrapperHeight;
-      wrapper.style.display = originalWrapperDisplay;
-      wrapper.style.overflow = originalWrapperOverflow;
-    }
-    window.scrollTo(originalScrollX, originalScrollY);
-    if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
+      // Restore original transform and scroll position for the live preview
+      element.style.transform = originalTransform;
+      element.style.transformOrigin = originalOrigin;
+      element.style.width = originalWidth;
+      element.style.height = originalHeight;
+      element.style.overflow = originalOverflow;
+      if (wrapper) {
+        wrapper.style.height = originalWrapperHeight;
+        wrapper.style.display = originalWrapperDisplay;
+        wrapper.style.overflow = originalWrapperOverflow;
+      }
+      if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     
     // Restore mobile preview tab state
     if (!wasPreviewShown) {
@@ -1247,9 +1209,14 @@ function runPdfGeneration() {
     console.error("PDF Generation failed", err);
     element.style.transform = originalTransform;
     element.style.transformOrigin = originalOrigin;
+    element.style.width = originalWidth;
     element.style.height = originalHeight;
     element.style.overflow = originalOverflow;
-    window.scrollTo(originalScrollX, originalScrollY);
+    if (wrapper) {
+      wrapper.style.height = originalWrapperHeight;
+      wrapper.style.display = originalWrapperDisplay;
+      wrapper.style.overflow = originalWrapperOverflow;
+    }
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     
     // Restore mobile preview tab state
@@ -1259,7 +1226,7 @@ function runPdfGeneration() {
     
     alert("Failed to generate PDF. Please try again.");
   });
-  }, 150);
+  }, 350);
 }
 
 /* ==========================================================================
