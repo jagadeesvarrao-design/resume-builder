@@ -987,7 +987,11 @@ const RenderHelpers = {
               <td style="font-weight: bold; text-align: right; color: ${accentColor};">${edu.dates || ""}</td>
             </tr>
             <tr>
-              <td style="font-style: italic; color: #333; text-align: left;">${edu.institution || ""}, <span style="font-weight: normal; color: #555;">${edu.location || ""}</span></td>
+              <td style="font-style: italic; color: #333; text-align: left;">
+                ${edu.institution || ""}
+                ${(edu.institution && edu.location) ? ', ' : ''}
+                ${edu.location ? `<span style="font-weight: normal; color: #555;">${edu.location}</span>` : ''}
+              </td>
               <td style="text-align: right; font-weight: bold; color: #111;">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
             </tr>
           </table>
@@ -1756,7 +1760,11 @@ const TEMPLATE_STYLES = {
                   <td style="font-weight:bold; text-align:right; color:${neonTeal}">${edu.dates || ""}</td>
                 </tr>
                 <tr>
-                  <td style="font-style:italic; color:${textSub};">${edu.institution || ""}, ${edu.location || ""}</td>
+                  <td style="font-style:italic; color:${textSub};">
+                    ${edu.institution || ""}
+                    ${(edu.institution && edu.location) ? ', ' : ''}
+                    ${edu.location || ""}
+                  </td>
                   <td style="text-align:right; font-weight:bold; color:${textLight};">${edu.gpa ? `GPA: ${edu.gpa}` : ""}</td>
                 </tr>
               </table>
@@ -1906,7 +1914,12 @@ const TEMPLATE_STYLES = {
                   <td style="font-weight:bold; text-align:right; color:${accent}">${edu.dates || ""}</td>
                 </tr>
               </table>
-              <div style="color:${textSub}; font-size:9px;">${edu.institution || ""}, ${edu.location || ""} ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}</div>
+              <div style="color:${textSub}; font-size:9px;">
+                ${edu.institution || ""}
+                ${(edu.institution && edu.location) ? ', ' : ''}
+                ${edu.location || ""}
+                ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}
+              </div>
             </div>
           `;
         });
@@ -2049,7 +2062,11 @@ const TEMPLATE_STYLES = {
                   <td style="font-weight:bold; text-align:right; color:${copper}">${edu.dates || ""}</td>
                 </tr>
                 <tr>
-                  <td style="font-style:italic; color:${textSub};">${edu.institution || ""}, ${edu.location || ""}</td>
+                  <td style="font-style:italic; color:${textSub};">
+                    ${edu.institution || ""}
+                    ${(edu.institution && edu.location) ? ', ' : ''}
+                    ${edu.location || ""}
+                  </td>
                   <td style="text-align:right; font-weight:bold; color:${textMain};">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
                 </tr>
               </table>
@@ -2213,7 +2230,12 @@ const TEMPLATE_STYLES = {
                   <td style="font-weight:bold; text-align:right; color:${steelBlue}">${edu.dates || ""}</td>
                 </tr>
               </table>
-              <div style="color:${textSub}; font-size:9px;">${edu.institution || ""}, ${edu.location || ""} ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}</div>
+              <div style="color:${textSub}; font-size:9px;">
+                ${edu.institution || ""}
+                ${(edu.institution && edu.location) ? ', ' : ''}
+                ${edu.location || ""}
+                ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}
+              </div>
             </div>
           `;
         });
@@ -2359,7 +2381,12 @@ const TEMPLATE_STYLES = {
                   <td style="font-weight:bold; text-align:right; color:${greenAccent}">${edu.dates || ""}</td>
                 </tr>
               </table>
-              <div style="color:${textSub}; font-size:9px;">${edu.institution || ""}, ${edu.location || ""} ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}</div>
+              <div style="color:${textSub}; font-size:9px;">
+                ${edu.institution || ""}
+                ${(edu.institution && edu.location) ? ', ' : ''}
+                ${edu.location || ""}
+                ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}
+              </div>
             </div>
           `;
         });

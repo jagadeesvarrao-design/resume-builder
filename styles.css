@@ -398,6 +398,8 @@ body {
   .resume-paper-wrapper {
     overflow-y: visible !important; /* Allow vertical touch gestures to bubble to body, preventing scroll freeze */
     overflow-x: hidden !important; /* Disable horizontal scroll shifting */
+    max-height: none !important;
+    padding: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
     position: relative !important;
@@ -925,6 +927,9 @@ textarea.form-input {
 /* Standard A4 Paper-like layout on Screen */
 .resume-paper-wrapper {
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 180px); /* Caps height on desktop and enables scroll bar */
+  padding: 24px 0; /* Padding around the paper to prevent shadow clipping */
   width: 100%;
 }
 
