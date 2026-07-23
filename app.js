@@ -1045,7 +1045,45 @@ function executeSystemPrint() {
 
 function runPdfGeneration() {
   const element = document.getElementById('resume-print-area');
-  
+
+  // CRITICAL FIX: Force-render the resume into the print area before PDF capture.
+  // On mobile, syncFormToPreview() skips rendering when the preview tab is hidden.
+  // This ensures the print area always has fresh, up-to-date content.
+  const currentData = extractCurrentFormData();
+  const template = TEMPLATE_STYLES[state.selectedTemplateId];
+  if (template) {
+    const rawHTML = template.render(currentData);
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = rawHTML;
+
+    const sectionMap = {};
+    const sections = tempDiv.querySelectorAll('[data-section]');
+    sections.forEach(sec => {
+      const sectionName = sec.getAttribute('data-section');
+      if (['experience', 'projects', 'education', 'certifications'].includes(sectionName)) {
+        sectionMap[sectionName] = sec;
+        sec.parentNode.removeChild(sec);
+      }
+    });
+    if (state.sectionOrder) {
+      state.sectionOrder.forEach(secName => {
+        if (sectionMap[secName]) {
+          tempDiv.appendChild(sectionMap[secName]);
+        }
+      });
+    }
+    element.innerHTML = tempDiv.innerHTML;
+
+    if (state.selectedTemplateId === 'sidebar') {
+      element.classList.add('sidebar-layout');
+    } else {
+      element.classList.remove('sidebar-layout');
+    }
+
+    // Run single-page auto-fit before capture
+    autoFitToSinglePage();
+  }
+
   // Save original transform to restore later
   const originalTransform = element.style.transform;
   const originalOrigin = element.style.transformOrigin;
