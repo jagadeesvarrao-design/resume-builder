@@ -412,6 +412,7 @@ body {
     transform-origin: top center; /* Default fallback, JS will override on zoom */
     margin: 0 auto;             /* Default fallback, JS will override on zoom */
     box-shadow: none !important; /* Flat look on mobile screens */
+    flex-shrink: 0 !important;
   }
 }
 
@@ -937,6 +938,7 @@ textarea.form-input {
   position: relative;
   box-sizing: border-box;
   color: #111111 !important; /* Always dark text for high readability */
+  flex-shrink: 0 !important; /* Prevent parent flex container from crushing paper width on mobile viewports */
 }
 
 

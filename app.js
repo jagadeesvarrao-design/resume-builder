@@ -1108,6 +1108,8 @@ function runPdfGeneration() {
       useCORS: true, 
       letterRendering: true, 
       scrollY: 0,
+      scrollX: 0,
+      windowWidth: isLetter ? 816 : 794, // Force virtual desktop width during capture to prevent mobile layout clipping
       height: element.offsetHeight - 1 // trim 1 pixel from the bottom to prevent overflow page break
     },
     jsPDF:        { unit: 'mm', format: isLetter ? 'letter' : 'a4', orientation: 'portrait' }
