@@ -1153,7 +1153,13 @@ function runPdfGeneration() {
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
   if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating PDF...';
 
-  html2pdf().set(opt).from(element).save().then(() => {
+  setTimeout(() => {
+    const paperHeightPx = isLetter ? 1056 : 1122;
+    const captureHeight = (element.offsetHeight && element.offsetHeight > 100) ? (element.offsetHeight - 1) : (paperHeightPx - 1);
+    opt.html2canvas.height = captureHeight;
+    opt.html2canvas.scrollX = 0;
+    
+    html2pdf().set(opt).from(element).save().then(() => {
     // Restore original transform and scroll position for the live preview
     element.style.transform = originalTransform;
     element.style.transformOrigin = originalOrigin;
@@ -1253,6 +1259,7 @@ function runPdfGeneration() {
     
     alert("Failed to generate PDF. Please try again.");
   });
+  }, 150);
 }
 
 /* ==========================================================================
