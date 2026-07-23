@@ -1306,6 +1306,7 @@ function adjustPreviewScale() {
   paper.style.transformOrigin = 'top left';
   paper.style.margin = '0';
   wrapper.style.alignItems = 'flex-start';
+  wrapper.scrollLeft = 0; // Force reset scroll offset to prevent cut-offs
   
   if (wrapperWidth > 0 && visualPaperWidth < wrapperWidth) {
     // Fits inside viewport: visually center using padding-left

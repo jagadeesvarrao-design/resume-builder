@@ -396,7 +396,8 @@ body {
 
   /* Dynamic scale container adjustments for mobile-only JavaScript fluid scaling */
   .resume-paper-wrapper {
-    overflow: auto !important; /* Allow touch scrolling / panning on mobile */
+    overflow-y: auto !important; /* Allow vertical touch scrolling on mobile */
+    overflow-x: hidden !important; /* Disable horizontal scroll shifting */
     width: 100% !important;
     max-width: 100% !important;
     position: relative !important;
