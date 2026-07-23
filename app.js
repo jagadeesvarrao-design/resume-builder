@@ -1011,6 +1011,7 @@ function executeSystemPrint() {
 }
 
 function runPdfGeneration() {
+  window.isGeneratingPdf = true;
   const element = document.getElementById('resume-print-area');
 
   // CRITICAL FIX: Force-render the resume into the print area before PDF capture.
@@ -1148,8 +1149,8 @@ function runPdfGeneration() {
         wrapper.style.display = originalWrapperDisplay;
         wrapper.style.overflow = originalWrapperOverflow;
         wrapper.style.paddingLeft = originalWrapperPaddingLeft;
-      }
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
+      window.isGeneratingPdf = false;
     
     // Restore mobile preview tab state
     if (!wasPreviewShown) {
@@ -1244,6 +1245,7 @@ function runPdfGeneration() {
     }
     
     alert("Failed to generate PDF. Please try again.");
+    window.isGeneratingPdf = false;
   });
   }, 350);
 }
@@ -1278,6 +1280,7 @@ function setMobileTab(activeTab) {
    7C. FLUID MOBILE PREVIEW SCALING
    ========================================================================== */
 function adjustPreviewScale() {
+  if (window.isGeneratingPdf) return;
   const wrapper = document.querySelector('.resume-paper-wrapper');
   const paper = document.getElementById('resume-print-area');
   const zoomPercentageEl = document.getElementById('zoom-percentage');
