@@ -1101,9 +1101,9 @@ function runPdfGeneration() {
   const fileName = `ZenResume_${userName.replace(/\s+/g, '_')}.pdf`;
 
   // Scale 3 causes canvas size limits to be exceeded in mobile safari/chrome, yielding blank pages.
-  // We dynamically use scale 2 on mobile (which is plenty sharp) and scale 3 on desktop.
+  // We dynamically use scale 1.5 on mobile (highly optimized for speed and memory) and scale 3 on desktop.
   const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const pdfScale = isMobileDevice ? 2 : 3;
+  const pdfScale = isMobileDevice ? 1.5 : 3;
 
   const opt = {
     margin:       0,
@@ -1112,7 +1112,8 @@ function runPdfGeneration() {
     html2canvas:  { 
       scale: pdfScale,
       useCORS: true, 
-      letterRendering: true, 
+      letterRendering: false, // Turn off slow letter-by-layer text painting loops
+      logging: false, // Suppress canvas debug output processing
       scrollY: 0,
       scrollX: 0,
       windowWidth: isLetter ? 816 : 794, // Force virtual desktop width during capture to prevent mobile layout clipping
