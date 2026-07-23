@@ -1067,6 +1067,7 @@ function runPdfGeneration() {
   const originalWrapperHeight = wrapper ? wrapper.style.height : '';
   const originalWrapperDisplay = wrapper ? wrapper.style.display : '';
   const originalWrapperOverflow = wrapper ? wrapper.style.overflow : '';
+  const originalWrapperPaddingLeft = wrapper ? wrapper.style.paddingLeft : '';
 
   // Remove scaling so PDF renders at full 1:1 resolution
   element.style.transform = 'none';
@@ -1079,6 +1080,7 @@ function runPdfGeneration() {
     wrapper.style.display = 'block';
     wrapper.style.height = 'auto';
     wrapper.style.overflow = 'visible';
+    wrapper.style.paddingLeft = '0px';
   }
 
   // Force strict proportions during print, slightly smaller than standard dimensions
@@ -1133,6 +1135,7 @@ function runPdfGeneration() {
         wrapper.style.height = originalWrapperHeight;
         wrapper.style.display = originalWrapperDisplay;
         wrapper.style.overflow = originalWrapperOverflow;
+        wrapper.style.paddingLeft = originalWrapperPaddingLeft;
       }
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     
@@ -1216,6 +1219,7 @@ function runPdfGeneration() {
       wrapper.style.height = originalWrapperHeight;
       wrapper.style.display = originalWrapperDisplay;
       wrapper.style.overflow = originalWrapperOverflow;
+      wrapper.style.paddingLeft = originalWrapperPaddingLeft;
     }
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     
@@ -1293,16 +1297,20 @@ function adjustPreviewScale() {
   
   paper.style.transform = `scale(${scale})`;
   
-  if (wrapperWidth > 0 && visualPaperWidth > wrapperWidth) {
-    // Overflows viewport: align to top-left to enable positive scrolling without negative cut-offs
-    paper.style.transformOrigin = 'top left';
-    paper.style.margin = '0';
-    wrapper.style.alignItems = 'flex-start';
+  // CRITICAL MOBILE VISIBILITY FIX:
+  // Instead of using flexbox align-items: center which centers the 794px layout box
+  // and pushes the left half into negative off-screen space (getting clipped on iOS/Android WebKit),
+  // we always align the layout box to top-left (x=0) and visually center it using padding-left on the wrapper.
+  paper.style.transformOrigin = 'top left';
+  paper.style.margin = '0';
+  wrapper.style.alignItems = 'flex-start';
+  
+  if (wrapperWidth > 0 && visualPaperWidth < wrapperWidth) {
+    // Fits inside viewport: visually center using padding-left
+    wrapper.style.paddingLeft = `${(wrapperWidth - visualPaperWidth) / 2}px`;
   } else {
-    // Fits inside viewport: center for optimal layout presentation
-    paper.style.transformOrigin = 'top center';
-    paper.style.margin = '0 auto';
-    wrapper.style.alignItems = 'center';
+    // Overflows: align to left edge
+    wrapper.style.paddingLeft = '0px';
   }
   
   // Update parent wrapper height so scroll bars and containers match exactly
