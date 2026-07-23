@@ -1062,6 +1062,9 @@ function runPdfGeneration() {
   const originalTransform = element.style.transform;
   const originalOrigin = element.style.transformOrigin;
   const originalWidth = element.style.width;
+  const originalPosition = element.style.position;
+  const originalLeft = element.style.left;
+  const originalTop = element.style.top;
   
   const wrapper = document.querySelector('.resume-paper-wrapper');
   const originalWrapperHeight = wrapper ? wrapper.style.height : '';
@@ -1072,6 +1075,9 @@ function runPdfGeneration() {
   // Remove scaling so PDF renders at full 1:1 resolution
   element.style.transform = 'none';
   element.style.transformOrigin = 'unset';
+  element.style.position = 'relative'; // Reset from absolute during canvas print capture
+  element.style.left = 'auto';
+  element.style.top = 'auto';
 
   // Fix flex shrinking on mobile viewports by setting display block on parent and absolute pixel width
   const isLetter = state.paperSize === 'letter';
@@ -1133,6 +1139,9 @@ function runPdfGeneration() {
       element.style.width = originalWidth;
       element.style.height = originalHeight;
       element.style.overflow = originalOverflow;
+      element.style.position = originalPosition;
+      element.style.left = originalLeft;
+      element.style.top = originalTop;
       if (wrapper) {
         wrapper.style.height = originalWrapperHeight;
         wrapper.style.display = originalWrapperDisplay;
@@ -1217,6 +1226,9 @@ function runPdfGeneration() {
     element.style.width = originalWidth;
     element.style.height = originalHeight;
     element.style.overflow = originalOverflow;
+    element.style.position = originalPosition;
+    element.style.left = originalLeft;
+    element.style.top = originalTop;
     if (wrapper) {
       wrapper.style.height = originalWrapperHeight;
       wrapper.style.display = originalWrapperDisplay;
@@ -1300,20 +1312,22 @@ function adjustPreviewScale() {
   paper.style.transform = `scale(${scale})`;
   
   // CRITICAL MOBILE VISIBILITY FIX:
-  // Instead of using flexbox align-items: center which centers the 794px layout box
-  // and pushes the left half into negative off-screen space (getting clipped on iOS/Android WebKit),
-  // we always align the layout box to top-left (x=0) and visually center it using padding-left on the wrapper.
+  // We use position: absolute on the paper element to take it out of layout flow,
+  // preventing the browser from creating a wide horizontal scroll area that causes shift/clipping.
   paper.style.transformOrigin = 'top left';
   paper.style.margin = '0';
+  paper.style.position = 'absolute';
+  paper.style.top = '0';
   wrapper.style.alignItems = 'flex-start';
+  wrapper.style.paddingLeft = '0px';
   wrapper.scrollLeft = 0; // Force reset scroll offset to prevent cut-offs
   
   if (wrapperWidth > 0 && visualPaperWidth < wrapperWidth) {
-    // Fits inside viewport: visually center using padding-left
-    wrapper.style.paddingLeft = `${(wrapperWidth - visualPaperWidth) / 2}px`;
+    // Fits inside viewport: visually center using left offset
+    paper.style.left = `${(wrapperWidth - visualPaperWidth) / 2}px`;
   } else {
     // Overflows: align to left edge
-    wrapper.style.paddingLeft = '0px';
+    paper.style.left = '0px';
   }
   
   // Update parent wrapper height so scroll bars and containers match exactly
