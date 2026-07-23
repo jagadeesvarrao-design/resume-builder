@@ -1312,23 +1312,34 @@ function adjustPreviewScale() {
   
   paper.style.transform = `scale(${scale})`;
   
-  // CRITICAL MOBILE VISIBILITY FIX:
-  // We use position: absolute on the paper element to take it out of layout flow,
-  // preventing the browser from creating a wide horizontal scroll area that causes shift/clipping.
-  paper.style.transformOrigin = 'top left';
-  paper.style.margin = '0';
-  paper.style.position = 'absolute';
-  paper.style.top = '0';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.paddingLeft = '0px';
-  wrapper.scrollLeft = 0; // Force reset scroll offset to prevent cut-offs
+  const isMobile = window.innerWidth <= 800;
   
-  if (wrapperWidth > 0 && visualPaperWidth < wrapperWidth) {
-    // Fits inside viewport: visually center using left offset
-    paper.style.left = `${(wrapperWidth - visualPaperWidth) / 2}px`;
+  if (isMobile) {
+    // Mobile/Tablet views: Use position: absolute to lock layout bounds and prevent horizontal scroll jitter/clipping
+    paper.style.transformOrigin = 'top left';
+    paper.style.margin = '0';
+    paper.style.position = 'absolute';
+    paper.style.top = '0';
+    wrapper.style.alignItems = 'flex-start';
+    wrapper.style.paddingLeft = '0px';
+    wrapper.scrollLeft = 0; // Force reset scroll offset to prevent cut-offs
+    
+    if (wrapperWidth > 0 && visualPaperWidth < wrapperWidth) {
+      // Fits inside viewport: visually center using left offset
+      paper.style.left = `${(wrapperWidth - visualPaperWidth) / 2}px`;
+    } else {
+      // Overflows: align to left edge
+      paper.style.left = '0px';
+    }
   } else {
-    // Overflows: align to left edge
-    paper.style.left = '0px';
+    // Desktop views: Use relative positioning to let the wide zoomed child stretch the parent container scrollWidth naturally
+    paper.style.transformOrigin = 'top center';
+    paper.style.margin = '0 auto';
+    paper.style.position = 'relative';
+    paper.style.top = 'auto';
+    paper.style.left = 'auto';
+    wrapper.style.alignItems = 'center';
+    wrapper.style.paddingLeft = '0px';
   }
   
   // Update parent wrapper height so scroll bars and containers match exactly
