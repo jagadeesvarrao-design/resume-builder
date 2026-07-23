@@ -1084,6 +1084,13 @@ function runPdfGeneration() {
     autoFitToSinglePage();
   }
 
+  // CRITICAL MOBILE FIX: If the preview panel is hidden (display: none !important),
+  // html2canvas will render a completely blank image. We must temporarily show it.
+  const wasPreviewShown = builderWorkspace.classList.contains('show-preview');
+  if (!wasPreviewShown) {
+    builderWorkspace.classList.add('show-preview');
+  }
+
   // Save original transform to restore later
   const originalTransform = element.style.transform;
   const originalOrigin = element.style.transformOrigin;
@@ -1135,6 +1142,11 @@ function runPdfGeneration() {
     element.style.overflow = originalOverflow;
     window.scrollTo(originalScrollX, originalScrollY);
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
+    
+    // Restore mobile preview tab state
+    if (!wasPreviewShown) {
+      builderWorkspace.classList.remove('show-preview');
+    }
     
     // Close the Print/AI Modal if it's open
     const printModal = document.getElementById('print-modal');
@@ -1208,6 +1220,12 @@ function runPdfGeneration() {
     element.style.overflow = originalOverflow;
     window.scrollTo(originalScrollX, originalScrollY);
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
+    
+    // Restore mobile preview tab state
+    if (!wasPreviewShown) {
+      builderWorkspace.classList.remove('show-preview');
+    }
+    
     alert("Failed to generate PDF. Please try again.");
   });
 }
