@@ -392,6 +392,8 @@ body {
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
+    max-height: none !important;
+    overflow-y: visible !important;
   }
 
   /* Dynamic scale container adjustments for mobile-only JavaScript fluid scaling */
@@ -837,6 +839,9 @@ textarea.form-input {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .preview-bar {
@@ -849,6 +854,9 @@ textarea.form-input {
   justify-content: space-between;
   align-items: center;
   box-shadow: var(--shadow-peaceful);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .preview-status {
@@ -927,8 +935,7 @@ textarea.form-input {
 /* Standard A4 Paper-like layout on Screen */
 .resume-paper-wrapper {
   overflow-x: auto;
-  overflow-y: auto;
-  max-height: calc(100vh - 180px); /* Caps height on desktop and enables scroll bar */
+  overflow-y: visible;
   padding: 24px 0; /* Padding around the paper to prevent shadow clipping */
   width: 100%;
 }

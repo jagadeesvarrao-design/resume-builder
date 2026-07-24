@@ -1104,7 +1104,7 @@ function runPdfGeneration() {
   // Scale 3 causes canvas size limits to be exceeded in mobile safari/chrome, yielding blank pages.
   // We dynamically use scale 1.5 on mobile (highly optimized for speed and memory) and scale 3 on desktop.
   const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const pdfScale = isMobileDevice ? 1.5 : 3;
+  const pdfScale = isMobileDevice ? 2 : 3;
 
   const opt = {
     margin:       0,
@@ -1149,6 +1149,7 @@ function runPdfGeneration() {
         wrapper.style.display = originalWrapperDisplay;
         wrapper.style.overflow = originalWrapperOverflow;
         wrapper.style.paddingLeft = originalWrapperPaddingLeft;
+      }
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
       window.isGeneratingPdf = false;
     

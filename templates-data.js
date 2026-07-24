@@ -925,7 +925,7 @@ const RenderHelpers = {
         <div class="resume-item" style="margin-bottom: 10px; page-break-inside: avoid;">
           <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10.5px; margin-bottom: 3px;">
             <tr>
-              <td style="font-weight: bold; text-align: left; color: #111; font-size: 11px;">${exp.role || ""} <span style="font-weight: normal; color: #555;">at ${exp.company || ""}</span></td>
+              <td style="font-weight: bold; text-align: left; color: #111; font-size: 11px;">${exp.role || ""} <span style="font-weight: normal; color: #555;">${exp.company ? 'at ' + exp.company : ''}</span></td>
               <td style="font-weight: bold; text-align: right; color: ${accentColor};">${exp.dates || ""}</td>
             </tr>
             <tr>
@@ -1714,7 +1714,7 @@ const TEMPLATE_STYLES = {
               <div style="position:absolute; left:-6px; top:3px; width:10px; height:10px; border-radius:50%; background:${darkBg}; border:2px solid ${neonTeal}"></div>
               <table style="width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:3px;">
                 <tr>
-                  <td style="font-weight:bold; color:${textLight}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">at ${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; color:${textLight}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">${exp.company ? 'at ' + exp.company : ''}</span></td>
                   <td style="font-weight:bold; text-align:right; color:${neonTeal}">${exp.dates || ""}</td>
                 </tr>
                 <tr>
@@ -1869,7 +1869,7 @@ const TEMPLATE_STYLES = {
             <div style="background:#ffffff; border:1px solid ${cardBorder}; padding:10px 14px; border-radius:8px; margin-bottom:8px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
               <table style="width:100%; border-collapse:collapse; font-size:10px; margin-bottom:3px;">
                 <tr>
-                  <td style="font-weight:bold; color:${textMain}; font-size:10.5px;">${exp.role || ""} at <span style="color:${accent}">${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; color:${textMain}; font-size:10.5px;">${exp.role || ""}${exp.company ? ` at <span style="color:${accent}">${exp.company}</span>` : ""}</td>
                   <td style="font-weight:bold; text-align:right; color:${accent}">${exp.dates || ""}</td>
                 </tr>
                 <tr>
@@ -2016,7 +2016,7 @@ const TEMPLATE_STYLES = {
               <div style="position:absolute; left:-7px; top:4px; width:12px; height:12px; border-radius:50%; background:#ffffff; border:3px solid ${copper}"></div>
               <table style="width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:2px;">
                 <tr>
-                  <td style="font-weight:bold; color:${textMain}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">at ${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; color:${textMain}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">${exp.company ? 'at ' + exp.company : ''}</span></td>
                   <td style="font-weight:bold; text-align:right; color:${copper}">${exp.dates || ""}</td>
                 </tr>
                 <tr>
@@ -2186,7 +2186,7 @@ const TEMPLATE_STYLES = {
             <div style="background:#ffffff; border:1px solid ${cardBorder}; border-radius:6px; padding:10px; margin-bottom:8px;">
               <table style="width:100%; border-collapse:collapse; font-size:10px; margin-bottom:3px;">
                 <tr>
-                  <td style="font-weight:bold; color:${textMain}; font-size:10.5px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">at ${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; color:${textMain}; font-size:10.5px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">${exp.company ? 'at ' + exp.company : ''}</span></td>
                   <td style="font-weight:bold; text-align:right; color:${steelBlue}">${exp.dates || ""}</td>
                 </tr>
                 <tr>
@@ -2337,7 +2337,7 @@ const TEMPLATE_STYLES = {
               <div style="position:absolute; left:-6px; top:4px; width:10px; height:10px; border-radius:50%; background:#ffffff; border:2.5px solid ${greenAccent}"></div>
               <table style="width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:2px;">
                 <tr>
-                  <td style="font-weight:bold; color:${textMain}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">at ${exp.company || ""}</span></td>
+                  <td style="font-weight:bold; color:${textMain}; font-size:11px;">${exp.role || ""} <span style="font-weight:normal; color:${textSub}">${exp.company ? 'at ' + exp.company : ''}</span></td>
                   <td style="font-weight:bold; text-align:right; color:${greenAccent}">${exp.dates || ""}</td>
                 </tr>
                 <tr>
@@ -2522,7 +2522,7 @@ const TEMPLATE_STYLES = {
         expHTML = data.experience.map(exp => `
           <div style="margin-bottom:12px; page-break-inside:avoid;">
             <div style="display:flex; justify-content:between; align-items:start; margin-bottom:2px;">
-              <strong style="font-size:11px; color:${primaryDark};">${exp.role || ''} @ ${exp.company || ''}</strong>
+              <strong style="font-size:11px; color:${primaryDark};">${exp.role || ''}${exp.company ? ' @ ' + exp.company : ''}</strong>
               <span style="font-size:9.5px; font-weight:600; color:${accent}; white-space:nowrap; margin-left:auto;">${exp.duration || ''}</span>
             </div>
             ${exp.location ? `<div style="font-size:9px; color:${textLight}; margin-bottom:4px; font-style:italic;">${exp.location}</div>` : ''}
