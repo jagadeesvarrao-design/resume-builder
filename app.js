@@ -1124,7 +1124,7 @@ function runPdfGeneration() {
   };
   
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
-  if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating PDF...';
+  if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating your free PDF...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.3;">Thanks for bearing with our ads, they help a solo developer keep this tool 100% free!</span>';
 
   // CRITICAL MOBILE FIX: Wait 350ms for the browser to complete layout reflow and repaint.
   // Mobile browsers defer rendering cycles; without this delay, the preview is captured before it is shown, resulting in blank pages.
