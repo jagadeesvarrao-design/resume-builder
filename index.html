@@ -851,14 +851,26 @@
 
 
   <!-- Site Footer -->
-  <footer class="site-footer no-print">
-    <div class="footer-links">
+  <footer class="site-footer no-print" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+    
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 13px; font-weight: 500;">
+      <span style="color: var(--text-light); text-transform: uppercase; font-size: 11px; font-weight: 700; letter-spacing: 1px; width: 100%; text-align: center;">Resume Examples</span>
+      <a href="/role/data-engineer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Data Engineer</a>
+      <a href="/role/data-scientist-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Data Scientist</a>
+      <a href="/role/ai-engineer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">AI Engineer</a>
+      <a href="/role/prompt-engineer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Prompt Engineer</a>
+      <a href="/role/cloud-engineer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Cloud Engineer</a>
+      <a href="/role/senior-software-developer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Senior Developer</a>
+    </div>
+
+    <div class="footer-links" style="border-top: 1px solid var(--border-light); padding-top: 20px; width: 100%; justify-content: center; max-width: 800px; display: flex; flex-wrap: wrap; gap: 20px;">
       <a href="/blog/">Blog Resources</a>
       <a href="/about.html">About Us</a>
       <a href="/privacy.html">Privacy Policy</a>
       <a href="/terms.html">Terms & Conditions</a>
       <a onclick="openModal('contact-modal')" style="cursor: pointer;">Contact Us</a>
     </div>
+    
     <div class="footer-text">
       &copy; 2026 ZenResume. All rights reserved.<br>
       Built for professionals, by professionals.
