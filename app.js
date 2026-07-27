@@ -1010,7 +1010,21 @@ function executeSystemPrint() {
   runPdfGeneration();
 }
 
-function runPdfGeneration() {
+function loadHtml2Pdf() {
+  return new Promise((resolve, reject) => {
+    if (window.html2pdf) return resolve(window.html2pdf);
+    const script = document.createElement('script');
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.integrity = "sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==";
+    script.crossOrigin = "anonymous";
+    script.referrerPolicy = "no-referrer";
+    script.onload = () => resolve(window.html2pdf);
+    script.onerror = () => reject(new Error('Failed to load html2pdf'));
+    document.head.appendChild(script);
+  });
+}
+
+async function runPdfGeneration() {
   window.isGeneratingPdf = true;
   const element = document.getElementById('resume-print-area');
 
@@ -1124,6 +1138,17 @@ function runPdfGeneration() {
   };
   
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
+  if (btnModalConfirm) btnModalConfirm.innerHTML = 'Loading PDF Engine...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.3;">Thanks for bearing with our ads, they help a solo developer keep this tool 100% free!</span>';
+
+  try {
+    await loadHtml2Pdf();
+  } catch (err) {
+    alert("Failed to load the PDF engine. Please check your internet connection.");
+    if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
+    window.isGeneratingPdf = false;
+    return;
+  }
+  
   if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating your free PDF...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.3;">Thanks for bearing with our ads, they help a solo developer keep this tool 100% free!</span>';
 
   // CRITICAL MOBILE FIX: Wait 350ms for the browser to complete layout reflow and repaint.
