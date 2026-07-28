@@ -1117,15 +1117,15 @@ async function runPdfGeneration() {
   const userName = document.getElementById('input-name').value.trim() || 'Professional';
   const fileName = `ZenResume_${userName.replace(/\s+/g, '_')}.pdf`;
 
-  // Scale 3 causes canvas size limits to be exceeded in mobile safari/chrome, yielding blank pages.
-  // We dynamically use scale 1.5 on mobile (highly optimized for speed and memory) and scale 3 on desktop.
+  // Scale 2 provides excellent 192 DPI print quality while remaining fast and memory-efficient.
+  // Using Scale 3 previously caused 7-13 second generation times.
   const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const pdfScale = isMobileDevice ? 2 : 3;
+  const pdfScale = 2;
 
   const opt = {
     margin:       0,
     filename:     fileName,
-    image:        { type: 'jpeg', quality: 0.98 },
+    image:        { type: 'jpeg', quality: 0.92 },
     html2canvas:  { 
       scale: pdfScale,
       useCORS: true, 
@@ -1140,7 +1140,7 @@ async function runPdfGeneration() {
   };
   
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
-  if (btnModalConfirm) btnModalConfirm.innerHTML = 'Loading PDF Engine...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.3;">Thanks for bearing with our ads, they help a solo developer keep this tool 100% free!</span>';
+  if (btnModalConfirm) btnModalConfirm.innerHTML = 'Loading PDF Engine...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.4;">This high-resolution PDF takes 5-10 seconds to generate. Please do not close the window.<br><br>Thanks for bearing with our ads, they help keep this tool free!</span>';
 
   try {
     await loadHtml2Pdf();
@@ -1151,7 +1151,7 @@ async function runPdfGeneration() {
     return;
   }
   
-  if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating your free PDF...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.3;">Thanks for bearing with our ads, they help a solo developer keep this tool 100% free!</span>';
+  if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating your free PDF...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.4;">This high-resolution PDF takes 5-10 seconds to generate. Please do not close the window.<br><br>Thanks for bearing with our ads, they help keep this tool free!</span>';
 
   // CRITICAL MOBILE FIX: Wait 350ms for the browser to complete layout reflow and repaint.
   // Mobile browsers defer rendering cycles; without this delay, the preview is captured before it is shown, resulting in blank pages.
