@@ -1,149 +1,107 @@
 # 📦 ZenResume - Archived Features (Future Roadmap)
 
-This document stores all major features, updates, and improvements planned for ZenResume.
-These features are archived here and will be rolled out progressively when the website reaches
-its desired growth milestones (traffic, AdSense approval, user base).
+This document stores detailed technical blueprints for all major features planned for ZenResume. 
+These features are fully architected here and will be rolled out progressively when the website reaches its desired growth milestones (traffic, AdSense approval, user base).
 
 ---
 
-## 1. 📝 AI Cover Letter Generation (Using Gemini 2.5)
-**Status:** Archived — Added: 22 July 2026
+## 1. 📊 Resume Score / ATS Score Checker
+**Status:** Archived — Ready to Rollout
 
 ### Feature Overview
-An AI-powered Cover Letter Generator that leverages the existing Gemini AI integration.
-It reads the user's currently loaded resume data in the ZenResume workspace and a user-provided
-job description to automatically draft a highly tailored, professional cover letter.
+An AI-powered tool that analyzes the user's resume data and provides an ATS Compatibility Score (0–100) with a detailed breakdown of improvements. This is a massive SEO and retention driver.
 
-### Proposed Implementation Plan
-
-**UI Changes (`index.html`)**
-- Add a "🪄 Generate Cover Letter" button to the left-hand workspace actions panel.
-- Build a new modal overlay (`#cover-letter-modal`) containing:
-  - Input: Target Job Title
-  - Input: Target Company Name
-  - Textarea: Job Description (optional, for tailoring)
-  - Button: "Generate with AI"
-  - Large Output Textarea: For displaying and editing the generated cover letter
-  - Button: "Copy to Clipboard"
-
-**Logic Changes (`app.js`)**
-- Implement `generateCoverLetter()` attached to the modal.
-- Extract the user's parsed resume data (Contact, Work Experience, Skills, Education).
-- Construct a strict Gemini prompt for professional cover letter generation.
-- Reuse existing `fetchWithRetry` wrapper and API key logic hitting `gemini-2.5-flash`.
-- Display result in output textarea with full error state handling.
-
-### Future Considerations
-- Feature will share the same API key quota as Magic Import — need clear UI warnings.
-- Decide: downloadable PDF output vs. simple text copy-paste (initial plan: text area).
+### Technical Implementation Blueprint
+*   **UI Updates (`index.html`):**
+    *   Add a large "Score My Resume" button next to the Download button.
+    *   Create a modal `<div id="score-modal">` featuring a circular progress bar (for the 0-100 score) and 5 category bars (Keywords, Formatting, Impact, Skills, Contact).
+*   **Logic (`app.js`):**
+    *   Create `async function calculateATSScore()`.
+    *   Extract current editor data via `document.getElementById('editor-content').innerText`.
+    *   Send to Gemini API with strict JSON formatting prompt: `{"score": 85, "feedback": ["Add more metrics", "Missing LinkedIn URL"]}`.
+    *   Animate the circular progress bar in the UI based on the returned score.
 
 ---
 
-## 2. 📱 Android App (TWA — Trusted Web Activity / Google Play Store)
-**Status:** Archived — Discussed: July 2026
+## 2. 📱 Android App (TWA — Trusted Web Activity)
+**Status:** Archived — Ready to Rollout
 
 ### Feature Overview
-Package ZenResume as a lightweight Android App Bundle (.aab) using Google's Trusted Web Activity
-(TWA) method and publish it on the Google Play Store.
+Package the website as an Android App Bundle (.aab) to publish on the Google Play Store, giving users a native app experience.
 
-### Why Archived
-- Requires the website to first achieve stable Google AdSense approval and consistent user traffic.
-- Once the site has a strong user base, the Play Store listing will dramatically increase discovery.
-
-### Implementation Plan (Already Prepared)
-- The ZenResume package files were already prepared and stored at:
-  `C:\Users\DELL\Downloads\ZenResume - Google Play package`
-- `manifest.json` and Service Worker (`sw.js`) are already in place for PWA compliance.
-- Next step: Use Bubblewrap CLI to generate the signed `.aab` file and submit to Play Store.
-
-### Traffic Milestone to Trigger Release
-- Recommended: Launch when the site reaches **500+ daily active users**.
+### Technical Implementation Blueprint
+*   **Prerequisites:** 
+    *   The `manifest.json` and `sw.js` (Service Worker) are already active.
+    *   Google Play Developer account ($25 fee) required.
+*   **Execution (CLI):**
+    *   Run `@bubblewrap/cli init --manifest=https://resume-builder-swart-sigma-93.vercel.app/manifest.json`.
+    *   Configure the keystore password and app details.
+    *   Run `bubblewrap build` to generate the `app-release-bundle.aab`.
+    *   Upload the `.aab` file to the Google Play Console.
 
 ---
 
 ## 3. 🏆 Premium Templates (Paid/Pro Tier)
-**Status:** Archived — Discussed: July 2026
+**Status:** Archived — Ready to Rollout
 
 ### Feature Overview
-Introduce a set of exclusive, premium-design resume templates that users can unlock.
-This creates a freemium monetization layer beyond AdSense alone.
+Introduce a Freemium model. Basic templates remain free, but users can pay ₹99 to unlock highly designed executive and creative templates.
 
-### Monetisation Model
-- Free: 4–5 standard ATS-friendly templates (current).
-- Pro (₹99–₹199 one-time or monthly): Access to 3–4 premium, highly-designed templates
-  (e.g., creative industry, executive, research/academic).
-
-### Implementation Notes
-- Requires a payment gateway integration (Razorpay for India is recommended).
-- Template unlock status stored in Firebase user profile.
+### Technical Implementation Blueprint
+*   **UI Updates (`index.html` & `styles.css`):**
+    *   Add 3 new templates (e.g., `modern-pro`, `executive-pro`) to the template selector.
+    *   Add a lock icon 🔒 overlay on Pro templates.
+    *   Create a clean, Apple-style payment popup when a Pro template is clicked.
+*   **Logic (`app.js` & Backend):**
+    *   Integrate Razorpay JS SDK: `<script src="https://checkout.razorpay.com/v1/checkout.js"></script>`.
+    *   On successful payment (`handler` callback), store a local storage token: `localStorage.setItem('pro_unlocked', 'true')`.
+    *   (Optional phase 2: Link Razorpay to Firebase Auth to save purchases across devices).
 
 ---
 
-## 4. 📊 Resume Score / ATS Score Checker
-**Status:** Archived — Discussed: July 2026
+## 4. 💼 Smart Job Description (JD) Tailoring
+**Status:** Archived — Ready to Rollout
 
 ### Feature Overview
-After the user builds their resume, provide an AI-generated ATS Compatibility Score (0–100)
-with a detailed breakdown of what's good and what needs to be improved.
+Enhancing the existing AI tailoring feature to automatically detect missing keywords from a Job Description and suggest where to place them.
 
-### How It Works
-- Send the completed resume data to Gemini with a structured scoring prompt.
-- Score categories: Keyword Density, Formatting, Contact Info, Skills Match, Experience Detail.
-- Show a visual progress bar for each category and an overall score badge.
-
-### Why Archived
-- This is a high-value "stickiness" feature that keeps users coming back.
-- Should be released after AdSense is approved to use it as a traffic driver via blog content
-  ("Check your resume's ATS score for free!").
+### Technical Implementation Blueprint
+*   **UI Updates (`index.html`):**
+    *   Add a new "Keyword Match Score" visual indicator inside the existing Tailor modal.
+    *   Add a section: "Keywords you are missing: [React] [Node.js] [Agile]".
+*   **Logic (`app.js`):**
+    *   Update the Gemini prompt in `tailorResume()` to output a JSON object containing `missing_keywords` and `tailored_bullets`.
+    *   Write a function `highlightKeywords(text, keywords)` that wraps matched keywords in `<span class="highlight">` so the user visually sees what the AI added.
 
 ---
 
-## 5. 🌐 Multi-Language Resume Support
-**Status:** Archived — Discussed: July 2026
+## 5. 📧 Email Newsletter / User Re-engagement System
+**Status:** Archived — Ready to Rollout
 
 ### Feature Overview
-Allow users to switch the UI language and also generate resume content in languages other
-than English (e.g., Hindi, Telugu, Tamil, French, German) for non-English job markets.
+Automatically capture emails and send "Career Tips" to bring users back to the site.
 
-### Why Archived
-- Current user base is primarily English-speaking India (confirmed via traffic data).
-- Low priority until traffic data shows significant demand from non-English regions.
-
----
-
-## 6. 💼 Job Description Tailoring (Resume Auto-Tailoring)
-**Status:** Already Partially Built — Enhancement Archived
-
-### Feature Overview (Enhancement)
-The current "Tailor & Download" feature uses Gemini to tailor resume bullets to a job description.
-The archived enhancement is to make this smarter:
-- Auto-detect missing keywords from the JD and highlight them in the editor.
-- Suggest additional skills or certifications to add based on the target JD.
-- Show a "Keyword Match %" score before and after tailoring.
+### Technical Implementation Blueprint
+*   **UI Updates (`index.html`):**
+    *   Add a non-intrusive "Save your progress" modal that asks for an email before closing the tab.
+*   **Logic (Firebase / Brevo):**
+    *   Setup Firebase Authentication (Email/Password).
+    *   When a user signs up, trigger a Firebase Cloud Function.
+    *   The Cloud Function sends a POST request to Brevo/Mailchimp API to add the user to the "Newsletter" list.
+    *   Setup an automated sequence in Brevo: Send Day 1 Welcome, Day 7 Resume Tips, Day 30 Check-in.
 
 ---
 
-## 7. 📧 Email Newsletter / User Re-engagement System
-**Status:** Archived — Discussed: July 2026
+## 6. 🌐 Multi-Language Resume Support
+**Status:** Archived — Ready to Rollout
 
 ### Feature Overview
-Build an opt-in email newsletter system for users who sign up.
-- Welcome email with resume tips on sign-up.
-- Weekly "Career Tips" newsletter linking back to blog articles.
-- Re-engagement email if a user hasn't visited in 30 days.
+Allow users to generate resumes in Hindi, Telugu, French, German, etc.
 
-### Why Archived
-- Requires a third-party email provider integration (Mailchimp / Brevo recommended).
-- Should only be built once user sign-up numbers are meaningful (target: 1,000+ registered users).
-
----
-
-## 📅 Feature Release Milestones
-
-| Milestone | Target | Features to Unlock |
-|---|---|---|
-| **Stage 1** | AdSense Approved | Launch as-is, let ads monetise |
-| **Stage 2** | 500 Daily Users | Android TWA App (Play Store) |
-| **Stage 3** | 2,000 Daily Users | ATS Score Checker + Cover Letter Generator |
-| **Stage 4** | 5,000 Daily Users | Premium Templates + Razorpay |
-| **Stage 5** | 10,000 Daily Users | Email Newsletter + Multi-Language Support |
+### Technical Implementation Blueprint
+*   **UI Updates (`index.html`):**
+    *   Add a dropdown in the top navbar: 🌐 Language (EN | HI | TE | FR).
+*   **Logic (`app.js`):**
+    *   Create a massive JSON dictionary for UI translations (`const translations = { en: { ... }, hi: { ... }}`).
+    *   When the user clicks "Translate Resume", send the current DOM content to Gemini with the prompt: *"Translate this resume into [Language] while keeping a highly professional, corporate tone."*
+    *   Replace the DOM elements with the translated text.
