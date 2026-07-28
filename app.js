@@ -1077,29 +1077,39 @@ async function runPdfGeneration() {
   const clone = element.cloneNode(true);
   
   // Create a hidden absolute container to enforce strict X=0 coordinates
+  const isLetter = state.paperSize === 'letter';
+  const paperWidth = isLetter ? '816px' : '794px';
+  const paperHeight = isLetter ? '278mm' : '295.5mm';
+
   const printContainer = document.createElement('div');
-  printContainer.style.position = 'absolute';
-  printContainer.style.top = '0';
-  printContainer.style.left = '0';
-  printContainer.style.zIndex = '-9999';
-  printContainer.style.width = '100%';
+  printContainer.style.cssText = `
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: ${paperWidth} !important;
+    z-index: -9999 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  `;
   
   printContainer.appendChild(clone);
   document.body.appendChild(printContainer);
 
   // Apply print-specific structural styles strictly to the clone
-  clone.style.transform = 'none';
-  clone.style.transformOrigin = 'unset';
-  clone.style.position = 'relative'; 
-  clone.style.left = '0';
-  clone.style.top = '0';
-  clone.style.margin = '0'; 
-
-  // Fix flex shrinking and rounding errors on the clone
-  const isLetter = state.paperSize === 'letter';
-  clone.style.width = isLetter ? '816px' : '794px';
-  clone.style.height = isLetter ? '278mm' : '295.5mm';
-  clone.style.overflow = 'hidden';
+  // We use cssText with !important to completely override any flexbox or scaling artifacts
+  clone.style.cssText += `
+    position: absolute !important;
+    left: 0px !important;
+    top: 0px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    transform: none !important;
+    transform-origin: 0 0 !important;
+    width: ${paperWidth} !important;
+    height: ${paperHeight} !important;
+    overflow: hidden !important;
+  `;
 
   // Get user's name for the filename
   const userName = document.getElementById('input-name').value.trim() || 'Professional';
@@ -1116,6 +1126,8 @@ async function runPdfGeneration() {
       useCORS: true, 
       letterRendering: false, 
       logging: false, 
+      x: 0,
+      y: 0,
       scrollY: 0,
       scrollX: 0,
       windowWidth: isLetter ? 816 : 794,
