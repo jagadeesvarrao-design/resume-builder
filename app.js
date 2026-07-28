@@ -1181,10 +1181,34 @@ async function runPdfGeneration() {
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
       window.isGeneratingPdf = false;
     
-    // Restore mobile preview tab state
-    if (!wasPreviewShown) {
-      builderWorkspace.classList.remove('show-preview');
-    }
+      // Restore mobile preview tab state
+      if (!wasPreviewShown) {
+        builderWorkspace.classList.remove('show-preview');
+      }
+    }).catch((err) => {
+      console.error("PDF Engine Error:", err);
+      // FAILSAGE: Restore layout if the engine crashes
+      element.style.transform = originalTransform;
+      element.style.transformOrigin = originalOrigin;
+      element.style.width = originalWidth;
+      element.style.height = originalHeight;
+      element.style.overflow = originalOverflow;
+      element.style.position = originalPosition;
+      element.style.left = originalLeft;
+      element.style.top = originalTop;
+      element.style.margin = originalMargin;
+      if (wrapper) {
+        wrapper.style.height = originalWrapperHeight;
+        wrapper.style.display = originalWrapperDisplay;
+        wrapper.style.overflow = originalWrapperOverflow;
+        wrapper.style.paddingLeft = originalWrapperPaddingLeft;
+      }
+      if (btnModalConfirm) btnModalConfirm.innerHTML = "Error generating PDF. Try again.";
+      window.isGeneratingPdf = false;
+      if (!wasPreviewShown) {
+        builderWorkspace.classList.remove('show-preview');
+      }
+    });
     
     // Close the Print/AI Modal if it's open
     const printModal = document.getElementById('print-modal');
