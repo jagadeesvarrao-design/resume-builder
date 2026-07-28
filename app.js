@@ -1080,6 +1080,7 @@ async function runPdfGeneration() {
   const originalPosition = element.style.position;
   const originalLeft = element.style.left;
   const originalTop = element.style.top;
+  const originalMargin = element.style.margin;
   
   const wrapper = document.querySelector('.resume-paper-wrapper');
   const originalWrapperHeight = wrapper ? wrapper.style.height : '';
@@ -1091,8 +1092,9 @@ async function runPdfGeneration() {
   element.style.transform = 'none';
   element.style.transformOrigin = 'unset';
   element.style.position = 'relative'; // Reset from absolute during canvas print capture
-  element.style.left = 'auto';
-  element.style.top = 'auto';
+  element.style.left = '0';
+  element.style.top = '0';
+  element.style.margin = '0'; // Reset margin so html2canvas captures from strict X=0
 
   // Fix flex shrinking on mobile viewports by setting display block on parent and absolute pixel width
   const isLetter = state.paperSize === 'letter';
@@ -1169,6 +1171,7 @@ async function runPdfGeneration() {
       element.style.position = originalPosition;
       element.style.left = originalLeft;
       element.style.top = originalTop;
+      element.style.margin = originalMargin;
       if (wrapper) {
         wrapper.style.height = originalWrapperHeight;
         wrapper.style.display = originalWrapperDisplay;
