@@ -1096,7 +1096,22 @@ async function runPdfGeneration() {
   element.style.position = 'relative'; // Reset from absolute during canvas print capture
   element.style.left = '0';
   element.style.top = '0';
-  // DO NOT set margin to 0 here directly, as it breaks centering algorithms unpredictably.
+  
+  // CRITICAL LAPTOP FIX: Disable the CSS Grid during capture so the 816px iframe isn't split in half
+  const builderWorkspace = document.getElementById('builder-workspace');
+  const originalWorkspaceDisplay = builderWorkspace ? builderWorkspace.style.display : '';
+  if (builderWorkspace) {
+    builderWorkspace.style.display = 'block';
+  }
+
+  // CRITICAL MOBILE & DESKTOP FIX: Remove all overflow-x hidden clips from parent containers
+  const previewPanel = document.querySelector('.preview-panel');
+  const originalPreviewOverflow = previewPanel ? previewPanel.style.overflow : '';
+  if (previewPanel) {
+    previewPanel.style.overflow = 'visible';
+  }
+  const originalBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'visible';
 
   // Fix flex shrinking on mobile viewports and ELIMINATE negative X coordinate bleeding
   const isLetter = state.paperSize === 'letter';
@@ -1106,8 +1121,7 @@ async function runPdfGeneration() {
     wrapper.style.height = 'auto';
     wrapper.style.overflow = 'visible';
     wrapper.style.paddingLeft = '0px';
-    // CRITICAL: Force flex-start so the oversized 816px paper aligns strictly to the left edge (X=0)
-    // If it stays centered on a small mobile screen, it bleeds into negative X coordinates and gets cut off.
+    // Force flex-start so the oversized 816px paper aligns strictly to the left edge (X=0)
     wrapper.style.alignItems = 'flex-start';
     wrapper.style.justifyContent = 'flex-start';
   }
@@ -1133,8 +1147,6 @@ async function runPdfGeneration() {
       useCORS: true, 
       letterRendering: false, 
       logging: false, 
-      x: 0,
-      y: 0,
       scrollY: 0,
       scrollX: 0,
       windowWidth: isLetter ? 816 : 794, 
@@ -1163,6 +1175,13 @@ async function runPdfGeneration() {
     element.style.left = originalLeft;
     element.style.top = originalTop;
     element.style.margin = originalMargin;
+    if (builderWorkspace) {
+      builderWorkspace.style.display = originalWorkspaceDisplay;
+    }
+    if (previewPanel) {
+      previewPanel.style.overflow = originalPreviewOverflow;
+    }
+    document.body.style.overflow = originalBodyOverflow;
     if (wrapper) {
       wrapper.style.height = originalWrapperHeight;
       wrapper.style.display = originalWrapperDisplay;
@@ -1260,6 +1279,13 @@ async function runPdfGeneration() {
       element.style.left = originalLeft;
       element.style.top = originalTop;
       element.style.margin = originalMargin;
+      if (builderWorkspace) {
+        builderWorkspace.style.display = originalWorkspaceDisplay;
+      }
+      if (previewPanel) {
+        previewPanel.style.overflow = originalPreviewOverflow;
+      }
+      document.body.style.overflow = originalBodyOverflow;
       if (wrapper) {
         wrapper.style.height = originalWrapperHeight;
         wrapper.style.display = originalWrapperDisplay;
