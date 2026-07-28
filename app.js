@@ -1073,43 +1073,50 @@ async function runPdfGeneration() {
     builderWorkspace.classList.add('show-preview');
   }
 
-  // Create a deep clone to avoid modifying the live preview DOM
-  const clone = element.cloneNode(true);
+  // Save original transform and layout states to restore later
+  const originalTransform = element.style.transform;
+  const originalOrigin = element.style.transformOrigin;
+  const originalWidth = element.style.width;
+  const originalPosition = element.style.position;
+  const originalLeft = element.style.left;
+  const originalTop = element.style.top;
+  const originalMargin = element.style.margin;
   
-  // Create a hidden absolute container to enforce strict X=0 coordinates
+  const wrapper = document.querySelector('.resume-paper-wrapper');
+  const originalWrapperHeight = wrapper ? wrapper.style.height : '';
+  const originalWrapperDisplay = wrapper ? wrapper.style.display : '';
+  const originalWrapperOverflow = wrapper ? wrapper.style.overflow : '';
+  const originalWrapperPaddingLeft = wrapper ? wrapper.style.paddingLeft : '';
+  const originalWrapperAlignItems = wrapper ? wrapper.style.alignItems : '';
+  const originalWrapperJustifyContent = wrapper ? wrapper.style.justifyContent : '';
+
+  // Remove scaling so PDF renders at full 1:1 resolution
+  element.style.transform = 'none';
+  element.style.transformOrigin = 'unset';
+  element.style.position = 'relative'; // Reset from absolute during canvas print capture
+  element.style.left = '0';
+  element.style.top = '0';
+  // DO NOT set margin to 0 here directly, as it breaks centering algorithms unpredictably.
+
+  // Fix flex shrinking on mobile viewports and ELIMINATE negative X coordinate bleeding
   const isLetter = state.paperSize === 'letter';
-  const paperWidth = isLetter ? '816px' : '794px';
-  const paperHeight = isLetter ? '278mm' : '295.5mm';
+  element.style.width = isLetter ? '816px' : '794px';
+  if (wrapper) {
+    wrapper.style.display = 'flex';
+    wrapper.style.height = 'auto';
+    wrapper.style.overflow = 'visible';
+    wrapper.style.paddingLeft = '0px';
+    // CRITICAL: Force flex-start so the oversized 816px paper aligns strictly to the left edge (X=0)
+    // If it stays centered on a small mobile screen, it bleeds into negative X coordinates and gets cut off.
+    wrapper.style.alignItems = 'flex-start';
+    wrapper.style.justifyContent = 'flex-start';
+  }
 
-  const printContainer = document.createElement('div');
-  printContainer.style.cssText = `
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: ${paperWidth} !important;
-    z-index: -9999 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  `;
-  
-  printContainer.appendChild(clone);
-  document.body.appendChild(printContainer);
-
-  // Apply print-specific structural styles strictly to the clone
-  // We use cssText with !important to completely override any flexbox or scaling artifacts
-  clone.style.cssText += `
-    position: absolute !important;
-    left: 0px !important;
-    top: 0px !important;
-    margin: 0px !important;
-    padding: 0px !important;
-    transform: none !important;
-    transform-origin: 0 0 !important;
-    width: ${paperWidth} !important;
-    height: ${paperHeight} !important;
-    overflow: hidden !important;
-  `;
+  // Force strict proportions during print
+  const originalHeight = element.style.height;
+  const originalOverflow = element.style.overflow;
+  element.style.height = isLetter ? '278mm' : '295.5mm';
+  element.style.overflow = 'hidden';
 
   // Get user's name for the filename
   const userName = document.getElementById('input-name').value.trim() || 'Professional';
@@ -1130,8 +1137,8 @@ async function runPdfGeneration() {
       y: 0,
       scrollY: 0,
       scrollX: 0,
-      windowWidth: isLetter ? 816 : 794,
-      height: clone.offsetHeight - 1 
+      windowWidth: isLetter ? 816 : 794, 
+      height: element.offsetHeight - 1 
     },
     jsPDF:        { unit: 'mm', format: isLetter ? 'letter' : 'a4', orientation: 'portrait' }
   };
@@ -1145,16 +1152,32 @@ async function runPdfGeneration() {
     alert("Failed to load the PDF engine. Please check your internet connection.");
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     window.isGeneratingPdf = false;
-    printContainer.remove();
+    
+    // Fail-safe restore
+    element.style.transform = originalTransform;
+    element.style.transformOrigin = originalOrigin;
+    element.style.width = originalWidth;
+    element.style.height = originalHeight;
+    element.style.overflow = originalOverflow;
+    element.style.position = originalPosition;
+    element.style.left = originalLeft;
+    element.style.top = originalTop;
+    element.style.margin = originalMargin;
+    if (wrapper) {
+      wrapper.style.height = originalWrapperHeight;
+      wrapper.style.display = originalWrapperDisplay;
+      wrapper.style.overflow = originalWrapperOverflow;
+      wrapper.style.paddingLeft = originalWrapperPaddingLeft;
+      wrapper.style.alignItems = originalWrapperAlignItems;
+      wrapper.style.justifyContent = originalWrapperJustifyContent;
+    }
     return;
   }
   
   if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating your free PDF...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.4;">This high-resolution PDF takes 5-10 seconds to generate. Please do not close the window.<br><br>Thanks for bearing with our ads, they help keep this tool free!</span>';
 
   setTimeout(() => {
-    html2pdf().set(opt).from(clone).save().then(() => {
-      // Cleanup the cloned container
-      printContainer.remove();
+    html2pdf().set(opt).from(element).save().then(() => {
       
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
       window.isGeneratingPdf = false;
@@ -1217,7 +1240,6 @@ async function runPdfGeneration() {
         
         if (btnAffiliateLink) {
           btnAffiliateLink.onclick = () => {
-            // Amazon Affiliate Link for Cracking the Coding Interview
             window.open('https://www.amazon.in/Gayle-Laakmann-McDowell-Programming-Solutions-Paperback/dp/B08CDHYF5D?dib=eyJ2IjoiMSJ9.9XzaqyXBhFL5Gf6bhDB4KFPawNIFDAZZc4mryrovwpuRF1wVPRHjmDv22-HvspwDPs7TQ6qIYajbFPeE_UonDPBo352mYPsBg6ZCpgiQDw0P9fVofTC4umZm8DPG9z7W-anWeKrVjEAzzAzj_sGC62HaL5DxGAi9UUDRNGpLU4PdfNfW53EM3s-FdoRnHYjZaNKa00UWBWFsdbMOYZAsYlDBCdzPiDZNh1rPeDRylJg.I-yvM3vNziTP3ns-zzIqdtdVTV4duaJFSaXJhjpZVWI&dib_tag=se&keywords=cracking+the+code+interview&qid=1782971021&sr=8-1&linkCode=ll2&tag=zenresume01-21&linkId=f96e4d6b195eccbaf632ecf501569508&ref_=as_li_ss_tl', '_blank', 'noopener,noreferrer');
             affiliateModal.style.display = 'none';
           };
@@ -1225,9 +1247,32 @@ async function runPdfGeneration() {
       }
     }).catch(err => {
       console.error("PDF Engine Error:", err);
-      printContainer.remove();
       if (btnModalConfirm) btnModalConfirm.innerHTML = "Error generating PDF. Try again.";
       alert("Failed to generate PDF. Please try again.");
+    }).finally(() => {
+      // ALWAYS RESTORE LAYOUT, REGARDLESS OF SUCCESS OR FAILURE
+      element.style.transform = originalTransform;
+      element.style.transformOrigin = originalOrigin;
+      element.style.width = originalWidth;
+      element.style.height = originalHeight;
+      element.style.overflow = originalOverflow;
+      element.style.position = originalPosition;
+      element.style.left = originalLeft;
+      element.style.top = originalTop;
+      element.style.margin = originalMargin;
+      if (wrapper) {
+        wrapper.style.height = originalWrapperHeight;
+        wrapper.style.display = originalWrapperDisplay;
+        wrapper.style.overflow = originalWrapperOverflow;
+        wrapper.style.paddingLeft = originalWrapperPaddingLeft;
+        wrapper.style.alignItems = originalWrapperAlignItems;
+        wrapper.style.justifyContent = originalWrapperJustifyContent;
+      }
+      
+      // Restore mobile preview tab state
+      if (!wasPreviewShown) {
+        builderWorkspace.classList.remove('show-preview');
+      }
       window.isGeneratingPdf = false;
     });
   }, 350);
