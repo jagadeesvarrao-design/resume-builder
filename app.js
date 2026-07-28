@@ -1073,53 +1073,38 @@ async function runPdfGeneration() {
     builderWorkspace.classList.add('show-preview');
   }
 
-  // Save original transform and layout states to restore later
-  const originalTransform = element.style.transform;
-  const originalOrigin = element.style.transformOrigin;
-  const originalWidth = element.style.width;
-  const originalPosition = element.style.position;
-  const originalLeft = element.style.left;
-  const originalTop = element.style.top;
-  const originalMargin = element.style.margin;
+  // Create a deep clone to avoid modifying the live preview DOM
+  const clone = element.cloneNode(true);
   
-  const wrapper = document.querySelector('.resume-paper-wrapper');
-  const originalWrapperHeight = wrapper ? wrapper.style.height : '';
-  const originalWrapperDisplay = wrapper ? wrapper.style.display : '';
-  const originalWrapperOverflow = wrapper ? wrapper.style.overflow : '';
-  const originalWrapperPaddingLeft = wrapper ? wrapper.style.paddingLeft : '';
+  // Create a hidden absolute container to enforce strict X=0 coordinates
+  const printContainer = document.createElement('div');
+  printContainer.style.position = 'absolute';
+  printContainer.style.top = '0';
+  printContainer.style.left = '0';
+  printContainer.style.zIndex = '-9999';
+  printContainer.style.width = '100%';
+  
+  printContainer.appendChild(clone);
+  document.body.appendChild(printContainer);
 
-  // Remove scaling so PDF renders at full 1:1 resolution
-  element.style.transform = 'none';
-  element.style.transformOrigin = 'unset';
-  element.style.position = 'relative'; // Reset from absolute during canvas print capture
-  element.style.left = '0';
-  element.style.top = '0';
-  element.style.margin = '0'; // Reset margin so html2canvas captures from strict X=0
+  // Apply print-specific structural styles strictly to the clone
+  clone.style.transform = 'none';
+  clone.style.transformOrigin = 'unset';
+  clone.style.position = 'relative'; 
+  clone.style.left = '0';
+  clone.style.top = '0';
+  clone.style.margin = '0'; 
 
-  // Fix flex shrinking on mobile viewports by setting display block on parent and absolute pixel width
+  // Fix flex shrinking and rounding errors on the clone
   const isLetter = state.paperSize === 'letter';
-  element.style.width = isLetter ? '816px' : '794px';
-  if (wrapper) {
-    wrapper.style.display = 'block';
-    wrapper.style.height = 'auto';
-    wrapper.style.overflow = 'visible';
-    wrapper.style.paddingLeft = '0px';
-  }
-
-  // Force strict proportions during print, slightly smaller than standard dimensions
-  // to prevent decimal pixel rounding errors from spilling over into a blank second page.
-  const originalHeight = element.style.height;
-  const originalOverflow = element.style.overflow;
-  element.style.height = isLetter ? '278mm' : '295.5mm';
-  element.style.overflow = 'hidden';
+  clone.style.width = isLetter ? '816px' : '794px';
+  clone.style.height = isLetter ? '278mm' : '295.5mm';
+  clone.style.overflow = 'hidden';
 
   // Get user's name for the filename
   const userName = document.getElementById('input-name').value.trim() || 'Professional';
   const fileName = `ZenResume_${userName.replace(/\s+/g, '_')}.pdf`;
 
-  // Scale 2 provides excellent 192 DPI print quality while remaining fast and memory-efficient.
-  // Using Scale 3 previously caused 7-13 second generation times.
-  const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   const pdfScale = 2;
 
   const opt = {
@@ -1129,12 +1114,12 @@ async function runPdfGeneration() {
     html2canvas:  { 
       scale: pdfScale,
       useCORS: true, 
-      letterRendering: false, // Turn off slow letter-by-layer text painting loops
-      logging: false, // Suppress canvas debug output processing
+      letterRendering: false, 
+      logging: false, 
       scrollY: 0,
       scrollX: 0,
-      windowWidth: isLetter ? 816 : 794, // Force virtual desktop width during capture to prevent mobile layout clipping
-      height: element.offsetHeight - 1 // trim 1 pixel from the bottom to prevent overflow page break
+      windowWidth: isLetter ? 816 : 794,
+      height: clone.offsetHeight - 1 
     },
     jsPDF:        { unit: 'mm', format: isLetter ? 'letter' : 'a4', orientation: 'portrait' }
   };
@@ -1148,158 +1133,91 @@ async function runPdfGeneration() {
     alert("Failed to load the PDF engine. Please check your internet connection.");
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     window.isGeneratingPdf = false;
+    printContainer.remove();
     return;
   }
   
   if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating your free PDF...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.4;">This high-resolution PDF takes 5-10 seconds to generate. Please do not close the window.<br><br>Thanks for bearing with our ads, they help keep this tool free!</span>';
 
-  // CRITICAL MOBILE FIX: Wait 350ms for the browser to complete layout reflow and repaint.
-  // Mobile browsers defer rendering cycles; without this delay, the preview is captured before it is shown, resulting in blank pages.
   setTimeout(() => {
-    const paperHeightPx = isLetter ? 1056 : 1122;
-    const captureHeight = (element.offsetHeight && element.offsetHeight > 100) ? (element.offsetHeight - 1) : (paperHeightPx - 1);
-    opt.html2canvas.height = captureHeight;
-    opt.html2canvas.scrollX = 0;
-    
-    html2pdf().set(opt).from(element).save().then(() => {
-      // Restore original transform and scroll position for the live preview
-      element.style.transform = originalTransform;
-      element.style.transformOrigin = originalOrigin;
-      element.style.width = originalWidth;
-      element.style.height = originalHeight;
-      element.style.overflow = originalOverflow;
-      element.style.position = originalPosition;
-      element.style.left = originalLeft;
-      element.style.top = originalTop;
-      element.style.margin = originalMargin;
-      if (wrapper) {
-        wrapper.style.height = originalWrapperHeight;
-        wrapper.style.display = originalWrapperDisplay;
-        wrapper.style.overflow = originalWrapperOverflow;
-        wrapper.style.paddingLeft = originalWrapperPaddingLeft;
-      }
+    html2pdf().set(opt).from(clone).save().then(() => {
+      // Cleanup the cloned container
+      printContainer.remove();
+      
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
       window.isGeneratingPdf = false;
-    
-      // Restore mobile preview tab state
-      if (!wasPreviewShown) {
-        builderWorkspace.classList.remove('show-preview');
-      }
-    }).catch((err) => {
-      console.error("PDF Engine Error:", err);
-      // FAILSAGE: Restore layout if the engine crashes
-      element.style.transform = originalTransform;
-      element.style.transformOrigin = originalOrigin;
-      element.style.width = originalWidth;
-      element.style.height = originalHeight;
-      element.style.overflow = originalOverflow;
-      element.style.position = originalPosition;
-      element.style.left = originalLeft;
-      element.style.top = originalTop;
-      element.style.margin = originalMargin;
-      if (wrapper) {
-        wrapper.style.height = originalWrapperHeight;
-        wrapper.style.display = originalWrapperDisplay;
-        wrapper.style.overflow = originalWrapperOverflow;
-        wrapper.style.paddingLeft = originalWrapperPaddingLeft;
-      }
-      if (btnModalConfirm) btnModalConfirm.innerHTML = "Error generating PDF. Try again.";
-      window.isGeneratingPdf = false;
-      if (!wasPreviewShown) {
-        builderWorkspace.classList.remove('show-preview');
-      }
-    });
-    
-    // Close the Print/AI Modal if it's open
-    const printModal = document.getElementById('print-modal');
-    if (printModal) {
-      printModal.style.display = 'none';
-      printModal.style.opacity = '0';
-    }
 
-    // Trigger Post-Download Affiliate & Share Modal
-    const affiliateModal = document.getElementById('affiliate-modal');
-    if (affiliateModal) {
-      affiliateModal.style.display = 'flex';
-      
-      const btnCloseAffiliate = document.getElementById('btn-close-affiliate-modal');
-      const btnAffiliateLink = document.getElementById('btn-affiliate-link');
-      
-      const btnWhatsapp = document.getElementById('btn-share-whatsapp');
-      const btnLinkedin = document.getElementById('btn-share-linkedin');
-      const btnCopy = document.getElementById('btn-share-copy');
-      
-      const shareUrl = "https://resume-builder-swart-sigma-93.vercel.app/";
-      const shareText = "I just built a perfect ATS-compliant resume for free using ZenResume. No paywalls or subscriptions. Build yours here:";
-      
-      if (btnWhatsapp) {
-        btnWhatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+      // Close the Print/AI Modal if it's open
+      const printModal = document.getElementById('print-modal');
+      if (printModal) {
+        printModal.style.display = 'none';
+        printModal.style.opacity = '0';
       }
-      
-      if (btnLinkedin) {
-        btnLinkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+
+      // Trigger Post-Download Affiliate & Share Modal
+      const affiliateModal = document.getElementById('affiliate-modal');
+      if (affiliateModal) {
+        affiliateModal.style.display = 'flex';
+        
+        const btnCloseAffiliate = document.getElementById('btn-close-affiliate-modal');
+        const btnAffiliateLink = document.getElementById('btn-affiliate-link');
+        
+        const btnWhatsapp = document.getElementById('btn-share-whatsapp');
+        const btnLinkedin = document.getElementById('btn-share-linkedin');
+        const btnCopy = document.getElementById('btn-share-copy');
+        
+        const shareUrl = "https://resume-builder-swart-sigma-93.vercel.app/";
+        const shareText = "I just built a perfect ATS-compliant resume for free using ZenResume. No paywalls or subscriptions. Build yours here:";
+        
+        if (btnWhatsapp) {
+          btnWhatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        }
+        
+        if (btnLinkedin) {
+          btnLinkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+        }
+        
+        if (btnCopy) {
+          btnCopy.onclick = () => {
+            navigator.clipboard.writeText(shareUrl).then(() => {
+              const originalText = btnCopy.innerHTML;
+              btnCopy.innerHTML = `<i class="fas fa-check"></i> Copied!`;
+              btnCopy.style.background = "#2ecc71";
+              btnCopy.style.color = "white";
+              btnCopy.style.borderColor = "#2ecc71";
+              setTimeout(() => {
+                btnCopy.innerHTML = originalText;
+                btnCopy.style.background = "";
+                btnCopy.style.color = "";
+                btnCopy.style.borderColor = "";
+              }, 2000);
+            }).catch(err => {
+              console.error("Clipboard copy failed", err);
+            });
+          };
+        }
+        
+        if (btnCloseAffiliate) {
+          btnCloseAffiliate.onclick = () => {
+            affiliateModal.style.display = 'none';
+          };
+        }
+        
+        if (btnAffiliateLink) {
+          btnAffiliateLink.onclick = () => {
+            // Amazon Affiliate Link for Cracking the Coding Interview
+            window.open('https://www.amazon.in/Gayle-Laakmann-McDowell-Programming-Solutions-Paperback/dp/B08CDHYF5D?dib=eyJ2IjoiMSJ9.9XzaqyXBhFL5Gf6bhDB4KFPawNIFDAZZc4mryrovwpuRF1wVPRHjmDv22-HvspwDPs7TQ6qIYajbFPeE_UonDPBo352mYPsBg6ZCpgiQDw0P9fVofTC4umZm8DPG9z7W-anWeKrVjEAzzAzj_sGC62HaL5DxGAi9UUDRNGpLU4PdfNfW53EM3s-FdoRnHYjZaNKa00UWBWFsdbMOYZAsYlDBCdzPiDZNh1rPeDRylJg.I-yvM3vNziTP3ns-zzIqdtdVTV4duaJFSaXJhjpZVWI&dib_tag=se&keywords=cracking+the+code+interview&qid=1782971021&sr=8-1&linkCode=ll2&tag=zenresume01-21&linkId=f96e4d6b195eccbaf632ecf501569508&ref_=as_li_ss_tl', '_blank', 'noopener,noreferrer');
+            affiliateModal.style.display = 'none';
+          };
+        }
       }
-      
-      if (btnCopy) {
-        btnCopy.onclick = () => {
-          navigator.clipboard.writeText(shareUrl).then(() => {
-            const originalText = btnCopy.innerHTML;
-            btnCopy.innerHTML = `<i class="fas fa-check"></i> Copied!`;
-            btnCopy.style.background = "#2ecc71";
-            btnCopy.style.color = "white";
-            btnCopy.style.borderColor = "#2ecc71";
-            setTimeout(() => {
-              btnCopy.innerHTML = originalText;
-              btnCopy.style.background = "";
-              btnCopy.style.color = "";
-              btnCopy.style.borderColor = "";
-            }, 2000);
-          }).catch(err => {
-            console.error("Clipboard copy failed", err);
-          });
-        };
-      }
-      
-      if (btnCloseAffiliate) {
-        btnCloseAffiliate.onclick = () => {
-          affiliateModal.style.display = 'none';
-        };
-      }
-      
-      if (btnAffiliateLink) {
-        btnAffiliateLink.onclick = () => {
-          // Amazon Affiliate Link for Cracking the Coding Interview
-          window.open('https://www.amazon.in/Gayle-Laakmann-McDowell-Programming-Solutions-Paperback/dp/B08CDHYF5D?dib=eyJ2IjoiMSJ9.9XzaqyXBhFL5Gf6bhDB4KFPawNIFDAZZc4mryrovwpuRF1wVPRHjmDv22-HvspwDPs7TQ6qIYajbFPeE_UonDPBo352mYPsBg6ZCpgiQDw0P9fVofTC4umZm8DPG9z7W-anWeKrVjEAzzAzj_sGC62HaL5DxGAi9UUDRNGpLU4PdfNfW53EM3s-FdoRnHYjZaNKa00UWBWFsdbMOYZAsYlDBCdzPiDZNh1rPeDRylJg.I-yvM3vNziTP3ns-zzIqdtdVTV4duaJFSaXJhjpZVWI&dib_tag=se&keywords=cracking+the+code+interview&qid=1782971021&sr=8-1&linkCode=ll2&tag=zenresume01-21&linkId=f96e4d6b195eccbaf632ecf501569508&ref_=as_li_ss_tl', '_blank', 'noopener,noreferrer');
-          affiliateModal.style.display = 'none';
-        };
-      }
-    }
-  }).catch(err => {
-    console.error("PDF Generation failed", err);
-    element.style.transform = originalTransform;
-    element.style.transformOrigin = originalOrigin;
-    element.style.width = originalWidth;
-    element.style.height = originalHeight;
-    element.style.overflow = originalOverflow;
-    element.style.position = originalPosition;
-    element.style.left = originalLeft;
-    element.style.top = originalTop;
-    if (wrapper) {
-      wrapper.style.height = originalWrapperHeight;
-      wrapper.style.display = originalWrapperDisplay;
-      wrapper.style.overflow = originalWrapperOverflow;
-      wrapper.style.paddingLeft = originalWrapperPaddingLeft;
-    }
-    if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
-    
-    // Restore mobile preview tab state
-    if (!wasPreviewShown) {
-      builderWorkspace.classList.remove('show-preview');
-    }
-    
-    alert("Failed to generate PDF. Please try again.");
-    window.isGeneratingPdf = false;
-  });
+    }).catch(err => {
+      console.error("PDF Engine Error:", err);
+      printContainer.remove();
+      if (btnModalConfirm) btnModalConfirm.innerHTML = "Error generating PDF. Try again.";
+      alert("Failed to generate PDF. Please try again.");
+      window.isGeneratingPdf = false;
+    });
   }, 350);
 }
 
