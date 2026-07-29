@@ -1068,8 +1068,9 @@ async function runPdfGeneration() {
 
   // CRITICAL MOBILE FIX: If the preview panel is hidden (display: none !important),
   // html2canvas will render a completely blank image. We must temporarily show it.
-  const wasPreviewShown = builderWorkspace.classList.contains('show-preview');
-  if (!wasPreviewShown) {
+  const builderWorkspace = document.getElementById('builder-workspace');
+  const wasPreviewShown = builderWorkspace ? builderWorkspace.classList.contains('show-preview') : false;
+  if (!wasPreviewShown && builderWorkspace) {
     builderWorkspace.classList.add('show-preview');
   }
 
@@ -1098,7 +1099,6 @@ async function runPdfGeneration() {
   element.style.top = '0';
   
   // CRITICAL LAPTOP FIX: Disable the CSS Grid during capture so the 816px iframe isn't split in half
-  const builderWorkspace = document.getElementById('builder-workspace');
   const originalWorkspaceDisplay = builderWorkspace ? builderWorkspace.style.display : '';
   if (builderWorkspace) {
     builderWorkspace.style.display = 'block';
