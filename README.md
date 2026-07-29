@@ -59,6 +59,12 @@ To run ZenResume on your local machine, you don't need `npm` or `Node.js`. It's 
    ```
 3. Open `index.html` in your favorite browser, or serve it using a local server (e.g., VSCode Live Server).
 
+## 🔒 Security & Privacy
+
+Since ZenResume is a client-side application, we prioritize local-first data privacy:
+* **API Key Safety:** If you configure a custom Gemini API key, it is stored locally in your browser's `localStorage` and never transmitted to our servers.
+* **Credential Rotation:** If you fork this project and deploy it publicly, rotate all default API keys and Firebase configurations, and scrub any previously hardcoded keys from your git history.
+
 ## 🤝 Contributing
 
 We welcome contributions from the community! Whether it's adding a new ATS-compliant template, improving the CSS, or fixing a bug, your help is appreciated.

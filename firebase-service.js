@@ -118,7 +118,7 @@ window.addEventListener('DOMContentLoaded', () => {
       provider.setCustomParameters({ prompt: 'select_account' });
       
       auth.signInWithPopup(provider).then((result) => {
-        console.log("Logged in via popup", result.user.email);
+        console.log("Logged in via popup");
         // Toast is handled automatically by the onAuthStateChanged listener now, 
         // but we can also trigger it here to be absolutely sure.
         window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email));
@@ -184,6 +184,10 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    let authAttempts = [];
+    const MAX_ATTEMPTS = 5;
+    const LOCKOUT_TIME = 60 * 1000; // 1 minute
+
     btnSubmitEmail.addEventListener('click', async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value;
@@ -193,6 +197,15 @@ window.addEventListener('DOMContentLoaded', () => {
         emailError.style.display = 'block';
         return;
       }
+
+      const now = Date.now();
+      authAttempts = authAttempts.filter(t => now - t < LOCKOUT_TIME);
+      if (authAttempts.length >= MAX_ATTEMPTS) {
+        emailError.textContent = 'Too many authentication attempts. Please wait 1 minute before trying again.';
+        emailError.style.display = 'block';
+        return;
+      }
+      authAttempts.push(now);
       
       try {
         btnSubmitEmail.disabled = true;
