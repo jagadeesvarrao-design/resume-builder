@@ -1074,63 +1074,49 @@ async function runPdfGeneration() {
     builderWorkspace.classList.add('show-preview');
   }
 
-  // Save original transform and layout states to restore later
-  const originalTransform = element.style.transform;
-  const originalOrigin = element.style.transformOrigin;
-  const originalWidth = element.style.width;
-  const originalPosition = element.style.position;
-  const originalLeft = element.style.left;
-  const originalTop = element.style.top;
-  const originalMargin = element.style.margin;
+  // ULTIMATE FIX: Create a deep clone to completely avoid mutating the live CSS Grid / Flexbox layout
+  const clone = element.cloneNode(true);
   
-  const wrapper = document.querySelector('.resume-paper-wrapper');
-  const originalWrapperHeight = wrapper ? wrapper.style.height : '';
-  const originalWrapperDisplay = wrapper ? wrapper.style.display : '';
-  const originalWrapperOverflow = wrapper ? wrapper.style.overflow : '';
-  const originalWrapperPaddingLeft = wrapper ? wrapper.style.paddingLeft : '';
-  const originalWrapperAlignItems = wrapper ? wrapper.style.alignItems : '';
-  const originalWrapperJustifyContent = wrapper ? wrapper.style.justifyContent : '';
-
-  // Remove scaling so PDF renders at full 1:1 resolution
-  element.style.transform = 'none';
-  element.style.transformOrigin = 'unset';
-  element.style.position = 'relative'; // Reset from absolute during canvas print capture
-  element.style.left = '0';
-  element.style.top = '0';
-  
-  // CRITICAL LAPTOP FIX: Disable the CSS Grid during capture so the 816px iframe isn't split in half
-  const originalWorkspaceDisplay = builderWorkspace ? builderWorkspace.style.display : '';
-  if (builderWorkspace) {
-    builderWorkspace.style.display = 'block';
-  }
-
-  // CRITICAL MOBILE & DESKTOP FIX: Remove all overflow-x hidden clips from parent containers
-  const previewPanel = document.querySelector('.preview-panel');
-  const originalPreviewOverflow = previewPanel ? previewPanel.style.overflow : '';
-  if (previewPanel) {
-    previewPanel.style.overflow = 'visible';
-  }
-  const originalBodyOverflow = document.body.style.overflow;
-  document.body.style.overflow = 'visible';
-
-  // Fix flex shrinking on mobile viewports and ELIMINATE negative X coordinate bleeding
+  // Create an absolute container isolated from all layout constraints
   const isLetter = state.paperSize === 'letter';
-  element.style.width = isLetter ? '816px' : '794px';
-  if (wrapper) {
-    wrapper.style.display = 'flex';
-    wrapper.style.height = 'auto';
-    wrapper.style.overflow = 'visible';
-    wrapper.style.paddingLeft = '0px';
-    // Force flex-start so the oversized 816px paper aligns strictly to the left edge (X=0)
-    wrapper.style.alignItems = 'flex-start';
-    wrapper.style.justifyContent = 'flex-start';
-  }
+  const paperWidth = isLetter ? '816px' : '794px';
+  const paperHeight = isLetter ? '278mm' : '295.5mm';
 
-  // Force strict proportions during print
-  const originalHeight = element.style.height;
-  const originalOverflow = element.style.overflow;
-  element.style.height = isLetter ? '278mm' : '295.5mm';
-  element.style.overflow = 'hidden';
+  const printContainer = document.createElement('div');
+  printContainer.style.cssText = `
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: ${paperWidth} !important;
+    height: auto !important;
+    z-index: -9999 !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  `;
+
+  // Strip scaling from the clone but KEEP original paddings!
+  clone.style.transform = 'none';
+  clone.style.transformOrigin = 'unset';
+  clone.style.position = 'relative';
+  clone.style.left = '0';
+  clone.style.top = '0';
+  clone.style.margin = '0';
+  clone.style.width = paperWidth;
+  clone.style.height = paperHeight;
+  clone.style.boxShadow = 'none';
+  
+  printContainer.appendChild(clone);
+  document.body.appendChild(printContainer);
+
+  // Disable body-level clipping that would chop the 816px clone on narrow mobile screens
+  const originalBodyOverflow = document.body.style.overflow;
+  const originalBodyWidth = document.body.style.width;
+  const originalHtmlOverflow = document.documentElement.style.overflow;
+  document.body.style.overflow = 'visible';
+  document.body.style.width = 'auto';
+  document.documentElement.style.overflow = 'visible';
 
   // Get user's name for the filename
   const userName = document.getElementById('input-name').value.trim() || 'Professional';
@@ -1147,10 +1133,12 @@ async function runPdfGeneration() {
       useCORS: true, 
       letterRendering: false, 
       logging: false, 
+      x: 0,
+      y: 0,
       scrollY: 0,
       scrollX: 0,
       windowWidth: isLetter ? 816 : 794, 
-      height: element.offsetHeight - 1 
+      height: clone.offsetHeight - 1 
     },
     jsPDF:        { unit: 'mm', format: isLetter ? 'letter' : 'a4', orientation: 'portrait' }
   };
@@ -1166,29 +1154,12 @@ async function runPdfGeneration() {
     window.isGeneratingPdf = false;
     
     // Fail-safe restore
-    element.style.transform = originalTransform;
-    element.style.transformOrigin = originalOrigin;
-    element.style.width = originalWidth;
-    element.style.height = originalHeight;
-    element.style.overflow = originalOverflow;
-    element.style.position = originalPosition;
-    element.style.left = originalLeft;
-    element.style.top = originalTop;
-    element.style.margin = originalMargin;
-    if (builderWorkspace) {
-      builderWorkspace.style.display = originalWorkspaceDisplay;
-    }
-    if (previewPanel) {
-      previewPanel.style.overflow = originalPreviewOverflow;
-    }
+    printContainer.remove();
     document.body.style.overflow = originalBodyOverflow;
-    if (wrapper) {
-      wrapper.style.height = originalWrapperHeight;
-      wrapper.style.display = originalWrapperDisplay;
-      wrapper.style.overflow = originalWrapperOverflow;
-      wrapper.style.paddingLeft = originalWrapperPaddingLeft;
-      wrapper.style.alignItems = originalWrapperAlignItems;
-      wrapper.style.justifyContent = originalWrapperJustifyContent;
+    document.body.style.width = originalBodyWidth;
+    document.documentElement.style.overflow = originalHtmlOverflow;
+    if (!wasPreviewShown && builderWorkspace) {
+      builderWorkspace.classList.remove('show-preview');
     }
     return;
   }
@@ -1196,11 +1167,11 @@ async function runPdfGeneration() {
   if (btnModalConfirm) btnModalConfirm.innerHTML = 'Generating your free PDF...<br><span style="font-size: 11px; opacity: 0.8; font-weight: normal; margin-top: 4px; display: inline-block; line-height: 1.4;">This high-resolution PDF takes 5-10 seconds to generate. Please do not close the window.<br><br>Thanks for bearing with our ads, they help keep this tool free!</span>';
 
   setTimeout(() => {
-    html2pdf().set(opt).from(element).save().then(() => {
+    html2pdf().set(opt).from(clone).save().then(() => {
       
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
       window.isGeneratingPdf = false;
-
+      
       // Close the Print/AI Modal if it's open
       const printModal = document.getElementById('print-modal');
       if (printModal) {
@@ -1215,6 +1186,12 @@ async function runPdfGeneration() {
         
         const btnCloseAffiliate = document.getElementById('btn-close-affiliate-modal');
         const btnAffiliateLink = document.getElementById('btn-affiliate-link');
+        
+        if (btnCloseAffiliate) {
+          btnCloseAffiliate.onclick = () => {
+            affiliateModal.style.display = 'none';
+          };
+        }
         
         const btnWhatsapp = document.getElementById('btn-share-whatsapp');
         const btnLinkedin = document.getElementById('btn-share-linkedin');
@@ -1251,12 +1228,6 @@ async function runPdfGeneration() {
           };
         }
         
-        if (btnCloseAffiliate) {
-          btnCloseAffiliate.onclick = () => {
-            affiliateModal.style.display = 'none';
-          };
-        }
-        
         if (btnAffiliateLink) {
           btnAffiliateLink.onclick = () => {
             window.open('https://www.amazon.in/Gayle-Laakmann-McDowell-Programming-Solutions-Paperback/dp/B08CDHYF5D?dib=eyJ2IjoiMSJ9.9XzaqyXBhFL5Gf6bhDB4KFPawNIFDAZZc4mryrovwpuRF1wVPRHjmDv22-HvspwDPs7TQ6qIYajbFPeE_UonDPBo352mYPsBg6ZCpgiQDw0P9fVofTC4umZm8DPG9z7W-anWeKrVjEAzzAzj_sGC62HaL5DxGAi9UUDRNGpLU4PdfNfW53EM3s-FdoRnHYjZaNKa00UWBWFsdbMOYZAsYlDBCdzPiDZNh1rPeDRylJg.I-yvM3vNziTP3ns-zzIqdtdVTV4duaJFSaXJhjpZVWI&dib_tag=se&keywords=cracking+the+code+interview&qid=1782971021&sr=8-1&linkCode=ll2&tag=zenresume01-21&linkId=f96e4d6b195eccbaf632ecf501569508&ref_=as_li_ss_tl', '_blank', 'noopener,noreferrer');
@@ -1270,33 +1241,13 @@ async function runPdfGeneration() {
       alert("Failed to generate PDF. Please try again.");
     }).finally(() => {
       // ALWAYS RESTORE LAYOUT, REGARDLESS OF SUCCESS OR FAILURE
-      element.style.transform = originalTransform;
-      element.style.transformOrigin = originalOrigin;
-      element.style.width = originalWidth;
-      element.style.height = originalHeight;
-      element.style.overflow = originalOverflow;
-      element.style.position = originalPosition;
-      element.style.left = originalLeft;
-      element.style.top = originalTop;
-      element.style.margin = originalMargin;
-      if (builderWorkspace) {
-        builderWorkspace.style.display = originalWorkspaceDisplay;
-      }
-      if (previewPanel) {
-        previewPanel.style.overflow = originalPreviewOverflow;
-      }
+      printContainer.remove();
       document.body.style.overflow = originalBodyOverflow;
-      if (wrapper) {
-        wrapper.style.height = originalWrapperHeight;
-        wrapper.style.display = originalWrapperDisplay;
-        wrapper.style.overflow = originalWrapperOverflow;
-        wrapper.style.paddingLeft = originalWrapperPaddingLeft;
-        wrapper.style.alignItems = originalWrapperAlignItems;
-        wrapper.style.justifyContent = originalWrapperJustifyContent;
-      }
+      document.body.style.width = originalBodyWidth;
+      document.documentElement.style.overflow = originalHtmlOverflow;
       
       // Restore mobile preview tab state
-      if (!wasPreviewShown) {
+      if (!wasPreviewShown && builderWorkspace) {
         builderWorkspace.classList.remove('show-preview');
       }
       window.isGeneratingPdf = false;
