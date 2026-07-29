@@ -1068,7 +1068,7 @@ async function runPdfGeneration() {
 
   // CRITICAL MOBILE FIX: If the preview panel is hidden (display: none !important),
   // html2canvas will render a completely blank image. We must temporarily show it.
-  const builderWorkspace = document.getElementById('builder-workspace');
+  // NOTE: builderWorkspace is declared at the top of the file (line 32), reusing it here.
   const wasPreviewShown = builderWorkspace ? builderWorkspace.classList.contains('show-preview') : false;
   if (!wasPreviewShown && builderWorkspace) {
     builderWorkspace.classList.add('show-preview');
