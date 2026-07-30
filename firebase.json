@@ -1,0 +1,26 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "gsc-data",
+      "coverage_report",
+      "package.json",
+      "package-lock.json",
+      "README.md",
+      "ZenResume_User_Guide.pdf",
+      "adsense_demographic_analysis.md",
+      "adsense_financial_projections.md",
+      "archived_features.md",
+      "product_launch_templates.md",
+      "social_media_templates.md",
+      "lighthouse_report.json",
+      "lighthouse_report_new.json",
+      "patch.py",
+      "fix.py"
+    ]
+  }
+}
