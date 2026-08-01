@@ -16,6 +16,7 @@
         function gtag(){dataLayer.push(arguments);}
         gtag("js", new Date());
         gtag("config", "G-Z90HSSD2P2");
+        gtag("config", "G-61BHT3KZL6");
 
         // 2. Load Google AdSense
         const adsenseScript = document.createElement("script");
