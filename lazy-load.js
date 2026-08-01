@@ -8,14 +8,14 @@
 
         // 1. Load Google Analytics
         const gtagScript = document.createElement("script");
-        gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-61BHT3KZL6";
+        gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-Z90HSSD2P2";
         gtagScript.async = true;
         document.head.appendChild(gtagScript);
 
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag("js", new Date());
-        gtag("config", "G-61BHT3KZL6");
+        gtag("config", "G-Z90HSSD2P2");
 
         // 2. Load Google AdSense
         const adsenseScript = document.createElement("script");
