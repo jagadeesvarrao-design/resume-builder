@@ -32,6 +32,20 @@ const selectionScreen = document.getElementById('selection-screen');
 const builderWorkspace = document.getElementById('builder-workspace');
 const templatesGrid = document.getElementById('templates-grid');
 
+// Dynamic AdSense Initializer Helper to prevent 0-width layout errors
+function triggerAdPush(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  if (container.getAttribute('data-ad-initialized') === 'true') return;
+  container.setAttribute('data-ad-initialized', 'true');
+  try {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    console.log(`[AdSense] Dynamic initialization successful for: #${containerId}`);
+  } catch (e) {
+    console.warn(`[AdSense] Dynamic push warning for #${containerId}:`, e);
+  }
+}
+
 const expFilters = document.getElementById('exp-filters');
 const industryFilters = document.getElementById('industry-filters');
 
@@ -162,6 +176,7 @@ function selectTemplateStyle(templateId) {
   const welcomeHeader = document.getElementById('app-header-welcome');
   if (welcomeHeader) welcomeHeader.style.display = 'none';
   builderWorkspace.style.display = 'grid';
+  triggerAdPush('promo-banner-sidebar');
   
   // Show mobile tabs and default to 'edit' tab on entry
   const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
@@ -628,6 +643,7 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     if (!preventDisplayTransition) {
       selectionScreen.style.display = 'none';
       builderWorkspace.style.display = 'grid';
+      triggerAdPush('promo-banner-sidebar');
       
       // Show mobile tabs and default to 'edit' tab
       const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
@@ -2382,7 +2398,10 @@ function enterApp() {
     // Transition straight to builder workspace
     if (selectionScreen) selectionScreen.style.display = 'none';
     if (welcomeHeader) welcomeHeader.style.display = 'none';
-    if (builderWorkspace) builderWorkspace.style.display = 'grid';
+    if (builderWorkspace) {
+      builderWorkspace.style.display = 'grid';
+      triggerAdPush('promo-banner-sidebar');
+    }
     if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'flex';
     if (typeof setMobileTab === 'function') setMobileTab('edit');
     adjustPreviewScale();
@@ -2391,7 +2410,11 @@ function enterApp() {
     if (builderWorkspace) builderWorkspace.style.display = 'none';
     if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
     if (welcomeHeader) welcomeHeader.style.display = 'block';
-    if (selectionScreen) selectionScreen.style.display = 'flex';
+    if (selectionScreen) {
+      selectionScreen.style.display = 'flex';
+      triggerAdPush('promo-banner-top');
+      triggerAdPush('promo-banner-horizontal');
+    }
   }
   
   // Smooth scroll to top when entering
