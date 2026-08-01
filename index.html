@@ -779,7 +779,7 @@
     <div class="modal-content" style="padding: 30px; width: 90%; max-width: 400px; text-align: left;">
       <h3 style="margin-top: 0; color: var(--primary-dark); font-weight: 600; margin-bottom: 20px; font-size: 20px;" id="email-modal-title">Sign in to ZenResume</h3>
       
-      <div style="display: flex; flex-direction: column; gap: 15px;">
+      <form onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 15px;">
         <div>
           <label class="form-label" style="display: block; margin-bottom: 8px;">Email Address</label>
           <input type="email" id="email-input" class="form-input" placeholder="you@example.com" style="width: 100%; box-sizing: border-box;">
@@ -799,7 +799,7 @@
           <span id="email-toggle-text">Don't have an account?</span> 
           <a href="#" id="btn-toggle-email-mode" style="color: var(--primary-calm); font-weight: 600; text-decoration: none; margin-left: 5px;">Create one</a>
         </div>
-      </div>
+      </form>
       
       <button id="btn-close-email-modal" class="btn-select" style="margin-top: 25px; width: 100%; justify-content: center; border: 1px solid var(--border-glass);">Cancel</button>
     </div>
