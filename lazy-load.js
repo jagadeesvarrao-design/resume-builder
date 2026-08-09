@@ -18,12 +18,7 @@
         gtag("config", "G-Z90HSSD2P2");
         gtag("config", "G-61BHT3KZL6");
 
-        // 2. Load Google AdSense
-        const adsenseScript = document.createElement("script");
-        adsenseScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1993051486567311";
-        adsenseScript.async = true;
-        adsenseScript.crossOrigin = "anonymous";
-        document.head.appendChild(adsenseScript);
+
 
         // Remove event listeners
         const events = ["scroll", "mousemove", "touchstart", "keydown", "wheel"];

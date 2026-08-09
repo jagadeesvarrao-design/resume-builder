@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://resume-builder-swart-sigma-93.vercel.app/sitemap.xml
+Sitemap: https://www.zenresume.online/sitemap.xml
