@@ -172,6 +172,24 @@
       h1 {
         font-size: 26px;
       }
+    .site-footer-nav {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .site-footer-nav a {
+      color: var(--text-sub);
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .site-footer-nav a:hover {
+      color: var(--primary);
     }
   </style>
 </head>
@@ -217,9 +235,18 @@
     <p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and Conditions.</p>
   </div>
 
-  <footer>
-    &copy; 2026 ZenResume. All rights reserved.
-  </footer>
+    <div class="site-footer-nav">
+      <a href="/">Home</a>
+      <a href="/blog/">Blog Resources</a>
+      <a href="/about.html">About Us</a>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms & Conditions</a>
+      <a href="/contact.html">Contact Us</a>
+    </div>
+
+    <footer>
+      &copy; 2026 ZenResume. All rights reserved.
+    </footer>
 
   <script>
     const themeToggle = document.getElementById('theme-toggle');
