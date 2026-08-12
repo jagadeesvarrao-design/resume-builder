@@ -844,6 +844,43 @@
     </div>
   </div>
 
+  <!-- Dedicated Share ZenResume Modal -->
+  <div id="share-zenresume-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);" onclick="if(event.target === this) this.style.display='none'">
+    <div class="modal-content" style="padding: 36px 30px; width: 90%; max-width: 460px; text-align: center; border-top: 4px solid var(--primary-calm); background: #ffffff; border-radius: 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.18); position: relative;">
+      <button class="btn-close" onclick="document.getElementById('share-zenresume-modal').style.display='none'" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 22px; cursor: pointer; color: #95a5a6;">&times;</button>
+      
+      <div style="width: 56px; height: 56px; background: rgba(0, 104, 86, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: var(--primary-calm); font-size: 24px;">
+        <i class="fas fa-share-alt"></i>
+      </div>
+      
+      <h3 style="margin-top: 0; color: #0f172a; font-weight: 700; font-size: 22px; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Share ZenResume</h3>
+      <p style="color: #475569; font-size: 14px; line-height: 1.5; margin-bottom: 24px;">Help your friends &amp; colleagues create a free, professional, ATS-optimized resume in minutes!</p>
+      
+      <!-- Social Sharing Buttons -->
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px;">
+        <a id="share-modal-whatsapp" href="https://api.whatsapp.com/send?text=Build%20your%20free%2C%20ATS-friendly%20resume%20instantly%20with%20ZenResume!%20Check%20it%20out%20at%20https%3A%2F%2Fzenresume.in" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #25D366; color: white; border: none; padding: 11px 18px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-radius: 10px; text-decoration: none; cursor: pointer; transition: transform 0.2s ease;">
+          <i class="fab fa-whatsapp" style="font-size: 16px;"></i> WhatsApp
+        </a>
+        <a id="share-modal-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fzenresume.in" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #0077b5; color: white; border: none; padding: 11px 18px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-radius: 10px; text-decoration: none; cursor: pointer; transition: transform 0.2s ease;">
+          <i class="fab fa-linkedin" style="font-size: 16px;"></i> LinkedIn
+        </a>
+        <a id="share-modal-twitter" href="https://twitter.com/intent/tweet?text=Build%20a%20free%2C%20ATS-friendly%20resume%20instantly%20with%20ZenResume!&url=https%3A%2F%2Fzenresume.in" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #0f1419; color: white; border: none; padding: 11px 18px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-radius: 10px; text-decoration: none; cursor: pointer; transition: transform 0.2s ease;">
+          <i class="fab fa-x-twitter" style="font-size: 16px;"></i> Post
+        </a>
+      </div>
+      
+      <!-- Copy Link Input Box -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 6px 6px 6px 14px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 20px;">
+        <input type="text" id="share-link-input" readonly value="https://zenresume.in" style="border: none; background: transparent; color: #475569; font-size: 13px; width: 100%; outline: none; font-family: monospace;">
+        <button id="btn-share-modal-copy" class="btn-primary" style="padding: 9px 16px; font-size: 12.5px; border-radius: 8px; font-weight: 600; white-space: nowrap;">
+          <i class="fas fa-copy" style="margin-right: 4px;"></i> Copy
+        </button>
+      </div>
+
+      <button onclick="document.getElementById('share-zenresume-modal').style.display='none'" style="background: none; border: none; color: #64748b; font-size: 13px; cursor: pointer; font-weight: 500;">Close</button>
+    </div>
+  </div>
+
   <!-- Affiliate Post-Download Modal -->
   <div id="affiliate-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
     <div class="modal-content" style="padding: 40px 30px; width: 90%; max-width: 450px; text-align: center; border-top: 4px solid var(--primary-calm); background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);">

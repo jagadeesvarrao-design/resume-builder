@@ -1914,10 +1914,31 @@ function attachEvents() {
 
   // Close modal when pressing Escape key
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && printModal.style.display === 'flex') {
-      closePrintModal();
+    if (e.key === 'Escape') {
+      if (printModal && printModal.style.display === 'flex') closePrintModal();
+      const shareModal = document.getElementById('share-zenresume-modal');
+      if (shareModal && shareModal.style.display === 'flex') shareModal.style.display = 'none';
     }
   });
+
+  // Dedicated Share Modal Copy Button Handler
+  const btnShareModalCopy = document.getElementById('btn-share-modal-copy');
+  if (btnShareModalCopy) {
+    btnShareModalCopy.addEventListener('click', () => {
+      const shareUrl = window.location.origin && !window.location.origin.includes('localhost') ? window.location.origin : 'https://zenresume.in';
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        const originalHTML = btnShareModalCopy.innerHTML;
+        btnShareModalCopy.innerHTML = '<i class="fas fa-check" style="margin-right: 4px;"></i> Copied!';
+        btnShareModalCopy.style.background = '#006856';
+        setTimeout(() => {
+          btnShareModalCopy.innerHTML = originalHTML;
+          btnShareModalCopy.style.background = '';
+        }, 2000);
+      }).catch(() => {
+        alert("Link copied to clipboard!");
+      });
+    });
+  }
 
   // Layout inline switcher dropdown select listener
   const selectLayoutInline = document.getElementById('select-layout-inline');
@@ -2527,12 +2548,20 @@ window.handleHeaderCTAClick = function() {
 };
 
 window.openShareModal = function() {
-  const affiliateModal = document.getElementById('affiliate-modal');
-  if (affiliateModal) {
-    affiliateModal.style.display = 'flex';
+  const shareModal = document.getElementById('share-zenresume-modal');
+  if (shareModal) {
+    shareModal.style.display = 'flex';
+    
+    // Set current domain dynamically in input
+    const shareInput = document.getElementById('share-link-input');
+    if (shareInput) {
+      const shareUrl = window.location.origin && !window.location.origin.includes('localhost') ? window.location.origin : 'https://zenresume.in';
+      shareInput.value = shareUrl;
+    }
   } else {
-    navigator.clipboard.writeText(window.location.href);
-    alert("Link copied to clipboard!");
+    const shareUrl = window.location.origin && !window.location.origin.includes('localhost') ? window.location.origin : 'https://zenresume.in';
+    navigator.clipboard.writeText(shareUrl);
+    alert("ZenResume link copied to clipboard!");
   }
 };
 

@@ -3007,6 +3007,29 @@ textarea.form-input {
   border-color: #2D3533;
 }
 
+[data-theme="dark"] #share-zenresume-modal .modal-content {
+  background: #1C2020 !important;
+  border-color: #2D3533 !important;
+  color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] #share-zenresume-modal h3 {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] #share-zenresume-modal p {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] #share-zenresume-modal #share-link-input {
+  color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] #share-zenresume-modal div[style*="background: #f8fafc"] {
+  background: #151818 !important;
+  border-color: #2D3533 !important;
+}
+
 
 
 
