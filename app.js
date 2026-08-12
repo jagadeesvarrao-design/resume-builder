@@ -191,6 +191,7 @@ function selectTemplateStyle(templateId) {
   updateProgressDots();
   adjustPreviewScale(); // Scale the print preview container once workspace is visible
   setTimeout(pushAllVisibleAds, 250);
+  updateHeaderNavCTA();
   
   // Sync the form values immediately to screen preview
   syncFormToPreview();
@@ -668,6 +669,7 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     updateProgressDots();
     adjustPreviewScale(); // Scale the print preview container once workspace is visible
     setTimeout(pushAllVisibleAds, 250);
+    updateHeaderNavCTA();
     
     // Render and Sync live preview
     const template = TEMPLATE_STYLES[state.selectedTemplateId];
@@ -920,63 +922,82 @@ function setupWizardDots() {
 }
 
 function updateProgressDots() {
-  const dots = wizardProgressDots.querySelectorAll('.progress-dot');
+  const current = parseInt(state.currentStep, 10) || 1;
+
+  // Sync wizard progress dots
+  const dots = wizardProgressDots ? wizardProgressDots.querySelectorAll('.progress-dot') : [];
   dots.forEach((dot, index) => {
     const stepNum = index + 1;
     dot.className = 'progress-dot';
-    if (stepNum === state.currentStep) {
+    if (stepNum === current) {
       dot.classList.add('active');
-    } else if (stepNum < state.currentStep) {
+    } else if (stepNum < current) {
       dot.classList.add('completed');
     }
   });
 }
 
+// Global Step Switcher for Vertical Nav
+window.goToStep = function(stepNum) {
+  const step = parseInt(stepNum, 10);
+  if (isNaN(step) || step < 1 || step > state.totalSteps) return;
+  showStep(step);
+  autoSaveResume();
+};
+
 function showStep(stepNum) {
-  // Hide all steps
+  const n = parseInt(stepNum, 10);
+  state.currentStep = n;
+
+  // 1. Hide all steps cleanly
   document.querySelectorAll('.form-step').forEach(step => {
     step.classList.remove('active');
   });
   
-  // Show active step
-  const activeStep = document.querySelector(`.form-step[data-step="${stepNum}"]`);
+  // 2. Show active step
+  const activeStep = document.querySelector(`.form-step[data-step="${n}"]`);
   if (activeStep) {
     activeStep.classList.add('active');
-    
-    // Smooth scroll top on form container
-    document.querySelector('.form-panel').scrollTop = 0;
-    
-    // Generate dynamic summary suggestions when step 2 is active
-    if (stepNum === 2) {
-      generateSummarySuggestions();
+  }
+  
+  // 3. Smooth scroll top on form container
+  const formScroll = document.querySelector('.form-scroll-container') || document.querySelector('.form-panel');
+  if (formScroll) {
+    formScroll.scrollTop = 0;
+  }
+  
+  // 4. Generate dynamic summary suggestions when step 2 is active
+  if (n === 2) {
+    generateSummarySuggestions();
+  }
+  
+  // 5. Update Navigation Controls Visibility
+  if (btnWizardPrev) {
+    btnWizardPrev.style.visibility = n === 1 ? 'hidden' : 'visible';
+  }
+  
+  if (btnWizardNext) {
+    if (n === state.totalSteps) {
+      btnWizardNext.innerHTML = `
+        Confirm & Download
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      `;
+    } else {
+      btnWizardNext.innerHTML = `
+        Next Step
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      `;
     }
   }
-  
-  // Update Navigation Controls Visibility
-  if (stepNum === 1) {
-    btnWizardPrev.style.visibility = 'hidden';
-  } else {
-    btnWizardPrev.style.visibility = 'visible';
-  }
-  
-  if (stepNum === state.totalSteps) {
-    btnWizardNext.innerHTML = `
-      Confirm & Download
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-    `;
-  } else {
-    btnWizardNext.innerHTML = `
-      Next Step
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-    `;
-  }
+
+  // 6. Update Progress Dots and Vertical Sidebar Navigation Icons
+  updateProgressDots();
 }
 
 function handleWizardNext() {
   if (state.currentStep < state.totalSteps) {
-    state.currentStep++;
-    showStep(state.currentStep);
-    updateProgressDots();
+    showStep(state.currentStep + 1);
+    autoSaveResume();
   } else {
     // We are on the final step -> Confirm & Download
     openPrintModal();
@@ -985,11 +1006,13 @@ function handleWizardNext() {
 
 function handleWizardPrev() {
   if (state.currentStep > 1) {
-    state.currentStep--;
-    showStep(state.currentStep);
-    updateProgressDots();
+    showStep(state.currentStep - 1);
+    autoSaveResume();
   }
 }
+
+window.wizardNext = handleWizardNext;
+window.wizardPrev = handleWizardPrev;
 
 /* ==========================================================================
    7. PRINT DIALOG, AI UPGRADE, & PDF EXPORT
@@ -2366,6 +2389,26 @@ window.addEventListener('DOMContentLoaded', initContactForm);
 /* ==========================================================================
    11. SPA ROUTING & LANDING PAGE TRANSITIONS
    ========================================================================== */
+function updateHeaderNavCTA() {
+  const navCta = document.querySelector('.stitch-nav-cta');
+  if (!navCta) return;
+  const builderWorkspace = document.getElementById('builder-workspace');
+  const isEditor = builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '';
+  if (isEditor) {
+    navCta.innerHTML = '<i class="fas fa-download" style="margin-right: 6px;"></i> Finish & Download';
+    navCta.onclick = () => {
+      const btn = document.getElementById('btn-trigger-download');
+      if (btn) btn.click();
+    };
+  } else {
+    navCta.innerHTML = 'Create My Resume';
+    navCta.onclick = () => {
+      const btn = document.getElementById('btn-start-building');
+      if (btn) btn.click();
+    };
+  }
+}
+
 function showLandingPage() {
   const landingScreen = document.getElementById('landing-screen');
   const selectionScreen = document.getElementById('selection-screen');
@@ -2379,6 +2422,8 @@ function showLandingPage() {
   if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
   if (landingScreen) landingScreen.style.display = 'block';
   
+  updateHeaderNavCTA();
+
   // Smooth scroll to top when returning
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -2417,6 +2462,8 @@ function enterApp() {
     }
   }
   
+  updateHeaderNavCTA();
+
   // Smooth scroll to top when entering
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -2447,4 +2494,65 @@ function setupLandingPageNavigation() {
     });
   }
 }
+
+// Global Nav Handlers for Flawless Interaction
+window.goToTemplates = function() {
+  const builderWorkspace = document.getElementById('builder-workspace');
+  const selectionScreen = document.getElementById('selection-screen');
+  const landingScreen = document.getElementById('landing-screen');
+  const welcomeHeader = document.getElementById('app-header-welcome');
+  const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+  
+  if (landingScreen) landingScreen.style.display = 'none';
+  if (builderWorkspace) builderWorkspace.style.display = 'none';
+  if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
+  if (welcomeHeader) welcomeHeader.style.display = 'block';
+  if (selectionScreen) {
+    selectionScreen.style.display = 'flex';
+    triggerAdPush('promo-banner-top');
+    triggerAdPush('promo-banner-horizontal');
+  }
+  updateHeaderNavCTA();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.handleHeaderCTAClick = function() {
+  const builderWorkspace = document.getElementById('builder-workspace');
+  const isEditor = builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '';
+  if (isEditor) {
+    openPrintModal();
+  } else {
+    enterApp();
+  }
+};
+
+window.openShareModal = function() {
+  const affiliateModal = document.getElementById('affiliate-modal');
+  if (affiliateModal) {
+    affiliateModal.style.display = 'flex';
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Link copied to clipboard!");
+  }
+};
+
+window.triggerDownloadModal = function() {
+  openPrintModal();
+};
+
+window.zoomIn = function() {
+  const btnZoomIn = document.getElementById('btn-zoom-in');
+  if (btnZoomIn) btnZoomIn.click();
+};
+
+window.zoomOut = function() {
+  const btnZoomOut = document.getElementById('btn-zoom-out');
+  if (btnZoomOut) btnZoomOut.click();
+};
+
+window.zoomFit = function() {
+  const btnZoomToggle = document.getElementById('btn-zoom-toggle');
+  if (btnZoomToggle) btnZoomToggle.click();
+};
+
 

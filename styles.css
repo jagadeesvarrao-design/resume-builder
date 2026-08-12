@@ -6,56 +6,66 @@
 
 
 :root {
-  /* Peaceful Sage & Slate Design Tokens */
-  --primary-calm: #4A6B62;
-  --primary-light: #6A8E83;
-  --primary-dark: #2A3F3A;
-  --primary-glow: rgba(74, 107, 98, 0.12);
-  --primary-glow-strong: rgba(74, 107, 98, 0.25);
+  /* Stitch Deep Pine & Modern Teal Tokens */
+  --primary-calm: #006856;
+  --primary-light: #00846D;
+  --primary-dark: #004D40;
+  --primary-fixed: #82F7D8;
+  --primary-fixed-dim: #65DABC;
+  --primary-glow: rgba(0, 104, 86, 0.12);
+  --primary-glow-strong: rgba(0, 104, 86, 0.25);
   
-  --bg-serene: #F2F5F4;
-  --bg-serene-gradient: linear-gradient(135deg, #EFF3F1 0%, #E5ECE9 100%);
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --bg-input: rgba(246, 248, 247, 0.9);
+  --bg-dark-surface: #2D3131;
+  --bg-dark-surface-dock: #242828;
+  --bg-serene: #F7FAF9;
+  --bg-serene-gradient: linear-gradient(135deg, #F7FAF9 0%, #EBEFED 100%);
+  --bg-card: #FFFFFF;
+  --bg-input: #F1F4F3;
   
-  --text-main: #23352E;
-  --text-sub: #52665E;
-  --text-light: #7E958C;
-  --white: #ffffff;
+  --text-main: #181C1C;
+  --text-sub: #3D4945;
+  --text-light: #6D7A75;
+  --white: #FFFFFF;
   
-  --border-glass: rgba(74, 107, 98, 0.12);
-  --border-glass-strong: rgba(74, 107, 98, 0.25);
-  --shadow-peaceful: 0 8px 32px 0 rgba(74, 107, 98, 0.06);
-  --shadow-hover: 0 12px 40px 0 rgba(74, 107, 98, 0.12);
+  --border-subtle: #D1DBDA;
+  --border-glass: rgba(0, 104, 86, 0.12);
+  --border-glass-strong: rgba(0, 104, 86, 0.25);
+  --shadow-peaceful: 0 4px 20px rgba(0, 104, 86, 0.05);
+  --shadow-hover: 0 12px 32px rgba(78, 96, 115, 0.12);
   --shadow-paper: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 8px rgba(0, 0, 0, 0.03);
   
-  --transition-smooth: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-  --radius-lg: 20px;
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --radius-lg: 16px;
   --radius-md: 12px;
   --radius-sm: 8px;
 }
 
 [data-theme="dark"] {
-  --primary-calm: #81A197;
-  --primary-light: #9BBAAF;
-  --primary-dark: #E2E8F0;
-  --primary-glow: rgba(129, 161, 151, 0.15);
-  --primary-glow-strong: rgba(129, 161, 151, 0.3);
+  --primary-calm: #65DABC;
+  --primary-light: #82F7D8;
+  --primary-dark: #FFFFFF;
+  --primary-fixed: #006856;
+  --primary-fixed-dim: #004D40;
+  --primary-glow: rgba(101, 218, 188, 0.18);
+  --primary-glow-strong: rgba(101, 218, 188, 0.35);
   
-  --bg-serene: #0F172A;
-  --bg-serene-gradient: linear-gradient(135deg, #0F172A 0%, #020617 100%);
-  --bg-card: rgba(30, 41, 59, 0.7);
-  --bg-input: rgba(15, 23, 42, 0.6);
+  --bg-dark-surface: #1E2222;
+  --bg-dark-surface-dock: #151818;
+  --bg-serene: #111515;
+  --bg-serene-gradient: linear-gradient(135deg, #181C1C 0%, #101313 100%);
+  --bg-card: #1C2020;
+  --bg-input: #252A2A;
   
-  --text-main: #CBD5E1;
+  --text-main: #E2E8F0;
   --text-sub: #94A3B8;
   --text-light: #64748B;
-  --white: #1E293B;
+  --white: #1C2020;
   
+  --border-subtle: #2D3533;
   --border-glass: rgba(255, 255, 255, 0.08);
   --border-glass-strong: rgba(255, 255, 255, 0.16);
-  --shadow-peaceful: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
-  --shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.35);
+  --shadow-peaceful: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
 }
 
 /* Enable smooth transitions for theme switching */
@@ -310,10 +320,14 @@ body {
    ========================================================================== */
 .builder-workspace {
   display: none; /* Controlled via JS */
-  grid-template-columns: 1fr 1.1fr;
-  gap: 32px;
+  grid-template-columns: minmax(420px, 1fr) minmax(480px, 1.15fr);
+  gap: 24px;
   align-items: start;
-  animation: fadeIn 0.6s var(--transition-smooth);
+  width: 100%;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 16px 0;
+  animation: fadeIn 0.4s ease;
 }
 
 /* Mobile Tab Bar styles */
@@ -519,17 +533,17 @@ body {
 
 /* Left Column: Form Panel */
 .form-panel {
-  background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-glass);
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 32px;
-  box-shadow: var(--shadow-peaceful);
+  padding: 0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   position: sticky;
-  top: 40px;
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
 }
 
 .workspace-actions {
@@ -621,41 +635,57 @@ body {
 
 .wizard-progress {
   display: flex;
-  gap: 6px;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0 2px 0;
+  width: 100%;
 }
 
 .progress-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(74, 107, 98, 0.15);
-  transition: var(--transition-smooth);
+  flex: 1;
+  max-width: 48px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--border-subtle);
+  transition: all 0.25s ease;
   cursor: pointer;
 }
 
 .progress-dot:hover {
   background: var(--primary-light);
-  transform: scale(1.2);
 }
 
 .progress-dot.active {
   background: var(--primary-calm);
-  transform: scale(1.3);
 }
 
 .progress-dot.completed {
   background: var(--primary-light);
 }
 
+[data-theme="dark"] .progress-dot {
+  background: #2D3533;
+}
+
+[data-theme="dark"] .progress-dot.active {
+  background: #00846D;
+}
+
+[data-theme="dark"] .progress-dot.completed {
+  background: #006856;
+}
+
 /* Form Steps Layout */
 .form-step {
-  display: none; /* Dynamic step display */
+  display: none !important; /* Dynamic step display */
   flex-direction: column;
   gap: 20px;
 }
 
 .form-step.active {
-  display: flex;
+  display: flex !important;
+  animation: fadeIn 0.25s ease-out;
 }
 
 .step-title {
@@ -692,30 +722,30 @@ body {
 }
 
 .form-label {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-sub);
+  color: #3D4945;
 }
 
 .form-input {
   font-family: 'Inter', sans-serif;
   font-size: 13.5px;
   color: var(--text-main);
-  background: var(--bg-input);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-sm);
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
   padding: 10px 14px;
   width: 100%;
-  transition: var(--transition-smooth);
+  transition: all 0.2s ease;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--primary-calm);
-  background: var(--white);
-  box-shadow: 0 0 0 3px var(--primary-glow);
+  border-color: #006856;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(0, 104, 86, 0.15);
 }
 
 textarea.form-input {
@@ -731,11 +761,12 @@ textarea.form-input {
 }
 
 .list-item-card {
-  background: rgba(74, 107, 98, 0.02);
-  border: 1px dashed var(--border-glass-strong);
-  border-radius: var(--radius-md);
+  background: #F7FAF9;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
   padding: 20px;
   position: relative;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -833,15 +864,20 @@ textarea.form-input {
 
 /* Right Column: Live Interactive Preview Card */
 .preview-panel {
-  background: transparent;
+  background: #EBEFED;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
   position: sticky;
-  top: 40px;
+  top: 24px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
-  max-height: calc(100vh - 80px);
+  max-height: calc(100vh - 48px);
   overflow-y: auto;
   overflow-x: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .preview-bar {
@@ -2189,6 +2225,788 @@ textarea.form-input {
     padding: 30px 10px;
   }
 }
+
+/* ==========================================================================
+   GOOGLE STITCH DESIGN SYSTEM COMPONENTS (MODERN REDESIGN)
+   ========================================================================== */
+
+/* 1. Immersive Top Navbar */
+.stitch-nav {
+  background: var(--bg-dark-surface) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(12px);
+}
+
+.stitch-nav a {
+  color: #D1DBDA !important;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.stitch-nav a:hover {
+  color: #FFFFFF !important;
+}
+
+.stitch-nav a.active-link {
+  color: var(--primary-fixed) !important;
+  border-bottom: 2px solid var(--primary-fixed) !important;
+  padding-bottom: 3px;
+}
+
+.stitch-nav-cta {
+  background: #006856 !important;
+  color: #FFFFFF !important;
+  padding: 8px 18px !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 12px rgba(0, 104, 86, 0.3) !important;
+  transition: background 0.2s ease, transform 0.2s ease !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stitch-nav-cta:hover {
+  background: #00846D !important;
+  transform: translateY(-1px);
+}
+
+/* 2. Hero Section with Ambient Glow */
+.stitch-hero-section {
+  background: var(--bg-dark-surface);
+  color: #FFFFFF;
+  padding: 80px 24px 60px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.stitch-hero-glow {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 104, 86, 0.45) 0%, rgba(0, 104, 86, 0) 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.stitch-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.stitch-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 104, 86, 0.25);
+  border: 1px solid rgba(130, 247, 216, 0.35);
+  color: var(--primary-fixed);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  margin-bottom: 24px;
+  letter-spacing: 0.2px;
+}
+
+.stitch-hero-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #FFFFFF;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+}
+
+.stitch-hero-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(16px, 2vw, 19px);
+  color: #D1DBDA;
+  line-height: 1.6;
+  max-width: 680px;
+  margin: 0 auto 36px auto;
+  font-weight: 400;
+}
+
+.stitch-hero-cta {
+  background: #006856;
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 16px 36px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(0, 104, 86, 0.4);
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stitch-hero-cta:hover {
+  background: #00846D;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(0, 104, 86, 0.5);
+}
+
+/* 3. Interactive Mac Window Mockup */
+.stitch-mockup-section {
+  padding: 0 20px 70px 20px;
+  margin-top: -30px;
+  position: relative;
+  z-index: 10;
+}
+
+.stitch-mac-window {
+  max-width: 960px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 104, 86, 0.08);
+  overflow: hidden;
+}
+
+.stitch-window-header {
+  background: var(--bg-input);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.stitch-window-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.stitch-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.stitch-dot.red { background: #BA1A1A; }
+.stitch-dot.yellow { background: #F5B041; }
+.stitch-dot.green { background: #58D68D; }
+
+.stitch-window-url {
+  margin: 0 auto;
+  background: var(--white);
+  padding: 3px 14px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--text-light);
+  border: 1px solid var(--border-subtle);
+}
+
+.stitch-window-body {
+  padding: 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  background: var(--bg-serene);
+  min-height: 380px;
+}
+
+.stitch-mockup-form-pane {
+  background: var(--white);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stitch-skeleton-title {
+  height: 16px;
+  width: 45%;
+  background: rgba(0, 104, 86, 0.2);
+  border-radius: 4px;
+}
+
+.stitch-skeleton-line {
+  height: 10px;
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+.stitch-skeleton-line.short { width: 70%; }
+
+.stitch-drag-drop-box {
+  border: 2px dashed rgba(0, 104, 86, 0.3);
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  color: var(--primary-calm);
+  font-weight: 600;
+  font-size: 13px;
+  background: rgba(0, 104, 86, 0.03);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.stitch-mockup-preview-pane {
+  background: #FFFFFF;
+  padding: 28px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 4. Why Build With ZenResume (4 Cards) */
+.stitch-section-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  text-align: center;
+  color: var(--text-main);
+  margin-bottom: 48px;
+}
+
+.stitch-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.stitch-card {
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s ease;
+}
+
+.stitch-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(0, 104, 86, 0.12);
+  border-color: var(--primary-calm);
+}
+
+.stitch-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.stitch-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.stitch-card p {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.6;
+}
+
+/* 5. Vertical Timeline (How It Works) */
+.stitch-timeline-container {
+  max-width: 780px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.stitch-timeline-container::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  bottom: 20px;
+  left: 24px;
+  width: 2px;
+  background: var(--border-subtle);
+}
+
+.stitch-timeline-step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.stitch-step-badge {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary-calm);
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 104, 86, 0.35);
+  border: 4px solid var(--bg-serene);
+  z-index: 2;
+  transition: transform 0.25s ease;
+}
+
+.stitch-timeline-step:hover .stitch-step-badge {
+  transform: scale(1.1);
+}
+
+.stitch-step-content {
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 24px;
+  flex: 1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+}
+
+.stitch-step-content h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.stitch-step-content p {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.55;
+}
+
+/* 6. Career Resources Grid */
+.stitch-articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.stitch-article-card {
+  background: var(--white);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stitch-article-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+}
+
+.stitch-article-banner {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 32px;
+}
+
+.stitch-article-body {
+  padding: 22px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.stitch-article-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 8px;
+}
+
+.stitch-article-body h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.stitch-article-body p {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-sub);
+  line-height: 1.5;
+  margin-top: auto;
+}
+
+/* 7. Modern Dark Footer */
+.stitch-footer {
+  background: var(--bg-dark-surface);
+  color: #FFFFFF;
+  padding: 60px 24px 40px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stitch-footer-container {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.stitch-footer-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stitch-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px 32px;
+}
+
+.stitch-footer-links a {
+  color: #D1DBDA;
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.stitch-footer-links a:hover {
+  color: var(--primary-fixed);
+  text-decoration: underline;
+}
+
+.stitch-footer-copy {
+  color: #6D7A75;
+  font-size: 13px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stitch-window-body {
+    grid-template-columns: 1fr;
+  }
+  .stitch-mockup-preview-pane {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   STITCH EDITOR WORKSPACE STYLING (THEME-ADAPTIVE & FLAWLESS)
+   ========================================================================== */
+
+/* 1. Vertical Section Navigation */
+.stitch-v-nav {
+  width: 58px;
+  min-width: 58px;
+  max-width: 58px;
+  background: var(--bg-input);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 5;
+}
+
+.stitch-v-nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: transparent !important;
+  color: #6D7A75 !important;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  user-select: none;
+  box-shadow: none !important;
+}
+
+.stitch-v-nav-btn i {
+  pointer-events: none;
+}
+
+.stitch-v-nav-btn:hover:not(.active) {
+  background: rgba(0, 104, 86, 0.12) !important;
+  color: #006856 !important;
+}
+
+.stitch-v-nav-btn.active {
+  background: #006856 !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(0, 104, 86, 0.35) !important;
+}
+
+/* 2. Editor Panel Top Header */
+.stitch-editor-top-bar {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stitch-editor-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stitch-editor-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.stitch-save-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--primary-calm);
+  background: rgba(0, 104, 86, 0.12);
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+/* 3. Floating Preview Controls */
+.stitch-preview-floating-bar {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 50;
+}
+
+.stitch-floating-btn {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-subtle);
+  padding: 7px 14px;
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.stitch-floating-btn:hover {
+  transform: translateY(-1px);
+  background: var(--bg-input);
+  border-color: var(--primary-calm);
+}
+
+.stitch-floating-btn.primary {
+  background: var(--primary-calm);
+  color: #FFFFFF;
+  border-color: var(--primary-calm);
+  box-shadow: 0 2px 10px rgba(0, 104, 86, 0.35);
+}
+
+.stitch-floating-btn.primary:hover {
+  background: var(--primary-light);
+}
+
+/* 4. Bottom Floating Zoom Pill */
+.stitch-floating-zoom {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9999px;
+  padding: 5px 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 50;
+}
+
+.stitch-zoom-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s ease;
+}
+
+.stitch-zoom-btn:hover {
+  background: var(--bg-input);
+  color: var(--primary-calm);
+}
+
+.stitch-zoom-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+  min-width: 34px;
+  text-align: center;
+}
+
+/* Dark Mode Overrides for Stitch Elements */
+[data-theme="dark"] .stitch-editor-top-bar {
+  background: #1C2020;
+  border-color: #2D3533;
+}
+
+[data-theme="dark"] .stitch-editor-title {
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .stitch-v-nav {
+  background: #151818;
+  border-color: #2D3533;
+}
+
+[data-theme="dark"] .stitch-v-nav-btn {
+  background: transparent !important;
+  color: #8E9E99 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="dark"] .stitch-v-nav-btn:hover:not(.active) {
+  background: rgba(130, 247, 216, 0.15) !important;
+  color: #82F7D8 !important;
+}
+
+[data-theme="dark"] .stitch-v-nav-btn.active {
+  background: #00846D !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 12px rgba(0, 132, 109, 0.45) !important;
+}
+
+[data-theme="dark"] .stitch-save-badge {
+  background: rgba(130, 247, 216, 0.15);
+  color: #82F7D8;
+}
+
+[data-theme="dark"] .stitch-floating-btn {
+  background: #1C2020;
+  color: #E2E8F0;
+  border-color: #2D3533;
+}
+
+[data-theme="dark"] .stitch-floating-btn:hover {
+  background: #252A2A;
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .stitch-floating-zoom {
+  background: #1C2020;
+  border-color: #2D3533;
+}
+
+[data-theme="dark"] .stitch-zoom-btn {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .stitch-zoom-btn:hover {
+  background: #252A2A;
+  color: #82F7D8;
+}
+
+[data-theme="dark"] .stitch-zoom-label {
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .form-input {
+  background: #151818;
+  color: #F7FAF9;
+  border-color: #2D3533;
+}
+
+[data-theme="dark"] .form-input:focus {
+  background: #1C2020;
+  border-color: #82F7D8;
+  box-shadow: 0 0 0 3px rgba(130, 247, 216, 0.2);
+}
+
+[data-theme="dark"] .form-label {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .list-item-card {
+  background: #151818;
+  border-color: #2D3533;
+}
+
+[data-theme="dark"] .preview-panel {
+  background: #151818;
+  border-color: #2D3533;
+}
+
 
 
 

@@ -60,6 +60,7 @@
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://www.googletagmanager.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
   
@@ -99,25 +100,29 @@
 </head>
 <body>
   
-  <!-- Global Top Header -->
-  <header class="no-print" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 30px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(74, 107, 98, 0.1); position: sticky; top: 0; z-index: 2000; box-shadow: 0 4px 20px rgba(74,107,98,0.05);">
+  <!-- Global Top Header (Stitch Dark Surface) -->
+  <header class="no-print stitch-nav" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; position: sticky; top: 0; z-index: 2000;">
     <a href="/" id="logo-link" class="header-logo-link" style="display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer;">
-      <div class="header-logo-icon" style="background: linear-gradient(135deg, var(--primary-calm), var(--primary-light)); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-family: 'Outfit', sans-serif;">
+      <div class="header-logo-icon" style="background: #006856; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-family: 'Outfit', sans-serif; box-shadow: 0 2px 8px rgba(0,104,86,0.4);">
         Z
       </div>
-      <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; color: var(--primary-dark); letter-spacing: -0.5px;">ZenResume</span>
+      <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; color: #FFFFFF; letter-spacing: -0.5px;">ZenResume</span>
     </a>
     
-    <div class="header-nav-menu" style="display: flex; gap: 20px; align-items: center;">
-      <a href="/" id="nav-app-link" style="font-size: 14px; font-weight: 600; color: var(--primary-calm); text-decoration: none; transition: color 0.2s;">App</a>
-      <a href="/blog/" style="font-size: 14px; font-weight: 600; color: var(--text-main); text-decoration: none;">Resources</a>
-      <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme" style="background: none; border: none; cursor: pointer; color: var(--text-main); font-size: 16px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
+    <div class="header-nav-menu" style="display: flex; gap: 24px; align-items: center;">
+      <a href="#" id="nav-app-link" class="active-link" onclick="window.enterApp && window.enterApp(); return false;" style="font-size: 14px; font-weight: 600; text-decoration: none;">App</a>
+      <a href="#" id="nav-templates-link" onclick="window.goToTemplates && window.goToTemplates(); return false;" style="font-size: 14px; font-weight: 600; text-decoration: none;">Templates</a>
+      <a href="/blog/" id="nav-resources-link" style="font-size: 14px; font-weight: 600; text-decoration: none;">Resources</a>
+      <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme" style="background: rgba(255,255,255,0.08); border: none; cursor: pointer; color: #FFFFFF; font-size: 15px; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
         <i class="fas fa-moon"></i>
+      </button>
+      <button type="button" class="stitch-nav-cta" id="btn-header-cta" onclick="window.handleHeaderCTAClick && window.handleHeaderCTAClick();" style="border: none; cursor: pointer;">
+        Create My Resume
       </button>
     </div>
   </header>
 
-  <div class="app-container">
+  <div class="app-container" style="padding-top: 0;">
     
     <!-- Peaceful & Dynamic Welcome Header -->
     <header class="app-header no-print" id="app-header-welcome" style="display: none;">
@@ -165,145 +170,178 @@
 
     <main>
       
-      <!-- SCREEN 0: MARKETING LANDING PAGE (NO-PRINT) -->
+      <!-- SCREEN 0: MARKETING LANDING PAGE (NO-PRINT) (GOOGLE STITCH REDESIGN) -->
       <section class="landing-screen no-print" id="landing-screen">
         
-        <!-- Hero Section -->
-        <div class="landing-hero">
-          <span class="hero-badge">🌿 100% Free & No Account Needed</span>
-          <h2 class="hero-title">Create an ATS-Friendly Resume in 5 Minutes</h2>
-          <p class="hero-subtitle">Build a recruiter-approved professional resume. Your details stay 100% private in your browser local cache—never saved to a server database.</p>
-          <button type="button" class="cta-button-primary" id="btn-start-building">
-            Create My Resume
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left: 6px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </button>
-          
-          <!-- Decorative App Mockup Wrapper -->
-          <div class="landing-mockup">
-            <div class="mockup-header-dots">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
-              <span class="mockup-url">zenresume.app/editor</span>
-            </div>
-            <div class="mockup-body">
-              <div class="mockup-sidebar">
-                <div class="mockup-line title"></div>
-                <div class="mockup-line long"></div>
-                <div class="mockup-line long"></div>
-                <div class="mockup-line short"></div>
+        <!-- Stitch Hero Section -->
+        <div class="stitch-hero-section">
+          <div class="stitch-hero-glow"></div>
+          <div class="stitch-hero-content">
+            <span class="stitch-pill-badge">
+              <i class="fas fa-shield-alt"></i> 100% Free &amp; No Account Needed
+            </span>
+            <h1 class="stitch-hero-title">Create an ATS-Friendly Resume in 5 Minutes</h1>
+            <p class="stitch-hero-subtitle">Build a recruiter-approved professional resume. Your details stay 100% private in your browser local cache—never saved to a server database.</p>
+            <button type="button" class="stitch-hero-cta" id="btn-start-building">
+              Create My Resume
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stitch Interactive Mac Window Mockup -->
+        <div class="stitch-mockup-section">
+          <div class="stitch-mac-window">
+            <div class="stitch-window-header">
+              <div class="stitch-window-dots">
+                <span class="stitch-dot red"></span>
+                <span class="stitch-dot yellow"></span>
+                <span class="stitch-dot green"></span>
               </div>
-              <div class="mockup-canvas">
-                <div class="mockup-doc">
-                  <div class="mockup-doc-header"></div>
-                  <div class="mockup-doc-line"></div>
-                  <div class="mockup-doc-line long"></div>
-                  <div class="mockup-doc-line"></div>
+              <div class="stitch-window-url">zenresume.app/editor</div>
+            </div>
+            <div class="stitch-window-body">
+              <div class="stitch-mockup-form-pane">
+                <div class="stitch-skeleton-title"></div>
+                <div class="stitch-skeleton-line"></div>
+                <div class="stitch-skeleton-line short"></div>
+                <div class="stitch-drag-drop-box">
+                  <i class="fas fa-magic"></i> ✨ Gemini AI Import or Fill Details
                 </div>
+              </div>
+              <div class="stitch-mockup-preview-pane">
+                <div style="width: 35%; height: 14px; background: #006856; border-radius: 3px;"></div>
+                <div style="width: 100%; height: 6px; background: var(--border-subtle); border-radius: 2px;"></div>
+                <div style="width: 85%; height: 6px; background: var(--border-subtle); border-radius: 2px;"></div>
+                <div style="width: 25%; height: 10px; background: #00846D; border-radius: 2px; margin-top: 12px;"></div>
+                <div style="width: 100%; height: 5px; background: var(--border-subtle); border-radius: 2px;"></div>
+                <div style="width: 90%; height: 5px; background: var(--border-subtle); border-radius: 2px;"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Features Grid Section -->
-        <div class="landing-section">
-          <h3 class="section-heading">Why Build With ZenResume?</h3>
-          <div class="landing-features-grid">
+        <!-- Why Build With ZenResume (4 Feature Cards) -->
+        <div class="landing-section" style="padding-top: 20px;">
+          <h2 class="stitch-section-heading">Why Build With ZenResume?</h2>
+          <div class="stitch-features-grid">
             
-            <div class="landing-feature-card">
-              <div class="feature-icon" style="color: #8e44ad; background: rgba(142, 68, 173, 0.08);"><i class="fas fa-magic"></i></div>
-              <h4>Magic AI Import</h4>
+            <div class="stitch-card">
+              <div class="stitch-card-icon" style="color: #006856; background: rgba(0, 104, 86, 0.1);">
+                <i class="fas fa-magic"></i>
+              </div>
+              <h3>Magic AI Import</h3>
               <p>Upload a messy resume PDF or copy-paste raw text. Our integrated Gemini AI automatically parses and pre-fills your layout fields in seconds.</p>
             </div>
             
-            <div class="landing-feature-card">
-              <div class="feature-icon" style="color: #16a085; background: rgba(22, 160, 133, 0.08);"><i class="fas fa-shield-alt"></i></div>
-              <h4>100% Data Security</h4>
+            <div class="stitch-card">
+              <div class="stitch-card-icon" style="color: #41625A; background: rgba(65, 98, 90, 0.1);">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3>100% Data Security</h3>
               <p>No account signups, no data tracking. Your personal details remain locally saved in your browser storage. Download and load backup JSONs anytime.</p>
             </div>
             
-            <div class="landing-feature-card">
-              <div class="feature-icon" style="color: #2980b9; background: rgba(41, 128, 185, 0.08);"><i class="fas fa-file-invoice"></i></div>
-              <h4>ATS-Optimized Templates</h4>
+            <div class="stitch-card">
+              <div class="stitch-card-icon" style="color: #4E6073; background: rgba(78, 96, 115, 0.1);">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <h3>ATS-Optimized Templates</h3>
               <p>Choose from 7 recruiter-approved templates structured specifically for resume parsing software, ensuring your applications actually get read.</p>
             </div>
             
-            <div class="landing-feature-card">
-              <div class="feature-icon" style="color: #e67e22; background: rgba(230, 126, 34, 0.08);"><i class="fas fa-print"></i></div>
-              <h4>High-Fidelity PDF Prints</h4>
+            <div class="stitch-card">
+              <div class="stitch-card-icon" style="color: #D68910; background: rgba(245, 176, 65, 0.1);">
+                <i class="fas fa-print"></i>
+              </div>
+              <h3>High-Fidelity PDF Prints</h3>
               <p>Utilizes native CSS print compilation to compile sharp, selectable-text vector PDFs. Recruiter software can easily index your skills.</p>
             </div>
 
           </div>
         </div>
 
-        <!-- How It Works Timeline -->
-        <div class="landing-section bg-trans">
-          <h3 class="section-heading">How It Works</h3>
-          <div class="how-it-works-grid">
-            <div class="step-card">
-              <div class="step-num">1</div>
-              <h4>Choose Layout</h4>
-              <p>Select from 7 industry-approved templates categorized by experience levels and disciplines.</p>
+        <!-- How It Works (Vertical Timeline) -->
+        <div class="landing-section" style="background: rgba(0, 104, 86, 0.03); border-radius: 20px; border: 1px solid var(--border-subtle); margin-top: 40px;">
+          <h2 class="stitch-section-heading">How It Works</h2>
+          <div class="stitch-timeline-container">
+            <div class="stitch-timeline-step">
+              <div class="stitch-step-badge">1</div>
+              <div class="stitch-step-content">
+                <h4>Choose Layout</h4>
+                <p>Select from 7 industry-approved templates categorized by experience levels and disciplines.</p>
+              </div>
             </div>
-            <div class="step-card">
-              <div class="step-num">2</div>
-              <h4>Fill Details</h4>
-              <p>Use our step-by-step form wizard or let Gemini AI parse your inputs automatically.</p>
+            <div class="stitch-timeline-step">
+              <div class="stitch-step-badge">2</div>
+              <div class="stitch-step-content">
+                <h4>Fill Details</h4>
+                <p>Use our step-by-step form wizard or let Gemini AI parse your inputs automatically.</p>
+              </div>
             </div>
-            <div class="step-card">
-              <div class="step-num">3</div>
-              <h4>Download PDF</h4>
-              <p>Preview in real-time and export a high-fidelity vector PDF to your system instantly.</p>
+            <div class="stitch-timeline-step">
+              <div class="stitch-step-badge">3</div>
+              <div class="stitch-step-content">
+                <h4>Download PDF</h4>
+                <p>Preview in real-time and export a high-fidelity vector PDF to your system instantly.</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Latest Career Resources (For AdSense Content Depth & Internal Linking) -->
-        <div class="landing-section bg-light" style="padding-bottom: 60px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
+        <!-- Latest Career Resources -->
+        <div class="landing-section" style="padding-top: 60px; padding-bottom: 60px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 36px; flex-wrap: wrap; gap: 16px;">
             <div>
-              <h3 class="section-heading" style="text-align: left; margin-bottom: 10px;">Latest Career Resources</h3>
-              <p style="color: #666; font-size: 16px;">Expert advice on resume writing, passing ATS systems, and landing your dream job.</p>
+              <h2 class="stitch-section-heading" style="text-align: left; margin-bottom: 8px;">Latest Career Resources</h2>
+              <p style="color: var(--text-sub); font-size: 15px; margin: 0;">Expert advice on resume writing, passing ATS systems, and landing your dream job.</p>
             </div>
-            <a href="/blog/" class="btn-theme-toggle" style="text-decoration: none; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border-glass); font-weight: 500; font-size: 14px; background: white;">View All Articles &rarr;</a>
+            <a href="/blog/" style="text-decoration: none; padding: 8px 18px; border-radius: 9999px; border: 1px solid var(--border-subtle); font-weight: 600; font-size: 13px; background: var(--white); color: var(--primary-calm);">View All Articles &rarr;</a>
           </div>
           
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+          <div class="stitch-articles-grid">
             
-            <a href="/blog/ats-resume-format-2026.html" style="text-decoration: none; display: flex; flex-direction: column; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s;">
-              <div style="height: 140px; background: linear-gradient(135deg, #16a085 0%, #2ecc71 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 40px;"><i class="fas fa-robot"></i></div>
-              <div style="padding: 20px;">
-                <span style="color: #16a085; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block;">ATS Optimization</span>
-                <h4 style="color: #333; margin: 0 0 10px 0; font-size: 18px;">The Ultimate ATS-Friendly Resume Format for 2026</h4>
-                <p style="color: #666; font-size: 14px; line-height: 1.5; margin: 0;">Learn exactly how modern Applicant Tracking Systems parse your resume and the critical formatting rules you must follow to get past the bots.</p>
+            <a href="/blog/ats-resume-format-2026.html" class="stitch-article-card">
+              <div class="stitch-article-banner" style="background: #2ECC71;">
+                <i class="fas fa-robot"></i>
+              </div>
+              <div class="stitch-article-body">
+                <span class="stitch-article-tag" style="color: #27AE60;">ATS Optimization</span>
+                <h3>The Ultimate ATS-Friendly Resume Format for 2026</h3>
+                <p>Learn exactly how modern Applicant Tracking Systems parse your resume and the critical formatting rules you must follow to get past the bots.</p>
               </div>
             </a>
 
-            <a href="/blog/software-engineer-resume-guide.html" style="text-decoration: none; display: flex; flex-direction: column; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s;">
-              <div style="height: 140px; background: linear-gradient(135deg, #2980b9 0%, #3498db 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 40px;"><i class="fas fa-laptop-code"></i></div>
-              <div style="padding: 20px;">
-                <span style="color: #2980b9; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block;">Engineering</span>
-                <h4 style="color: #333; margin: 0 0 10px 0; font-size: 18px;">How to Write a Software Engineer Resume That Stands Out</h4>
-                <p style="color: #666; font-size: 14px; line-height: 1.5; margin: 0;">Discover how to effectively showcase your GitHub projects, technical skills, and leetcode achievements to top tech recruiters.</p>
+            <a href="/blog/software-engineer-resume-guide.html" class="stitch-article-card">
+              <div class="stitch-article-banner" style="background: #3498DB;">
+                <i class="fas fa-laptop-code"></i>
+              </div>
+              <div class="stitch-article-body">
+                <span class="stitch-article-tag" style="color: #2980B9;">Engineering</span>
+                <h3>How to Write a Software Engineer Resume That Stands Out</h3>
+                <p>Discover how to effectively showcase your GitHub projects, technical skills, and leetcode achievements to top tech recruiters.</p>
               </div>
             </a>
 
-            <a href="/blog/resume-tips-for-freshers.html" style="text-decoration: none; display: flex; flex-direction: column; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s;">
-              <div style="height: 140px; background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 40px;"><i class="fas fa-graduation-cap"></i></div>
-              <div style="padding: 20px;">
-                <span style="color: #8e44ad; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block;">College Grads</span>
-                <h4 style="color: #333; margin: 0 0 10px 0; font-size: 18px;">Top 10 Resume Tips for Freshers with No Experience</h4>
-                <p style="color: #666; font-size: 14px; line-height: 1.5; margin: 0;">No work experience? No problem. Learn how to highlight your education, internships, academic projects, and extracurriculars effectively.</p>
+            <a href="/blog/resume-tips-for-freshers.html" class="stitch-article-card">
+              <div class="stitch-article-banner" style="background: #9B59B6;">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <div class="stitch-article-body">
+                <span class="stitch-article-tag" style="color: #8E44AD;">College Grads</span>
+                <h3>Top 10 Resume Tips for Freshers with No Experience</h3>
+                <p>No work experience? No problem. Learn how to highlight your education, internships, academic projects, and extracurriculars effectively.</p>
               </div>
             </a>
 
-            <a href="/blog/resume-action-verbs.html" style="text-decoration: none; display: flex; flex-direction: column; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s;">
-              <div style="height: 140px; background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 40px;"><i class="fas fa-bolt"></i></div>
-              <div style="padding: 20px;">
-                <span style="color: #e67e22; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block;">Writing Tips</span>
-                <h4 style="color: #333; margin: 0 0 10px 0; font-size: 18px;">100+ Powerful Action Verbs to Supercharge Your Resume</h4>
-                <p style="color: #666; font-size: 14px; line-height: 1.5; margin: 0;">Stop using "Responsible for" or "Managed". Transform your bullet points into impactful achievements with these strong action words.</p>
+            <a href="/blog/resume-action-verbs.html" class="stitch-article-card">
+              <div class="stitch-article-banner" style="background: #E67E22;">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div class="stitch-article-body">
+                <span class="stitch-article-tag" style="color: #D35400;">Writing Tips</span>
+                <h3>100+ Powerful Action Verbs to Supercharge Your Resume</h3>
+                <p>Stop using "Responsible for" or "Managed". Transform your bullet points into impactful achievements with these strong action words.</p>
               </div>
             </a>
 
@@ -412,291 +450,279 @@
 
       <section class="builder-workspace" id="builder-workspace">
         
-        <!-- Left Panel: Guided Multi-step Form -->
-        <div class="form-panel no-print">
+        <!-- Left Panel: Guided Multi-step Form with Vertical Navigation -->
+        <div class="form-panel no-print" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
           
-          <div class="workspace-actions">
-            <button class="btn-back" id="btn-back-to-templates">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-              Change Template
-            </button>
-            <button type="button" class="btn-back" id="btn-reorder-layout" style="color: #2980b9; border-color: rgba(41, 128, 185, 0.25);">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-              Reorder Layout
-            </button>
-            <div class="data-actions">
-              <button type="button" class="btn-data-action" id="btn-magic-import" style="color: #8e44ad; border-color: rgba(142, 68, 173, 0.25);" title="Auto-fill from an existing PDF Resume">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
-                Magic Import (PDF)
-              </button>
-              <input type="file" id="input-magic-pdf" accept="application/pdf" style="display: none;">
-              
-              <button type="button" class="btn-data-action" id="btn-export-json" title="Export Resume Data as JSON file">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                Backup
-              </button>
-              <button type="button" class="btn-data-action" id="btn-import-json" title="Restore Resume Data from JSON file">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                Restore
-              </button>
-              <button type="button" class="btn-data-action" id="btn-reset-defaults" title="Reset to Industry/Experience Default Content" style="color: #c97d7d; border-color: rgba(201, 125, 125, 0.25);">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
-                Reset Defaults
-              </button>
-              <button type="button" class="btn-data-action" id="btn-help-guide" onclick="openModal('guide-modal')" title="View Help & Tips Guide" style="color: #16a085; border-color: rgba(22, 160, 133, 0.25);">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                Help Guide
-              </button>
-              <input type="file" id="input-import-file" accept=".json" style="display: none;">
+          <!-- Stitch Editor Top Bar -->
+          <div class="stitch-editor-top-bar">
+            <div class="stitch-editor-top-row">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="btn-back" id="btn-back-to-templates" onclick="window.goToTemplates && window.goToTemplates();" style="padding: 6px 12px; font-size: 12px; margin: 0;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  Templates
+                </button>
+                <h2 class="stitch-editor-title">Edit Resume</h2>
+              </div>
+              <span class="stitch-save-badge">
+                <span class="status-pulse" style="display: inline-block; width: 7px; height: 7px; background: #006856; border-radius: 50%;"></span>
+                Draft saved locally
+              </span>
             </div>
+
+            <!-- Quick Template Selector & Actions Row -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 4px;">
+              <div class="quick-layout-switch" style="margin: 0;">
+                <label for="select-layout-inline" class="quick-switch-label" style="font-size: 12px; font-weight: 600;">Style:</label>
+                <select id="select-layout-inline" class="quick-switch-select" style="font-size: 12px; padding: 4px 10px;">
+                  <option value="classic">Minimalist Classic</option>
+                  <option value="modern">Serene Modern</option>
+                  <option value="grid">Technical Grid</option>
+                  <option value="executive">Bold Executive</option>
+                  <option value="academic">Academic Scholar</option>
+                  <option value="minimalist">Minimalist Sans</option>
+                  <option value="linear">Structured Linear</option>
+                  <option value="sidebar">Split Sidebar</option>
+                </select>
+              </div>
+
+              <div class="data-actions" style="margin: 0; gap: 6px;">
+                <button type="button" class="btn-data-action" id="btn-magic-import" style="color: #006856; border-color: rgba(0, 104, 86, 0.3); font-weight: 600;" title="Auto-fill from an existing PDF Resume">
+                  <i class="fas fa-magic" style="margin-right: 4px;"></i> AI Import
+                </button>
+                <input type="file" id="input-magic-pdf" accept="application/pdf" style="display: none;">
+                
+                <button type="button" class="btn-data-action" id="btn-reorder-layout" style="color: #2980b9; border-color: rgba(41, 128, 185, 0.25);">
+                  <i class="fas fa-bars" style="margin-right: 4px;"></i> Reorder
+                </button>
+                <button type="button" class="btn-data-action" id="btn-export-json" title="Export JSON">
+                  <i class="fas fa-download"></i> Backup
+                </button>
+                <button type="button" class="btn-data-action" id="btn-import-json" title="Restore JSON">
+                  <i class="fas fa-upload"></i> Restore
+                </button>
+                <button type="button" class="btn-data-action" id="btn-reset-defaults" title="Reset Defaults" style="color: #c97d7d; border-color: rgba(201, 125, 125, 0.25);">
+                  <i class="fas fa-undo"></i>
+                </button>
+                <input type="file" id="input-import-file" accept=".json" style="display: none;">
+              </div>
+            </div>
+            
             <div class="wizard-progress" id="wizard-progress-dots">
-              <!-- Dots added dynamically -->
+              <!-- Handled by wizard progress dots -->
             </div>
           </div>
 
           <!-- Wizard Form Container -->
-          <form id="resume-form" onsubmit="event.preventDefault();">
-            
-            <!-- Step 1: Personal Details -->
-            <div class="form-step active" data-step="1">
-              <h2 class="step-title">Contact & Profiles</h2>
-              <p class="step-desc">Provide your contact details. Keep titles clear and emails professional.</p>
-              
-              <div class="form-group">
-                <label class="form-label" for="input-name">Full Name</label>
-                <input type="text" id="input-name" class="form-input" placeholder="e.g. Rohan Das">
-              </div>
+          <div class="form-scroll-container" style="flex: 1; overflow-y: auto; padding: 24px;">
+            <form id="resume-form" onsubmit="event.preventDefault();">
+                
+                <!-- Step 1: Personal Details -->
+                <div class="form-step active" data-step="1">
+                  <h2 class="step-title">Contact &amp; Profiles</h2>
+                  <p class="step-desc">Provide your contact details. Keep titles clear and emails professional.</p>
+                  
+                  <div class="form-group">
+                    <label class="form-label" for="input-name">Full Name</label>
+                    <input type="text" id="input-name" class="form-input" placeholder="e.g. Rohan Das">
+                  </div>
 
-              <div class="form-group">
-                <label class="form-label" for="input-title">Professional Title</label>
-                <input type="text" id="input-title" class="form-input" placeholder="e.g. Graduate Mechanical Engineer">
-              </div>
+                  <div class="form-group">
+                    <label class="form-label" for="input-title">Professional Title</label>
+                    <input type="text" id="input-title" class="form-input" placeholder="e.g. Graduate Mechanical Engineer">
+                  </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="input-email">Email Address</label>
-                  <input type="email" id="input-email" class="form-input" placeholder="e.g. name@email.com">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="input-email">Email Address</label>
+                      <input type="email" id="input-email" class="form-input" placeholder="e.g. name@email.com">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="input-phone">Phone Number</label>
+                      <input type="text" id="input-phone" class="form-input" placeholder="e.g. +91 98765 43210">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="input-location">Location</label>
+                    <input type="text" id="input-location" class="form-input" placeholder="e.g. Bangalore, India">
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="input-website">Portfolio / Website Link</label>
+                      <input type="text" id="input-website" class="form-input" placeholder="e.g. rohandas.dev">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="input-linkedin">LinkedIn Username</label>
+                      <input type="text" id="input-linkedin" class="form-input" placeholder="e.g. linkedin.com/in/rohan">
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="input-github">GitHub Profile Link</label>
+                      <input type="text" id="input-github" class="form-input" placeholder="e.g. github.com/username">
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="input-custom-social">Custom Link / Portfolio</label>
+                      <input type="text" id="input-custom-social" class="form-input" placeholder="e.g. behance.net/username">
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="input-phone">Phone Number</label>
-                  <input type="text" id="input-phone" class="form-input" placeholder="e.g. +91 98765 43210">
-                </div>
-              </div>
 
-              <div class="form-group">
-                <label class="form-label" for="input-location">Location</label>
-                <input type="text" id="input-location" class="form-input" placeholder="e.g. Bangalore, India">
-              </div>
+                <!-- Step 2: Professional Summary -->
+                <div class="form-step" data-step="2">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <h2 class="step-title" style="margin: 0;">Professional Summary</h2>
+                    <button type="button" class="btn-regenerate-suggestions" id="btn-regenerate-suggestions" style="font-size: 11px; font-weight: 600; color: #006856;">
+                      <i class="fas fa-magic"></i> AI Suggestions
+                    </button>
+                  </div>
+                  <p class="step-desc">Write a concise, 3-4 sentence paragraph highlighting your core capabilities, technical goals, and credentials.</p>
+                  
+                  <div class="form-group">
+                    <label class="form-label" for="input-summary">Summary Statement</label>
+                    <textarea id="input-summary" class="form-input" placeholder="Highly motivated engineer with expertise in..."></textarea>
+                  </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="input-website">Portfolio / Website Link</label>
-                  <input type="text" id="input-website" class="form-input" placeholder="e.g. rohandas.dev">
+                  <div class="summary-suggestions-panel" id="summary-suggestions-panel" style="display: none;">
+                    <div class="suggestions-header">
+                      <span class="suggestion-label">🌿 Suggested Summaries (Click to Select)</span>
+                    </div>
+                    <div class="suggestions-list" id="summary-suggestions-list">
+                      <!-- Rendered dynamically by JS -->
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="input-linkedin">LinkedIn Username</label>
-                  <input type="text" id="input-linkedin" class="form-input" placeholder="e.g. linkedin.com/in/rohan">
-                </div>
-              </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="input-github">GitHub Profile Link</label>
-                  <input type="text" id="input-github" class="form-input" placeholder="e.g. github.com/username">
+                <!-- Step 3: Core Competencies / Skills -->
+                <div class="form-step" data-step="3">
+                  <h2 class="step-title">Skills &amp; Keywords</h2>
+                  <p class="step-desc">List your technical skills and domain expertise. Separating them with commas makes it easy for the ATS to parse.</p>
+                  
+                  <div class="form-group">
+                    <label class="form-label" for="input-skills">Skills (Comma-separated)</label>
+                    <textarea id="input-skills" class="form-input" style="min-height: 120px;" placeholder="e.g. AutoCAD, SolidWorks, FEA, GD&T, CNC, Project Planning"></textarea>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="input-custom-social">Custom Link / Portfolio</label>
-                  <input type="text" id="input-custom-social" class="form-input" placeholder="e.g. behance.net/username">
+
+                <!-- Step 4: Professional Timeline (Experience) -->
+                <div class="form-step" data-step="4">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <h2 class="step-title" style="margin: 0;">Work Experience</h2>
+                    <button type="button" class="btn-add-item" id="btn-add-experience" style="margin: 0; padding: 6px 12px; font-size: 12px;">
+                      <i class="fas fa-plus"></i> Add Entry
+                    </button>
+                  </div>
+                  <p class="step-desc">Detail your recent professional history, internships, or leadership positions.</p>
+                  
+                  <div class="list-container" id="experience-list-container">
+                    <!-- Dynamically generated entries -->
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <!-- Step 2: Professional Summary -->
-            <div class="form-step" data-step="2">
-              <h2 class="step-title">Professional Summary</h2>
-              <p class="step-desc">Write a concise, 3-4 sentence paragraph highlighting your core capabilities, technical goals, and credentials.</p>
-              
-              <div class="form-group">
-                <label class="form-label" for="input-summary">Summary Statement</label>
-                <textarea id="input-summary" class="form-input" placeholder="Highly motivated engineer with expertise in..."></textarea>
-              </div>
+                <!-- Step 5: Key Projects -->
+                <div class="form-step" data-step="5">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <h2 class="step-title" style="margin: 0;">Technical Projects</h2>
+                    <button type="button" class="btn-add-item" id="btn-add-project" style="margin: 0; padding: 6px 12px; font-size: 12px;">
+                      <i class="fas fa-plus"></i> Add Project
+                    </button>
+                  </div>
+                  <p class="step-desc">List key academic capstone works, personal engineering repositories, or major prototypes built.</p>
+                  
+                  <div class="list-container" id="projects-list-container">
+                    <!-- Dynamically generated entries -->
+                  </div>
+                </div>
 
-              <div class="summary-suggestions-panel" id="summary-suggestions-panel" style="display: none;">
-                <div class="suggestions-header">
-                  <span class="suggestion-label">🌿 Suggested Summaries (Click to Select)</span>
-                  <button type="button" class="btn-regenerate-suggestions" id="btn-regenerate-suggestions">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                    Refresh
+                <!-- Step 6: Education -->
+                <div class="form-step" data-step="6">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <h2 class="step-title" style="margin: 0;">Education</h2>
+                    <button type="button" class="btn-add-item" id="btn-add-education" style="margin: 0; padding: 6px 12px; font-size: 12px;">
+                      <i class="fas fa-plus"></i> Add Education
+                    </button>
+                  </div>
+                  <p class="step-desc">Add your formal degrees, universities, graduation timelines, and grade credentials.</p>
+                  
+                  <div class="list-container" id="education-list-container">
+                    <!-- Dynamically generated entries -->
+                  </div>
+                </div>
+
+                <!-- Step 7: Certifications -->
+                <div class="form-step" data-step="7">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <h2 class="step-title" style="margin: 0;">Certifications</h2>
+                    <button type="button" class="btn-add-item" id="btn-add-certification" style="margin: 0; padding: 6px 12px; font-size: 12px;">
+                      <i class="fas fa-plus"></i> Add Certification
+                    </button>
+                  </div>
+                  <p class="step-desc">Add professional licensing, training courses, and verified developer badges to strengthen your profile.</p>
+                  
+                  <div class="list-container" id="certifications-list-container">
+                    <!-- Dynamically generated entries -->
+                  </div>
+                </div>
+
+                <!-- Navigation Actions -->
+                <div class="wizard-nav no-print" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between;">
+                  <button type="button" class="btn-nav-prev" id="btn-wizard-prev" onclick="window.wizardPrev && window.wizardPrev();" style="visibility: hidden;">Previous Step</button>
+                  <button type="button" class="btn-nav-next" id="btn-wizard-next" onclick="window.wizardNext && window.wizardNext();">
+                    Next Step
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                   </button>
                 </div>
-                <div class="suggestions-list" id="summary-suggestions-list">
-                  <!-- Rendered dynamically by JS -->
-                </div>
+
+              </form>
+
+              <!-- Support & Ads Footer Note -->
+              <div class="developer-support-note no-print" style="margin-top: 24px; padding-top: 12px; text-align: center;">
+                <p style="font-size: 11px; color: var(--text-sub); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; margin: 0;" onclick="document.getElementById('developer-modal').style.display='flex'">
+                  <span>Made with <i class="fas fa-heart" style="color: #e74c3c;"></i> by a solo developer.</span> 
+                  <span style="text-decoration: underline;">Why we have ads</span>
+                </p>
               </div>
             </div>
 
-            <!-- Step 3: Core Competencies / Skills -->
-            <div class="form-step" data-step="3">
-              <h2 class="step-title">Skills & Keywords</h2>
-              <p class="step-desc">List your technical skills and domain expertise. Separating them with commas makes it easy for the ATS to parse.</p>
-              
-              <div class="form-group">
-                <label class="form-label" for="input-skills">Skills (Comma-separated)</label>
-                <textarea id="input-skills" class="form-input" style="min-height: 120px;" placeholder="e.g. AutoCAD, SolidWorks, FEA, GD&T, CNC, Project Planning"></textarea>
-              </div>
-            </div>
-
-            <!-- Step 4: Professional Timeline (Experience) -->
-            <div class="form-step" data-step="4">
-              <h2 class="step-title">Work Experience</h2>
-              <p class="step-desc">Detail your recent professional history, internships, or leadership positions.</p>
-              
-              <div class="list-container" id="experience-list-container">
-                <!-- Dynamically generated entries -->
-              </div>
-              <button type="button" class="btn-add-item" id="btn-add-experience">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Add Experience Entry
-              </button>
-            </div>
-
-            <!-- Step 5: Key Projects -->
-            <div class="form-step" data-step="5">
-              <h2 class="step-title">Technical Projects</h2>
-              <p class="step-desc">List key academic capstone works, personal engineering repositories, or major prototypes built.</p>
-              
-              <div class="list-container" id="projects-list-container">
-                <!-- Dynamically generated entries -->
-              </div>
-              <button type="button" class="btn-add-item" id="btn-add-project">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Add Project Entry
-              </button>
-            </div>
-
-            <!-- Step 6: Education -->
-            <div class="form-step" data-step="6">
-              <h2 class="step-title">Education</h2>
-              <p class="step-desc">Add your formal degrees, universities, graduation timelines, and grade credentials.</p>
-              
-              <div class="list-container" id="education-list-container">
-                <!-- Dynamically generated entries -->
-              </div>
-              <button type="button" class="btn-add-item" id="btn-add-education">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Add Education Entry
-              </button>
-            </div>
-
-            <!-- Step 7: Certifications -->
-            <div class="form-step" data-step="7">
-              <h2 class="step-title">Certifications</h2>
-              <p class="step-desc">Add professional licensing, training courses, and verified developer badges to strengthen your profile.</p>
-              
-              <div class="list-container" id="certifications-list-container">
-                <!-- Dynamically generated entries -->
-              </div>
-              <button type="button" class="btn-add-item" id="btn-add-certification">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Add Certification
-              </button>
-            </div>
-
-            <!-- Navigation Actions -->
-            <div class="wizard-nav no-print">
-              <button type="button" class="btn-nav-prev" id="btn-wizard-prev" style="visibility: hidden;">Previous Step</button>
-              <button type="button" class="btn-nav-next" id="btn-wizard-next">
-                Next Step
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-              </button>
-            </div>
-
-          </form>
-          <!-- Amazon Affiliate Widget -->
-          <div class="affiliate-widget no-print" style="width: 100%; max-width: 300px; margin: 30px auto 0 auto; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-            <div style="font-size: 24px; margin-bottom: 10px;">📚</div>
-            <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 15px;">Interview Prep Guides</h4>
-            <p style="margin: 0 0 15px 0; font-size: 12px; color: #64748b;">The ultimate guides to passing Software Engineering interviews.</p>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <a href="https://www.amazon.in/Gayle-Laakmann-McDowell-Programming-Solutions-Paperback/dp/B08CDHYF5D?dib=eyJ2IjoiMSJ9.9XzaqyXBhFL5Gf6bhDB4KFPawNIFDAZZc4mryrovwpuRF1wVPRHjmDv22-HvspwDPs7TQ6qIYajbFPeE_UonDPBo352mYPsBg6ZCpgiQDw0P9fVofTC4umZm8DPG9z7W-anWeKrVjEAzzAzj_sGC62HaL5DxGAi9UUDRNGpLU4PdfNfW53EM3s-FdoRnHYjZaNKa00UWBWFsdbMOYZAsYlDBCdzPiDZNh1rPeDRylJg.I-yvM3vNziTP3ns-zzIqdtdVTV4duaJFSaXJhjpZVWI&dib_tag=se&keywords=cracking+the+code+interview&qid=1782971021&sr=8-1&linkCode=ll2&tag=zenresume01-21&linkId=f96e4d6b195eccbaf632ecf501569508&ref_=as_li_ss_tl" target="_blank" rel="noopener noreferrer nofollow" style="display: block; background: #fbbf24; color: #78350f; font-weight: 700; text-decoration: none; padding: 10px; border-radius: 8px; font-size: 12px; transition: opacity 0.2s;">
-                Cracking the Coding Interview
-              </a>
-              <a href="https://www.amazon.in/Data-Structures-Algorithms-Made-Easy/dp/8193245288?pd_rd_w=k6OWB&content-id=amzn1.sym.e933bed8-66b5-4e19-9aeb-b2834144fba3&pf_rd_p=e933bed8-66b5-4e19-9aeb-b2834144fba3&pf_rd_r=8WZYE49BKT0XP53ESSQF&pd_rd_wg=YsLAI&pd_rd_r=626c2f98-234a-4918-bde2-79c6408e9212&pd_rd_i=8193245288&psc=1&linkCode=ll2&tag=zenresume01-21&linkId=fc90f1ad798a7e5312aeab293dc070b6&ref_=as_li_ss_tl" target="_blank" rel="noopener noreferrer nofollow" style="display: block; background: #fbbf24; color: #78350f; font-weight: 700; text-decoration: none; padding: 10px; border-radius: 8px; font-size: 12px; transition: opacity 0.2s;">
-                Data Structures & Algorithms
-              </a>
-            </div>
-          </div>
-
-          <!-- AdSense Placeholder: Sidebar -->
-          <div id="promo-banner-sidebar" class="ad-container-sidebar no-print" style="width: 100%; max-width: 300px; min-height: 250px; margin: 30px auto 0 auto; background: rgba(255,255,255,0.4); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <ins class="adsbygoogle"
-                 style="display:block; width:100%; height:250px;"
-                 data-ad-client="ca-pub-1993051486567311"
-                 data-ad-slot="5649020299"
-                 data-ad-format="rectangle"
-                 data-full-width-responsive="true"></ins>
-          </div>
-
-          <div class="developer-support-note no-print" style="margin-top: 20px; padding-bottom: 20px; text-align: center;">
-            <p style="font-size: 11px; color: var(--text-sub); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.2s;" onclick="document.getElementById('developer-modal').style.display='flex'">
-              <span>Made with <i class="fas fa-heart" style="color: #e74c3c;"></i> by a solo developer.</span> 
-              <span style="text-decoration: underline;">Why we have ads</span>
-            </p>
-          </div>
         </div>
 
-        <!-- Right Panel: Live Synchronized Preview -->
-        <div class="preview-panel">
+        <!-- Right Panel: Live Synchronized Preview (Stitch Immersive View) -->
+        <div class="preview-panel" style="position: relative; background: var(--bg-serene);">
           
-          <div class="preview-bar no-print">
-            <span class="preview-status" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;">
-              <span style="display: flex; align-items: center; gap: 6px;">
-                <span class="status-pulse"></span>
-                Live Syncing Preview
-              </span>
-              <div class="zoom-controls">
-                <button id="btn-zoom-out" class="btn-zoom-action" title="Zoom Out">-</button>
-                <span id="zoom-percentage">100%</span>
-                <button id="btn-zoom-in" class="btn-zoom-action" title="Zoom In">+</button>
-                <button id="btn-zoom-toggle" class="btn-zoom-toggle" title="Fit to Screen" aria-label="Fit to Screen">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                </button>
-              </div>
-            </span>
-            
-            <div class="quick-layout-switch">
-              <label for="select-layout-inline" class="quick-switch-label">Style:</label>
-              <select id="select-layout-inline" class="quick-switch-select">
-                <option value="classic">Minimalist Classic</option>
-                <option value="modern">Serene Modern</option>
-                <option value="grid">Technical Grid</option>
-                <option value="executive">Bold Executive</option>
-                <option value="academic">Academic Scholar</option>
-                <option value="minimalist">Minimalist Sans</option>
-                <option value="linear">Structured Linear</option>
-                <option value="sidebar">Split Sidebar</option>
-              </select>
-            </div>
-
-            <div class="quick-size-switch">
-              <label for="select-paper-size" class="quick-switch-label">Paper:</label>
-              <select id="select-paper-size" class="quick-switch-select">
-                <option value="a4">A4 Size</option>
+          <!-- Floating Top Actions -->
+          <div class="stitch-preview-floating-bar no-print">
+            <button type="button" class="stitch-floating-btn" id="btn-share-preview" onclick="window.openShareModal && window.openShareModal();" title="Share ZenResume">
+              <i class="fas fa-share-alt"></i> Share
+            </button>
+            <div class="quick-size-switch" style="margin: 0;">
+              <select id="select-paper-size" class="quick-switch-select" style="font-size: 12px; padding: 6px 12px; border-radius: 9999px; font-weight: 600;">
+                <option value="a4">A4 Sheet</option>
                 <option value="letter">US Letter</option>
               </select>
             </div>
-
-            <button class="btn-nav-next" style="padding: 6px 14px; font-size: 12px; border-radius: 6px;" id="btn-trigger-download">
-              Download Resume
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <button type="button" class="stitch-floating-btn primary" id="btn-trigger-download" onclick="window.triggerDownloadModal && window.triggerDownloadModal();">
+              <i class="fas fa-download"></i> Download PDF
             </button>
           </div>
 
           <!-- Paper-like Printable Sheet Container -->
-          <div class="resume-paper-wrapper">
+          <div class="resume-paper-wrapper" style="margin-top: 40px;">
             <div class="resume-paper" id="resume-print-area">
               <!-- Rendered template structure injected here by app.js -->
             </div>
+          </div>
+
+          <!-- Floating Zoom Controls -->
+          <div class="stitch-floating-zoom no-print">
+            <button id="btn-zoom-out" class="stitch-zoom-btn" onclick="window.zoomOut && window.zoomOut();" title="Zoom Out">−</button>
+            <span id="zoom-percentage" class="stitch-zoom-label">100%</span>
+            <button id="btn-zoom-in" class="stitch-zoom-btn" onclick="window.zoomIn && window.zoomIn();" title="Zoom In">+</button>
+            <div style="width: 1px; height: 16px; background: var(--border-subtle);"></div>
+            <button id="btn-zoom-toggle" class="stitch-zoom-btn" onclick="window.zoomFit && window.zoomFit();" title="Fit to Screen" aria-label="Fit to Screen">
+              <i class="fas fa-expand" style="font-size: 11px;"></i>
+            </button>
           </div>
 
         </div>
@@ -857,31 +883,37 @@
 
 
 
-  <!-- Site Footer -->
-  <footer class="site-footer no-print" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-    
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 13px; font-weight: 500;">
-      <span style="color: var(--text-light); text-transform: uppercase; font-size: 11px; font-weight: 700; letter-spacing: 1px; width: 100%; text-align: center;">Resume Examples</span>
-      <a href="/role/data-engineer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Data Engineer</a>
-      <a href="/role/data-scientist-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Data Scientist</a>
-      <a href="/role/ai-engineer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">AI Engineer</a>
-      <a href="/role/prompt-engineer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Prompt Engineer</a>
-      <a href="/role/cloud-engineer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Cloud Engineer</a>
-      <a href="/role/senior-software-developer-resume.html" style="color: var(--text-sub); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-calm)'" onmouseout="this.style.color='var(--text-sub)'">Senior Developer</a>
-      <a href="/role/index.html" style="color: var(--primary-calm); font-weight: 700; text-decoration: none; transition: opacity 0.2s; margin-left: 10px;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">View All 50+ Roles &rarr;</a>
-    </div>
+  <!-- Site Footer (Stitch Modern Dark Canvas) -->
+  <footer class="stitch-footer no-print">
+    <div class="stitch-footer-container">
+      
+      <div class="stitch-footer-logo">
+        <div style="background: #006856; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 15px;">Z</div>
+        <span>ZenResume</span>
+      </div>
 
-    <div class="footer-links" style="border-top: 1px solid var(--border-light); padding-top: 20px; width: 100%; justify-content: center; max-width: 800px; display: flex; flex-wrap: wrap; gap: 20px;">
-      <a href="/blog/">Blog Resources</a>
-      <a href="/about.html">About Us</a>
-      <a href="/privacy.html">Privacy Policy</a>
-      <a href="/terms.html">Terms & Conditions</a>
-      <a href="/contact.html">Contact Us</a>
-    </div>
-    
-    <div class="footer-text">
-      &copy; 2026 ZenResume. All rights reserved.<br>
-      Built for professionals, by professionals.
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 24px; font-size: 13px; font-weight: 500;">
+        <span style="color: var(--primary-fixed); text-transform: uppercase; font-size: 11px; font-weight: 700; letter-spacing: 1px; width: 100%; text-align: center;">Popular Role Resume Guides</span>
+        <a href="/role/data-engineer-resume.html" style="color: #D1DBDA; text-decoration: none;">Data Engineer</a>
+        <a href="/role/data-scientist-resume.html" style="color: #D1DBDA; text-decoration: none;">Data Scientist</a>
+        <a href="/role/ai-engineer-resume.html" style="color: #D1DBDA; text-decoration: none;">AI Engineer</a>
+        <a href="/role/cloud-engineer-resume.html" style="color: #D1DBDA; text-decoration: none;">Cloud Engineer</a>
+        <a href="/role/senior-software-developer-resume.html" style="color: #D1DBDA; text-decoration: none;">Senior Developer</a>
+        <a href="/role/index.html" style="color: var(--primary-fixed); font-weight: 700; text-decoration: none;">View All 50+ Roles &rarr;</a>
+      </div>
+
+      <div class="stitch-footer-links" style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 24px; width: 100%; max-width: 780px;">
+        <a href="/blog/">Blog Resources</a>
+        <a href="/about.html">About Us</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms &amp; Conditions</a>
+        <a href="/contact.html">Contact Us</a>
+      </div>
+      
+      <div class="stitch-footer-copy">
+        &copy; 2026 ZenResume. Built for ATS compatibility.<br>
+        100% Free &amp; Private in Your Browser.
+      </div>
     </div>
   </footer>
 
@@ -1024,11 +1056,16 @@
   <script src="templates-data.js" defer></script>
   <script src="firebase-service.js" defer></script>
   <script src="app.js" defer></script>
-  <!-- Vercel Web Analytics (HTML Native) -->
+  <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      const vaScript = document.createElement('script');
+      vaScript.defer = true;
+      vaScript.src = '/_vercel/insights/script.js';
+      document.head.appendChild(vaScript);
+    }
   </script>
-  <script defer src="/_vercel/insights/script.js"></script>
   <!-- Service Worker Registration for PWA Installation -->
   <script>
     if ('serviceWorker' in navigator) {
