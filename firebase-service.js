@@ -66,6 +66,11 @@ auth.onAuthStateChanged(user => {
   const profileDiv = document.getElementById('user-profile');
   const userName = document.getElementById('user-name');
   
+  const syncLoggedOut = document.getElementById('cloud-sync-logged-out');
+  const syncLoggedIn = document.getElementById('cloud-sync-logged-in');
+  const syncUserName = document.getElementById('sync-user-name');
+  const syncUserDesc = document.getElementById('sync-user-desc');
+
   updateGreetingBanner(user);
   
   if (user) {
@@ -82,9 +87,18 @@ auth.onAuthStateChanged(user => {
       if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
     }
     
+    // Update Multi-Device Cloud Sync Banner State
+    if (syncLoggedOut) syncLoggedOut.style.display = 'none';
+    if (syncLoggedIn) {
+      syncLoggedIn.style.display = 'flex';
+      let displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'Professional');
+      if (syncUserName) syncUserName.textContent = displayName;
+      if (syncUserDesc) syncUserDesc.textContent = `Connected as ${user.email || displayName}. Your resume automatically syncs across all devices in real-time.`;
+    }
+
     // Show greeting toast if hasn't been shown this session
     if (!sessionStorage.getItem('loginGreetingShown')) {
-      window.showToast(`Login Successful! Welcome, ${displayName || 'Professional'}`);
+      window.showToast(`Login Successful! Welcome, ${user.displayName || user.email || 'Professional'}`);
       sessionStorage.setItem('loginGreetingShown', 'true');
     }
     
@@ -102,6 +116,11 @@ auth.onAuthStateChanged(user => {
     if (loginOptions) loginOptions.style.display = 'block';
     if (profileDiv) profileDiv.style.display = 'none';
     if (userName) userName.textContent = '';
+    
+    // Reset Multi-Device Cloud Sync Banner State
+    if (syncLoggedOut) syncLoggedOut.style.display = 'flex';
+    if (syncLoggedIn) syncLoggedIn.style.display = 'none';
+
     if (window.state) {
       window.state.hasLoadedProfile = false;
     }
@@ -111,34 +130,36 @@ auth.onAuthStateChanged(user => {
 window.addEventListener('DOMContentLoaded', () => {
   const loginBtn = document.getElementById('btn-google-login');
   const logoutBtn = document.getElementById('btn-logout');
-  
-  if (loginBtn) {
-    loginBtn.addEventListener('click', () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-      
-      auth.signInWithPopup(provider).then((result) => {
-        console.log("Logged in via popup");
-        // Toast is handled automatically by the onAuthStateChanged listener now, 
-        // but we can also trigger it here to be absolutely sure.
-        window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email));
-      }).catch(error => {
-        console.error("Popup Login Error:", error);
-        if (error.code === 'auth/popup-blocked') {
-          alert("Your browser blocked the Google Login popup. Please allow popups for this site.");
-        } else if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
-          alert("Failed to sign in. " + error.message);
-        }
-      });
+  const syncBannerLoginBtn = document.getElementById('btn-sync-banner-login');
+  const syncBannerLogoutBtn = document.getElementById('btn-sync-banner-logout');
+
+  const triggerGoogleLogin = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    
+    auth.signInWithPopup(provider).then((result) => {
+      console.log("Logged in via popup");
+      window.showToast("Cloud Sync Active! Welcome, " + (result.user.displayName || result.user.email));
+    }).catch(error => {
+      console.error("Popup Login Error:", error);
+      if (error.code === 'auth/popup-blocked') {
+        alert("Your browser blocked the Google Login popup. Please allow popups for this site.");
+      } else if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
+        alert("Failed to sign in. " + error.message);
+      }
     });
-  }
+  };
   
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      sessionStorage.removeItem('loginGreetingShown');
-      auth.signOut();
-    });
-  }
+  if (loginBtn) loginBtn.addEventListener('click', triggerGoogleLogin);
+  if (syncBannerLoginBtn) syncBannerLoginBtn.addEventListener('click', triggerGoogleLogin);
+  
+  const triggerLogout = () => {
+    sessionStorage.removeItem('loginGreetingShown');
+    auth.signOut();
+  };
+
+  if (logoutBtn) logoutBtn.addEventListener('click', triggerLogout);
+  if (syncBannerLogoutBtn) syncBannerLogoutBtn.addEventListener('click', triggerLogout);
 
   // Email/Password Auth Logic
   const btnShowEmailLogin = document.getElementById('btn-show-email-login');
