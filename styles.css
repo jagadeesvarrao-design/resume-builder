@@ -2274,110 +2274,205 @@ textarea.form-input {
   transform: translateY(-1px);
 }
 
-/* 2. Hero Section with Ambient Glow */
+/* 2. Hero Section with Ambient Glow & Staggered Animations */
 .stitch-hero-section {
-  background: var(--bg-dark-surface);
+  background: radial-gradient(circle at 50% 15%, #152320 0%, #0C1211 55%, #070C0B 100%);
   color: #FFFFFF;
-  padding: 80px 24px 60px 24px;
+  padding: 85px 24px 85px 24px;
   text-align: center;
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid rgba(0, 168, 138, 0.2);
+}
+
+@keyframes ambientPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(-50%, -46%) scale(1.18);
+    opacity: 0.8;
+  }
 }
 
 .stitch-hero-glow {
   position: absolute;
-  top: 40%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(0, 104, 86, 0.45) 0%, rgba(0, 104, 86, 0) 70%);
+  width: 680px;
+  height: 680px;
+  background: radial-gradient(circle, rgba(0, 168, 138, 0.4) 0%, rgba(0, 104, 86, 0.2) 45%, rgba(12, 18, 17, 0) 75%);
   filter: blur(80px);
   pointer-events: none;
   z-index: 1;
+  animation: ambientPulse 8s ease-in-out infinite;
+}
+
+.stitch-hero-glow.glow-secondary {
+  top: 70%;
+  left: 55%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(0, 132, 109, 0.3) 0%, rgba(88, 214, 141, 0.12) 50%, rgba(12, 18, 17, 0) 75%);
+  filter: blur(85px);
+  animation: ambientPulse 10s ease-in-out infinite reverse;
 }
 
 .stitch-hero-content {
   position: relative;
   z-index: 2;
-  max-width: 850px;
+  max-width: 860px;
   margin: 0 auto;
+}
+
+@keyframes heroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .stitch-pill-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(0, 104, 86, 0.25);
-  border: 1px solid rgba(130, 247, 216, 0.35);
+  background: rgba(0, 104, 86, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(130, 247, 216, 0.4);
   color: var(--primary-fixed);
   font-size: 13px;
   font-weight: 600;
-  padding: 6px 16px;
+  padding: 7px 18px;
   border-radius: 9999px;
   margin-bottom: 24px;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 14px rgba(0, 104, 86, 0.25);
+  animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stitch-pill-badge i {
+  color: #58D68D;
+  animation: pulseIcon 2s infinite ease-in-out;
+}
+
+@keyframes pulseIcon {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
 }
 
 .stitch-hero-title {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(32px, 5vw, 54px);
+  font-size: clamp(34px, 5.5vw, 56px);
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.12;
   color: #FFFFFF;
   margin-bottom: 20px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.6px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
 }
 
 .stitch-hero-subtitle {
   font-family: 'Inter', sans-serif;
   font-size: clamp(16px, 2vw, 19px);
   color: #D1DBDA;
-  line-height: 1.6;
+  line-height: 1.65;
   max-width: 680px;
   margin: 0 auto 36px auto;
   font-weight: 400;
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+@keyframes buttonShimmer {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  100% { transform: translateX(250%) rotate(25deg); }
 }
 
 .stitch-hero-cta {
-  background: #006856;
+  background: linear-gradient(135deg, #00846D 0%, #006856 100%);
   color: #FFFFFF;
   font-family: 'Outfit', sans-serif;
   font-size: 18px;
   font-weight: 700;
-  padding: 16px 36px;
+  padding: 16px 40px;
   border-radius: 9999px;
-  border: none;
+  border: 1px solid rgba(130, 247, 216, 0.3);
   cursor: pointer;
-  box-shadow: 0 10px 28px rgba(0, 104, 86, 0.4);
-  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 12px 32px rgba(0, 104, 86, 0.45);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+.stitch-hero-cta::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: rotate(25deg);
+  animation: buttonShimmer 4.5s infinite ease-in-out;
+  pointer-events: none;
 }
 
 .stitch-hero-cta:hover {
-  background: #00846D;
-  transform: translateY(-2px);
-  box-shadow: 0 14px 34px rgba(0, 104, 86, 0.5);
+  background: linear-gradient(135deg, #009E83 0%, #007D67 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(0, 104, 86, 0.6);
+  border-color: rgba(130, 247, 216, 0.6);
 }
 
-/* 3. Interactive Mac Window Mockup */
+.stitch-hero-cta:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* 3. Interactive Mac Window Mockup with Live Scanner & Floating Badges */
 .stitch-mockup-section {
-  padding: 0 20px 70px 20px;
-  margin-top: -30px;
+  padding: 40px 20px 20px 20px;
+  margin-top: 20px;
   position: relative;
   z-index: 10;
+  perspective: 1200px;
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 .stitch-mac-window {
   max-width: 960px;
   margin: 0 auto;
   background: var(--bg-card);
-  border-radius: 16px;
-  border: 1px solid var(--border-subtle);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 104, 86, 0.08);
+  border-radius: 18px;
+  border: 1px solid rgba(0, 104, 86, 0.18);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 104, 86, 0.12);
   overflow: hidden;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: subtleFloat 6s ease-in-out infinite;
+}
+
+.stitch-mac-window:hover {
+  transform: translateY(-4px) scale(1.008);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.2), 0 12px 36px rgba(0, 104, 86, 0.2);
 }
 
 .stitch-window-header {
@@ -2397,6 +2492,11 @@ textarea.form-input {
   width: 11px;
   height: 11px;
   border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.stitch-mac-window:hover .stitch-dot {
+  transform: scale(1.1);
 }
 
 .stitch-dot.red { background: #BA1A1A; }
@@ -2406,12 +2506,16 @@ textarea.form-input {
 .stitch-window-url {
   margin: 0 auto;
   background: var(--white);
-  padding: 3px 14px;
-  border-radius: 6px;
+  padding: 4px 16px;
+  border-radius: 8px;
   font-family: monospace;
   font-size: 11px;
+  font-weight: 500;
   color: var(--text-light);
   border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .stitch-window-body {
@@ -2421,6 +2525,12 @@ textarea.form-input {
   gap: 30px;
   background: var(--bg-serene);
   min-height: 380px;
+  position: relative;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.95; }
 }
 
 .stitch-mockup-form-pane {
@@ -2431,37 +2541,65 @@ textarea.form-input {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.03);
 }
 
 .stitch-skeleton-title {
   height: 16px;
   width: 45%;
-  background: rgba(0, 104, 86, 0.2);
+  background: rgba(0, 104, 86, 0.25);
   border-radius: 4px;
+  animation: skeletonPulse 2.5s infinite ease-in-out;
 }
 
 .stitch-skeleton-line {
   height: 10px;
   background: var(--border-subtle);
   border-radius: 4px;
+  animation: skeletonPulse 3s infinite ease-in-out;
 }
 
 .stitch-skeleton-line.short { width: 70%; }
 
 .stitch-drag-drop-box {
-  border: 2px dashed rgba(0, 104, 86, 0.3);
-  border-radius: 8px;
-  padding: 24px;
+  border: 2px dashed rgba(0, 104, 86, 0.35);
+  border-radius: 10px;
+  padding: 26px 16px;
   text-align: center;
   color: var(--primary-calm);
   font-weight: 600;
   font-size: 13px;
-  background: rgba(0, 104, 86, 0.03);
+  background: rgba(0, 104, 86, 0.04);
   margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.stitch-mac-window:hover .stitch-drag-drop-box {
+  background: rgba(0, 104, 86, 0.08);
+  border-color: rgba(0, 104, 86, 0.6);
+  transform: translateY(-2px);
+}
+
+/* ATS Laser Scanner Effect on Preview Pane */
+@keyframes laserScan {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
 .stitch-mockup-preview-pane {
@@ -2473,16 +2611,175 @@ textarea.form-input {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* 4. Why Build With ZenResume (4 Cards) */
+.stitch-mockup-preview-pane::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0,168,138,0) 0%, #00A88A 50%, rgba(0,168,138,0) 100%);
+  box-shadow: 0 0 12px #00A88A, 0 0 24px rgba(0,168,138,0.5);
+  animation: laserScan 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+/* Floating Glass Badges (Dark Fintech Luxury Style) */
+.stitch-floating-badge {
+  position: absolute;
+  padding: 12px 20px;
+  background: rgba(12, 18, 17, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 168, 138, 0.38);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 24px rgba(0, 104, 86, 0.25);
+  font-family: 'Outfit', sans-serif;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 20;
+  pointer-events: none;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.stitch-floating-badge.badge-top-left {
+  top: 25px;
+  left: -28px;
+  animation: subtleFloat 5s ease-in-out infinite reverse;
+}
+
+.stitch-floating-badge.badge-bottom-right {
+  bottom: 25px;
+  right: -28px;
+  animation: subtleFloat 6s ease-in-out infinite;
+}
+
+@keyframes pulseLiveDot {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(88, 214, 141, 0.7);
+  }
+  70% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 8px rgba(88, 214, 141, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(88, 214, 141, 0);
+  }
+}
+
+.pulse-live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #58D68D;
+  box-shadow: 0 0 8px #58D68D;
+  animation: pulseLiveDot 2s infinite;
+}
+
+.score-circular-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mockup-input-box {
+  background: #F9FBFB;
+  border: 1px solid rgba(0, 104, 86, 0.2);
+  border-radius: 8px;
+  padding: 6px 10px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mockup-input-label {
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #006856;
+}
+
+.mockup-input-val {
+  font-size: 11px;
+  font-weight: 600;
+  color: #222;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typing-cursor {
+  color: #006856;
+  font-weight: 700;
+  margin-left: 2px;
+  animation: blinkCursor 1s infinite;
+}
+
+.mockup-resume-card {
+  background: #FFFFFF;
+  padding: 16px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 104, 86, 0.12);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
+
+.mockup-skill-chip {
+  font-size: 8.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(0, 104, 86, 0.08);
+  color: #006856;
+  border: 1px solid rgba(0, 104, 86, 0.18);
+  font-family: monospace;
+}
+
+.mockup-scanner-status {
+  margin-top: 10px;
+  background: rgba(0, 104, 86, 0.06);
+  border: 1px solid rgba(0, 104, 86, 0.2);
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #006856;
+  font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 900px) {
+  .stitch-floating-badge {
+    display: none;
+  }
+}
+
+/* 4. Why Build With ZenResume (4 Cards with Dynamic Elevation) */
 .stitch-section-heading {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(28px, 4vw, 36px);
+  font-size: clamp(28px, 4vw, 38px);
   font-weight: 800;
   text-align: center;
   color: var(--text-main);
   margin-bottom: 48px;
+  letter-spacing: -0.5px;
 }
 
 .stitch-features-grid {
@@ -2495,33 +2792,57 @@ textarea.form-input {
 
 .stitch-card {
   background: var(--white);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 32px 24px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s ease;
+  border: 1px solid rgba(0, 104, 86, 0.14);
+  border-radius: 20px;
+  padding: 36px 26px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03), 0 1px 4px rgba(0, 104, 86, 0.04);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stitch-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, var(--primary-calm), #58D68D);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .stitch-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 36px rgba(0, 104, 86, 0.12);
-  border-color: var(--primary-calm);
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 22px 50px rgba(0, 104, 86, 0.16), 0 6px 14px rgba(0,0,0,0.04);
+  border-color: rgba(0, 168, 138, 0.4);
+}
+
+.stitch-card:hover::before {
+  opacity: 1;
 }
 
 .stitch-card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  margin-bottom: 20px;
+  font-size: 24px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 12px rgba(0, 104, 86, 0.06);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stitch-card:hover .stitch-card-icon {
+  transform: scale(1.15) rotate(-6deg);
 }
 
 .stitch-card h3 {
   font-family: 'Outfit', sans-serif;
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 700;
   color: var(--text-main);
   margin-bottom: 12px;
@@ -2531,7 +2852,7 @@ textarea.form-input {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   color: var(--text-sub);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 /* 5. Vertical Timeline (How It Works) */

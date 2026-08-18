@@ -173,9 +173,11 @@
       <!-- SCREEN 0: MARKETING LANDING PAGE (NO-PRINT) (GOOGLE STITCH REDESIGN) -->
       <section class="landing-screen no-print" id="landing-screen">
         
-        <!-- Stitch Hero Section -->
+        <!-- Stitch Hero Section (Envelops Hero + Mockup in Dark Luxury Canvas) -->
         <div class="stitch-hero-section">
           <div class="stitch-hero-glow"></div>
+          <div class="stitch-hero-glow glow-secondary"></div>
+          
           <div class="stitch-hero-content">
             <span class="stitch-pill-badge">
               <i class="fas fa-shield-alt"></i> 100% Free &amp; No Account Needed
@@ -187,35 +189,121 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
           </div>
-        </div>
 
-        <!-- Stitch Interactive Mac Window Mockup -->
-        <div class="stitch-mockup-section">
-          <div class="stitch-mac-window">
-            <div class="stitch-window-header">
-              <div class="stitch-window-dots">
-                <span class="stitch-dot red"></span>
-                <span class="stitch-dot yellow"></span>
-                <span class="stitch-dot green"></span>
+          <!-- Stitch Interactive Mac Window Mockup -->
+          <div class="stitch-mockup-section">
+            <!-- Floating Feature Badge 1: Privacy Shield -->
+            <div class="stitch-floating-badge badge-top-left">
+              <div class="badge-icon-box" style="background: rgba(0, 168, 138, 0.15); color: #58D68D; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                <i class="fas fa-shield-halved"></i>
               </div>
-              <div class="stitch-window-url">zenresume.app/editor</div>
+              <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-weight: 700; font-size: 13px; color: #FFFFFF;">100% Client Privacy</span>
+                  <span class="pulse-live-dot"></span>
+                </div>
+                <span style="font-size: 11px; color: #A0B4B0; font-family: 'Inter', sans-serif; font-weight: 400;">Zero server storage • Local cache</span>
+              </div>
             </div>
-            <div class="stitch-window-body">
-              <div class="stitch-mockup-form-pane">
-                <div class="stitch-skeleton-title"></div>
-                <div class="stitch-skeleton-line"></div>
-                <div class="stitch-skeleton-line short"></div>
-                <div class="stitch-drag-drop-box">
-                  <i class="fas fa-magic"></i> ✨ Gemini AI Import or Fill Details
+
+            <!-- Floating Feature Badge 2: ATS Match Score & Trend -->
+            <div class="stitch-floating-badge badge-bottom-right">
+              <div class="score-circular-badge">
+                <svg width="40" height="40" viewBox="0 0 36 36">
+                  <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+                  <path class="circle-progress" stroke-dasharray="98, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#58D68D" stroke-width="3" stroke-linecap="round"/>
+                  <text x="18" y="21.5" text-anchor="middle" font-family="'Outfit', sans-serif" font-size="10px" font-weight="800" fill="#FFFFFF">98%</text>
+                </svg>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <span style="font-weight: 700; font-size: 13px; color: #FFFFFF;">ATS Match Rate</span>
+                <span style="font-size: 11px; color: #58D68D; font-family: 'Inter', sans-serif; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+                  <i class="fas fa-arrow-trend-up"></i> +45% Interview Callbacks
+                </span>
+              </div>
+            </div>
+
+            <div class="stitch-mac-window">
+              <div class="stitch-window-header">
+                <div class="stitch-window-dots">
+                  <span class="stitch-dot red"></span>
+                  <span class="stitch-dot yellow"></span>
+                  <span class="stitch-dot green"></span>
+                </div>
+                <div class="stitch-window-url"><i class="fas fa-lock" style="font-size: 9px; color: #58D68D;"></i> zenresume.online/editor</div>
+                <div class="stitch-window-badge" style="font-size: 11px; font-weight: 600; color: #58D68D; display: flex; align-items: center; gap: 5px;">
+                  <span class="pulse-live-dot"></span> Live Editor
                 </div>
               </div>
-              <div class="stitch-mockup-preview-pane">
-                <div style="width: 35%; height: 14px; background: #006856; border-radius: 3px;"></div>
-                <div style="width: 100%; height: 6px; background: var(--border-subtle); border-radius: 2px;"></div>
-                <div style="width: 85%; height: 6px; background: var(--border-subtle); border-radius: 2px;"></div>
-                <div style="width: 25%; height: 10px; background: #00846D; border-radius: 2px; margin-top: 12px;"></div>
-                <div style="width: 100%; height: 5px; background: var(--border-subtle); border-radius: 2px;"></div>
-                <div style="width: 90%; height: 5px; background: var(--border-subtle); border-radius: 2px;"></div>
+              <div class="stitch-window-body">
+                <!-- Left Form Pane -->
+                <div class="stitch-mockup-form-pane">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="stitch-skeleton-title"></div>
+                    <span style="font-size: 10px; font-weight: 700; color: #006856; background: rgba(0,104,86,0.1); padding: 3px 8px; border-radius: 4px;">Step 1 of 3</span>
+                  </div>
+                  <div class="stitch-skeleton-line"></div>
+                  <div class="stitch-skeleton-line short"></div>
+                  
+                  <div class="stitch-drag-drop-box">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 104, 86, 0.1); display: flex; align-items: center; justify-content: center; color: #006856; font-size: 14px;">
+                      <i class="fas fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                      <div style="font-weight: 700; color: #006856;">Gemini AI Magic Import</div>
+                      <div style="font-size: 11px; color: var(--text-light); font-weight: 400;">Drop old PDF or paste LinkedIn profile</div>
+                    </div>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
+                    <div class="mockup-input-box">
+                      <span class="mockup-input-label">Full Name</span>
+                      <div class="mockup-input-val">Alex Rivera<span class="typing-cursor">|</span></div>
+                    </div>
+                    <div class="mockup-input-box">
+                      <span class="mockup-input-label">Target Role</span>
+                      <div class="mockup-input-val">Lead Architect</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Resume Preview Pane with Laser Scanner -->
+                <div class="stitch-mockup-preview-pane">
+                  <div class="mockup-resume-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #006856; padding-bottom: 8px;">
+                      <div>
+                        <div style="font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800; color: #111;">ALEX RIVERA</div>
+                        <div style="font-size: 10px; font-weight: 600; color: #006856;">Senior Full-Stack Engineer</div>
+                      </div>
+                      <span style="font-size: 9px; color: #666; font-family: monospace;">San Francisco, CA</span>
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                      <div style="font-size: 10px; font-weight: 800; color: #006856; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Experience</div>
+                      <div style="font-size: 10px; font-weight: 700; color: #222;">Lead Software Architect &bull; TechCorp</div>
+                      <div style="font-size: 9px; color: #555; line-height: 1.4; margin-top: 2px;">
+                        &bull; Architected distributed microservices handling 2M+ daily active requests.<br>
+                        &bull; Increased ATS candidate pipeline efficiency by 65% using cloud automation.
+                      </div>
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                      <div style="font-size: 10px; font-weight: 800; color: #006856; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Skills</div>
+                      <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                        <span class="mockup-skill-chip">React</span>
+                        <span class="mockup-skill-chip">Node.js</span>
+                        <span class="mockup-skill-chip">Python</span>
+                        <span class="mockup-skill-chip">TypeScript</span>
+                        <span class="mockup-skill-chip">Docker</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mockup-scanner-status">
+                    <i class="fas fa-circle-check" style="color: #58D68D;"></i>
+                    <span>ATS Layout: 100% Parsable</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
