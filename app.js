@@ -32,6 +32,23 @@ const selectionScreen = document.getElementById('selection-screen');
 const builderWorkspace = document.getElementById('builder-workspace');
 const templatesGrid = document.getElementById('templates-grid');
 
+// GA4 Conversion Tracking Helper
+function trackGAEvent(eventName, params = {}) {
+  try {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, params);
+      console.log(`[GA4 Event] ${eventName}:`, params);
+    } else if (typeof window.trackGAEvent === 'function') {
+      window.trackGAEvent(eventName, params);
+    } else if (window.dataLayer) {
+      window.dataLayer.push({ event: eventName, ...params });
+      console.log(`[DataLayer Event] ${eventName}:`, params);
+    }
+  } catch (err) {
+    console.warn(`[GA4 Event Error] ${eventName}:`, err);
+  }
+}
+
 // Dynamic AdSense Initializer Helper to prevent 0-width layout errors
 function triggerAdPush(containerId) {
   const container = document.getElementById(containerId);
@@ -139,6 +156,13 @@ function renderTemplatesCatalog() {
 function selectTemplateStyle(templateId) {
   state.selectedTemplateId = templateId;
   
+  // Track GA4 Funnel Event: template_selected
+  trackGAEvent('template_selected', {
+    template_id: templateId,
+    industry: state.selectedInd,
+    experience_level: state.selectedExp
+  });
+  
   // Find matching pre-populated mock profile ONLY if not already loaded or customized
   if (!state.hasLoadedProfile) {
     const profileKey = `${state.selectedInd}_${state.selectedExp}`;
@@ -178,10 +202,10 @@ function selectTemplateStyle(templateId) {
   builderWorkspace.style.display = 'grid';
   triggerAdPush('promo-banner-sidebar');
   
-  // Show mobile tabs and default to 'edit' tab on entry
+  // Show mobile tabs on small screens and default to 'edit' tab on entry
   const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
   if (mobileWorkspaceTabs) {
-    mobileWorkspaceTabs.style.display = 'flex';
+    mobileWorkspaceTabs.style.display = '';
   }
   setMobileTab('edit');
   
@@ -195,6 +219,7 @@ function selectTemplateStyle(templateId) {
   
   // Sync the form values immediately to screen preview
   syncFormToPreview();
+  checkVaultOnboardingBanner();
 }
 
 function loadProfileIntoForm(data) {
@@ -572,7 +597,13 @@ function autoSaveResume() {
     hasLoadedProfile: state.hasLoadedProfile,
     sectionOrder: state.sectionOrder
   };
-  localStorage.setItem('zenresume_state', JSON.stringify(stateToSave));
+  
+  const registry = getStoredProfilesRegistry();
+  if (registry.activeId === 'default') {
+    localStorage.setItem('zenresume_state', JSON.stringify(stateToSave));
+  } else {
+    localStorage.setItem(`zenresume_profile_${registry.activeId}`, JSON.stringify(stateToSave));
+  }
 
   // Also save to cloud if logged in
   if (typeof saveResumeToFirestore === 'function') {
@@ -580,8 +611,276 @@ function autoSaveResume() {
   }
 }
 
+/* ==========================================================================
+   5C. MULTI-APPLICATION PROFILES & RETENTION ENGINE
+   ========================================================================== */
+const PROFILES_STORAGE_KEY = 'zenresume_application_profiles';
+
+function getStoredProfilesRegistry() {
+  try {
+    const raw = localStorage.getItem(PROFILES_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {}
+  return {
+    activeId: 'default',
+    profiles: [
+      { id: 'default', name: 'Master Resume', updatedAt: new Date().toISOString() }
+    ]
+  };
+}
+
+function saveProfilesRegistry(registry) {
+  try {
+    localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(registry));
+  } catch (e) {}
+}
+
+function initProfileVersions() {
+  const select = document.getElementById('select-profile-version');
+  const btnNew = document.getElementById('btn-new-version');
+  if (!select) return;
+
+  const registry = getStoredProfilesRegistry();
+  renderProfileDropdown(registry);
+
+  select.addEventListener('change', (e) => {
+    switchProfileVersion(e.target.value);
+  });
+
+  if (btnNew) {
+    btnNew.addEventListener('click', () => {
+      promptCreateNewProfileVersion();
+    });
+  }
+}
+
+function renderProfileDropdown(registry) {
+  const select = document.getElementById('select-profile-version');
+  if (!select) return;
+  select.innerHTML = '';
+  registry.profiles.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name;
+    if (p.id === registry.activeId) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+function promptCreateNewProfileVersion() {
+  const defaultName = `Application - ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`;
+  const versionName = prompt("Enter a name for this Job Application Profile (e.g., 'Google FullStack', 'Amazon Backend', 'Startup Lead'):", defaultName);
+  if (!versionName || !versionName.trim()) return;
+
+  const cleanName = versionName.trim();
+  const registry = getStoredProfilesRegistry();
+  const newId = `profile_${Date.now()}`;
+
+  // Capture current state
+  const currentData = extractCurrentFormData();
+  const currentState = {
+    formData: currentData,
+    selectedExp: state.selectedExp,
+    selectedInd: state.selectedInd,
+    selectedTemplateId: state.selectedTemplateId,
+    currentStep: state.currentStep,
+    hasLoadedProfile: state.hasLoadedProfile,
+    sectionOrder: state.sectionOrder
+  };
+
+  // Save current active profile's data first
+  if (registry.activeId === 'default') {
+    localStorage.setItem('zenresume_state', JSON.stringify(currentState));
+  } else {
+    localStorage.setItem(`zenresume_profile_${registry.activeId}`, JSON.stringify(currentState));
+  }
+
+  // Save new profile data
+  localStorage.setItem(`zenresume_profile_${newId}`, JSON.stringify(currentState));
+
+  // Update registry
+  registry.profiles.push({
+    id: newId,
+    name: cleanName,
+    updatedAt: new Date().toISOString()
+  });
+  registry.activeId = newId;
+  saveProfilesRegistry(registry);
+
+  renderProfileDropdown(registry);
+  
+  // Track GA4 conversion event: resume_version_created
+  trackGAEvent('resume_version_created', {
+    version_name: cleanName,
+    total_versions: registry.profiles.length
+  });
+
+  alert(`🎉 Created job profile: "${cleanName}"!\n\nYou can now tailor your skills and summary specifically for this job description without losing your master resume.`);
+}
+
+function switchProfileVersion(targetId) {
+  const registry = getStoredProfilesRegistry();
+  if (targetId === registry.activeId) return;
+
+  // Auto-save current profile first
+  const currentData = extractCurrentFormData();
+  const currentState = {
+    formData: currentData,
+    selectedExp: state.selectedExp,
+    selectedInd: state.selectedInd,
+    selectedTemplateId: state.selectedTemplateId,
+    currentStep: state.currentStep,
+    hasLoadedProfile: state.hasLoadedProfile,
+    sectionOrder: state.sectionOrder
+  };
+  if (registry.activeId === 'default') {
+    localStorage.setItem('zenresume_state', JSON.stringify(currentState));
+  } else {
+    localStorage.setItem(`zenresume_profile_${registry.activeId}`, JSON.stringify(currentState));
+  }
+
+  // Set active ID in registry
+  registry.activeId = targetId;
+  saveProfilesRegistry(registry);
+
+  // Load target profile
+  let targetStateJson;
+  if (targetId === 'default') {
+    targetStateJson = localStorage.getItem('zenresume_state');
+  } else {
+    targetStateJson = localStorage.getItem(`zenresume_profile_${targetId}`);
+  }
+
+  if (targetStateJson) {
+    try {
+      const parsed = JSON.parse(targetStateJson);
+      hydrateStateFromData(parsed, false);
+      syncFormToPreview();
+      const targetProfile = registry.profiles.find(p => p.id === targetId);
+      const profileName = targetProfile ? targetProfile.name : targetId;
+      console.log(`[Profile Switch] Loaded version: ${profileName}`);
+      trackGAEvent('resume_version_switched', {
+        version_id: targetId,
+        version_name: profileName
+      });
+    } catch (e) {
+      console.error("Error switching profile:", e);
+    }
+  }
+}
+
+/* ==========================================================================
+   5D. "MASTER RESUME VAULT" RETURNING USER WELCOME ENGINE
+   ========================================================================== */
+function checkReturningUserVault() {
+  try {
+    const lastVisit = localStorage.getItem('zenresume_last_visit');
+    const now = Date.now();
+    localStorage.setItem('zenresume_last_visit', String(now));
+
+    const savedStateJson = localStorage.getItem('zenresume_state');
+    if (!savedStateJson) return;
+
+    // Trigger if last visit was more than 30 minutes ago
+    if (lastVisit && (now - parseInt(lastVisit, 10)) > 30 * 60 * 1000) {
+      setTimeout(showWelcomeVaultToast, 1200);
+    }
+  } catch (e) {}
+}
+
+function showWelcomeVaultToast() {
+  if (document.querySelector('.vault-welcome-toast')) return;
+  const toast = document.createElement('div');
+  toast.className = 'vault-welcome-toast';
+  toast.innerHTML = `
+    <div style="display: flex; align-items: flex-start; gap: 12px;">
+      <span style="font-size: 24px; line-height: 1;">🌟</span>
+      <div style="flex: 1;">
+        <strong style="display: block; color: #0f172a; font-size: 13.5px; font-weight: 700; margin-bottom: 3px; font-family: 'Outfit', sans-serif;">Welcome back! Your Master Resume is ready.</strong>
+        <p style="margin: 0 0 10px 0; font-size: 12px; color: #475569; line-height: 1.45;">Tailoring your resume for a new job application today?</p>
+        <div style="display: flex; gap: 8px;">
+          <button id="btn-toast-tailor" class="btn-primary" style="padding: 5px 12px; font-size: 11.5px; font-weight: 700; border-radius: 6px; cursor: pointer;">
+            + Tailor for New Job
+          </button>
+          <button id="btn-toast-dismiss" style="background: transparent; color: #64748B; border: 1px solid #CBD5E1; padding: 5px 10px; border-radius: 6px; font-size: 11.5px; cursor: pointer;">
+            Continue
+          </button>
+        </div>
+      </div>
+      <button id="btn-toast-close" style="background: none; border: none; color: #94A3B8; font-size: 18px; cursor: pointer; line-height: 1; padding: 0 4px;">&times;</button>
+    </div>
+  `;
+  document.body.appendChild(toast);
+
+  const btnTailor = toast.querySelector('#btn-toast-tailor');
+  if (btnTailor) {
+    btnTailor.addEventListener('click', () => {
+      toast.remove();
+      if (typeof enterApp === 'function') enterApp();
+      promptCreateNewProfileVersion();
+    });
+  }
+
+  const btnDismiss = toast.querySelector('#btn-toast-dismiss');
+  if (btnDismiss) {
+    btnDismiss.addEventListener('click', () => {
+      toast.remove();
+    });
+  }
+
+  const btnClose = toast.querySelector('#btn-toast-close');
+  if (btnClose) {
+    btnClose.addEventListener('click', () => {
+      toast.remove();
+    });
+  }
+
+  // Auto dismiss after 12s
+  setTimeout(() => {
+    if (toast.parentElement) toast.remove();
+  }, 12000);
+}
+
+/* ==========================================================================
+   5E. ONE-TIME MASTER RESUME SPOTLIGHT BANNER MANAGER
+   ========================================================================== */
+function checkVaultOnboardingBanner() {
+  try {
+    const hasSeen = localStorage.getItem('zenresume_seen_vault_intro');
+    const banner = document.getElementById('vault-onboarding-banner');
+    if (!banner) return;
+    if (!hasSeen) {
+      banner.style.display = 'flex';
+    } else {
+      banner.style.display = 'none';
+    }
+    
+    const btnDismiss = document.getElementById('btn-dismiss-vault-banner');
+    if (btnDismiss) {
+      btnDismiss.onclick = () => {
+        localStorage.setItem('zenresume_seen_vault_intro', 'true');
+        banner.style.opacity = '0';
+        banner.style.transform = 'translateY(-10px)';
+        setTimeout(() => { banner.style.display = 'none'; }, 300);
+      };
+    }
+  } catch(e) {}
+}
+
 function loadSavedResume(preventDisplayTransition = false) {
-  const savedStateJson = localStorage.getItem('zenresume_state');
+  const registry = getStoredProfilesRegistry();
+  let savedStateJson;
+  if (registry.activeId === 'default') {
+    savedStateJson = localStorage.getItem('zenresume_state');
+  } else {
+    savedStateJson = localStorage.getItem(`zenresume_profile_${registry.activeId}`) || localStorage.getItem('zenresume_state');
+  }
+
   if (!savedStateJson) return false;
   
   try {
@@ -646,10 +945,10 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
       builderWorkspace.style.display = 'grid';
       triggerAdPush('promo-banner-sidebar');
       
-      // Show mobile tabs and default to 'edit' tab
+      // Show mobile tabs on small screens and default to 'edit' tab
       const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
       if (mobileWorkspaceTabs) {
-        mobileWorkspaceTabs.style.display = 'flex';
+        mobileWorkspaceTabs.style.display = '';
       }
       if (typeof setMobileTab === 'function') setMobileTab('edit');
     } else {
@@ -722,6 +1021,13 @@ function exportResumeJSON() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+
+  // Track GA4 Event: json_backup_exported
+  trackGAEvent('json_backup_exported', {
+    template_id: state.selectedTemplateId,
+    industry: state.selectedInd,
+    experience_level: state.selectedExp
+  });
 }
 
 function importResumeJSON(e) {
@@ -1018,6 +1324,13 @@ window.wizardPrev = handleWizardPrev;
    7. PRINT DIALOG, AI UPGRADE, & PDF EXPORT
    ========================================================================== */
 function openPrintModal() {
+  // Track GA4 Funnel Event: ats_score_checked
+  trackGAEvent('ats_score_checked', {
+    template_id: state.selectedTemplateId,
+    industry: state.selectedInd,
+    experience_level: state.selectedExp
+  });
+
   const step1 = document.getElementById('ai-upgrade-step-1');
   const step2 = document.getElementById('ai-upgrade-step-2');
   const btnStep1 = document.getElementById('ai-buttons-step-1');
@@ -1210,6 +1523,14 @@ async function runPdfGeneration() {
       
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
       window.isGeneratingPdf = false;
+
+      // Track Primary GA4 Funnel Conversion Event: pdf_download_completed
+      trackGAEvent('pdf_download_completed', {
+        template_id: state.selectedTemplateId,
+        industry: state.selectedInd,
+        experience_level: state.selectedExp,
+        paper_size: state.paperSize
+      });
       
       // Close the Print/AI Modal if it's open
       const printModal = document.getElementById('print-modal');
@@ -1218,17 +1539,24 @@ async function runPdfGeneration() {
         printModal.style.opacity = '0';
       }
 
-      // Trigger Post-Download Affiliate & Share Modal
+      // Trigger Post-Download Retention & Job Tailor Modal (Retention Engine)
       const affiliateModal = document.getElementById('affiliate-modal');
       if (affiliateModal) {
         affiliateModal.style.display = 'flex';
         
         const btnCloseAffiliate = document.getElementById('btn-close-affiliate-modal');
-        const btnAffiliateLink = document.getElementById('btn-affiliate-link');
+        const btnModalTailor = document.getElementById('btn-modal-tailor-new');
         
         if (btnCloseAffiliate) {
           btnCloseAffiliate.onclick = () => {
             affiliateModal.style.display = 'none';
+          };
+        }
+
+        if (btnModalTailor) {
+          btnModalTailor.onclick = () => {
+            affiliateModal.style.display = 'none';
+            promptCreateNewProfileVersion();
           };
         }
         
@@ -1236,7 +1564,7 @@ async function runPdfGeneration() {
         const btnLinkedin = document.getElementById('btn-share-linkedin');
         const btnCopy = document.getElementById('btn-share-copy');
         
-        const shareUrl = "https://resume-builder-swart-sigma-93.vercel.app/";
+        const shareUrl = "https://zenresume.online/";
         const shareText = "I just built a perfect ATS-compliant resume for free using ZenResume. No paywalls or subscriptions. Build yours here:";
         
         if (btnWhatsapp) {
@@ -1676,6 +2004,15 @@ async function parseHeuristics(inputData, isPdf = false) {
     }
     
     syncFormToPreview();
+
+    // Track GA4 Conversion Event: gemini_ai_import_success
+    trackGAEvent('gemini_ai_import_success', {
+      is_pdf: isPdf,
+      has_experience: !!(parsedData.experience && parsedData.experience.length),
+      has_projects: !!(parsedData.projects && parsedData.projects.length),
+      has_education: !!(parsedData.education && parsedData.education.length)
+    });
+
     alert("AI Magic Import successful! Your resume has been perfectly structured.");
     
   } catch (err) {
@@ -2128,6 +2465,7 @@ function bootstrap() {
   renderTemplatesCatalog();
   setupWizardDots();
   attachEvents();
+  initProfileVersions();
   
   const hasSaved = loadSavedResume(true); // Hydrate data in background but keep landing screen displayed on startup
   if (!hasSaved) {
@@ -2137,6 +2475,8 @@ function bootstrap() {
   
   initTheme();
   setupLandingPageNavigation();
+  checkReturningUserVault();
+  checkVaultOnboardingBanner();
 }
 
 function initTheme() {
@@ -2468,9 +2808,10 @@ function enterApp() {
       builderWorkspace.style.display = 'grid';
       triggerAdPush('promo-banner-sidebar');
     }
-    if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'flex';
+    if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = '';
     if (typeof setMobileTab === 'function') setMobileTab('edit');
     adjustPreviewScale();
+    checkVaultOnboardingBanner();
   } else {
     // Show template selection screen
     if (builderWorkspace) builderWorkspace.style.display = 'none';

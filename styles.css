@@ -3794,6 +3794,338 @@ textarea.form-input {
   }
 }
 
+/* ==========================================================================
+   RETENTION ENGINE: MASTER RESUME VAULT TOAST & PROFILE SWITCHER
+   ========================================================================== */
+.vault-welcome-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: 380px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(0, 104, 86, 0.25);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14), 0 2px 10px rgba(0, 104, 86, 0.08);
+  z-index: 9999;
+  animation: slideUpToast 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
+[data-theme="dark"] .vault-welcome-toast {
+  background: rgba(20, 26, 25, 0.96);
+  border-color: rgba(130, 247, 216, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
 
+[data-theme="dark"] .vault-welcome-toast strong {
+  color: #FFFFFF !important;
+}
 
+[data-theme="dark"] .vault-welcome-toast p {
+  color: #CBD5E1 !important;
+}
+
+@keyframes slideUpToast {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+.cloud-sync-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cloud-sync-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 104, 86, 0.1);
+  color: #006856;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  width: fit-content;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+[data-theme="dark"] .cloud-sync-pill {
+  background: rgba(130, 247, 216, 0.15);
+  color: #82F7D8;
+}
+
+.cloud-sync-pill.active-pill {
+  background: rgba(46, 204, 113, 0.15);
+  color: #27AE60;
+}
+
+[data-theme="dark"] .cloud-sync-pill.active-pill {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ECC71;
+}
+
+.cloud-sync-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.cloud-sync-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  color: var(--text-sub);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 580px;
+}
+
+.cloud-sync-perks {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--primary-calm);
+}
+
+[data-theme="dark"] .cloud-sync-perks {
+  color: #82F7D8;
+}
+
+.cloud-sync-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-cloud-sync-google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #FFFFFF;
+  color: #1F2937;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 1px solid #D1D5DB;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-cloud-sync-google:hover {
+  transform: translateY(-2px);
+  border-color: #006856;
+  box-shadow: 0 8px 20px rgba(0, 104, 86, 0.2);
+}
+
+[data-theme="dark"] .btn-cloud-sync-google {
+  background: #252D2C;
+  color: #FFFFFF;
+  border-color: #374744;
+}
+
+[data-theme="dark"] .btn-cloud-sync-google:hover {
+  background: #2D3735;
+  border-color: #82F7D8;
+}
+
+.cloud-sync-hint {
+  font-size: 11px;
+  color: var(--text-light);
+  font-family: 'Inter', sans-serif;
+}
+
+.cloud-sync-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #27AE60;
+  background: rgba(46, 204, 113, 0.1);
+  padding: 6px 14px;
+  border-radius: 9999px;
+}
+
+.btn-sync-signout {
+  background: none;
+  border: none;
+  font-size: 11.5px;
+  color: #E74C3C;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 2px;
+}
+
+@media (max-width: 768px) {
+  .cloud-sync-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .cloud-sync-cta {
+    width: 100%;
+    align-items: stretch;
+  }
+  .btn-cloud-sync-google {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   RETENTION ENGINE: MASTER RESUME VAULT TOAST & PROFILE SWITCHER
+   ========================================================================== */
+.vault-welcome-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: 380px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(0, 104, 86, 0.25);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14), 0 2px 10px rgba(0, 104, 86, 0.08);
+  z-index: 9999;
+  animation: slideUpToast 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .vault-welcome-toast {
+  background: rgba(20, 26, 25, 0.96);
+  border-color: rgba(130, 247, 216, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .vault-welcome-toast strong {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .vault-welcome-toast p {
+  color: #CBD5E1 !important;
+}
+
+@keyframes slideUpToast {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.version-profile-switch select:focus {
+  outline: none;
+}
+
+/* One-Time Master Resume Onboarding Spotlight Banner */
+.vault-onboarding-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(0, 104, 86, 0.08) 0%, rgba(88, 214, 141, 0.1) 100%), #FFFFFF;
+  border: 1.5px solid rgba(0, 104, 86, 0.25);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(0, 104, 86, 0.06);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+[data-theme="dark"] .vault-onboarding-banner {
+  background: linear-gradient(135deg, rgba(0, 132, 109, 0.15) 0%, rgba(12, 18, 17, 0.95) 60%), #141A19;
+  border-color: rgba(130, 247, 216, 0.3);
+}
+
+.vault-onboarding-icon {
+  font-size: 28px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.vault-onboarding-body {
+  flex: 1;
+}
+
+.vault-onboarding-badge {
+  font-size: 10px;
+  font-weight: 800;
+  background: #006856;
+  color: white;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.vault-onboarding-title {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #006856;
+  font-family: 'Outfit', sans-serif;
+}
+
+[data-theme="dark"] .vault-onboarding-title {
+  color: #82F7D8;
+}
+
+.vault-onboarding-desc {
+  margin: 0;
+  font-size: 12.5px;
+  color: #475569;
+  line-height: 1.45;
+}
+
+[data-theme="dark"] .vault-onboarding-desc {
+  color: #CBD5E1;
+}
+
+.btn-dismiss-vault {
+  background: #006856;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, background 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 104, 86, 0.25);
+}
+
+.btn-dismiss-vault:hover {
+  background: #005244;
+  transform: scale(1.03);
+}
+
+@media (max-width: 600px) {
+  .vault-onboarding-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .btn-dismiss-vault {
+    width: 100%;
+    text-align: center;
+  }
+}

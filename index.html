@@ -298,10 +298,20 @@
           </div>
         </div>
 
-        <!-- Why Build With ZenResume (4 Feature Cards) -->
+        <!-- Why Build With ZenResume (5 Feature Cards) -->
         <div class="landing-section" style="padding-top: 20px;">
           <h2 class="stitch-section-heading">Why Build With ZenResume?</h2>
           <div class="stitch-features-grid">
+            <div class="stitch-card" style="border: 1.5px solid rgba(0, 104, 86, 0.3); background: linear-gradient(135deg, rgba(0, 104, 86, 0.04), rgba(255, 255, 255, 0.8));">
+              <div class="stitch-card-icon" style="color: #00846D; background: rgba(0, 132, 109, 0.12);">
+                <i class="fas fa-folder-tree"></i>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                <h3 style="margin: 0;">Master Resume Vault</h3>
+                <span style="font-size: 10px; font-weight: 800; background: #006856; color: white; padding: 2px 6px; border-radius: 4px;">1-CLICK TAILOR</span>
+              </div>
+              <p>Keep one master profile saved in browser storage. Duplicate &amp; tailor customized versions for Google, Amazon, or startups in 30 seconds without retyping.</p>
+            </div>
             
             <div class="stitch-card">
               <div class="stitch-card-icon" style="color: #006856; background: rgba(0, 104, 86, 0.1);">
@@ -599,10 +609,24 @@
                 </button>
                 <h2 class="stitch-editor-title">Edit Resume</h2>
               </div>
-              <span class="stitch-save-badge">
-                <span class="status-pulse" style="display: inline-block; width: 7px; height: 7px; background: #006856; border-radius: 50%;"></span>
-                Draft saved locally
-              </span>
+
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- Application Profile / Job Version Selector (Retention Engine) -->
+                <div class="version-profile-switch" style="display: flex; align-items: center; gap: 4px; background: rgba(0, 104, 86, 0.08); padding: 4px 8px; border-radius: 8px; border: 1px solid rgba(0, 104, 86, 0.18);">
+                  <i class="fas fa-folder-open" style="color: #006856; font-size: 11px;"></i>
+                  <select id="select-profile-version" style="background: transparent; border: none; font-size: 11.5px; font-weight: 700; color: #006856; cursor: pointer; max-width: 140px; outline: none;">
+                    <option value="default">Master Version</option>
+                  </select>
+                  <button type="button" id="btn-new-version" title="Save / Tailor as new job profile" style="background: #006856; color: white; border: none; border-radius: 4px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer;">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+
+                <span class="stitch-save-badge">
+                  <span class="status-pulse" style="display: inline-block; width: 7px; height: 7px; background: #006856; border-radius: 50%;"></span>
+                  Draft saved
+                </span>
+              </div>
             </div>
 
             <!-- Quick Template Selector & Actions Row -->
@@ -650,6 +674,24 @@
 
           <!-- Wizard Form Container -->
           <div class="form-scroll-container" style="flex: 1; overflow-y: auto; padding: 24px;">
+            
+            <!-- One-Time Master Resume & Job Tailor Spotlight Banner -->
+            <div id="vault-onboarding-banner" class="vault-onboarding-banner" style="display: none;">
+              <div class="vault-onboarding-icon">💼</div>
+              <div class="vault-onboarding-body">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+                  <span class="vault-onboarding-badge">PRO TIP</span>
+                  <h4 class="vault-onboarding-title">Your Master Resume is Auto-Saved in Browser!</h4>
+                </div>
+                <p class="vault-onboarding-desc">
+                  Applying to multiple companies? Use the <strong>"➕ Tailor for New Job"</strong> button above to clone this master copy into separate, tailored profiles (e.g. <em>Google</em>, <em>Amazon</em>, <em>Startup</em>) without losing your original data.
+                </p>
+              </div>
+              <button type="button" id="btn-dismiss-vault-banner" class="btn-dismiss-vault" title="Got it!">
+                <i class="fas fa-check" style="margin-right: 4px;"></i> Got it
+              </button>
+            </div>
+
             <form id="resume-form" onsubmit="event.preventDefault();">
                 
                 <!-- Step 1: Personal Details -->
@@ -869,40 +911,57 @@
 
   </div>
 
-  <!-- AI Upgrade / Download Modal Overlay -->
+  <!-- Modernized ATS Export & Download Modal Overlay -->
   <div class="modal-overlay no-print" id="print-modal" style="backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.75);">
-    <div class="modal-card" style="background: linear-gradient(145deg, #ffffff, #f8f9fa); border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.4); padding: 32px; max-width: 440px; transform: scale(1); transition: all 0.3s ease;">
-      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-        <div style="background: linear-gradient(135deg, #8b5cf6, #d946ef); padding: 12px; border-radius: 16px; box-shadow: 0 8px 16px rgba(217, 70, 239, 0.25);">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
-        </div>
-      </div>
-      <h3 style="margin-top: 0; color: #1e293b; font-size: 24px; font-weight: 800; text-align: center; letter-spacing: -0.5px;">Tailor Your Resume?</h3>
-        
-        <div class="modal-instruction" id="ai-upgrade-step-1" style="text-align: center;">
-          <p style="color: #64748b; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">Would you like our AI to automatically tailor your <strong style="color: #334155;">Summary</strong> and <strong style="color: #334155;">Skills</strong> to perfectly match a specific Job Description before downloading?</p>
+    <div class="modal-card" style="background: #ffffff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1.5px solid rgba(0, 104, 86, 0.2); padding: 32px; max-width: 450px; transform: scale(1); transition: all 0.3s ease; text-align: center;">
+      
+      <div id="ai-upgrade-step-1">
+        <div style="width: 56px; height: 56px; background: rgba(0, 104, 86, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: #006856; font-size: 26px;">
+          <i class="fas fa-file-arrow-down"></i>
         </div>
 
-        <div class="modal-instruction" id="ai-upgrade-step-2" style="display: none;">
-          <p style="color: #475569; font-size: 14px; font-weight: 600; margin-bottom: 8px;">Paste the Job Description below:</p>
-          <textarea id="input-job-description" rows="6" style="width: 100%; border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px; font-family: inherit; font-size: 14px; color: #334155; transition: border-color 0.2s ease; resize: none; box-sizing: border-box;" placeholder="Paste the job description here to let Gemini 2.5 work its magic..."></textarea>
-        </div>
+        <h3 style="margin-top: 0; color: #0f172a; font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; margin-bottom: 8px;">Export Your ATS Resume</h3>
+        <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin-bottom: 24px;">Your resume compiles into pure vector ATS text for maximum recruiter compatibility. 100% Free.</p>
 
-        <div class="modal-buttons" id="ai-buttons-step-1" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
-          <button class="btn-modal btn-confirm" id="btn-yes-ai" style="background: linear-gradient(135deg, #8b5cf6, #d946ef); border: none; border-radius: 12px; color: white; padding: 14px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(217, 70, 239, 0.3); transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; width: 100%;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: text-bottom; margin-right: 6px;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
-            Yes, Tailor my Resume
+        <div class="modal-buttons" id="ai-buttons-step-1" style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- Primary Instant Free Download -->
+          <button class="btn-modal btn-confirm" id="btn-skip-ai" style="background: #006856; border: none; border-radius: 12px; color: white; padding: 14px 18px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); transition: all 0.2s ease; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <i class="fas fa-bolt" style="color: #FCD34D;"></i>
+            <span>Download ATS Vector PDF (Free &amp; Instant)</span>
           </button>
-          <button class="btn-modal btn-confirm" id="btn-skip-ai" style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; color: #475569; padding: 14px; font-weight: 600; font-size: 15px; cursor: pointer; width: 100%; transition: background 0.2s ease;">No, Just Download</button>
-          <button class="btn-modal btn-cancel" id="btn-modal-close" style="background: transparent; border: none; color: #94a3b8; font-size: 14px; cursor: pointer; padding: 8px; margin-top: 4px;">Cancel</button>
-        </div>
+          
+          <!-- Optional Gemini AI Keyword Matcher -->
+          <button class="btn-modal btn-confirm" id="btn-yes-ai" style="background: rgba(139, 92, 246, 0.08); border: 1.5px solid rgba(139, 92, 246, 0.3); border-radius: 12px; color: #7C3AED; padding: 13px 18px; font-weight: 700; font-size: 14px; cursor: pointer; width: 100%; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i class="fas fa-wand-magic-sparkles" style="color: #8B5CF6;"></i>
+            <span>Tailor Keywords with Gemini AI (Optional)</span>
+          </button>
 
-        <div class="modal-buttons" id="ai-buttons-step-2" style="display: none; flex-direction: column; gap: 12px; margin-top: 24px;">
-          <button class="btn-modal btn-confirm" id="btn-generate-ai" style="background: linear-gradient(135deg, #8b5cf6, #d946ef); border: none; border-radius: 12px; color: white; padding: 14px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 14px rgba(217, 70, 239, 0.3); cursor: pointer; width: 100%;">Tailor & Download</button>
-          <button class="btn-modal btn-cancel" id="btn-back-ai" style="background: transparent; border: 1px solid #e2e8f0; border-radius: 12px; color: #64748b; padding: 12px; font-weight: 600; font-size: 15px; cursor: pointer; width: 100%;">Back</button>
+          <button class="btn-modal btn-cancel" id="btn-modal-close" style="background: transparent; border: none; color: #94a3b8; font-size: 13.5px; cursor: pointer; padding: 8px; margin-top: 4px; text-decoration: underline;">Back to Editor</button>
         </div>
       </div>
+
+      <div class="modal-instruction" id="ai-upgrade-step-2" style="display: none; text-align: left;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+          <div style="background: rgba(139, 92, 246, 0.15); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #7C3AED;">
+            <i class="fas fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <h4 style="margin: 0; font-size: 15px; font-weight: 800; color: #0F172A;">Tailor for Target Job Description</h4>
+            <p style="margin: 0; font-size: 12px; color: #64748B;">Gemini 2.5 will align Summary &amp; Skills with job keywords.</p>
+          </div>
+        </div>
+        <textarea id="input-job-description" rows="5" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 13px; color: #334155; resize: none; box-sizing: border-box; outline: none;" placeholder="Paste the job description or required skills here..."></textarea>
+        
+        <div class="modal-buttons" id="ai-buttons-step-2" style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
+          <button class="btn-modal btn-confirm" id="btn-generate-ai" style="background: linear-gradient(135deg, #7C3AED, #9333EA); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14.5px; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); cursor: pointer; width: 100%;">
+            <i class="fas fa-wand-magic-sparkles" style="margin-right: 6px;"></i> Tailor &amp; Download PDF
+          </button>
+          <button class="btn-modal btn-cancel" id="btn-back-ai" style="background: transparent; border: 1px solid #CBD5E1; border-radius: 12px; color: #64748B; padding: 10px; font-weight: 600; font-size: 13.5px; cursor: pointer; width: 100%;">Back</button>
+        </div>
+      </div>
+
     </div>
+  </div>
 
   <!-- Reorder Layout Modal -->
   <div class="modal-overlay no-print" id="reorder-modal">
@@ -1017,40 +1076,43 @@
     </div>
   </div>
 
-  <!-- Affiliate Post-Download Modal -->
-  <div id="affiliate-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
-    <div class="modal-content" style="padding: 40px 30px; width: 90%; max-width: 450px; text-align: center; border-top: 4px solid var(--primary-calm); background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);">
-      <div style="font-size: 40px; color: #2ecc71; margin-bottom: 15px;"><i class="fas fa-check-circle"></i></div>
-      <h3 style="margin-top: 0; color: #0f172a; font-weight: 700; font-size: 22px; margin-bottom: 10px;">Resume Downloaded!</h3>
-      <p style="color: #334155; font-size: 14px; line-height: 1.5; margin-bottom: 25px;">Your ATS-friendly PDF is ready. Before you start applying, are you fully prepared for the technical interviews?</p>
+  <!-- Post-Download Retention & Job Tailor Modal (Retention Engine) -->
+  <div id="affiliate-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);">
+    <div class="modal-content" style="padding: 36px 28px; width: 90%; max-width: 480px; text-align: center; border-top: 5px solid #00846D; background: #ffffff; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.2);">
+      <div style="font-size: 44px; color: #2ECC71; margin-bottom: 12px;"><i class="fas fa-circle-check"></i></div>
+      <h3 style="margin-top: 0; color: #0f172a; font-weight: 800; font-size: 22px; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Your ATS Resume is Ready! 🎉</h3>
+      <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">Your pure vector, machine-readable PDF has been generated and saved to your device.</p>
       
+      <!-- Pro Tip & Retention Hook -->
+      <div style="background: linear-gradient(135deg, rgba(0, 104, 86, 0.08), rgba(88, 214, 141, 0.12)); border: 1.5px solid rgba(0, 104, 86, 0.25); padding: 18px 16px; border-radius: 14px; margin-bottom: 22px; text-align: left;">
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 800; color: #006856; margin-bottom: 6px; font-family: 'Outfit', sans-serif;">
+          <i class="fas fa-lightbulb" style="color: #F59E0B;"></i> Pro Tip for Active Job Seekers:
+        </div>
+        <p style="margin: 0 0 12px 0; font-size: 12.5px; color: #334155; line-height: 1.55;">
+          Top candidates tailor their keywords for <strong>every single job description</strong>. Bookmark ZenResume (<kbd style="background: white; border: 1px solid #cbd5e1; padding: 2px 5px; border-radius: 4px; font-size: 11px; font-weight: 600;">Ctrl + D</kbd> / <kbd style="background: white; border: 1px solid #cbd5e1; padding: 2px 5px; border-radius: 4px; font-size: 11px; font-weight: 600;">Cmd + D</kbd>) to duplicate and customize your resume in 30 seconds for your next application!
+        </p>
+        <button type="button" id="btn-modal-tailor-new" class="btn-primary" style="width: 100%; justify-content: center; padding: 11px; font-size: 13px; font-weight: 700; border-radius: 9999px; gap: 8px; box-shadow: 0 4px 15px rgba(0, 104, 86, 0.3);">
+          <i class="fas fa-copy"></i> Save as New Job Version (e.g. Google, Amazon)
+        </button>
+      </div>
+
       <!-- Share ZenResume Section -->
-      <div style="margin-bottom: 25px; border-bottom: 1px solid #eef2f7; padding-bottom: 20px; text-align: center;">
-        <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 15px; font-weight: 700;">Share ZenResume with friends! 🙌</h4>
-        <p style="margin: 0 0 14px 0; font-size: 12px; color: #475569;">If this tool saved you time and money, please help us grow by sharing it.</p>
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-          <a id="btn-share-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #25D366; color: white; border: none; padding: 10px 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-radius: 8px; text-decoration: none; cursor: pointer; transition: transform 0.2s ease;">
+      <div style="margin-bottom: 18px; border-bottom: 1px solid #eef2f7; padding-bottom: 16px; text-align: center;">
+        <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 13.5px; font-weight: 700;">Help your friends get hired! 🙌</h4>
+        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+          <a id="btn-share-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #25D366; color: white; border: none; padding: 8px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; border-radius: 8px; text-decoration: none;">
             <i class="fab fa-whatsapp"></i> WhatsApp
           </a>
-          <a id="btn-share-linkedin" href="#" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #0077b5; color: white; border: none; padding: 10px 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-radius: 8px; text-decoration: none; cursor: pointer; transition: transform 0.2s ease;">
+          <a id="btn-share-linkedin" href="#" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #0077b5; color: white; border: none; padding: 8px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; border-radius: 8px; text-decoration: none;">
             <i class="fab fa-linkedin"></i> LinkedIn
           </a>
-          <button id="btn-share-copy" class="btn-select" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 10px 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer; transition: transform 0.2s ease;">
+          <button id="btn-share-copy" class="btn-select" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 8px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; border-radius: 8px; cursor: pointer;">
             <i class="fas fa-copy"></i> Copy Link
           </button>
         </div>
       </div>
       
-      <!-- Affiliate Banner Area -->
-      <div style="background: linear-gradient(135deg, #f6f8fb, #eef2f7); padding: 20px; border-radius: 12px; border: 1px solid var(--border-glass); margin-bottom: 20px;">
-        <h4 style="margin: 0 0 10px 0; color: #0f172a; font-size: 16px;">📚 Cracking the Coding Interview</h4>
-        <p style="margin: 0 0 15px 0; font-size: 12px; color: #475569;">The #1 best-selling guide to acing Software Engineering interviews. Get your copy today.</p>
-        <button id="btn-affiliate-link" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);">
-          Check Price on Amazon
-        </button>
-      </div>
-      
-      <button id="btn-close-affiliate-modal" style="background: none; border: none; color: #95a5a6; font-size: 13px; cursor: pointer; text-decoration: underline;">No thanks, I'll risk it</button>
+      <button id="btn-close-affiliate-modal" style="background: none; border: none; color: #94A3B8; font-size: 13px; cursor: pointer; text-decoration: underline;">Done / Close Window</button>
     </div>
   </div>
 

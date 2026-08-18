@@ -14,11 +14,25 @@
 
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
         gtag("js", new Date());
         gtag("config", "G-Z90HSSD2P2");
         gtag("config", "G-61BHT3KZL6");
 
-
+        // Global Helper for GA4 Event Tracking
+        window.trackGAEvent = function(eventName, params = {}) {
+            try {
+                if (typeof window.gtag === 'function') {
+                    window.gtag('event', eventName, params);
+                    console.log(`[GA4 Event] ${eventName}:`, params);
+                } else if (window.dataLayer) {
+                    window.dataLayer.push({ event: eventName, ...params });
+                    console.log(`[DataLayer Event] ${eventName}:`, params);
+                }
+            } catch (err) {
+                console.warn(`[GA4 Event Error] ${eventName}:`, err);
+            }
+        };
 
         // Remove event listeners
         const events = ["scroll", "mousemove", "touchstart", "keydown", "wheel"];
@@ -29,7 +43,7 @@
     const events = ["scroll", "mousemove", "touchstart", "keydown", "wheel"];
     events.forEach(e => window.addEventListener(e, loadHeavyScripts, { once: true, passive: true }));
     
-    // Fallback: Trigger after 4 seconds regardless of interaction
-    setTimeout(loadHeavyScripts, 4000);
+    // Fallback: Trigger after 2.5 seconds regardless of interaction
+    setTimeout(loadHeavyScripts, 2500);
 })();
 
