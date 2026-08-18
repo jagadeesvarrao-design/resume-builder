@@ -2460,6 +2460,53 @@ function attachEvents() {
 /* ==========================================================================
    9. APPLICATION BOOTSTRAP
    ========================================================================== */
+function checkURLParamsOnLoad() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roleSlug = urlParams.get('role');
+    const templateId = urlParams.get('template');
+    
+    if (roleSlug || templateId) {
+      const cleanSlug = (roleSlug || '').replace('-resume', '');
+      const formattedTitle = cleanSlug ? cleanSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : '';
+      
+      // Determine template ID
+      let targetTemplate = templateId;
+      if (!targetTemplate) {
+        if (cleanSlug.includes('engineer') || cleanSlug.includes('developer') || cleanSlug.includes('data')) {
+          targetTemplate = 'grid';
+        } else if (cleanSlug.includes('manager') || cleanSlug.includes('analyst') || cleanSlug.includes('finance')) {
+          targetTemplate = 'executive';
+        } else if (cleanSlug.includes('design') || cleanSlug.includes('marketing')) {
+          targetTemplate = 'modern';
+        } else {
+          targetTemplate = 'classic';
+        }
+      }
+      
+      selectTemplateStyle(targetTemplate);
+      
+      if (formattedTitle) {
+        setTimeout(() => {
+          const titleInput = document.getElementById('input-title');
+          if (titleInput) {
+            titleInput.value = formattedTitle;
+            titleInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        }, 150);
+      }
+
+      // Hide landing page and jump straight to builder
+      const landingScreen = document.getElementById('landing-screen');
+      if (landingScreen) landingScreen.style.display = 'none';
+      const workspace = document.querySelector('.workspace-container');
+      if (workspace) workspace.style.display = 'flex';
+    }
+  } catch(e) {
+    console.warn('[URL Param Error]:', e);
+  }
+}
+
 function bootstrap() {
   initFilters();
   renderTemplatesCatalog();
@@ -2477,6 +2524,7 @@ function bootstrap() {
   setupLandingPageNavigation();
   checkReturningUserVault();
   checkVaultOnboardingBanner();
+  checkURLParamsOnLoad();
 }
 
 function initTheme() {
