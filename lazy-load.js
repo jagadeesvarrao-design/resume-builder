@@ -43,7 +43,29 @@
     const events = ["scroll", "mousemove", "touchstart", "keydown", "wheel"];
     events.forEach(e => window.addEventListener(e, loadHeavyScripts, { once: true, passive: true }));
     
-    // Fallback: Trigger after 2.5 seconds regardless of interaction
-    setTimeout(loadHeavyScripts, 2500);
+    // Mobile Menu Toggle & Auto-Close Controller
+    window.toggleMobileMenu = function(forceClose = false) {
+        const drawer = document.getElementById('mobile-drawer-menu');
+        const btn = document.getElementById('btn-mobile-menu');
+        if (!drawer) return;
+        
+        if (forceClose || drawer.classList.contains('open')) {
+            drawer.classList.remove('open');
+            if (btn) btn.innerHTML = '<i class="fas fa-bars"></i>';
+        } else {
+            drawer.classList.add('open');
+            if (btn) btn.innerHTML = '<i class="fas fa-times"></i>';
+        }
+    };
+
+    document.addEventListener('click', function(e) {
+        const drawer = document.getElementById('mobile-drawer-menu');
+        const btn = document.getElementById('btn-mobile-menu');
+        if (drawer && drawer.classList.contains('open')) {
+            if (!drawer.contains(e.target) && !btn?.contains(e.target)) {
+                window.toggleMobileMenu(true);
+            }
+        }
+    });
 })();
 

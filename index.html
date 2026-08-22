@@ -123,24 +123,60 @@
 <body>
   
   <!-- Global Top Header (Stitch Dark Surface) -->
-  <header class="no-print stitch-nav" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; position: sticky; top: 0; z-index: 2000;">
-    <a href="/" id="logo-link" class="header-logo-link" style="display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer;">
-      <img src="https://www.zenresume.online/favicon-96x96.png" alt="ZenResume Logo" style="width: 32px; height: 32px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); object-fit: cover;">
-      <span style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; color: #FFFFFF; letter-spacing: -0.5px;">ZenResume</span>
-    </a>
-    
-    <div class="header-nav-menu" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-      <a href="#" id="nav-app-link" class="active-link" onclick="window.enterApp && window.enterApp(); return false;" style="font-size: 14px; font-weight: 600; text-decoration: none;">App</a>
-      <a href="/role/" id="nav-roles-link" style="font-size: 14px; font-weight: 600; text-decoration: none;">Templates (63 Roles)</a>
-      <a href="/blog/" id="nav-resources-link" style="font-size: 14px; font-weight: 600; text-decoration: none;">Career Guides</a>
-      <a href="/methodology.html" style="font-size: 14px; font-weight: 600; text-decoration: none;">Methodology</a>
-      <a href="/about.html" style="font-size: 14px; font-weight: 600; text-decoration: none;">About</a>
-      <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme" style="background: rgba(255,255,255,0.08); border: none; cursor: pointer; color: #FFFFFF; font-size: 15px; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
-        <i class="fas fa-moon"></i>
-      </button>
-      <button type="button" class="stitch-nav-cta" id="btn-header-cta" onclick="window.handleHeaderCTAClick && window.handleHeaderCTAClick();" style="border: none; cursor: pointer;">
-        Create My Resume
-      </button>
+    <!-- Global Top Header with Responsive Navigation -->
+  <header class="no-print stitch-nav">
+    <div class="stitch-nav-container">
+      <a href="/" id="logo-link" class="header-logo-link">
+        <img src="https://www.zenresume.online/favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img">
+        <span class="brand-logo-text">ZenResume</span>
+      </a>
+      
+      <!-- Desktop Navigation Links -->
+      <nav class="desktop-nav-links">
+        <a href="#" id="nav-app-link" class="active-link" onclick="window.enterApp && window.enterApp(); return false;">App</a>
+        <a href="/role/" id="nav-roles-link">Templates (63 Roles)</a>
+        <a href="/blog/" id="nav-resources-link">Career Guides</a>
+        <a href="/methodology.html">Methodology</a>
+        <a href="/about.html">About</a>
+      </nav>
+
+      <!-- Right Action Controls -->
+      <div class="header-right-actions">
+        <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button type="button" class="stitch-nav-cta" id="btn-header-cta" onclick="window.handleHeaderCTAClick && window.handleHeaderCTAClick();" style="border: none; cursor: pointer;">
+          Create My Resume
+        </button>
+        <button type="button" class="mobile-menu-toggle" id="btn-mobile-menu" onclick="window.toggleMobileMenu && window.toggleMobileMenu();" aria-label="Toggle Navigation Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Slide-Down Drawer Menu -->
+    <div class="mobile-drawer-menu" id="mobile-drawer-menu">
+      <a href="#" class="mobile-nav-link" onclick="window.enterApp && window.enterApp(); window.toggleMobileMenu(true); return false;">
+        <i class="fas fa-file-invoice"></i> Builder App
+      </a>
+      <a href="/role/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-layer-group"></i> Templates (63 Roles)
+      </a>
+      <a href="/blog/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-book-open"></i> Career Guides
+      </a>
+      <a href="/methodology.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-flask"></i> ATS Methodology
+      </a>
+      <a href="/editorial-policy.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-shield-alt"></i> Editorial Policy
+      </a>
+      <a href="/about.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-info-circle"></i> About Us
+      </a>
+      <a href="/contact.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-envelope"></i> Contact Support
+      </a>
     </div>
   </header>
 
@@ -458,19 +494,20 @@
         </div>
 
         <!-- Comprehensive Publisher Footer (E-E-A-T & Google Quality Guidelines) -->
-        <footer style="margin-top: 60px; text-align: center; padding: 40px 20px 60px 20px; border-top: 1px solid rgba(255,255,255,0.08);">
-          <div style="font-size: 13.5px; color: var(--text-light); margin-bottom: 14px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-            <a href="/" style="color: inherit; text-decoration: none;">Builder</a>
-            <a href="/role/" style="color: inherit; text-decoration: none;">All 63 Role Templates</a>
-            <a href="/blog/" style="color: inherit; text-decoration: none;">Career Resource Hub (21 Guides)</a>
-            <a href="/about.html" style="color: inherit; text-decoration: none;">About Us</a>
-            <a href="/editorial-policy.html" style="color: inherit; text-decoration: none;">Editorial Policy</a>
-            <a href="/methodology.html" style="color: inherit; text-decoration: none;">ATS Testing Methodology</a>
-            <a href="/contact.html" style="color: inherit; text-decoration: none;">Contact Support</a>
-            <a href="/privacy.html" style="color: inherit; text-decoration: none;">Privacy Policy</a>
-            <a href="/terms.html" style="color: inherit; text-decoration: none;">Terms of Service</a>
+                <!-- Comprehensive Publisher Footer (E-E-A-T & Google Quality Guidelines) -->
+        <footer class="site-publisher-footer no-print">
+          <div class="footer-nav-container">
+            <a href="/" class="footer-nav-pill">Builder</a>
+            <a href="/role/" class="footer-nav-pill">All 63 Role Templates</a>
+            <a href="/blog/" class="footer-nav-pill">Career Resource Hub (21 Guides)</a>
+            <a href="/about.html" class="footer-nav-pill">About Us</a>
+            <a href="/editorial-policy.html" class="footer-nav-pill">Editorial Policy</a>
+            <a href="/methodology.html" class="footer-nav-pill">ATS Testing Methodology</a>
+            <a href="/contact.html" class="footer-nav-pill">Contact Support</a>
+            <a href="/privacy.html" class="footer-nav-pill">Privacy Policy</a>
+            <a href="/terms.html" class="footer-nav-pill">Terms of Service</a>
           </div>
-          <div style="font-size: 12px; color: var(--text-light);">
+          <div class="footer-copyright">
             &copy; 2026 ZenResume. All rights reserved. Recruiter-verified ATS formatting tools.
           </div>
         </footer>
