@@ -4619,6 +4619,35 @@ footer a:active,
   border-color: #CBD5E1;
 }
 
+[data-theme="dark"] .spacing-popover-card {
+  background: #141A19 !important;
+  border-color: rgba(130, 247, 216, 0.25) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .spacing-popover-header span {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .spacing-slider-label {
+  color: #D1DBDA !important;
+}
+
+[data-theme="dark"] .spacing-val-badge {
+  background: rgba(130, 247, 216, 0.15) !important;
+  color: #82F7D8 !important;
+}
+
+[data-theme="dark"] .btn-reset-spacing {
+  border-color: #2D3533 !important;
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .btn-reset-spacing:hover {
+  background: #1B2422 !important;
+  color: #FFFFFF !important;
+}
+
 /* ==========================================================================
    FEATURE 2: INTERACTIVE SECTION REORDERING (DRAG & TAP ARROWS)
    ========================================================================== */

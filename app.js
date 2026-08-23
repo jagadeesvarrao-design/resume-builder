@@ -2075,6 +2075,19 @@ function initSpacingController() {
   const valLineHeight = document.getElementById('label-val-line-height');
   const valFontScale = document.getElementById('label-val-font-scale');
 
+  // Pre-hydrate sliders from current state
+  if (state.spacing) {
+    if (sliderMargin && state.spacing.pageMargin) sliderMargin.value = state.spacing.pageMargin;
+    if (sliderGap && state.spacing.sectionGap) sliderGap.value = state.spacing.sectionGap;
+    if (sliderLineHeight && state.spacing.lineHeight) sliderLineHeight.value = state.spacing.lineHeight;
+    if (sliderFontScale && state.spacing.fontScale) sliderFontScale.value = state.spacing.fontScale;
+
+    if (valMargin && state.spacing.pageMargin) valMargin.textContent = `${state.spacing.pageMargin}px`;
+    if (valGap && state.spacing.sectionGap) valGap.textContent = `${state.spacing.sectionGap}px`;
+    if (valLineHeight && state.spacing.lineHeight) valLineHeight.textContent = `${state.spacing.lineHeight}x`;
+    if (valFontScale && state.spacing.fontScale) valFontScale.textContent = `${state.spacing.fontScale}%`;
+  }
+
   function applySpacing() {
     const paper = document.getElementById('resume-print-area');
     if (!paper) return;
