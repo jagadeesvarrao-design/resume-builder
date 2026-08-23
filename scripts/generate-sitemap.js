@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const baseUrl = 'https://resume-builder-swart-sigma-93.vercel.app';
+const baseUrl = 'https://www.zenresume.online';
 const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
 let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -16,7 +16,7 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <loc>${baseUrl}/blog/</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>${baseUrl}/role/</loc>
@@ -26,6 +26,25 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   </url>
 `;
 
+// Add static root E-E-A-T pages
+const rootFiles = [
+  { file: 'about.html', priority: '0.8', changefreq: 'monthly' },
+  { file: 'contact.html', priority: '0.8', changefreq: 'monthly' },
+  { file: 'editorial-policy.html', priority: '0.8', changefreq: 'monthly' },
+  { file: 'methodology.html', priority: '0.8', changefreq: 'monthly' },
+  { file: 'privacy.html', priority: '0.5', changefreq: 'yearly' },
+  { file: 'terms.html', priority: '0.5', changefreq: 'yearly' }
+];
+
+rootFiles.forEach(item => {
+  sitemap += `  <url>
+    <loc>${baseUrl}/${item.file}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${item.changefreq}</changefreq>
+    <priority>${item.priority}</priority>
+  </url>\n`;
+});
+
 // Add blog posts
 const blogDir = path.join(__dirname, '..', 'blog');
 const blogFiles = fs.readdirSync(blogDir).filter(f => f.endsWith('.html') && f !== 'index.html');
@@ -34,8 +53,8 @@ blogFiles.forEach(file => {
   sitemap += `  <url>
     <loc>${baseUrl}/blog/${file}</loc>
     <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>\n`;
 });
 
@@ -47,19 +66,8 @@ roleFiles.forEach(file => {
   sitemap += `  <url>
     <loc>${baseUrl}/role/${file}</loc>
     <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>\n`;
-});
-
-// Add static pages
-const rootFiles = ['about.html', 'privacy.html', 'terms.html'];
-rootFiles.forEach(file => {
-  sitemap += `  <url>
-    <loc>${baseUrl}/${file}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
   </url>\n`;
 });
 
@@ -68,4 +76,5 @@ sitemap += `</urlset>`;
 const outputPath = path.join(__dirname, '..', 'sitemap.xml');
 fs.writeFileSync(outputPath, sitemap);
 
-console.log(`Successfully generated sitemap.xml with ${3 + blogFiles.length + roleFiles.length + rootFiles.length} URLs!`);
+const totalUrls = 3 + rootFiles.length + blogFiles.length + roleFiles.length;
+console.log(`Successfully generated sitemap.xml with ${totalUrls} production URLs under https://www.zenresume.online!`);
