@@ -57,31 +57,53 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Skip non-GET and AI API proxy endpoints (let network handle /api/gemini)
+  // Skip non-GET and all API endpoints (let network handle /api/* directly)
   if (event.request.method !== 'GET' || url.pathname.startsWith('/api/')) {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-          }
-          return networkResponse;
-        })
-        .catch(() => {
-          // Offline fallback
-          if (event.request.headers.get('accept')?.includes('text/html')) {
-            return caches.match('/index.html');
-          }
-        });
+  // Skip chrome-extension and unsupported schemes
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
 
-      return cachedResponse || fetchPromise;
+  event.respondWith(
+    caches.match(event.request).then(async (cachedResponse) => {
+      if (cachedResponse) {
+        // Fetch fresh version in background without blocking response
+        fetch(event.request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
+              const responseToCache = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
+            }
+          })
+          .catch(() => {
+            // Ignore background refresh errors
+          });
+        return cachedResponse;
+      }
+
+      // If not in cache, fetch from network
+      try {
+        const networkResponse = await fetch(event.request);
+        if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
+        }
+        return networkResponse;
+      } catch (err) {
+        // Offline HTML navigation fallback
+        if (event.request.headers.get('accept')?.includes('text/html')) {
+          const fallback = await caches.match('/index.html');
+          if (fallback) return fallback;
+        }
+        return new Response('Network error occurred', {
+          status: 408,
+          headers: { 'Content-Type': 'text/plain' },
+        });
+      }
     })
   );
 });
+

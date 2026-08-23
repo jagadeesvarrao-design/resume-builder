@@ -351,7 +351,7 @@
 
       let delivered = false;
 
-      // 1. Primary: Direct Vercel Serverless Function (/api/contact)
+      // 1. Direct Serverless API Route (/api/contact)
       try {
         const res = await fetch('/api/contact', {
           method: 'POST',
@@ -362,36 +362,7 @@
           delivered = true;
         }
       } catch (err) {
-        console.warn('/api/contact request failed, trying external endpoints...', err);
-      }
-
-      // 2. Secondary: Fallback to CRM Endpoints if local / external
-      if (!delivered) {
-        const crmEndpoints = [
-          'http://127.0.0.1:5000/api/inbound-lead',
-          'http://localhost:5000/api/inbound-lead',
-          'https://ai-sales-agent.onrender.com/api/inbound-lead'
-        ];
-        for (const url of crmEndpoints) {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 2500);
-            const response = await fetch(url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ product: 'ZenResume', ...payload }),
-              signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-
-            if (response.ok) {
-              delivered = true;
-              break;
-            }
-          } catch {
-            // Try next
-          }
-        }
+        console.warn('/api/contact request encountered network error:', err);
       }
 
       btnSubmit.innerHTML = originalText;
@@ -401,7 +372,7 @@
         document.getElementById('contact-form').style.display = 'none';
         document.getElementById('success-message').style.display = 'block';
       } else {
-        // 3. Graceful Mailto Fallback
+        // Graceful Mailto Fallback
         const subject = `[ZenResume Inquiry] from ${name} (${rating}★)`;
         const body = `From: ${name} <${email}>\nRating: ${rating}/5\n\nMessage:\n${message}\n\n---\nSent via ZenResume Contact Portal`;
         window.location.href = `mailto:aneevarpsolutions@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
