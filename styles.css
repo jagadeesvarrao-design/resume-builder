@@ -4431,51 +4431,71 @@ textarea.form-input {
   margin: 0 auto 18px auto;
 }
 
+/* ==========================================================================
+   ZENRESUME BRANDED FOOTER PILL BUTTONS (SIGNATURE EMERALD THEME)
+   ========================================================================== */
 .footer-nav-pill,
-footer a.footer-nav-pill,
-.site-publisher-footer a.footer-nav-pill,
-.stitch-footer a.footer-nav-pill {
-  color: #D1DBDA !important;
+footer a,
+footer a:link,
+footer a:visited,
+.site-publisher-footer a,
+.site-publisher-footer a:link,
+.site-publisher-footer a:visited,
+.stitch-footer a,
+.stitch-footer a:link,
+.stitch-footer a:visited,
+.stitch-footer-links a,
+.stitch-footer-links a:link,
+.stitch-footer-links a:visited {
+  color: #00E5BC !important; /* Signature ZenResume Glowing Emerald */
   text-decoration: none !important;
   font-size: 13px !important;
-  font-weight: 500 !important;
-  padding: 6px 14px !important;
+  font-weight: 600 !important;
+  padding: 7px 16px !important;
   border-radius: 9999px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(0, 168, 138, 0.35) !important;
+  background: rgba(0, 104, 86, 0.16) !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
   position: relative !important;
+  line-height: 1.2 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
 .footer-nav-pill:hover,
-footer a.footer-nav-pill:hover,
-.site-publisher-footer a.footer-nav-pill:hover,
-.stitch-footer a.footer-nav-pill:hover {
-  color: #00E5BC !important;
-  background: rgba(0, 168, 138, 0.2) !important;
-  border-color: rgba(0, 168, 138, 0.5) !important;
+footer a:hover,
+.site-publisher-footer a:hover,
+.stitch-footer a:hover,
+.stitch-footer-links a:hover {
+  color: #FFFFFF !important;
+  background: #006856 !important;
+  border-color: #00A88A !important;
   transform: translateY(-3px) scale(1.05) !important;
-  box-shadow: 0 6px 18px rgba(0, 168, 138, 0.35) !important;
-  text-shadow: 0 0 10px rgba(0, 229, 188, 0.5) !important;
+  box-shadow: 0 6px 20px rgba(0, 168, 138, 0.45) !important;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
 }
 
 .footer-nav-pill:active,
-footer a.footer-nav-pill:active,
-.site-publisher-footer a.footer-nav-pill:active,
-.stitch-footer a.footer-nav-pill:active {
+footer a:active,
+.site-publisher-footer a:active,
+.stitch-footer a:active,
+.stitch-footer-links a:active {
   transform: translateY(0) scale(0.96) !important;
-  background: rgba(0, 168, 138, 0.3) !important;
+  background: #005244 !important;
 }
 
-.footer-copyright {
-  font-size: 13px;
-  color: #94A3B8;
-  transition: color 0.2s ease;
+.footer-copyright,
+.stitch-footer-copy {
+  font-size: 13px !important;
+  color: #94A3B8 !important;
+  transition: color 0.2s ease !important;
+  text-align: center !important;
+  line-height: 1.6 !important;
 }
 
-.footer-copyright:hover {
-  color: #FFFFFF;
+.footer-copyright:hover,
+.stitch-footer-copy:hover {
+  color: #FFFFFF !important;
 }
