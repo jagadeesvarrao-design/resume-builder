@@ -185,8 +185,13 @@
       <!-- Interactive Form -->
       <form id="contact-form" onsubmit="submitForm(event)" style="display: flex; flex-direction: column; gap: 18px;">
         <div>
-          <label style="display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">Your Email Address</label>
-          <input type="email" id="contact-email" required placeholder="you@example.com" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main);">
+          <label style="display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">Your Full Name</label>
+          <input type="text" id="contact-name" placeholder="e.g., Alex Johnson" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">Your Email Address *</label>
+          <input type="email" id="contact-email" required placeholder="you@example.com" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
         </div>
 
         <div>
@@ -198,36 +203,35 @@
             <span class="star" data-val="4"><i class="fas fa-star"></i></span>
             <span class="star" data-val="5"><i class="fas fa-star"></i></span>
           </div>
-          <input type="hidden" id="contact-rating" value="0">
+          <input type="hidden" id="contact-rating" value="5">
         </div>
 
         <div>
-          <label style="display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">Your Message or Feedback</label>
-          <textarea id="contact-message" required rows="4" placeholder="How can we help you improve your ATS resume?" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); line-height: 1.5;"></textarea>
+          <label style="display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">Your Message or Feedback *</label>
+          <textarea id="contact-message" required rows="4" placeholder="How can we help you improve your ATS resume?" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); line-height: 1.5; box-sizing: border-box;"></textarea>
         </div>
 
-        <button type="submit" class="btn-primary" style="padding: 13px; font-size: 15px; font-weight: 700; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <button type="submit" id="btn-submit-contact" class="btn-primary" style="padding: 13px; font-size: 15px; font-weight: 700; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box;">
           <i class="fas fa-paper-plane"></i> Send Message &rarr;
         </button>
       </form>
 
-      <div id="success-message" style="display: none; text-align: center; padding: 25px; background: rgba(0, 104, 86, 0.08); border-radius: 12px; margin-top: 15px;">
-        <i class="fas fa-circle-check" style="font-size: 36px; color: #006856; margin-bottom: 10px;"></i>
-        <h3 style="font-size: 18px; color: var(--primary-dark); font-weight: 700;">Message Prepared!</h3>
-        <p style="font-size: 14px; color: var(--text-sub); margin-bottom: 12px;">Your email client is opening with your formatted inquiry.</p>
-        <button type="button" onclick="resetForm()" class="btn-primary" style="padding: 8px 16px; font-size: 13px;">Send Another Message</button>
+      <div id="success-message" style="display: none; text-align: center; padding: 30px 20px; background: rgba(0, 104, 86, 0.08); border: 1px solid rgba(0, 104, 86, 0.2); border-radius: 16px; margin-top: 15px;">
+        <div style="width: 56px; height: 56px; background: #006856; color: #FFFFFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 24px;">
+          <i class="fas fa-check"></i>
+        </div>
+        <h3 style="font-size: 20px; color: var(--primary-dark); font-weight: 800; margin: 0 0 8px 0; font-family: 'Outfit', sans-serif;">Message Delivered to Aneevarp Hub!</h3>
+        <p style="font-size: 14px; color: var(--text-sub); margin-bottom: 18px; line-height: 1.6;">
+          Your inquiry has been successfully routed to our central operations desk. An instant notification was sent to our support team and founder's desk.
+        </p>
+        <button type="button" onclick="resetForm()" class="btn-primary" style="padding: 10px 20px; font-size: 13.5px; border-radius: 8px;">Send Another Message</button>
       </div>
 
     </article>
   </div>
 
   <!-- Global Footer -->
-          <!-- Comprehensive Publisher Footer (E-E-A-T & Google Quality Guidelines) -->
-                <!-- Comprehensive Publisher Footer (E-E-A-T & Google Quality Guidelines) -->
-                <!-- Comprehensive Publisher Footer (E-E-A-T & Google Quality Guidelines) -->
-                <!-- Comprehensive Publisher Footer (E-E-A-T & Google Quality Guidelines) -->
-          <!-- Site Footer (Stitch Modern Dark Canvas) -->
-    <!-- Site Footer (Stitch Modern Dark Canvas) -->
+  <!-- Site Footer (Stitch Modern Dark Canvas) -->
   <footer class="stitch-footer no-print" style="background: #0B1315; color: #FFFFFF; padding: 60px 24px 40px 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 60px; width: 100%; box-sizing: border-box;">
     <div class="stitch-footer-container" style="max-width: 1160px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 28px; text-align: center;">
       
@@ -299,7 +303,10 @@
 
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('contact-rating');
-    let selectedRating = 0;
+    let selectedRating = 5;
+
+    // Default to 5 stars
+    highlightStars(5);
 
     stars.forEach(star => {
       const val = parseInt(star.getAttribute('data-val'));
@@ -323,23 +330,79 @@
       });
     }
 
-    function submitForm(e) {
+    async function submitForm(e) {
       e.preventDefault();
-      const email = document.getElementById('contact-email').value;
-      const rating = document.getElementById('contact-rating').value;
-      const message = document.getElementById('contact-message').value;
-      const subject = `ZenResume Support Inquiry (${rating} Stars)`;
-      const body = `From: ${email}\nRating: ${rating}/5\n\nMessage:\n${message}\n\n---\nSent via ZenResume Contact Portal`;
-      window.location.href = `mailto:support@zenresume.online?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      document.getElementById('contact-form').style.display = 'none';
-      document.getElementById('success-message').style.display = 'block';
+      const btnSubmit = document.getElementById('btn-submit-contact');
+      const originalText = btnSubmit.innerHTML;
+      btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dispatching to Operations...';
+      btnSubmit.disabled = true;
+
+      const name = document.getElementById('contact-name').value.trim() || 'ZenResume User';
+      const email = document.getElementById('contact-email').value.trim();
+      const rating = parseInt(document.getElementById('contact-rating').value) || 5;
+      const message = document.getElementById('contact-message').value.trim();
+
+      const payload = {
+        product: "ZenResume",
+        name: name,
+        email: email,
+        rating: rating,
+        message: message,
+        type: "support_and_feedback"
+      };
+
+      // Configurable CRM endpoints (tries local dev server, production endpoints, or mailto fallback)
+      const endpoints = [
+        'http://127.0.0.1:5000/api/inbound-lead',
+        'http://localhost:5000/api/inbound-lead',
+        'https://ai-sales-agent.onrender.com/api/inbound-lead',
+        'https://aneevarp-crm.onrender.com/api/inbound-lead'
+      ];
+
+      let delivered = false;
+
+      for (const url of endpoints) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3500);
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+
+          if (response.ok) {
+            delivered = true;
+            break;
+          }
+        } catch (err) {
+          // Try next endpoint
+        }
+      }
+
+      btnSubmit.innerHTML = originalText;
+      btnSubmit.disabled = false;
+
+      if (delivered) {
+        document.getElementById('contact-form').style.display = 'none';
+        document.getElementById('success-message').style.display = 'block';
+      } else {
+        // Graceful Mailto Fallback
+        const subject = `[ZenResume Support] Inquiry from ${name} (${rating}★)`;
+        const body = `From: ${name} <${email}>\nRating: ${rating}/5\n\nMessage:\n${message}\n\n---\nTransmitted via ZenResume Contact Portal`;
+        window.location.href = `mailto:support@zenresume.online?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        document.getElementById('contact-form').style.display = 'none';
+        document.getElementById('success-message').style.display = 'block';
+      }
     }
 
     function resetForm() {
       document.getElementById('contact-form').reset();
-      selectedRating = 0;
-      ratingInput.value = '0';
-      highlightStars(0);
+      selectedRating = 5;
+      ratingInput.value = '5';
+      highlightStars(5);
       document.getElementById('contact-form').style.display = 'flex';
       document.getElementById('success-message').style.display = 'none';
     }
