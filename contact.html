@@ -170,7 +170,7 @@
       <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; flex-wrap: wrap;">
         <div style="background: rgba(0, 104, 86, 0.04); border: 1px solid var(--border-glass); border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; font-size: 13.5px;">
           <i class="fas fa-envelope" style="color: #006856; font-size: 16px;"></i>
-          <span><strong>Email:</strong> support@zenresume.online</span>
+          <span><strong>Email:</strong> <a href="mailto:aneevarpsolutions@gmail.com" style="color: inherit; text-decoration: underline;">aneevarpsolutions@gmail.com</a></span>
         </div>
         <div style="background: rgba(0, 104, 86, 0.04); border: 1px solid var(--border-glass); border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; gap: 10px; font-size: 13.5px;">
           <i class="fas fa-building" style="color: #006856; font-size: 16px;"></i>
@@ -186,12 +186,12 @@
       <form id="contact-form" onsubmit="submitForm(event)" style="display: flex; flex-direction: column; gap: 18px;">
         <div>
           <label style="display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">Your Full Name</label>
-          <input type="text" id="contact-name" placeholder="e.g., Alex Johnson" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
+          <input type="text" id="contact-name" name="name" placeholder="e.g., Alex Johnson" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
         </div>
 
         <div>
           <label style="display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">Your Email Address *</label>
-          <input type="email" id="contact-email" required placeholder="you@example.com" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
+          <input type="email" id="contact-email" name="email" required placeholder="you@example.com" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); box-sizing: border-box;">
         </div>
 
         <div>
@@ -203,12 +203,12 @@
             <span class="star" data-val="4"><i class="fas fa-star"></i></span>
             <span class="star" data-val="5"><i class="fas fa-star"></i></span>
           </div>
-          <input type="hidden" id="contact-rating" value="5">
+          <input type="hidden" id="contact-rating" name="rating" value="5">
         </div>
 
         <div>
           <label style="display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">Your Message or Feedback *</label>
-          <textarea id="contact-message" required rows="4" placeholder="How can we help you improve your ATS resume?" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); line-height: 1.5; box-sizing: border-box;"></textarea>
+          <textarea id="contact-message" name="message" required rows="4" placeholder="How can we help you improve your ATS resume?" style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-glass); border-radius: 8px; font-family: inherit; font-size: 14px; background: var(--bg-card); color: var(--text-main); line-height: 1.5; box-sizing: border-box;"></textarea>
         </div>
 
         <button type="submit" id="btn-submit-contact" class="btn-primary" style="padding: 13px; font-size: 15px; font-weight: 700; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box;">
@@ -220,9 +220,9 @@
         <div style="width: 56px; height: 56px; background: #006856; color: #FFFFFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 24px;">
           <i class="fas fa-check"></i>
         </div>
-        <h3 style="font-size: 20px; color: var(--primary-dark); font-weight: 800; margin: 0 0 8px 0; font-family: 'Outfit', sans-serif;">Message Delivered to Aneevarp Hub!</h3>
+        <h3 style="font-size: 20px; color: var(--primary-dark); font-weight: 800; margin: 0 0 8px 0; font-family: 'Outfit', sans-serif;">Message Delivered to Aneevarp Solutions!</h3>
         <p style="font-size: 14px; color: var(--text-sub); margin-bottom: 18px; line-height: 1.6;">
-          Your inquiry has been successfully routed to our central operations desk. An instant notification was sent to our support team and founder's desk.
+          Thank you! Your message has been sent directly to our operations inbox (<code>aneevarpsolutions@gmail.com</code>). Our engineering and support team will respond promptly.
         </p>
         <button type="button" onclick="resetForm()" class="btn-primary" style="padding: 10px 20px; font-size: 13.5px; border-radius: 8px;">Send Another Message</button>
       </div>
@@ -334,51 +334,63 @@
       e.preventDefault();
       const btnSubmit = document.getElementById('btn-submit-contact');
       const originalText = btnSubmit.innerHTML;
-      btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dispatching to Operations...';
+      btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Message...';
       btnSubmit.disabled = true;
 
-      const name = document.getElementById('contact-name').value.trim() || 'ZenResume User';
+      const name = document.getElementById('contact-name').value.trim() || 'ZenResume Visitor';
       const email = document.getElementById('contact-email').value.trim();
       const rating = parseInt(document.getElementById('contact-rating').value) || 5;
       const message = document.getElementById('contact-message').value.trim();
 
       const payload = {
-        product: "ZenResume",
-        name: name,
-        email: email,
-        rating: rating,
-        message: message,
-        type: "support_and_feedback"
+        name,
+        email,
+        rating,
+        message
       };
-
-      // Configurable CRM endpoints (tries local dev server, production endpoints, or mailto fallback)
-      const endpoints = [
-        'http://127.0.0.1:5000/api/inbound-lead',
-        'http://localhost:5000/api/inbound-lead',
-        'https://ai-sales-agent.onrender.com/api/inbound-lead',
-        'https://aneevarp-crm.onrender.com/api/inbound-lead'
-      ];
 
       let delivered = false;
 
-      for (const url of endpoints) {
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
+      // 1. Primary: Direct Vercel Serverless Function (/api/contact)
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          delivered = true;
+        }
+      } catch (err) {
+        console.warn('/api/contact request failed, trying external endpoints...', err);
+      }
 
-          if (response.ok) {
-            delivered = true;
-            break;
+      // 2. Secondary: Fallback to CRM Endpoints if local / external
+      if (!delivered) {
+        const crmEndpoints = [
+          'http://127.0.0.1:5000/api/inbound-lead',
+          'http://localhost:5000/api/inbound-lead',
+          'https://ai-sales-agent.onrender.com/api/inbound-lead'
+        ];
+        for (const url of crmEndpoints) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2500);
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ product: 'ZenResume', ...payload }),
+              signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (response.ok) {
+              delivered = true;
+              break;
+            }
+          } catch {
+            // Try next
           }
-        } catch (err) {
-          // Try next endpoint
         }
       }
 
@@ -389,10 +401,10 @@
         document.getElementById('contact-form').style.display = 'none';
         document.getElementById('success-message').style.display = 'block';
       } else {
-        // Graceful Mailto Fallback
-        const subject = `[ZenResume Support] Inquiry from ${name} (${rating}★)`;
-        const body = `From: ${name} <${email}>\nRating: ${rating}/5\n\nMessage:\n${message}\n\n---\nTransmitted via ZenResume Contact Portal`;
-        window.location.href = `mailto:support@zenresume.online?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        // 3. Graceful Mailto Fallback
+        const subject = `[ZenResume Inquiry] from ${name} (${rating}★)`;
+        const body = `From: ${name} <${email}>\nRating: ${rating}/5\n\nMessage:\n${message}\n\n---\nSent via ZenResume Contact Portal`;
+        window.location.href = `mailto:aneevarpsolutions@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         document.getElementById('contact-form').style.display = 'none';
         document.getElementById('success-message').style.display = 'block';
       }

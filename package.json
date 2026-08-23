@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@vercel/speed-insights": "^2.0.0"
+    "@vercel/speed-insights": "^2.0.0",
+    "nodemailer": "^9.0.5"
   }
 }
