@@ -12,10 +12,17 @@ const state = {
   currentStep: 1,
   totalSteps: 7,
   hasLoadedProfile: false,
-  sectionOrder: ['experience', 'projects', 'education', 'certifications'],
+  sectionOrder: ['summary', 'skills', 'experience', 'projects', 'education', 'certifications'],
   isFitToScreen: false,
   zoomScale: null,               // null means auto-scale to width on small screens
-  paperSize: 'a4'
+  paperSize: 'a4',
+  spacing: {
+    pageMargin: 24,
+    sectionGap: 16,
+    lineHeight: 1.35,
+    fontScale: 100
+  },
+  targetJobDescription: localStorage.getItem('zenresume_target_jd') || ''
 };
 
 // Check if timezone resolution defaults to US/Canada/etc (North America timezone)
@@ -595,7 +602,8 @@ function autoSaveResume() {
     selectedTemplateId: state.selectedTemplateId,
     currentStep: state.currentStep,
     hasLoadedProfile: state.hasLoadedProfile,
-    sectionOrder: state.sectionOrder
+    sectionOrder: state.sectionOrder,
+    spacing: state.spacing
   };
   
   const registry = getStoredProfilesRegistry();
@@ -913,9 +921,29 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     
     state.currentStep = savedState.currentStep || 1;
     state.hasLoadedProfile = savedState.hasLoadedProfile !== undefined ? savedState.hasLoadedProfile : true;
-    state.sectionOrder = savedState.sectionOrder || ['experience', 'projects', 'education', 'certifications'];
+    state.sectionOrder = savedState.sectionOrder || ['summary', 'skills', 'experience', 'projects', 'education', 'certifications'];
     
-    // Sync Sortable List visually with the loaded order
+    // Restore and apply custom spacing if saved
+    if (savedState.spacing) {
+      state.spacing = savedState.spacing;
+      const paper = document.getElementById('resume-print-area');
+      if (paper) {
+        paper.style.setProperty('--resume-page-padding', `${state.spacing.pageMargin || 24}px`);
+        paper.style.setProperty('--resume-section-gap', `${state.spacing.sectionGap || 16}px`);
+        paper.style.setProperty('--resume-line-height', state.spacing.lineHeight || 1.35);
+        paper.style.setProperty('--resume-font-scale', (state.spacing.fontScale || 100) / 100);
+      }
+      const sliderMargin = document.getElementById('slider-page-margin');
+      const sliderGap = document.getElementById('slider-section-gap');
+      const sliderLineHeight = document.getElementById('slider-line-height');
+      const sliderFontScale = document.getElementById('slider-font-scale');
+      if (sliderMargin && state.spacing.pageMargin) sliderMargin.value = state.spacing.pageMargin;
+      if (sliderGap && state.spacing.sectionGap) sliderGap.value = state.spacing.sectionGap;
+      if (sliderLineHeight && state.spacing.lineHeight) sliderLineHeight.value = state.spacing.lineHeight;
+      if (sliderFontScale && state.spacing.fontScale) sliderFontScale.value = state.spacing.fontScale;
+    }
+
+    // Sync Reorder List visually with the loaded order
     const list = document.getElementById('reorder-list');
     if (list) {
       state.sectionOrder.forEach(id => {
@@ -1142,7 +1170,7 @@ function syncFormToPreview() {
     
     sections.forEach(sec => {
       const sectionName = sec.getAttribute('data-section');
-      if (['experience', 'projects', 'education', 'certifications'].includes(sectionName)) {
+      if (['summary', 'skills', 'experience', 'projects', 'education', 'certifications'].includes(sectionName)) {
         sectionMap[sectionName] = sec;
         sec.parentNode.removeChild(sec);
       }
@@ -2028,39 +2056,439 @@ async function parseHeuristics(inputData, isPdf = false) {
 }
 
 /* ==========================================================================
+   FEATURE 1: SPACING CONTROLLER & 1-CLICK MAGIC FIT-TO-PAGE
+   ========================================================================== */
+function initSpacingController() {
+  const btnToggle = document.getElementById('btn-spacing-toggle');
+  const popover = document.getElementById('spacing-popover-card');
+  const btnClose = document.getElementById('btn-close-spacing-popover');
+  const btnMagicFit = document.getElementById('btn-magic-fit-page');
+  const btnReset = document.getElementById('btn-reset-spacing');
+
+  const sliderMargin = document.getElementById('slider-page-margin');
+  const sliderGap = document.getElementById('slider-section-gap');
+  const sliderLineHeight = document.getElementById('slider-line-height');
+  const sliderFontScale = document.getElementById('slider-font-scale');
+
+  const valMargin = document.getElementById('label-val-margin');
+  const valGap = document.getElementById('label-val-section-gap');
+  const valLineHeight = document.getElementById('label-val-line-height');
+  const valFontScale = document.getElementById('label-val-font-scale');
+
+  function applySpacing() {
+    const paper = document.getElementById('resume-print-area');
+    if (!paper) return;
+    
+    const margin = sliderMargin ? sliderMargin.value : 24;
+    const gap = sliderGap ? sliderGap.value : 16;
+    const lineHeight = sliderLineHeight ? sliderLineHeight.value : 1.35;
+    const fontScale = sliderFontScale ? sliderFontScale.value : 100;
+
+    paper.style.setProperty('--resume-page-padding', `${margin}px`);
+    paper.style.setProperty('--resume-section-gap', `${gap}px`);
+    paper.style.setProperty('--resume-line-height', lineHeight);
+    paper.style.setProperty('--resume-font-scale', fontScale / 100);
+
+    if (valMargin) valMargin.textContent = `${margin}px`;
+    if (valGap) valGap.textContent = `${gap}px`;
+    if (valLineHeight) valLineHeight.textContent = `${lineHeight}x`;
+    if (valFontScale) valFontScale.textContent = `${fontScale}%`;
+
+    state.spacing = {
+      pageMargin: Number(margin),
+      sectionGap: Number(gap),
+      lineHeight: Number(lineHeight),
+      fontScale: Number(fontScale)
+    };
+    autoSaveResume();
+  }
+
+  if (btnToggle && popover) {
+    btnToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = popover.style.display === 'flex';
+      popover.style.display = isVisible ? 'none' : 'flex';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (popover.style.display === 'flex' && !popover.contains(e.target) && e.target !== btnToggle) {
+        popover.style.display = 'none';
+      }
+    });
+
+    if (btnClose) {
+      btnClose.addEventListener('click', () => {
+        popover.style.display = 'none';
+      });
+    }
+  }
+
+  [sliderMargin, sliderGap, sliderLineHeight, sliderFontScale].forEach(slider => {
+    if (slider) {
+      slider.addEventListener('input', applySpacing);
+    }
+  });
+
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      if (sliderMargin) sliderMargin.value = 24;
+      if (sliderGap) sliderGap.value = 16;
+      if (sliderLineHeight) sliderLineHeight.value = 1.35;
+      if (sliderFontScale) sliderFontScale.value = 100;
+      applySpacing();
+      showToast('Spacing reset to default!');
+    });
+  }
+
+  if (btnMagicFit) {
+    btnMagicFit.addEventListener('click', () => {
+      magicFitToSinglePage();
+    });
+  }
+}
+
+function magicFitToSinglePage() {
+  const paper = document.getElementById('resume-print-area');
+  if (!paper) return;
+
+  const sliderMargin = document.getElementById('slider-page-margin');
+  const sliderGap = document.getElementById('slider-section-gap');
+  const sliderLineHeight = document.getElementById('slider-line-height');
+  const sliderFontScale = document.getElementById('slider-font-scale');
+
+  const valMargin = document.getElementById('label-val-margin');
+  const valGap = document.getElementById('label-val-section-gap');
+  const valLineHeight = document.getElementById('label-val-line-height');
+  const valFontScale = document.getElementById('label-val-font-scale');
+
+  const maxHeight = state.paperSize === 'letter' ? 1056 : 1122;
+
+  const presets = [
+    { margin: 22, gap: 14, line: 1.30, font: 100 },
+    { margin: 20, gap: 12, line: 1.25, font: 95 },
+    { margin: 18, gap: 10, line: 1.20, font: 90 },
+    { margin: 14, gap: 8, line: 1.15, font: 85 }
+  ];
+
+  let fitted = false;
+  for (const p of presets) {
+    paper.style.setProperty('--resume-page-padding', `${p.margin}px`);
+    paper.style.setProperty('--resume-section-gap', `${p.gap}px`);
+    paper.style.setProperty('--resume-line-height', p.line);
+    paper.style.setProperty('--resume-font-scale', p.font / 100);
+
+    if (paper.scrollHeight <= maxHeight + 10) {
+      if (sliderMargin) sliderMargin.value = p.margin;
+      if (sliderGap) sliderGap.value = p.gap;
+      if (sliderLineHeight) sliderLineHeight.value = p.line;
+      if (sliderFontScale) sliderFontScale.value = p.font;
+
+      if (valMargin) valMargin.textContent = `${p.margin}px`;
+      if (valGap) valGap.textContent = `${p.gap}px`;
+      if (valLineHeight) valLineHeight.textContent = `${p.line}x`;
+      if (valFontScale) valFontScale.textContent = `${p.font}%`;
+
+      fitted = true;
+      break;
+    }
+  }
+
+  if (fitted) {
+    showToast('⚡ Optimized cleanly onto 1 single page!');
+  } else {
+    showToast('Applied maximum compression (Content is extensive)');
+  }
+}
+
+/* ==========================================================================
+   FEATURE 2: INTERACTIVE SECTION REORDERING (DRAG & TAP ARROWS)
+   ========================================================================== */
+function initReorderController() {
+  const reorderModal = document.getElementById('reorder-modal');
+  const btnOpen = document.getElementById('btn-reorder-layout');
+  const btnClose = document.getElementById('btn-close-reorder');
+  const btnCloseX = document.getElementById('btn-close-reorder-x');
+  const btnReset = document.getElementById('btn-reset-reorder');
+  const reorderList = document.getElementById('reorder-list');
+
+  if (!reorderList) return;
+
+  function syncReorderUIFromState() {
+    if (!state.sectionOrder || !Array.isArray(state.sectionOrder)) return;
+    state.sectionOrder.forEach(secId => {
+      const item = reorderList.querySelector(`[data-id="${secId}"]`);
+      if (item) {
+        reorderList.appendChild(item);
+      }
+    });
+  }
+
+  function readOrderFromDOM() {
+    const order = [];
+    reorderList.querySelectorAll('.reorder-item').forEach(item => {
+      order.push(item.getAttribute('data-id'));
+    });
+    state.sectionOrder = order;
+    syncFormToPreview();
+    autoSaveResume();
+  }
+
+  if (btnOpen && reorderModal) {
+    btnOpen.addEventListener('click', () => {
+      syncReorderUIFromState();
+      reorderModal.style.display = 'flex';
+    });
+  }
+
+  [btnClose, btnCloseX].forEach(btn => {
+    if (btn && reorderModal) {
+      btn.addEventListener('click', () => {
+        readOrderFromDOM();
+        reorderModal.style.display = 'none';
+        showToast('Section order updated!');
+      });
+    }
+  });
+
+  // Tap arrow click handlers
+  reorderList.addEventListener('click', (e) => {
+    const arrowBtn = e.target.closest('.btn-reorder-arrow');
+    if (!arrowBtn) return;
+    const item = arrowBtn.closest('.reorder-item');
+    if (!item) return;
+    const action = arrowBtn.getAttribute('data-action');
+
+    if (action === 'up' && item.previousElementSibling) {
+      reorderList.insertBefore(item, item.previousElementSibling);
+      readOrderFromDOM();
+    } else if (action === 'down' && item.nextElementSibling) {
+      reorderList.insertBefore(item.nextElementSibling, item);
+      readOrderFromDOM();
+    }
+  });
+
+  // Reset to default order
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      const defaultOrder = ['summary', 'skills', 'experience', 'projects', 'education', 'certifications'];
+      defaultOrder.forEach(id => {
+        const item = reorderList.querySelector(`[data-id="${id}"]`);
+        if (item) reorderList.appendChild(item);
+      });
+      readOrderFromDOM();
+      showToast('Restored default section hierarchy');
+    });
+  }
+
+  // Drag-and-drop via SortableJS
+  if (typeof Sortable !== 'undefined') {
+    new Sortable(reorderList, {
+      handle: '.reorder-handle',
+      animation: 150,
+      ghostClass: 'sortable-ghost',
+      onEnd: readOrderFromDOM
+    });
+  }
+}
+
+/* ==========================================================================
+   FEATURE 3: LIVE CLIENT-SIDE ATS JOB DESCRIPTION KEYWORD MATCHER
+   ========================================================================== */
+const COMMON_TECH_SKILLS = [
+  'Python', 'JavaScript', 'TypeScript', 'Java', 'C++', 'C#', '.NET', 'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin',
+  'React', 'React.js', 'Next.js', 'Vue', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Django', 'Flask', 'FastAPI', 'Spring Boot',
+  'HTML5', 'CSS3', 'Tailwind CSS', 'Bootstrap', 'SASS', 'Redux', 'GraphQL', 'REST API', 'Microservices',
+  'SQL', 'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Cassandra', 'Elasticsearch', 'DynamoDB',
+  'AWS', 'Amazon Web Services', 'Azure', 'GCP', 'Google Cloud', 'Docker', 'Kubernetes', 'CI/CD', 'Jenkins', 'GitHub Actions', 'Terraform', 'Ansible', 'Linux',
+  'Machine Learning', 'Deep Learning', 'AI', 'NLP', 'Computer Vision', 'PyTorch', 'TensorFlow', 'Scikit-Learn', 'Pandas', 'NumPy', 'Data Science', 'Data Engineering', 'Spark', 'Kafka',
+  'Agile', 'Scrum', 'Jira', 'Git', 'GitHub', 'GitLab', 'Unit Testing', 'Jest', 'Cypress', 'Selenium', 'TDD', 'Figma', 'UI/UX',
+  'Cybersecurity', 'SIEM', 'Cloud Security', 'DevOps', 'SRE', 'System Design', 'AutoCAD', 'SolidWorks', 'MATLAB', 'Tableau', 'Power BI', 'Excel'
+];
+
+function initAtsMatcher() {
+  const btnOpen = document.getElementById('btn-open-ats-matcher');
+  const modal = document.getElementById('ats-matcher-modal');
+  const btnClose = document.getElementById('btn-close-ats-matcher');
+  const btnScan = document.getElementById('btn-run-ats-scan');
+  const btnClear = document.getElementById('btn-clear-ats-scan');
+  const inputJd = document.getElementById('input-ats-job-desc');
+  const resultsContainer = document.getElementById('ats-scan-results');
+  const scoreDisplay = document.getElementById('ats-score-display');
+  const statusBadge = document.getElementById('ats-status-badge');
+  const matchRatio = document.getElementById('ats-match-ratio');
+  const missingContainer = document.getElementById('ats-missing-tags');
+  const foundContainer = document.getElementById('ats-found-tags');
+
+  // Pre-hydrate from existing state if user already entered JD
+  if (state.targetJobDescription && inputJd) {
+    inputJd.value = state.targetJobDescription;
+  }
+
+  if (btnOpen && modal) {
+    btnOpen.addEventListener('click', () => {
+      // Sync stored JD into textarea
+      if (state.targetJobDescription && inputJd) {
+        inputJd.value = state.targetJobDescription;
+      }
+      modal.style.display = 'flex';
+      if (inputJd && inputJd.value.trim()) {
+        runAtsScan();
+      }
+    });
+  }
+
+  if (btnClose && modal) {
+    btnClose.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+  }
+
+  if (btnClear) {
+    btnClear.addEventListener('click', () => {
+      if (inputJd) inputJd.value = '';
+      state.targetJobDescription = '';
+      localStorage.removeItem('zenresume_target_jd');
+      if (resultsContainer) resultsContainer.style.display = 'none';
+    });
+  }
+
+  if (btnScan) {
+    btnScan.addEventListener('click', runAtsScan);
+  }
+
+  function runAtsScan() {
+    const jd = inputJd ? inputJd.value.trim() : '';
+    if (!jd) {
+      alert('Please paste a job description or list of required skills first.');
+      return;
+    }
+
+    // Store in shared state & localStorage so user never has to re-paste!
+    state.targetJobDescription = jd;
+    localStorage.setItem('zenresume_target_jd', jd);
+
+    // Auto-fill the Gemini AI tailor input box too!
+    const aiJdInput = document.getElementById('input-job-description');
+    if (aiJdInput) aiJdInput.value = jd;
+
+    // 1. Extract keywords from JD
+    const jdLower = jd.toLowerCase();
+    const extractedKeywords = [];
+
+    COMMON_TECH_SKILLS.forEach(skill => {
+      const regex = new RegExp(`\\b${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      if (regex.test(jd)) {
+        if (!extractedKeywords.includes(skill)) {
+          extractedKeywords.push(skill);
+        }
+      }
+    });
+
+    // Also extract capitalized technical keywords (e.g., specific acronyms/libraries)
+    const customWords = jd.match(/\b[A-Z][a-zA-Z0-9#+.-]{2,}\b/g) || [];
+    const stopWords = ['The', 'And', 'For', 'With', 'You', 'Will', 'Are', 'This', 'Our', 'Job', 'Team', 'Work', 'Role', 'Company', 'Must', 'Have', 'Able', 'Join', 'From', 'About', 'Full', 'Time', 'Year', 'Years', 'Plus', 'Ideal', 'Good', 'Self', 'Fast', 'Looking', 'Required', 'Requirements'];
+    customWords.forEach(w => {
+      if (!stopWords.includes(w) && w.length >= 3 && !extractedKeywords.some(k => k.toLowerCase() === w.toLowerCase())) {
+        if (extractedKeywords.length < 25) {
+          extractedKeywords.push(w);
+        }
+      }
+    });
+
+    // 2. Extract entire resume text to search against
+    const currentData = extractCurrentFormData();
+    const resumeText = [
+      currentData.personal.name,
+      currentData.personal.title,
+      currentData.summary,
+      (currentData.skills || []).join(' '),
+      currentData.experience.map(e => `${e.role} ${e.company} ${e.descriptions.join(' ')}`).join(' '),
+      currentData.projects.map(p => `${p.title} ${p.technologies} ${p.description}`).join(' '),
+      currentData.education.map(ed => `${ed.degree} ${ed.institution}`).join(' '),
+      currentData.certifications.map(c => `${c.name} ${c.issuer}`).join(' ')
+    ].join(' ').toLowerCase();
+
+    // 3. Classify into Found and Missing
+    const found = [];
+    const missing = [];
+
+    extractedKeywords.forEach(kw => {
+      const kwLower = kw.toLowerCase();
+      if (resumeText.includes(kwLower)) {
+        found.push(kw);
+      } else {
+        missing.push(kw);
+      }
+    });
+
+    const total = extractedKeywords.length || 1;
+    const score = Math.round((found.length / total) * 100);
+
+    // 4. Render UI Results
+    if (scoreDisplay) scoreDisplay.textContent = `${score}%`;
+    if (matchRatio) matchRatio.textContent = `${found.length} of ${total} matched`;
+
+    if (statusBadge) {
+      if (score >= 80) {
+        statusBadge.textContent = '🌟 High Compatibility';
+        statusBadge.style.background = 'rgba(46, 204, 113, 0.15)';
+        statusBadge.style.color = '#27AE60';
+      } else if (score >= 50) {
+        statusBadge.textContent = '⚠️ Moderate Match';
+        statusBadge.style.background = 'rgba(241, 196, 15, 0.15)';
+        statusBadge.style.color = '#D97706';
+      } else {
+        statusBadge.textContent = '❌ Low Keyword Match';
+        statusBadge.style.background = 'rgba(231, 76, 60, 0.15)';
+        statusBadge.style.color = '#E74C3C';
+      }
+    }
+
+    if (foundContainer) {
+      foundContainer.innerHTML = found.length > 0
+        ? found.map(k => `<span class="ats-keyword-tag found"><i class="fas fa-check"></i> ${escapeHTML(k)}</span>`).join('')
+        : '<span style="font-size: 12px; color: #94A3B8;">No target keywords detected in your resume yet.</span>';
+    }
+
+    if (missingContainer) {
+      missingContainer.innerHTML = missing.length > 0
+        ? missing.map(k => `<button type="button" class="ats-keyword-tag missing" data-keyword="${escapeHTML(k)}" title="Click to add to Skills"><i class="fas fa-plus"></i> ${escapeHTML(k)}</button>`).join('')
+        : '<span style="font-size: 12px; color: #16A34A;">🎉 Excellent! All extracted keywords are in your resume.</span>';
+
+      // 1-Click add to skills handler
+      missingContainer.querySelectorAll('.ats-keyword-tag.missing').forEach(tagBtn => {
+        tagBtn.addEventListener('click', () => {
+          const kw = tagBtn.getAttribute('data-keyword');
+          const skillsInput = document.getElementById('input-skills');
+          if (skillsInput) {
+            const currentSkills = skillsInput.value.trim();
+            skillsInput.value = currentSkills ? `${currentSkills}, ${kw}` : kw;
+            syncFormToPreview();
+            tagBtn.remove();
+            showToast(`Added "${kw}" to Skills!`);
+            runAtsScan(); // Re-evaluate score reactively!
+          }
+        });
+      });
+    }
+
+    if (resultsContainer) resultsContainer.style.display = 'block';
+  }
+}
+
+/* ==========================================================================
    8. ATTACH GENERAL EVENT LISTENERS
    ========================================================================== */
 function attachEvents() {
   
-  // Reorder Layout Modal & SortableJS logic
-  const reorderModal = document.getElementById('reorder-modal');
-  const btnReorderLayout = document.getElementById('btn-reorder-layout');
-  const btnCloseReorder = document.getElementById('btn-close-reorder');
-  const reorderList = document.getElementById('reorder-list');
-  
-  if (btnReorderLayout && reorderModal) {
-    btnReorderLayout.addEventListener('click', () => {
-      reorderModal.style.display = 'flex';
-    });
-    btnCloseReorder.addEventListener('click', () => {
-      reorderModal.style.display = 'none';
-    });
-    
-    if (typeof Sortable !== 'undefined' && reorderList) {
-      new Sortable(reorderList, {
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        onEnd: function () {
-          const newOrder = [];
-          reorderList.querySelectorAll('li').forEach(li => {
-            newOrder.push(li.getAttribute('data-id'));
-          });
-          state.sectionOrder = newOrder;
-          syncFormToPreview();
-        }
-      });
-    }
-  }
+  // Initialize Feature 1: Spacing Controller & 1-Click Fit-to-Page
+  initSpacingController();
+
+  // Initialize Feature 2: Interactive Section Reordering (Drag + Tap Arrows)
+  initReorderController();
+
+  // Initialize Feature 3: Live Client-Side ATS Job Description Keyword Matcher
+  initAtsMatcher();
 
   // Go back to the Greeting & Catalog screen
   btnBackToTemplates.addEventListener('click', () => {
@@ -2147,6 +2575,12 @@ function attachEvents() {
       document.getElementById('ai-buttons-step-1').style.display = 'none';
       document.getElementById('ai-upgrade-step-2').style.display = 'block';
       document.getElementById('ai-buttons-step-2').style.display = 'flex';
+
+      // Auto pre-populate JD if user previously pasted one in the ATS Matcher!
+      const jdInput = document.getElementById('input-job-description');
+      if (jdInput && state.targetJobDescription && !jdInput.value.trim()) {
+        jdInput.value = state.targetJobDescription;
+      }
     });
   }
   

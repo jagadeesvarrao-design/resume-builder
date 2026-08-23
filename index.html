@@ -750,6 +750,9 @@
                 </button>
                 <input type="file" id="input-magic-pdf" accept="application/pdf" style="display: none;">
                 
+                <button type="button" class="btn-data-action" id="btn-open-ats-matcher" style="color: #7C3AED; border-color: rgba(124, 58, 237, 0.3); font-weight: 600;" title="Live ATS Job Description Matcher (Optional)">
+                  <i class="fas fa-bullseye" style="margin-right: 4px;"></i> ATS Matcher
+                </button>
                 <button type="button" class="btn-data-action" id="btn-reorder-layout" style="color: #2980b9; border-color: rgba(41, 128, 185, 0.25);">
                   <i class="fas fa-bars" style="margin-right: 4px;"></i> Reorder
                 </button>
@@ -969,7 +972,65 @@
         <div class="preview-panel" style="position: relative; background: var(--bg-serene);">
           
           <!-- Floating Top Actions -->
-          <div class="stitch-preview-floating-bar no-print">
+          <div class="stitch-preview-floating-bar no-print" style="position: relative;">
+            <div class="spacing-popover-wrapper" style="position: relative;">
+              <button type="button" class="stitch-floating-btn" id="btn-spacing-toggle" title="Customize Spacing & Fit to Page">
+                <i class="fas fa-sliders"></i> Spacing
+              </button>
+              
+              <!-- Floating Spacing Control Popover -->
+              <div class="spacing-popover-card" id="spacing-popover-card" style="display: none;">
+                <div class="spacing-popover-header">
+                  <span style="font-weight: 800; font-size: 13px; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-sliders" style="color: #006856;"></i> Spacing &amp; Layout
+                  </span>
+                  <button type="button" id="btn-close-spacing-popover" style="background: none; border: none; font-size: 16px; cursor: pointer; color: #94A3B8; padding: 0 4px;">&times;</button>
+                </div>
+                
+                <!-- 1-Click Fit to 1 Page Button -->
+                <button type="button" id="btn-magic-fit-page" class="btn-magic-fit-page" title="Automatically adjust spacing to fit exactly onto 1 page">
+                  <i class="fas fa-bolt" style="color: #FCD34D;"></i>
+                  <span>⚡ Fit to 1 Single Page</span>
+                </button>
+
+                <div class="spacing-slider-group">
+                  <div class="spacing-slider-label">
+                    <span>Page Margins</span>
+                    <span id="label-val-margin" class="spacing-val-badge">24px</span>
+                  </div>
+                  <input type="range" id="slider-page-margin" min="12" max="36" step="2" value="24" class="spacing-range-input">
+                </div>
+
+                <div class="spacing-slider-group">
+                  <div class="spacing-slider-label">
+                    <span>Section Gap</span>
+                    <span id="label-val-section-gap" class="spacing-val-badge">16px</span>
+                  </div>
+                  <input type="range" id="slider-section-gap" min="6" max="28" step="2" value="16" class="spacing-range-input">
+                </div>
+
+                <div class="spacing-slider-group">
+                  <div class="spacing-slider-label">
+                    <span>Line Spacing</span>
+                    <span id="label-val-line-height" class="spacing-val-badge">1.35x</span>
+                  </div>
+                  <input type="range" id="slider-line-height" min="1.15" max="1.60" step="0.05" value="1.35" class="spacing-range-input">
+                </div>
+
+                <div class="spacing-slider-group">
+                  <div class="spacing-slider-label">
+                    <span>Font Scale</span>
+                    <span id="label-val-font-scale" class="spacing-val-badge">100%</span>
+                  </div>
+                  <input type="range" id="slider-font-scale" min="85" max="115" step="5" value="100" class="spacing-range-input">
+                </div>
+
+                <button type="button" id="btn-reset-spacing" class="btn-reset-spacing">
+                  <i class="fas fa-undo" style="font-size: 10px; margin-right: 4px;"></i> Reset Spacing Defaults
+                </button>
+              </div>
+            </div>
+
             <button type="button" class="stitch-floating-btn" id="btn-share-preview" onclick="window.openShareModal && window.openShareModal();" title="Share ZenResume">
               <i class="fas fa-share-alt"></i> Share
             </button>
@@ -1062,21 +1123,139 @@
     </div>
   </div>
 
-  <!-- Reorder Layout Modal -->
-  <div class="modal-overlay no-print" id="reorder-modal">
-    <div class="modal-card" style="max-width: 400px;">
-      <h3 style="margin-top: 0; color: #2c3e50;">Reorder Resume Sections</h3>
-      <p style="font-size: 13px; color: #555; margin-bottom: 15px;">Drag and drop to arrange the sections exactly how you want them to appear on your resume.</p>
+  <!-- Reorder Layout Modal (Interactive Drag & Tap Arrows) -->
+  <div class="modal-overlay no-print" id="reorder-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px);">
+    <div class="modal-card" style="background: #ffffff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1.5px solid rgba(0, 104, 86, 0.2); padding: 30px; max-width: 440px; width: 90%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: #0F172A; font-size: 20px; font-weight: 800; font-family: 'Outfit', sans-serif;">Reorder Resume Sections</h3>
+        <button type="button" id="btn-close-reorder-x" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #94A3B8;">&times;</button>
+      </div>
+      <p style="font-size: 13px; color: #64748B; margin-top: 0; margin-bottom: 18px; line-height: 1.5;">Drag or use <strong>▲ / ▼ arrows</strong> to customize the section hierarchy on your resume.</p>
       
-      <ul id="reorder-list" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
-        <li data-id="experience" style="background: #f8f9fa; border: 1px solid #ddd; padding: 12px; margin-bottom: 8px; border-radius: 6px; cursor: grab; font-weight: bold; color: #333; display: flex; align-items: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" style="margin-right: 10px;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg> Experience</li>
-        <li data-id="projects" style="background: #f8f9fa; border: 1px solid #ddd; padding: 12px; margin-bottom: 8px; border-radius: 6px; cursor: grab; font-weight: bold; color: #333; display: flex; align-items: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" style="margin-right: 10px;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg> Projects</li>
-        <li data-id="education" style="background: #f8f9fa; border: 1px solid #ddd; padding: 12px; margin-bottom: 8px; border-radius: 6px; cursor: grab; font-weight: bold; color: #333; display: flex; align-items: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" style="margin-right: 10px;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg> Education</li>
-        <li data-id="certifications" style="background: #f8f9fa; border: 1px solid #ddd; padding: 12px; margin-bottom: 8px; border-radius: 6px; cursor: grab; font-weight: bold; color: #333; display: flex; align-items: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" style="margin-right: 10px;"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg> Certifications</li>
+      <ul id="reorder-list" class="reorder-sections-list" style="list-style: none; padding: 0; margin: 0 0 20px 0; display: flex; flex-direction: column; gap: 8px;">
+        <li data-id="summary" class="reorder-item">
+          <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
+          <div class="reorder-title"><i class="fas fa-user-pen"></i> Professional Summary</div>
+          <div class="reorder-arrows">
+            <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
+            <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
+          </div>
+        </li>
+        <li data-id="skills" class="reorder-item">
+          <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
+          <div class="reorder-title"><i class="fas fa-code"></i> Skills &amp; Keywords</div>
+          <div class="reorder-arrows">
+            <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
+            <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
+          </div>
+        </li>
+        <li data-id="experience" class="reorder-item">
+          <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
+          <div class="reorder-title"><i class="fas fa-briefcase"></i> Work Experience</div>
+          <div class="reorder-arrows">
+            <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
+            <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
+          </div>
+        </li>
+        <li data-id="projects" class="reorder-item">
+          <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
+          <div class="reorder-title"><i class="fas fa-laptop-code"></i> Technical Projects</div>
+          <div class="reorder-arrows">
+            <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
+            <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
+          </div>
+        </li>
+        <li data-id="education" class="reorder-item">
+          <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
+          <div class="reorder-title"><i class="fas fa-graduation-cap"></i> Education</div>
+          <div class="reorder-arrows">
+            <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
+            <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
+          </div>
+        </li>
+        <li data-id="certifications" class="reorder-item">
+          <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
+          <div class="reorder-title"><i class="fas fa-certificate"></i> Certifications</div>
+          <div class="reorder-arrows">
+            <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
+            <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
+          </div>
+        </li>
       </ul>
 
-      <div class="modal-buttons" style="justify-content: flex-end;">
-        <button class="btn-modal btn-confirm" id="btn-close-reorder">Done</button>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button type="button" id="btn-reset-reorder" style="background: none; border: none; font-size: 12.5px; color: #64748B; cursor: pointer; text-decoration: underline;">
+          Reset Default Order
+        </button>
+        <button class="btn-modal btn-confirm" id="btn-close-reorder" style="background: #006856; border-radius: 10px; padding: 10px 20px; font-weight: 700; color: white; border: none; cursor: pointer;">
+          Apply &amp; Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live ATS Job Description Keyword Matcher & Scanner Modal (Optional) -->
+  <div class="modal-overlay no-print" id="ats-matcher-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px);">
+    <div class="modal-card" style="background: #ffffff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1.5px solid rgba(124, 58, 237, 0.2); padding: 30px; max-width: 580px; width: 92%; max-height: 90vh; overflow-y: auto; text-align: left; position: relative;">
+      <button type="button" class="btn-close" id="btn-close-ats-matcher" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 24px; cursor: pointer; color: #94A3B8;">&times;</button>
+      
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+        <div style="width: 44px; height: 44px; background: rgba(124, 58, 237, 0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #7C3AED; font-size: 20px; flex-shrink: 0;">
+          <i class="fas fa-bullseye"></i>
+        </div>
+        <div>
+          <h3 style="margin: 0; color: #0F172A; font-size: 20px; font-weight: 800; font-family: 'Outfit', sans-serif;">Live ATS Job Matcher (Optional)</h3>
+          <p style="margin: 0; font-size: 13px; color: #64748B;">Compare your resume keywords against any job posting in real-time.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px;">Target Job Description (Optional)</label>
+        <textarea id="input-ats-job-desc" rows="4" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 13px; color: #334155; resize: vertical; box-sizing: border-box; outline: none;" placeholder="Paste the job posting, responsibilities, or required skills from LinkedIn, Indeed, or company portal..."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-bottom: 18px;">
+        <button type="button" id="btn-run-ats-scan" style="background: #7C3AED; color: white; border: none; border-radius: 10px; padding: 11px 18px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);">
+          <i class="fas fa-search"></i> Scan &amp; Match Keywords
+        </button>
+        <button type="button" id="btn-clear-ats-scan" style="background: #F1F5F9; color: #64748B; border: none; border-radius: 10px; padding: 11px 14px; font-weight: 600; font-size: 13px; cursor: pointer;">
+          Clear
+        </button>
+      </div>
+
+      <!-- ATS Match Result Container -->
+      <div id="ats-scan-results" style="display: none; border-top: 1px solid #E2E8F0; padding-top: 16px;">
+        <!-- Score Bar -->
+        <div style="display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 14px 18px; border-radius: 12px; margin-bottom: 16px;">
+          <div>
+            <span style="font-size: 11.5px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">ATS Match Score</span>
+            <div style="font-size: 26px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="ats-score-display">0%</div>
+          </div>
+          <div style="text-align: right;">
+            <span class="ats-status-badge" id="ats-status-badge" style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 9999px; background: rgba(46, 204, 113, 0.15); color: #27AE60;">Good Match</span>
+            <div style="font-size: 11.5px; color: #64748B; margin-top: 4px;" id="ats-match-ratio">0 of 0 matched</div>
+          </div>
+        </div>
+
+        <!-- Missing Keywords Section -->
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 13px; font-weight: 700; color: #DC2626; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-circle-exclamation"></i> Missing Keywords (Tap to Add to Skills):
+          </div>
+          <div id="ats-missing-tags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Found Keywords Section -->
+        <div>
+          <div style="font-size: 13px; font-weight: 700; color: #16A34A; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-circle-check"></i> Already in Your Resume:
+          </div>
+          <div id="ats-found-tags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
