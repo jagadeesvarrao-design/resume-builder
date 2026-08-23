@@ -613,6 +613,11 @@ function autoSaveResume() {
     localStorage.setItem(`zenresume_profile_${registry.activeId}`, JSON.stringify(stateToSave));
   }
 
+  // High-resilience IndexedDB persistence (immune to 5MB quota & Safari 7-day purge)
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveDraft === 'function') {
+    window.ZenResumeDB.saveDraft(stateToSave, registry.activeId || 'default');
+  }
+
   // Also save to cloud if logged in
   if (typeof saveResumeToFirestore === 'function') {
     saveResumeToFirestore(stateToSave);
@@ -1936,14 +1941,57 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
   throw new Error("AI is currently experiencing extremely high demand. Please try again in 1 minute.");
 }
 
+async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf = false, pdfData = '') {
+  // 1. Try serverless Edge API proxy first (protects API keys, handles throttling)
+  try {
+    const res = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, payload, prompt: fallbackPromptText })
+    });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && json.data) {
+        return json.data;
+      }
+    }
+  } catch (proxyErr) {
+    console.warn('Serverless Gemini proxy offline or running standalone, falling back to client engine:', proxyErr);
+  }
+
+  // 2. Resilient Client-Side Fallback
+  const _gk = () => { const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]; const _s = "ZenResume2026"; return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
+  let apiKey = localStorage.getItem('GEMINI_API_KEY') || _gk();
+
+  const parts = [{ text: fallbackPromptText }];
+  if (isPdf && pdfData) {
+    parts.push({
+      inline_data: {
+        mime_type: "application/pdf",
+        data: pdfData
+      }
+    });
+  }
+
+  const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contents: [{ parts: parts }] })
+  });
+
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message);
+
+  const rawResponse = data.candidates[0].content.parts[0].text;
+  const jsonString = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+  return JSON.parse(jsonString);
+}
+
 async function parseHeuristics(inputData, isPdf = false) {
   const btnMagicImport = document.getElementById('btn-magic-import');
   if (btnMagicImport) {
     btnMagicImport.innerHTML = "AI Analyzing Resume...";
   }
-
-  const _gk = () => { const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]; const _s = "ZenResume2026"; return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
-  let apiKey = localStorage.getItem('GEMINI_API_KEY') || _gk();
   
   try {
     const promptText = `
@@ -1993,38 +2041,16 @@ async function parseHeuristics(inputData, isPdf = false) {
         { "name": "string", "issuer": "string", "date": "string", "desc": "string" }
       ]
     }
+    ${isPdf ? '' : `\n\nRaw Resume Text:\n${inputData}`}
     `;
 
-    // Construct the payload dynamically depending on if it's raw text or a PDF Base64 string
-    const parts = [{ text: promptText }];
-    
-    if (isPdf) {
-      parts.push({
-        inline_data: {
-          mime_type: "application/pdf",
-          data: inputData
-        }
-      });
-    } else {
-      parts.push({
-        text: `\n\nRaw Resume Text:\n${inputData}`
-      });
-    }
-
-    const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: parts }]
-      })
-    });
-    
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-    
-    const rawResponse = data.candidates[0].content.parts[0].text;
-    const jsonString = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
-    const parsedData = JSON.parse(jsonString);
+    const parsedData = await callSecureGeminiProxy(
+      'parse_resume',
+      { rawText: isPdf ? '' : inputData },
+      promptText,
+      isPdf,
+      isPdf ? inputData : ''
+    );
     
     if (typeof loadProfileIntoForm === 'function') {
       loadProfileIntoForm(parsedData);
@@ -2610,7 +2636,6 @@ function attachEvents() {
       }
       
       const _gk2 = () => { const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]; const _s = "ZenResume2026"; return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
-      let apiKey = localStorage.getItem('GEMINI_API_KEY') || _gk2();
       
       const originalBtnText = btnGenerateAi.textContent;
       btnGenerateAi.textContent = "Analyzing & Tailoring...";
@@ -2640,22 +2665,11 @@ function attachEvents() {
         }
         `;
         
-        const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: promptText }] }]
-          })
-        });
-        
-        const data = await response.json();
-        if (data.error) {
-          throw new Error(data.error.message);
-        }
-        
-        const rawResponse = data.candidates[0].content.parts[0].text;
-        const jsonString = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
-        const result = JSON.parse(jsonString);
+        const result = await callSecureGeminiProxy(
+          'tailor_keywords',
+          { summary: currentSummary, skills: currentSkills, jobDescription: jd },
+          promptText
+        );
         
         if (result.summary) document.getElementById('input-summary').value = result.summary;
         if (result.skills) document.getElementById('input-skills').value = result.skills;

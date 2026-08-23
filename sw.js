@@ -1,36 +1,51 @@
-const CACHE_NAME = "zenresume-cache-v1";
-const ASSETS_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/styles.css",
-  "/app.js",
-  "/templates-data.js",
-  "/firebase-service.js",
-  "/icon-192.png",
-  "/icon-512.png",
-  "/favicon.ico",
-  "/about.html",
-  "/privacy.html",
-  "/terms.html"
+/**
+ * ZenResume Offline Service Worker (PWA Engine)
+ * Provides 100% offline resume editing, draft auto-saving, and instant app loading.
+ */
+
+const CACHE_NAME = 'zenresume-cache-v1.2';
+const STATIC_ASSETS = [
+  '/',
+  '/index.html',
+  '/styles.css?v=3.3',
+  '/app.js',
+  '/indexeddb-storage.js',
+  '/manifest.json',
+  '/favicon-96x96.png',
+  '/apple-touch-icon.png',
+  '/about.html',
+  '/contact.html',
+  '/privacy.html',
+  '/terms.html',
+  '/editorial-policy.html',
+  '/methodology.html',
+  '/role/',
+  '/blog/',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'
 ];
 
-// Install Event: cache all core assets
-self.addEventListener("install", (e) => {
-  e.waitUntil(
+// Install Event - Pre-cache core shell assets
+self.addEventListener('install', (event) => {
+  event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      console.log('⚡ [ZenResume ServiceWorker] Pre-caching offline app shell');
+      return cache.addAll(STATIC_ASSETS).catch((err) => {
+        console.warn('Some optional static assets could not be cached immediately:', err);
+      });
     }).then(() => self.skipWaiting())
   );
 });
 
-// Activate Event: clear old caches
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => {
+// Activate Event - Clean up outdated caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
+        cacheNames.map((name) => {
+          if (name !== CACHE_NAME) {
+            console.log('🧹 [ZenResume ServiceWorker] Removing old cache:', name);
+            return caches.delete(name);
           }
         })
       );
@@ -38,25 +53,35 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Fetch Event: serve from cache first, then fetch in background (Stale-While-Revalidate)
-self.addEventListener("fetch", (e) => {
-  // Only cache GET requests belonging to our site origin (ignores Google Analytics, AdSense, APIs)
-  if (e.request.method !== "GET" || !e.request.url.startsWith(self.location.origin)) {
+// Fetch Event - Stale-While-Revalidate with Offline Fallback
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // Skip non-GET and AI API proxy endpoints (let network handle /api/gemini)
+  if (event.request.method !== 'GET' || url.pathname.startsWith('/api/')) {
     return;
   }
 
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Update the cache in the background for next load
-        fetch(e.request).then((networkResponse) => {
-          if (networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => cache.put(e.request, networkResponse));
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      const fetchPromise = fetch(event.request)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
           }
-        }).catch(() => {});
-        return cachedResponse;
-      }
-      return fetch(e.request);
+          return networkResponse;
+        })
+        .catch(() => {
+          // Offline fallback
+          if (event.request.headers.get('accept')?.includes('text/html')) {
+            return caches.match('/index.html');
+          }
+        });
+
+      return cachedResponse || fetchPromise;
     })
   );
 });
