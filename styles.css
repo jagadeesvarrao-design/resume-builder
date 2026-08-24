@@ -4776,3 +4776,57 @@ footer a:active,
   margin-bottom: var(--resume-section-gap, 16px) !important;
 }
 
+/* ==========================================================================
+   ADSENSE HIGH-RPM & ANTI-CLS CONTAINER SYSTEM
+   ========================================================================== */
+.ad-slot-card,
+#promo-banner-top,
+#promo-banner-horizontal,
+.ad-container-horizontal {
+  width: 100%;
+  margin: 24px auto;
+  border-radius: var(--radius-md, 12px);
+  background: rgba(0, 104, 86, 0.02);
+  border: 1px dashed rgba(0, 104, 86, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: min-height 0.3s ease;
+}
+
+#promo-banner-top {
+  max-width: 728px;
+  min-height: 90px;
+}
+
+#promo-banner-horizontal,
+.ad-container-horizontal {
+  max-width: 970px;
+  min-height: 90px;
+}
+
+.adsbygoogle {
+  background: transparent !important;
+}
+
+/* Print Safety: 100% Guaranteed Zero Ads in Exported PDFs */
+@media print {
+  .adsbygoogle,
+  .ad-slot-card,
+  #promo-banner-top,
+  #promo-banner-horizontal,
+  .ad-container-horizontal,
+  [data-ad-client] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: hidden !important;
+  }
+}
+
+
