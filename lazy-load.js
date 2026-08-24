@@ -1,20 +1,6 @@
 
 (function() {
-    // 1. Immediately initialize and load Google Analytics (100% visitor capture)
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    window.gtag = gtag;
-    gtag("js", new Date());
-    gtag("config", "G-Z90HSSD2P2", {
-        send_page_view: true
-    });
-
-    const gtagScript = document.createElement("script");
-    gtagScript.src = "https://www.googletagmanager.com/gtag/js?id=G-Z90HSSD2P2";
-    gtagScript.async = true;
-    document.head.appendChild(gtagScript);
-
-    // Global Helper for GA4 Event Tracking
+    // Global Helper for GA4 Event Tracking (calls standard gtag in <head>)
     window.trackGAEvent = function(eventName, params = {}) {
         try {
             if (typeof window.gtag === 'function') {
@@ -28,6 +14,7 @@
             console.warn(`[GA4 Event Error] ${eventName}:`, err);
         }
     };
+
 
     let heavyScriptsLoaded = false;
     function loadHeavyScripts() {
