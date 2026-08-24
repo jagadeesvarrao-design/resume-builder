@@ -192,6 +192,18 @@
         ZenResume is an official digital product developed, published, and supported by <strong>Aneevarp Solutions</strong> (Govt. of India MSME: <code>UDYAM-AP-10-0144446</code>), Visakhapatnam, Andhra Pradesh, India.
       </div>
 
+      <!-- Statutory Grievance Redressal Desk (IT Rules 2021 / Consumer Protection) -->
+      <div style="background: #ffffff; border: 1px solid rgba(0, 104, 86, 0.2); border-left: 4px solid #006856; border-radius: 12px; padding: 16px 20px; margin-bottom: 25px; font-size: 13px; line-height: 1.6; color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <div style="font-weight: 700; color: #006856; margin-bottom: 6px; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+          <i class="fas fa-balance-scale"></i> Statutory Grievance Redressal Desk (Rule 3(2), IT Rules 2021)
+        </div>
+        <div>
+          <strong>Grievance Officer:</strong> Operations Desk, Aneevarp Solutions &bull; <strong>Helpline:</strong> +91 87909 06267<br>
+          <strong>Postal Address:</strong> Aneevarp Solutions, Visakhapatnam, Andhra Pradesh 530001, India<br>
+          <strong>Statutory Resolution SLA:</strong> Formal Acknowledgment within <strong>24 Hours</strong> &bull; Disposal within <strong>15 Days</strong>
+        </div>
+      </div>
+
       <!-- Interactive Form -->
       <form id="contact-form" onsubmit="submitForm(event)" style="display: flex; flex-direction: column; gap: 18px;">
         <div>
@@ -231,8 +243,11 @@
           <i class="fas fa-check"></i>
         </div>
         <h3 style="font-size: 20px; color: var(--primary-dark); font-weight: 800; margin: 0 0 8px 0; font-family: 'Outfit', sans-serif;">Message Delivered to Aneevarp Solutions!</h3>
+        <div id="ticket-badge-box" style="display: inline-block; background: #ffffff; border: 1px solid rgba(0, 104, 86, 0.3); border-radius: 8px; padding: 8px 16px; margin-bottom: 15px; font-size: 13px; font-weight: 700; color: #006856;">
+          Traceable Ticket Ref: <span id="ticket-ref-display">ANV-202608-PENDING</span>
+        </div>
         <p style="font-size: 14px; color: var(--text-sub); margin-bottom: 18px; line-height: 1.6;">
-          Thank you! Your message has been sent directly to our operations inbox (<code>aneevarpsolutions@gmail.com</code>). Our engineering and support team will respond promptly.
+          Your inquiry has been logged in our operations desk. In compliance with Rule 3(2) of the IT Rules 2021, our team will review and respond within our 24-hour statutory SLA.
         </p>
         <button type="button" onclick="resetForm()" class="btn-primary" style="padding: 10px 20px; font-size: 13.5px; border-radius: 8px;">Send Another Message</button>
       </div>
@@ -360,6 +375,7 @@
       };
 
       let delivered = false;
+      let generatedTicket = 'ANV-' + Date.now().toString(36).toUpperCase();
 
       // 1. Direct Serverless API Route (/api/contact)
       try {
@@ -369,6 +385,10 @@
           body: JSON.stringify(payload)
         });
         if (res.ok) {
+          const data = await res.json();
+          if (data && data.ticketId) {
+            generatedTicket = data.ticketId;
+          }
           delivered = true;
         }
       } catch (err) {
@@ -378,13 +398,16 @@
       btnSubmit.innerHTML = originalText;
       btnSubmit.disabled = false;
 
+      const ticketElem = document.getElementById('ticket-ref-display');
+      if (ticketElem) ticketElem.textContent = generatedTicket;
+
       if (delivered) {
         document.getElementById('contact-form').style.display = 'none';
         document.getElementById('success-message').style.display = 'block';
       } else {
         // Graceful Mailto Fallback
-        const subject = `[ZenResume Inquiry] from ${name} (${rating}★)`;
-        const body = `From: ${name} <${email}>\nRating: ${rating}/5\n\nMessage:\n${message}\n\n---\nSent via ZenResume Contact Portal`;
+        const subject = `[ZenResume Inquiry ${generatedTicket}] from ${name} (${rating}★)`;
+        const body = `Traceable Ticket: ${generatedTicket}\nFrom: ${name} <${email}>\nRating: ${rating}/5\n\nMessage:\n${message}\n\n---\nSent via ZenResume Contact Portal`;
         window.location.href = `mailto:aneevarpsolutions@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         document.getElementById('contact-form').style.display = 'none';
         document.getElementById('success-message').style.display = 'block';

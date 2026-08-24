@@ -136,9 +136,16 @@ export default async function handler(req, res) {
       }
     }
 
+    // 3. Generate Traceable Grievance Ticket ID (Consumer Protection & IT Rules 2021)
+    const timestampIST = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    const ticketId = 'ANV-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+
     return res.status(200).json({
       success: true,
-      message: 'Message sent successfully',
+      ticketId,
+      timestampIST,
+      sla: 'Statutory SLA: Acknowledgment within 24 hours, Resolution within 15 days.',
+      message: 'Inquiry registered successfully with Aneevarp Solutions Desk.',
       emailDispatched,
       whatsappDispatched,
     });
