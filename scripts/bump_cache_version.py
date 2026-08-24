@@ -21,3 +21,4 @@ def bump_version():
 
 if __name__ == '__main__':
     bump_version()
+

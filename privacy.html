@@ -153,52 +153,75 @@
       <div class="blog-content" style="line-height: 1.8; font-size: 15.5px; color: var(--text-main);">
         
         <p>
-          At ZenResume, accessible from <a href="https://www.zenresume.online" style="color: #006856; font-weight: 600;">https://www.zenresume.online</a>, our primary priority is safeguarding the privacy of our visitors. This Privacy Policy details the types of information collected, how it is used, and mandatory disclosures regarding third-party advertising partners like Google AdSense.
+          At ZenResume, accessible from <a href="https://www.zenresume.online" style="color: #006856; font-weight: 600;">https://www.zenresume.online</a>, our core engineering philosophy is <strong>privacy-first and local-first</strong>. This Privacy Policy provides a transparent, legally binding disclosure of how data is handled on our platform, our ephemeral AI processing architecture, and our compliance with Google AdSense, GDPR, and CCPA/CPRA frameworks.
         </p>
 
         <h2 style="font-size: 22px; color: var(--primary-dark); margin: 30px 0 12px 0; font-family: 'Outfit', sans-serif;">
-          1. 100% Client-Side Local Storage & Data Security
+          1. Local-First Client Storage &amp; Data Ownership
         </h2>
         <p>
-          Unlike legacy resume platforms that transmit sensitive personal information to third-party databases, ZenResume operates on a strict <strong>Local-First client-side architecture</strong>. All resume text, contact details, work history, and education entered into our editor are stored exclusively in your browser's private local cache (<code>localStorage</code>). We do not operate server-side databases that harvest or store your resume content.
-        </p>
-
-        <h2 style="font-size: 22px; color: var(--primary-dark); margin: 35px 0 12px 0; font-family: 'Outfit', sans-serif;">
-          2. Cookies & Advertising Disclosures (Google AdSense Requirements)
-        </h2>
-        <p>
-          In accordance with Google AdSense program policies, we disclose the following cookie and advertising practices:
+          Unlike legacy resume builders that require account sign-ups and harvest user employment histories into centralized cloud databases, ZenResume operates as a <strong>Local-First Web Application</strong>:
         </p>
         <ul>
-          <li><strong>Third-Party Vendors:</strong> Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website or other websites across the Internet.</li>
-          <li><strong>Google Advertising Cookies:</strong> Google's use of advertising cookies enables it and its partners to serve personalized ads to our visitors based on their visit to ZenResume and other sites on the World Wide Web.</li>
-          <li><strong>User Opt-Out Rights:</strong> Users may opt out of personalized advertising at any time by visiting <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" style="color: #006856; font-weight: 600;">Google Ads Settings</a> or by visiting <a href="https://www.aboutads.info/" target="_blank" rel="noopener noreferrer" style="color: #006856; font-weight: 600;">www.aboutads.info</a>.</li>
+          <li><strong>Client-Side Storage:</strong> Your resume text, contact information, work history, and custom styling parameters are stored locally inside your browser's private storage (IndexedDB &amp; localStorage).</li>
+          <li><strong>Zero Remote Databases:</strong> We do not operate remote databases that persist, catalogue, or store your resume profile.</li>
+          <li><strong>Portable Data Backup (.zenresume / JSON):</strong> You have complete, unencumbered ownership of your data. You can export a downloadable, portable backup file (<code>.zenresume</code> or <code>.json</code>) and restore your resume anytime on any device with zero vendor lock-in.</li>
         </ul>
 
         <h2 style="font-size: 22px; color: var(--primary-dark); margin: 35px 0 12px 0; font-family: 'Outfit', sans-serif;">
-          3. Analytics & Speed Insights
+          2. Ephemeral AI Processing Disclosures (Gemini Edge Gateway)
         </h2>
         <p>
-          We utilize lightweight web analytics (such as Vercel Web Analytics and Google Analytics) to monitor aggregate traffic trends, page load speeds, and geographic regions. These tools collect non-personally identifiable telemetry to optimize site performance.
-        </p>
-
-        <h2 style="font-size: 22px; color: var(--primary-dark); margin: 35px 0 12px 0; font-family: 'Outfit', sans-serif;">
-          4. GDPR & CCPA/CPRA Privacy Rights
-        </h2>
-        <p>
-          If you are a resident of the European Economic Area (EEA) or California (CCPA/CPRA), you have the right to:
+          When you optionally choose to utilize our AI-assisted features (such as <em>Magic Resume Import</em> or <em>Job Description Bullet Tailoring</em>):
         </p>
         <ul>
-          <li><strong>Request Data Erasure:</strong> Because your data is stored locally in your browser, clearing your browser's cache/localStorage immediately and permanently deletes all resume records.</li>
-          <li><strong>Opt-Out of Data Sale:</strong> We do not sell, lease, or monetize your personal resume data.</li>
+          <li><strong>Ephemeral Transmission:</strong> The specific text or document fragment needed to fulfill your request is transmitted securely via HTTPS to our serverless edge proxy (powered by Google Gemini 2.5 API).</li>
+          <li><strong>No Server Persistence:</strong> The transmitted data is processed in-memory solely to generate the requested text or parsed JSON structure and returned directly to your browser. ZenResume servers do not save or log your resume content.</li>
+          <li><strong>Local-Only Mode:</strong> All AI features are 100% optional. Users who prefer strictly air-gapped, local-only editing can build, customize, and export vector PDFs entirely offline without triggering any AI network requests.</li>
         </ul>
 
         <h2 style="font-size: 22px; color: var(--primary-dark); margin: 35px 0 12px 0; font-family: 'Outfit', sans-serif;">
-          5. Contact Our Data Protection Team
+          3. Cookies &amp; Advertising Disclosures (Google AdSense Compliance)
         </h2>
         <p>
-          For questions regarding this policy or data privacy practices, contact our support team at <a href="mailto:support@zenresume.online" style="color: #006856; font-weight: 600;">support@zenresume.online</a>.
+          To maintain ZenResume as a free service without mandatory paywalls, we partner with third-party advertising networks, including Google AdSense. In compliance with Google publisher requirements:
         </p>
+        <ul>
+          <li><strong>Third-Party Advertising:</strong> Third-party vendors, including Google, use cookies to serve ads based on prior visits to our website or other websites across the Internet.</li>
+          <li><strong>Personalized Advertising:</strong> Google's use of advertising cookies enables it and its partners to serve ads based on your visits to ZenResume and other sites on the Internet.</li>
+          <li><strong>Opt-Out Mechanisms:</strong> Users may opt out of personalized advertising at any time by visiting <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" style="color: #006856; font-weight: 600;">Google Ads Settings</a> or through the Digital Advertising Alliance at <a href="https://www.aboutads.info/" target="_blank" rel="noopener noreferrer" style="color: #006856; font-weight: 600;">www.aboutads.info</a>.</li>
+        </ul>
+
+        <h2 style="font-size: 22px; color: var(--primary-dark); margin: 35px 0 12px 0; font-family: 'Outfit', sans-serif;">
+          4. Telemetry &amp; Anonymous Performance Metrics
+        </h2>
+        <p>
+          We employ lightweight, privacy-preserving telemetry (such as Google Analytics 4 and Vercel Speed Insights) to monitor aggregated system performance, page load velocities, and error rates. This telemetry does not track or collect personal resume content.
+        </p>
+
+        <h2 style="font-size: 22px; color: var(--primary-dark); margin: 35px 0 12px 0; font-family: 'Outfit', sans-serif;">
+          5. GDPR, CCPA/CPRA &amp; Global Privacy Rights
+        </h2>
+        <p>
+          Regardless of your jurisdiction (including the European Economic Area, United Kingdom, and California), ZenResume honors all foundational data privacy principles:
+        </p>
+        <ul>
+          <li><strong>Right to Erase / Delete:</strong> Because your data resides exclusively in your browser storage, clearing your browser cache or clicking "Reset Defaults" instantly and permanently purges all local data.</li>
+          <li><strong>Right to Portability:</strong> You can download a complete structured JSON/<code>.zenresume</code> file of your entire profile with one click.</li>
+          <li><strong>Zero Sale of Data:</strong> We do not sell, rent, trade, or monetize your personal employment records or contact information to any third party.</li>
+        </ul>
+
+        <h2 style="font-size: 22px; color: var(--primary-dark); margin: 35px 0 12px 0; font-family: 'Outfit', sans-serif;">
+          6. Corporate Entity &amp; Data Protection Officer Contact
+        </h2>
+        <p>
+          ZenResume is developed and published by <strong>Aneevarp Solutions</strong> (Govt. of India MSME: <code>UDYAM-AP-10-0144446</code>). If you have questions regarding this privacy policy or our data practices, contact our operations desk directly:
+        </p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:aneevarpsolutions@gmail.com" style="color: #006856; font-weight: 600;">aneevarpsolutions@gmail.com</a></li>
+          <li><strong>Parent Enterprise:</strong> Aneevarp Solutions, Visakhapatnam, Andhra Pradesh, India</li>
+          <li><strong>Support Portal:</strong> <a href="/contact.html" style="color: #006856; font-weight: 600;">https://www.zenresume.online/contact.html</a></li>
+        </ul>
 
       </div>
 
