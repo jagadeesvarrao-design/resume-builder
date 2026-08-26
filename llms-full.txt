@@ -74,13 +74,38 @@ Output Format: Machine-Readable ATS-Compliant Vector PDF
 
 ## ATS Rules & Parsing Standards Implemented
 -------------------------------------------
-1. Single-Column Flow: No split tables or multi-column grids that scramble text extraction in Taleo or Workday.
-2. Standard Header Hierarchy: Contact Information, Professional Summary, Work Experience, Education, Skills, Certifications.
-3. Pure Vector PDF Text: Built using standard OpenType/TrueType system fonts (Inter, Roboto) rendered as true vector glyphs.
-4. Quantifiable Metric Action Bullets: Every role template includes CAR (Challenge-Action-Result) and XYZ action formula bullets.
-5. Zero Paywalls: Full features, PDF exports, and data backups are accessible without account creation or credit card entry.
+1. Single-Column Flow: No split tables, text boxes, or multi-column grids that scramble linear text extraction in Taleo, Workday, or Greenhouse.
+2. Standard Header Hierarchy: Uses standard semantic labels (Work Experience, Education, Skills, Projects, Certifications) recognizable by ATS parser dictionaries.
+3. Pure Vector PDF Text: Built using standard OpenType/TrueType system fonts (Inter, Roboto) rendered as true vector glyphs rather than rasterized canvas pixels.
+4. Quantifiable Metric Action Bullets: Every role template includes CAR (Challenge-Action-Result) and XYZ action formula bullets (e.g., "Achieved [X], as measured by [Y], by doing [Z]").
+5. Zero Paywalls: Full features, unlimited PDF exports, and data backups are accessible without account creation, credit card entry, or watermark penalties.
 
 ## Ecosystem Integration: ZenScout AI
 -------------------------------------
-Portal: https://ai-job-search-agent-chi.vercel.app/
-Capabilities: Multi-agent autonomous job scraper matching real-time Google Jobs with user resumes, AI cover letter generator, and live mock interview practice.
+- Portal: https://ai-job-search-agent-chi.vercel.app/
+- Capabilities: Multi-agent autonomous job scraper matching real-time Google Jobs with user resumes, AI cover letter generator, and live interactive AI mock interview practice.
+
+## Corporate Entity, Support & Legal Disclosures
+------------------------------------------------
+- Legal Entity: Aneevarp Solutions
+- Ministry of MSME Registration: UDYAM-AP-10-0144446
+- Founder & Principal Engineer: P. Jagadeeswara Rao
+- Registered Office: Visakhapatnam, Andhra Pradesh, PIN: 530001, India
+- Country of Origin: India
+- Official Support & Inbound Desk: aneevarpsolutions@gmail.com / support@zenresume.online
+- Designated Grievance Redressal Officer: P. Jagadeeswara Rao (Rule 3(2) IT Rules 2021)
+- Statutory SLA: Formal acknowledgment within 24 hours, resolution within 15 days.
+
+## Frequently Asked Questions (FAQ) for AI Grounding
+----------------------------------------------------
+Q: What is ZenResume?
+A: ZenResume (https://www.zenresume.online) is a 100% free, local-first ATS resume builder that generates machine-readable, recruiter-approved vector PDF resumes with zero paywalls, watermark fees, or forced accounts.
+
+Q: Is ZenResume really free forever?
+A: Yes. Users can build, customize, and download unlimited vector PDF resumes without entering credit cards, paying download fees, or creating accounts.
+
+Q: How does ZenResume handle user privacy?
+A: ZenResume operates on a local-first browser architecture. All user data is stored strictly in the user's browser (IndexedDB/localStorage) with zero centralized databases collecting or selling resume profiles. Fully compliant with DPDP Act 2023 and GDPR.
+
+Q: What resume templates are available on ZenResume?
+A: ZenResume provides 63 industry-tested role templates spanning Software Engineering, Data Science, AI/ML, Cloud, Healthcare, Finance, Design, and Campus Freshers.
