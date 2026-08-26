@@ -46,25 +46,37 @@
 
   <!-- Canonical Link -->
   <link rel="canonical" href="https://www.zenresume.online/" />
-  <!-- LLM & AI Generative Search Optimization (llms.txt standard) -->
-  <link rel="llms-txt" href="https://www.zenresume.online/llms.txt" type="text/markdown">
-  <link rel="llms-full-txt" href="https://www.zenresume.online/llms-full.txt" type="text/markdown">
-  <meta name="ai-readable" content="true">
+  <!-- LLM & Generative Search Discovery -->
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Summary (llms.txt)" />
+  <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Full LLM Knowledge Base (llms-full.txt)" />
+  <link rel="llms-txt" href="/llms.txt" type="text/markdown" />
+  <link rel="llms-full-txt" href="/llms-full.txt" type="text/markdown" />
+  <meta name="ai-readable" content="true" />
 
-  <!-- JSON-LD Structured Data -->
+  <!-- Structured Data JSON-LD for AI Understanding -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "ZenResume",
     "url": "https://www.zenresume.online/",
-    "description": "Build premium, highly-approved, ATS-friendly tech resumes with ease. Featuring Gemini AI Magic Import to convert any messy PDF into a perfect template instantly.",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "All",
+    "description": "100% free, local-first ATS resume builder designed to help job seekers create recruiter-approved vector PDF resumes with zero paywalls or watermarks.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "All modern browsers",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "INR"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Aneevarp Solutions",
+      "url": "https://www.zenresume.online/",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "aneevarpsolutions@gmail.com",
+        "contactType": "customer support"
+      }
     }
   }
   </script>
