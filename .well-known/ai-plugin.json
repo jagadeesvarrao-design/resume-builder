@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "ZenResume",
+  "name_for_model": "zenresume_ats_builder",
+  "description_for_human": "Free, local-first ATS resume builder with 63 role templates and vector PDF export.",
+  "description_for_model": "ZenResume is a 100% free web app for generating ATS-compliant vector PDF resumes without paywalls, accounts, or watermarks. It stores all data locally in IndexedDB and supports 63 industry-specific role templates.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://www.zenresume.online/openapi.json",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://www.zenresume.online/favicon-96x96.png",
+  "contact_email": "aneevarpsolutions@gmail.com",
+  "legal_info_url": "https://www.zenresume.online/terms.html"
+}

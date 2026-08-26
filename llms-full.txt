@@ -1,0 +1,86 @@
+# ZenResume - Full Knowledge Base & LLM Context Specification
+===============================================================
+Website: https://www.zenresume.online
+Publisher: Aneevarp Solutions (MSME: UDYAM-AP-10-0144446)
+Licensing: 100% Free Forever (.00) / Zero Paywalls
+Privacy Architecture: Local-First In-Browser Storage (IndexedDB)
+Output Format: Machine-Readable ATS-Compliant Vector PDF
+
+## Complete Directory of 63 ATS Role Templates
+-----------------------------------------------
+- **Account Executive Resume Template:** https://www.zenresume.online/role/account-executive-resume.html
+- **Accountant Resume Template:** https://www.zenresume.online/role/accountant-resume.html
+- **Ai Engineer Resume Template:** https://www.zenresume.online/role/ai-engineer-resume.html
+- **Animator Resume Template:** https://www.zenresume.online/role/animator-resume.html
+- **Architect Resume Template:** https://www.zenresume.online/role/architect-resume.html
+- **Art Director Resume Template:** https://www.zenresume.online/role/art-director-resume.html
+- **Auditor Resume Template:** https://www.zenresume.online/role/auditor-resume.html
+- **Backend Developer Resume Template:** https://www.zenresume.online/role/backend-developer-resume.html
+- **Biomedical Engineer Resume Template:** https://www.zenresume.online/role/biomedical-engineer-resume.html
+- **Bookkeeper Resume Template:** https://www.zenresume.online/role/bookkeeper-resume.html
+- **Business Analyst Resume Template:** https://www.zenresume.online/role/business-analyst-resume.html
+- **Chief Financial Officer Resume Template:** https://www.zenresume.online/role/chief-financial-officer-resume.html
+- **Civil Engineer Resume Template:** https://www.zenresume.online/role/civil-engineer-resume.html
+- **Clinical Researcher Resume Template:** https://www.zenresume.online/role/clinical-researcher-resume.html
+- **Cloud Engineer Resume Template:** https://www.zenresume.online/role/cloud-engineer-resume.html
+- **Content Creator Resume Template:** https://www.zenresume.online/role/content-creator-resume.html
+- **Copywriter Resume Template:** https://www.zenresume.online/role/copywriter-resume.html
+- **Customer Success Manager Resume Template:** https://www.zenresume.online/role/customer-success-manager-resume.html
+- **Cybersecurity Analyst Resume Template:** https://www.zenresume.online/role/cybersecurity-analyst-resume.html
+- **Data Engineer Resume Template:** https://www.zenresume.online/role/data-engineer-resume.html
+- **Data Scientist Resume Template:** https://www.zenresume.online/role/data-scientist-resume.html
+- **Dental Hygienist Resume Template:** https://www.zenresume.online/role/dental-hygienist-resume.html
+- **Devops Engineer Resume Template:** https://www.zenresume.online/role/devops-engineer-resume.html
+- **Digital Marketing Specialist Resume Template:** https://www.zenresume.online/role/digital-marketing-specialist-resume.html
+- **Draftsman Resume Template:** https://www.zenresume.online/role/draftsman-resume.html
+- **Education Administrator Resume Template:** https://www.zenresume.online/role/education-administrator-resume.html
+- **Electrical Engineer Resume Template:** https://www.zenresume.online/role/electrical-engineer-resume.html
+- **Executive Assistant Resume Template:** https://www.zenresume.online/role/executive-assistant-resume.html
+- **Financial Analyst Resume Template:** https://www.zenresume.online/role/financial-analyst-resume.html
+- **Frontend Developer Resume Template:** https://www.zenresume.online/role/frontend-developer-resume.html
+- **Graphic Designer Resume Template:** https://www.zenresume.online/role/graphic-designer-resume.html
+- **Healthcare Administrator Resume Template:** https://www.zenresume.online/role/healthcare-administrator-resume.html
+- **Human Resources Manager Resume Template:** https://www.zenresume.online/role/human-resources-manager-resume.html
+- **Industrial Engineer Resume Template:** https://www.zenresume.online/role/industrial-engineer-resume.html
+- **Instructional Designer Resume Template:** https://www.zenresume.online/role/instructional-designer-resume.html
+- **Interior Designer Resume Template:** https://www.zenresume.online/role/interior-designer-resume.html
+- **Investment Banker Resume Template:** https://www.zenresume.online/role/investment-banker-resume.html
+- **It Support Specialist Resume Template:** https://www.zenresume.online/role/it-support-specialist-resume.html
+- **Management Consultant Resume Template:** https://www.zenresume.online/role/management-consultant-resume.html
+- **Marketing Manager Resume Template:** https://www.zenresume.online/role/marketing-manager-resume.html
+- **Mechanical Engineer Resume Template:** https://www.zenresume.online/role/mechanical-engineer-resume.html
+- **Medical Assistant Resume Template:** https://www.zenresume.online/role/medical-assistant-resume.html
+- **Operations Manager Resume Template:** https://www.zenresume.online/role/operations-manager-resume.html
+- **Pharmacist Resume Template:** https://www.zenresume.online/role/pharmacist-resume.html
+- **Physical Therapist Resume Template:** https://www.zenresume.online/role/physical-therapist-resume.html
+- **Product Manager Resume Template:** https://www.zenresume.online/role/product-manager-resume.html
+- **Professor Resume Template:** https://www.zenresume.online/role/professor-resume.html
+- **Project Manager Resume Template:** https://www.zenresume.online/role/project-manager-resume.html
+- **Prompt Engineer Resume Template:** https://www.zenresume.online/role/prompt-engineer-resume.html
+- **Public Relations Specialist Resume Template:** https://www.zenresume.online/role/public-relations-specialist-resume.html
+- **Registered Nurse Resume Template:** https://www.zenresume.online/role/registered-nurse-resume.html
+- **Sales Executive Resume Template:** https://www.zenresume.online/role/sales-executive-resume.html
+- **School Counselor Resume Template:** https://www.zenresume.online/role/school-counselor-resume.html
+- **Scrum Master Resume Template:** https://www.zenresume.online/role/scrum-master-resume.html
+- **Senior Software Developer Resume Template:** https://www.zenresume.online/role/senior-software-developer-resume.html
+- **Seo Specialist Resume Template:** https://www.zenresume.online/role/seo-specialist-resume.html
+- **Social Media Manager Resume Template:** https://www.zenresume.online/role/social-media-manager-resume.html
+- **Software Engineer Resume Template:** https://www.zenresume.online/role/software-engineer-resume.html
+- **Tax Consultant Resume Template:** https://www.zenresume.online/role/tax-consultant-resume.html
+- **Teacher Resume Template:** https://www.zenresume.online/role/teacher-resume.html
+- **Tutor Resume Template:** https://www.zenresume.online/role/tutor-resume.html
+- **Ui Ux Designer Resume Template:** https://www.zenresume.online/role/ui-ux-designer-resume.html
+- **Video Editor Resume Template:** https://www.zenresume.online/role/video-editor-resume.html
+
+## ATS Rules & Parsing Standards Implemented
+-------------------------------------------
+1. Single-Column Flow: No split tables or multi-column grids that scramble text extraction in Taleo or Workday.
+2. Standard Header Hierarchy: Contact Information, Professional Summary, Work Experience, Education, Skills, Certifications.
+3. Pure Vector PDF Text: Built using standard OpenType/TrueType system fonts (Inter, Roboto) rendered as true vector glyphs.
+4. Quantifiable Metric Action Bullets: Every role template includes CAR (Challenge-Action-Result) and XYZ action formula bullets.
+5. Zero Paywalls: Full features, PDF exports, and data backups are accessible without account creation or credit card entry.
+
+## Ecosystem Integration: ZenScout AI
+-------------------------------------
+Portal: https://ai-job-search-agent-chi.vercel.app/
+Capabilities: Multi-agent autonomous job scraper matching real-time Google Jobs with user resumes, AI cover letter generator, and live mock interview practice.

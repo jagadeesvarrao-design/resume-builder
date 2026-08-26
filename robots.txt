@@ -1,4 +1,88 @@
+# ==============================================================================
+# ZenResume (https://www.zenresume.online) - Robots & LLM Discovery Policy
+# Developed by Aneevarp Solutions (MSME: UDYAM-AP-10-0144446)
+# ==============================================================================
+
 User-agent: *
 Allow: /
 
+# ------------------------------------------------------------------------------
+# Generative AI, LLMs & Retrieval-Augmented Generation (RAG) Crawlers
+# We explicitly welcome all AI search engines, citation systems & grounding bots:
+# ------------------------------------------------------------------------------
+
+# OpenAI (ChatGPT, GPT-4, SearchGPT)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic (Claude, Claude 3.5 Sonnet)
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity AI Search
+User-agent: PerplexityBot
+Allow: /
+
+# Google (Gemini, Vertex AI, Search Generative Experience)
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+# Apple Intelligence & Siri
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Meta AI & Llama
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# ByteDance / Doubao AI
+User-agent: Bytespider
+Allow: /
+
+# Microsoft / Bing Copilot
+User-agent: Bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
+# DuckDuckGo AI Assist
+User-agent: DuckAssistBot
+Allow: /
+
+# Cohere AI
+User-agent: cohere-ai
+Allow: /
+
+# Diffbot Knowledge Graph
+User-agent: Diffbot
+Allow: /
+
+# Amazon AI
+User-agent: Amazonbot
+Allow: /
+
+# ------------------------------------------------------------------------------
+# Sitemaps & LLM Context Standards
+# ------------------------------------------------------------------------------
 Sitemap: https://www.zenresume.online/sitemap.xml
+llms-txt: https://www.zenresume.online/llms.txt
+llms-full-txt: https://www.zenresume.online/llms-full.txt
