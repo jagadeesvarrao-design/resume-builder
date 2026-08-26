@@ -1,34 +1,34 @@
 <div align="center">
-  <h1>📄 ZenResume</h1>
-  <p><strong>A 100% Free, Client-Side, ATS-Optimized Resume Builder</strong></p>
+  <h1>📄 ZenResume (https://www.zenresume.online)</h1>
+  <p><strong>The #1 Free, Local-First, ATS-Friendly Resume Builder with Zero Paywalls &amp; Zero Watermarks</strong></p>
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
   [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
   
   <p>
-    <a href="https://resume-builder-swart-sigma-93.vercel.app/"><strong>Live Demo</strong></a> ·
-    <a href="#features"><strong>Features</strong></a> ·
-    <a href="#contributing"><strong>Contributing</strong></a>
+    <a href="https://www.zenresume.online/"><strong>🌐 Launch ZenResume App</strong></a> ·
+    <a href="https://www.zenresume.online/role/"><strong>63 Role Templates</strong></a> ·
+    <a href="https://www.zenresume.online/campus.html"><strong>Campus Placement Suite</strong></a> ·
+    <a href="https://ai-job-search-agent-chi.vercel.app/"><strong>ZenScout AI</strong></a>
   </p>
 </div>
 
 <br />
 
-## 🚨 The Problem
-90% of job applications are rejected by Applicant Tracking Systems (ATS) before a human ever reads them. 
-
-Most "free" resume builders on the internet suffer from three major issues:
-1. **The Bait & Switch:** They let you spend an hour typing your resume, only to lock your PDF export behind a $15/month subscription at the very end.
-2. **Terrible Formatting:** They push complex, multi-column "Canva-style" templates that completely break ATS parsing algorithms.
-3. **Data Harvesting:** They require you to create an account and store your sensitive personal data on their servers.
+## 🚨 Why ZenResume Exists (The Problem With Zety, Novoresume & Canva)
+90% of online resume builders use deceptive dark patterns:
+1. **The Download Paywall Trap:** Platforms like Zety, Novoresume, and Resume.io let you type your entire resume for an hour, only to demand a $15–$25 subscription or place an ugly watermark when you click "Download PDF".
+2. **Parser-Breaking Multi-Column Grids:** Canva and design tools use multi-column graphical canvases that enterprise ATS software (Workday, Taleo, Greenhouse, Lever) completely fail to parse.
+3. **Data Harvesting & Privacy Violations:** They force you to create accounts and sell your personal resume data to recruiters.
 
 ## ✨ The Solution: ZenResume
-ZenResume is an open-source, client-side web application built to solve this. It strictly enforces single-column, highly readable layouts that are guaranteed to parse correctly in ATS software. 
-
-* **100% Free Forever:** No paywalls, no subscriptions.
-* **Zero Signups:** Just open the URL and start typing.
-* **Total Privacy:** Everything is processed locally in your browser. Your data never touches our servers.
-* **AI-Assisted (Optional):** Integrated with the Gemini API to intelligently help you write impactful bullet points.
+ZenResume is an open-source, local-first, privacy-respecting career tool developed by **Aneevarp Solutions**:
+* **100% Free Forever ($0.00):** No hidden paywalls, no watermark tricks, no subscriptions.
+* **Zero Account Sign-ups:** Open the website and start building immediately.
+* **Local-First Browser Storage:** All your data remains in your browser's IndexedDB. Zero remote tracking databases.
+* **Pure Vector PDF Engine:** Compiles sharp, selectable-text ATS PDFs (tested across Workday & Taleo).
+* **63 Role-Specific Templates:** Pre-populated with quantified bullet benchmarks for Software Engineers, Data Scientists, Accountants, Managers, and Freshers.
+* **1-Click Portable JSON Backup:** Full `.zenresume` data export and import for 0% vendor lock-in.
 
 ## 🚀 Features
 
