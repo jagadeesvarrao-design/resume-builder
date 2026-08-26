@@ -31,6 +31,20 @@ export default async function handler(req, res) {
     let emailDispatched = false;
     let whatsappDispatched = false;
 
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br />');
+
     // 1. Dispatch Email Alert via Nodemailer (Gmail SMTP)
     const gmailUser = process.env.GMAIL_USER || 'aneevarpsolutions@gmail.com';
     const gmailPass = process.env.GMAIL_APP_PASSWORD;
@@ -50,7 +64,7 @@ export default async function handler(req, res) {
           from: `"ZenResume Operations" <${gmailUser}>`,
           to: recipientEmail,
           replyTo: email,
-          subject: `[ZenResume Lead] New Inbound Inquiry from ${name} (${rating}★)`,
+          subject: `[ZenResume Lead] New Inbound Inquiry from ${safeName} (${rating}★)`,
           text: `Name: ${name}\nEmail: ${email}\nRating: ${rating}/5\n\nMessage:\n${message}`,
           html: `
             <div style="font-family: 'Segoe UI', Arial, sans-serif; background-color: #f8fafc; color: #1e293b; padding: 24px;">
@@ -63,11 +77,11 @@ export default async function handler(req, res) {
                 <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                   <tr>
                     <td style="padding: 8px 0; color: #64748b; font-size: 13px; font-weight: bold; width: 30%;">Sender Name:</td>
-                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 600;">${name}</td>
+                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 600;">${safeName}</td>
                   </tr>
                   <tr>
                     <td style="padding: 8px 0; color: #64748b; font-size: 13px; font-weight: bold;">Sender Email:</td>
-                    <td style="padding: 8px 0; color: #006856; font-size: 14px; font-weight: 600;"><a href="mailto:${email}" style="color: #006856; text-decoration: none;">${email}</a></td>
+                    <td style="padding: 8px 0; color: #006856; font-size: 14px; font-weight: 600;"><a href="mailto:${safeEmail}" style="color: #006856; text-decoration: none;">${safeEmail}</a></td>
                   </tr>
                   <tr>
                     <td style="padding: 8px 0; color: #64748b; font-size: 13px; font-weight: bold;">Experience Rating:</td>
@@ -77,7 +91,7 @@ export default async function handler(req, res) {
 
                 <div style="font-size: 12px; font-weight: bold; text-transform: uppercase; color: #475569; margin-bottom: 8px;">Message / Feedback:</div>
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: #1e293b;">
-                  ${message.replace(/\n/g, '<br />')}
+                  ${safeMessage}
                 </div>
 
                 <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #f1f5f9; text-align: center; font-size: 11px; color: #94a3b8;">
