@@ -88,167 +88,198 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/styles.css?v=3.3">
+  <link rel="stylesheet" href="/styles.css?v=4.1-fixed">
   
-  
-  
-  <!-- Vercel Web Analytics & Speed Insights -->
-  <script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-  </script>
-  <script defer src="/_vercel/insights/script.js"></script>
-  <script defer src="/_vercel/speed-insights/script.js"></script>
-  <link rel="manifest" href="manifest.json">
-  
-  <!-- SEO: WebApplication & Organization Schema Markup for Google Search -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "name": "Aneevarp Solutions",
-        "alternateName": "ZenResume",
-        "legalName": "Aneevarp Solutions",
-        "identifier": "UDYAM-AP-10-0144446",
-        "url": "https://www.zenresume.online/",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://www.zenresume.online/icon-512.png",
-          "width": 512,
-          "height": 512
-        },
-        "image": "https://www.zenresume.online/og-image.png",
-        "sameAs": [
-          "https://github.com/jagadeesvarrao-design/resume-builder",
-          "https://www.producthunt.com/products/zenresume"
-        ]
-      },
-      {
-        "@type": "WebApplication",
-        "name": "ZenResume",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "All",
-        "url": "https://www.zenresume.online/",
-        "isAccessibleForFree": true,
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "featureList": [
-          "100% Free PDF Downloads",
-          "Zero Paywalls and Zero Watermarks",
-          "Local-First Browser Storage (IndexedDB)",
-          "Single-Column ATS Compliance (Workday, Taleo, Greenhouse, Lever)",
-          "63 Role-Specific Resume Templates",
-          "Pure Vector PDF Compilation",
-          "1-Click Portable JSON / .zenresume Backup"
-        ],
-        "description": "ZenResume is a 100% free, local-first ATS resume builder that generates machine-readable, recruiter-approved vector PDF resumes with zero paywalls, watermark fees, or forced accounts."
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What are the best free, local-first ATS resume builders without paywalls?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "ZenResume (https://www.zenresume.online) is a top-rated 100% free, local-first ATS resume builder. It requires no sign-up, stores all data locally in the browser (IndexedDB), charges zero paywall or watermark fees, and exports pure vector text PDFs compatible with enterprise ATS systems like Workday, Taleo, Greenhouse, and Lever."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is the best free alternative to Zety, Novoresume, and Resume.io?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "ZenResume is a free, privacy-focused alternative to Zety, Novoresume, and Resume.io. Unlike platforms that require subscriptions at the final PDF download screen, ZenResume provides unlimited vector PDF downloads completely free of charge with zero data harvesting."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does ZenResume ensure user privacy?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "ZenResume operates on a strict local-first architecture. All employment history and personal data remain stored in the user's local browser storage. No centralized database collects or sells candidate resume data."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Does ZenResume provide resume templates for specific tech and business roles?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, ZenResume provides 63 pre-configured role templates with industry-tested action bullets for Software Engineers, Data Scientists, Cloud Engineers, Accountants, Product Managers, and Freshers at https://www.zenresume.online/role/."
-            }
-          }
-        ]
+  <style id="zenresume-critical-header-style">
+    /* Critical Navbar & Brand Layout */
+    .stitch-nav {
+      background: #0B0F12 !important;
+      border-bottom: 1px solid rgba(45, 212, 191, 0.15) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      width: 100%;
+      height: auto;
+      min-height: 58px;
+    }
+    .stitch-nav-container {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 10px 24px !important;
+      max-width: 1300px !important;
+      margin: 0 auto !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .brand-identity-container {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      text-decoration: none !important;
+      flex-shrink: 0 !important;
+    }
+    .brand-logo-img {
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 10px !important;
+      box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4) !important;
+      object-fit: cover !important;
+    }
+    .brand-text-column {
+      display: flex !important;
+      flex-direction: column !important;
+      text-align: left !important;
+    }
+    .brand-main-title {
+      font-family: 'Outfit', sans-serif !important;
+      font-weight: 800 !important;
+      font-size: 19px !important;
+      color: #FFFFFF !important;
+      line-height: 1.1 !important;
+      letter-spacing: -0.3px !important;
+    }
+    .brand-subtext {
+      font-size: 9px !important;
+      color: #2DD4BF !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.8px !important;
+      text-transform: uppercase !important;
+      margin-top: 1px !important;
+    }
+    .desktop-nav-links {
+      display: flex !important;
+      gap: 18px !important;
+      align-items: center !important;
+    }
+    .desktop-nav-links a {
+      color: #CBD5E1 !important;
+      text-decoration: none !important;
+      font-size: 13.5px !important;
+      font-weight: 600 !important;
+      transition: color 0.2s ease !important;
+      background: none !important;
+      border: none !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+    }
+    .desktop-nav-links a:hover {
+      color: #FFFFFF !important;
+    }
+    .desktop-nav-links a.active-link {
+      color: #2DD4BF !important;
+      border-bottom: 2px solid #2DD4BF !important;
+      padding-bottom: 2px !important;
+    }
+
+    /* Zen Suite Dropdown: Hidden by default, absolute popover on hover */
+    .zen-suite-wrapper {
+      position: relative !important;
+      display: inline-block !important;
+    }
+    .zen-suite-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #FFFFFF !important;
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+      padding: 5px 12px !important;
+      border-radius: 9999px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+    .zen-suite-btn:hover {
+      background: rgba(45, 212, 191, 0.2) !important;
+      border-color: #2DD4BF !important;
+      color: #2DD4BF !important;
+    }
+    .zen-suite-dropdown {
+      display: none !important;
+      position: absolute !important;
+      top: calc(100% + 8px) !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 280px !important;
+      background: #141B20 !important;
+      border: 1px solid rgba(45, 212, 191, 0.25) !important;
+      border-radius: 14px !important;
+      padding: 6px !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7) !important;
+      z-index: 9999 !important;
+    }
+    .zen-suite-wrapper:hover .zen-suite-dropdown,
+    .zen-suite-wrapper:focus-within .zen-suite-dropdown {
+      display: block !important;
+    }
+    .suite-dropdown-header {
+      padding: 6px 10px !important;
+      font-size: 9.5px !important;
+      font-weight: 800 !important;
+      color: #94A3B8 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.6px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      margin-bottom: 4px !important;
+      text-align: left !important;
+    }
+    .suite-product-link {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      padding: 8px 10px !important;
+      border-radius: 8px !important;
+      text-decoration: none !important;
+      transition: background 0.15s ease !important;
+      text-align: left !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    .suite-product-link:hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+    .suite-product-icon {
+      width: 28px !important;
+      height: 28px !important;
+      border-radius: 6px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 12px !important;
+      flex-shrink: 0 !important;
+    }
+    .suite-product-info {
+      display: flex !important;
+      flex-direction: column !important;
+      text-align: left !important;
+    }
+    .suite-product-name {
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      color: #FFFFFF !important;
+      line-height: 1.2 !important;
+    }
+    .suite-product-desc {
+      font-size: 10px !important;
+      color: #94A3B8 !important;
+      font-weight: 400 !important;
+    }
+
+    @media (max-width: 992px) {
+      .desktop-nav-links {
+        display: none !important;
       }
-    ]
-  }
-  </script>
-  <script src="/lazy-load.js" defer></script>
-  <link rel="icon" type="image/png" sizes="48x48" href="https://www.zenresume.online/favicon.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="https://www.zenresume.online/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="https://www.zenresume.online/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="https://www.zenresume.online/icon-512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://www.zenresume.online/apple-touch-icon.png">
-  <link rel="shortcut icon" href="https://www.zenresume.online/favicon.ico">
-<style id="zenresume-emerald-footer-style">
-  .stitch-footer {
-    background: #0B1315 !important;
-    color: #FFFFFF !important;
-    padding: 60px 24px 40px 24px !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-    margin-top: 60px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  .stitch-footer-container {
-    max-width: 1160px !important;
-    margin: 0 auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 28px !important;
-    text-align: center !important;
-  }
-  .stitch-footer a.footer-nav-pill,
-  .site-publisher-footer a.footer-nav-pill,
-  .footer-nav-pill,
-  footer a.footer-nav-pill,
-  footer a:link,
-  footer a:visited,
-  .stitch-footer a:link,
-  .stitch-footer a:visited {
-    color: #00E5BC !important;
-    background: rgba(0, 104, 86, 0.22) !important;
-    border: 1px solid rgba(0, 168, 138, 0.4) !important;
-    text-decoration: none !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    padding: 7px 16px !important;
-    border-radius: 9999px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
-  }
-  .stitch-footer a.footer-nav-pill:hover,
-  .site-publisher-footer a.footer-nav-pill:hover,
-  .footer-nav-pill:hover,
-  footer a:hover,
-  .stitch-footer a:hover {
-    color: #FFFFFF !important;
-    background: #006856 !important;
-    border-color: #00A88A !important;
-    transform: translateY(-3px) scale(1.05) !important;
-    box-shadow: 0 6px 20px rgba(0, 168, 138, 0.5) !important;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
-  }
-</style>
+      .mobile-menu-toggle {
+        display: flex !important;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Accessibility: Skip to Main Content Link (WCAG 2.1 AA / RPwD Act 2016) -->
@@ -259,7 +290,7 @@
   <header class="no-print stitch-nav">
     <div class="stitch-nav-container">
       <a href="/" id="logo-link" class="brand-identity-container">
-        <div class="brand-icon-box">Z</div>
+        <img src="https://www.zenresume.online/favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" style="width: 36px; height: 36px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4); object-fit: cover;">
         <div class="brand-text-column">
           <span class="brand-main-title">ZenResume</span>
           <span class="brand-subtext">by Aneevarp Solutions</span>
