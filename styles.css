@@ -27,66 +27,73 @@
 
 
 :root {
-  /* Stitch Deep Pine & Modern Teal Tokens */
-  --primary-calm: #006856;
-  --primary-light: #00846D;
-  --primary-dark: #004D40;
-  --primary-fixed: #82F7D8;
-  --primary-fixed-dim: #65DABC;
-  --primary-glow: rgba(0, 104, 86, 0.12);
-  --primary-glow-strong: rgba(0, 104, 86, 0.25);
+  /* Aneevarp Solutions Forest Emerald & Cyan Suite Tokens */
+  --primary-calm: #00685F;
+  --primary-light: #0D9488;
+  --primary-dark: #004D46;
+  --primary-fixed: #2DD4BF;
+  --primary-fixed-dim: #00E5BC;
+  --primary-glow: rgba(0, 104, 95, 0.12);
+  --primary-glow-strong: rgba(0, 104, 95, 0.25);
   
-  --bg-dark-surface: #2D3131;
-  --bg-dark-surface-dock: #242828;
-  --bg-serene: #F7FAF9;
-  --bg-serene-gradient: linear-gradient(135deg, #F7FAF9 0%, #EBEFED 100%);
+  --bg-main: #F5FAF8;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #F8FAFC;
+  --bg-dark-surface: #1E293B;
+  --bg-dark-surface-dock: #0F172A;
+  --bg-serene: #F5FAF8;
+  --bg-serene-gradient: linear-gradient(135deg, #F5FAF8 0%, #E6F4F1 100%);
   --bg-card: #FFFFFF;
-  --bg-input: #F1F4F3;
+  --bg-input: #FFFFFF;
   
-  --text-main: #181C1C;
-  --text-sub: #3D4945;
-  --text-light: #6D7A75;
+  --text-main: #09090B;
+  --text-sub: #475569;
+  --text-light: #64748B;
   --white: #FFFFFF;
   
-  --border-subtle: #D1DBDA;
-  --border-glass: rgba(0, 104, 86, 0.12);
-  --border-glass-strong: rgba(0, 104, 86, 0.25);
-  --shadow-peaceful: 0 4px 20px rgba(0, 104, 86, 0.05);
-  --shadow-hover: 0 12px 32px rgba(78, 96, 115, 0.12);
-  --shadow-paper: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 8px rgba(0, 0, 0, 0.03);
+  --border-subtle: #E2E8F0;
+  --border-glass: rgba(0, 104, 95, 0.14);
+  --border-glass-strong: rgba(0, 104, 95, 0.28);
+  --shadow-peaceful: 0 4px 20px rgba(0, 104, 95, 0.06);
+  --shadow-hover: 0 12px 36px rgba(0, 104, 95, 0.14);
+  --shadow-paper: 0 10px 30px rgba(0, 0, 0, 0.06), 0 1px 8px rgba(0, 0, 0, 0.03);
   
-  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  --radius-lg: 16px;
+  --transition-smooth: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --radius-xl: 24px;
+  --radius-lg: 18px;
   --radius-md: 12px;
   --radius-sm: 8px;
 }
 
 [data-theme="dark"] {
-  --primary-calm: #65DABC;
-  --primary-light: #82F7D8;
+  --primary-calm: #2DD4BF;
+  --primary-light: #5EEAD4;
   --primary-dark: #FFFFFF;
-  --primary-fixed: #006856;
-  --primary-fixed-dim: #004D40;
-  --primary-glow: rgba(101, 218, 188, 0.18);
-  --primary-glow-strong: rgba(101, 218, 188, 0.35);
+  --primary-fixed: #00685F;
+  --primary-fixed-dim: #004D46;
+  --primary-glow: rgba(45, 212, 191, 0.2);
+  --primary-glow-strong: rgba(45, 212, 191, 0.38);
   
-  --bg-dark-surface: #1E2222;
-  --bg-dark-surface-dock: #151818;
-  --bg-serene: #111515;
-  --bg-serene-gradient: linear-gradient(135deg, #181C1C 0%, #101313 100%);
-  --bg-card: #1C2020;
-  --bg-input: #252A2A;
+  --bg-main: #0B0F12;
+  --bg-surface: #141B20;
+  --bg-surface-elevated: #1A2228;
+  --bg-dark-surface: #141B20;
+  --bg-dark-surface-dock: #0B0F12;
+  --bg-serene: #0B0F12;
+  --bg-serene-gradient: linear-gradient(135deg, #0B0F12 0%, #141B20 100%);
+  --bg-card: #141B20;
+  --bg-input: #1A2228;
   
-  --text-main: #E2E8F0;
-  --text-sub: #94A3B8;
-  --text-light: #64748B;
-  --white: #1C2020;
+  --text-main: #F8FAFC;
+  --text-sub: #CBD5E1;
+  --text-light: #94A3B8;
+  --white: #141B20;
   
-  --border-subtle: #2D3533;
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-glass-strong: rgba(255, 255, 255, 0.16);
-  --shadow-peaceful: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+  --border-subtle: #232D36;
+  --border-glass: rgba(45, 212, 191, 0.16);
+  --border-glass-strong: rgba(45, 212, 191, 0.3);
+  --shadow-peaceful: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+  --shadow-hover: 0 14px 44px 0 rgba(0, 0, 0, 0.65);
 }
 
 /* Enable smooth transitions for theme switching */
@@ -4849,5 +4856,331 @@ footer a:active,
     visibility: hidden !important;
   }
 }
+
+/* ==============================================================================
+   ANEEVARP SOLUTIONS DESIGN SYSTEM HARMONIZATION
+   Unified with ZenScout AI & ZenDoc AI (DocAI)
+   ============================================================================== */
+
+/* 1. Keyframe Animations & Ambient Visuals */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.08); }
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes float-soft-delayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(6px); }
+}
+
+@keyframes scanline {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.ambient-glow-teal {
+  position: absolute;
+  top: -60px;
+  left: 20%;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.15) 0%, rgba(45, 212, 191, 0) 70%);
+  border-radius: 50%;
+  filter: blur(45px);
+  pointer-events: none;
+  animation: pulse-glow 6s infinite ease-in-out;
+  z-index: 0;
+}
+
+.ambient-glow-emerald {
+  position: absolute;
+  top: 40px;
+  right: 20%;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(0, 104, 95, 0.18) 0%, rgba(0, 104, 95, 0) 70%);
+  border-radius: 50%;
+  filter: blur(50px);
+  pointer-events: none;
+  animation: pulse-glow 8s infinite ease-in-out 2s;
+  z-index: 0;
+}
+
+/* 2. Text Gradients & Typography */
+.text-gradient {
+  background: linear-gradient(135deg, #00685F 0%, #0D9488 50%, #00E5BC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+[data-theme="dark"] .text-gradient {
+  background: linear-gradient(135deg, #2DD4BF 0%, #5EEAD4 50%, #A7F3D0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 3. Modern Tactile Interaction Tokens */
+.btn-tactile {
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.btn-tactile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 104, 95, 0.25);
+}
+
+.btn-tactile:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* 4. Brand Logo & Header Layout */
+.brand-identity-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.brand-icon-box {
+  background: #00685F;
+  color: #FFFFFF;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  box-shadow: 0 4px 14px rgba(0, 104, 95, 0.35);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.brand-identity-container:hover .brand-icon-box {
+  transform: scale(1.06);
+}
+
+.brand-text-column {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.brand-main-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  color: #FFFFFF;
+  line-height: 1.1;
+  letter-spacing: -0.3px;
+}
+
+.brand-subtext {
+  font-size: 9px;
+  color: #2DD4BF;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* 5. Zen Suite Interactive Ecosystem Dropdown */
+.zen-suite-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.zen-suite-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF !important;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.zen-suite-btn:hover {
+  background: rgba(45, 212, 191, 0.2);
+  border-color: #2DD4BF;
+  color: #2DD4BF !important;
+}
+
+.zen-suite-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  width: 290px;
+  background: #141B20;
+  border: 1px solid rgba(45, 212, 191, 0.25);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2500;
+}
+
+.zen-suite-wrapper:hover .zen-suite-dropdown,
+.zen-suite-wrapper:focus-within .zen-suite-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.suite-dropdown-header {
+  padding: 8px 12px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 4px;
+}
+
+.suite-product-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.suite-product-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.suite-product-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.suite-product-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.suite-product-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.suite-product-desc {
+  font-size: 10.5px;
+  color: #94A3B8;
+}
+
+/* 6. Announcement Badge */
+.suite-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 104, 95, 0.12);
+  border: 1px solid rgba(0, 104, 95, 0.25);
+  color: #00685F;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .suite-pill-badge {
+  background: rgba(45, 212, 191, 0.12);
+  border-color: rgba(45, 212, 191, 0.3);
+  color: #2DD4BF;
+}
+
+.suite-pill-badge:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0, 104, 95, 0.15);
+}
+
+/* 7. Unified Multi-Column Ecosystem Footer */
+.aneevarp-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 36px;
+  text-align: left;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 0 40px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-col-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #2DD4BF;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 16px;
+}
+
+.footer-col-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-col-links a {
+  color: #CBD5E1 !important;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.footer-col-links a:hover {
+  color: #2DD4BF !important;
+  transform: translateX(3px);
+  text-shadow: none !important;
+}
+
 
 
