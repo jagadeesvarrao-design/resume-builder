@@ -44,6 +44,167 @@ function deepEscapeHTML(obj) {
 }
 
 const RESUME_PROFILES = {
+  tcs_fresher: {
+    personal: {
+      name: "Aditya Sharma",
+      title: "TCS NQT Candidate / Full-Stack Developer",
+      email: "aditya.sharma@email.com",
+      phone: "+91 98450 12345",
+      location: "Hyderabad, India",
+      website: "adityasharma.dev",
+      linkedin: "linkedin.com/in/adityasharma-cs"
+    },
+    summary: "Aspiring Software Engineer & TCS NQT High-Scorer with strong fundamentals in Java, Data Structures, OOPs, and SQL. Hands-on experience developing full-stack web applications and optimizing relational database queries. Proven problem-solving skills with 200+ solved algorithmic challenges on LeetCode.",
+    skills: ["Java (Core & OOPs)", "Python", "Data Structures & Algorithms", "SQL (MySQL/PostgreSQL)", "HTML5 / CSS3 / JavaScript", "Spring Boot Basics", "Git & GitHub", "REST APIs"],
+    experience: [
+      {
+        role: "Software Engineering Intern",
+        company: "Apex Tech Labs",
+        location: "Hyderabad, India",
+        dates: "Jun 2025 - Dec 2025",
+        descriptions: [
+          "Developed backend microservices using Java and Spring Boot, reducing API latency by 22% for student portal.",
+          "Designed normalized database schemas in MySQL, improving query execution time across 50,000+ test records.",
+          "Collaborated in an agile team of 5 to implement secure JWT token authentication with 100% test coverage."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "Campus Placement Automation Portal",
+        technologies: "React.js, Node.js, Express, PostgreSQL",
+        description: "Engineered a centralized placement drive portal used by 800+ batchmates to track interview rounds and company eligibility.",
+        link: "github.com/adityasharma/campus-portal"
+      },
+      {
+        title: "Algorithmic Code Visualizer",
+        technologies: "JavaScript, HTML5 Canvas, CSS Grid",
+        description: "Built an interactive web tool visualizing sorting and pathfinding algorithms in real-time, receiving 1,200+ GitHub stars.",
+        link: "github.com/adityasharma/algo-visualizer"
+      }
+    ],
+    education: [
+      {
+        degree: "B.Tech in Computer Science & Engineering",
+        institution: "JNTU College of Engineering",
+        location: "Hyderabad, India",
+        dates: "2022 - 2026",
+        gpa: "8.7 / 10.0 CGPA"
+      }
+    ],
+    certifications: [
+      {
+        name: "TCS NQT Certified (Top 10% Band)",
+        issuer: "Tata Consultancy Services",
+        date: "2026"
+      },
+      {
+        name: "Oracle Certified Foundations Associate, Java",
+        issuer: "Oracle University",
+        date: "2025"
+      }
+    ]
+  },
+  cloud_fresher: {
+    personal: {
+      name: "Pooja Reddy",
+      title: "AWS Cloud & DevOps Engineer",
+      email: "pooja.reddy@email.com",
+      phone: "+91 97012 34567",
+      location: "Bengaluru, India",
+      website: "poojareddy.cloud",
+      linkedin: "linkedin.com/in/poojareddy-cloud"
+    },
+    summary: "Cloud & Infrastructure Engineer with hands-on expertise in AWS architectures (EC2, S3, RDS, Lambda), Infrastructure as Code (Terraform), and containerization with Docker. Certified AWS Solutions Architect with a track record of building automated CI/CD deployment pipelines.",
+    skills: ["AWS (EC2, S3, RDS, Lambda, VPC, IAM)", "Terraform & CloudFormation", "Docker & Kubernetes Basics", "CI/CD (GitHub Actions, Jenkins)", "Linux Administration & Bash", "Python Scripting", "Monitoring (CloudWatch, Grafana)"],
+    experience: [
+      {
+        role: "Cloud DevOps Intern",
+        company: "CloudVantage Technologies",
+        location: "Bengaluru, India",
+        dates: "Aug 2025 - Feb 2026",
+        descriptions: [
+          "Provisioned multi-tier VPC network infrastructure across 3 AWS Availability Zones using modular Terraform scripts.",
+          "Containerized monolithic Node.js microservices with Docker, reducing deployment cycle times from 45 mins to 6 mins.",
+          "Implemented automated AWS CloudWatch metric alerts and IAM least-privilege security policies."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "Serverless E-Commerce Event Pipeline",
+        technologies: "AWS Lambda, API Gateway, DynamoDB, Python",
+        description: "Architected a serverless order processing pipeline handling 10,000+ mock events daily with zero server provisioning overhead.",
+        link: "github.com/poojareddy/aws-serverless-pipeline"
+      }
+    ],
+    education: [
+      {
+        degree: "B.Tech in Information Technology",
+        institution: "Vellore Institute of Technology (VIT)",
+        location: "Vellore, India",
+        dates: "2022 - 2026",
+        gpa: "8.9 / 10.0 CGPA"
+      }
+    ],
+    certifications: [
+      {
+        name: "AWS Certified Solutions Architect – Associate",
+        issuer: "Amazon Web Services",
+        date: "2025"
+      }
+    ]
+  },
+  campus_fresher: {
+    personal: {
+      name: "Siddharth Verma",
+      title: "B.Tech Graduate / Software Engineer",
+      email: "siddharth.verma@email.com",
+      phone: "+91 99123 45678",
+      location: "Pune, India",
+      website: "siddharthv.dev",
+      linkedin: "linkedin.com/in/siddharth-verma"
+    },
+    summary: "Goal-driven B.Tech Computer Science graduate with strong command of core CS fundamentals (Operating Systems, DBMS, Computer Networks) and modern full-stack development. Experienced in building responsive web applications, working in collaborative Git workflows, and solving algorithmic problems.",
+    skills: ["C++ / Java / Python", "Data Structures & Algorithms", "SQL & Database Design", "React.js & Node.js", "Git & GitHub Version Control", "Linux Shell Scripting", "RESTful API Integration"],
+    experience: [
+      {
+        role: "Full-Stack Web Development Intern",
+        company: "CodeCraft Innovations",
+        location: "Pune, India",
+        dates: "May 2025 - Aug 2025",
+        descriptions: [
+          "Engineered responsive user dashboards using React.js and CSS Grid, improving user interaction speeds by 25%.",
+          "Constructed CRUD REST APIs in Node.js connected to MongoDB, handling over 2,000 daily user requests.",
+          "Participated in agile sprints, weekly retrospective reviews, and wrote automated unit tests."
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: "Smart Attendance Management System",
+        technologies: "Python, OpenCV, SQLite, Flask",
+        description: "Developed a computer vision attendance tool reducing manual classroom roll-call time by 90%.",
+        link: "github.com/siddharthv/smart-attendance"
+      }
+    ],
+    education: [
+      {
+        degree: "Bachelor of Technology in CSE",
+        institution: "College of Engineering Pune (COEP)",
+        location: "Pune, India",
+        dates: "2022 - 2026",
+        gpa: "8.6 / 10.0 CGPA"
+      }
+    ],
+    certifications: [
+      {
+        name: "5-Star Gold Badge in Problem Solving",
+        issuer: "HackerRank",
+        date: "2025"
+      }
+    ]
+  },
   software_fresher: {
     personal: {
       name: "Rohan Das",

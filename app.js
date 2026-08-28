@@ -3431,6 +3431,44 @@ function enterApp() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function openOnboardingModal() {
+  const modal = document.getElementById('onboarding-choice-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+  }
+}
+
+function closeOnboardingModal() {
+  const modal = document.getElementById('onboarding-choice-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+function enterBuilderDirectly() {
+  const landingScreen = document.getElementById('landing-screen');
+  const selectionScreen = document.getElementById('selection-screen');
+  const builderWorkspace = document.getElementById('builder-workspace');
+  const welcomeHeader = document.getElementById('app-header-welcome');
+  const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+  
+  if (landingScreen) landingScreen.style.display = 'none';
+  if (selectionScreen) selectionScreen.style.display = 'none';
+  if (welcomeHeader) welcomeHeader.style.display = 'none';
+  if (builderWorkspace) {
+    builderWorkspace.style.display = 'grid';
+    triggerAdPush('promo-banner-sidebar');
+  }
+  if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = '';
+  if (typeof setMobileTab === 'function') setMobileTab('edit');
+  
+  syncFormToPreview();
+  adjustPreviewScale();
+  checkVaultOnboardingBanner();
+  updateHeaderNavCTA();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function setupLandingPageNavigation() {
   const btnStartBuilding = document.getElementById('btn-start-building');
   const logoLink = document.getElementById('logo-link');
@@ -3439,10 +3477,75 @@ function setupLandingPageNavigation() {
   if (btnStartBuilding) {
     btnStartBuilding.addEventListener('click', (e) => {
       e.preventDefault();
-      enterApp();
+      const savedStateJson = localStorage.getItem('zenresume_state');
+      if (savedStateJson) {
+        enterApp();
+      } else {
+        openOnboardingModal();
+      }
     });
   }
   
+  // Hero 1-Click Fast-Track Role Chips Handlers
+  const heroRoleChips = document.querySelectorAll('.hero-role-chip');
+  heroRoleChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const presetKey = chip.getAttribute('data-preset');
+      if (presetKey && typeof RESUME_PROFILES !== 'undefined' && RESUME_PROFILES[presetKey]) {
+        loadProfileIntoForm(RESUME_PROFILES[presetKey]);
+        state.hasLoadedProfile = true;
+      }
+      enterBuilderDirectly();
+    });
+  });
+
+  // Onboarding Modal Choices Handlers
+  const btnCloseOnboardingX = document.getElementById('btn-close-onboarding-x');
+  if (btnCloseOnboardingX) {
+    btnCloseOnboardingX.addEventListener('click', closeOnboardingModal);
+  }
+
+  const choiceMagic = document.getElementById('choice-magic-import');
+  if (choiceMagic) {
+    choiceMagic.addEventListener('click', () => {
+      closeOnboardingModal();
+      enterBuilderDirectly();
+      const inputMagicPdf = document.getElementById('input-magic-pdf');
+      if (inputMagicPdf) {
+        setTimeout(() => inputMagicPdf.click(), 200);
+      }
+    });
+  }
+
+  const choiceRole = document.getElementById('choice-role-preset');
+  if (choiceRole) {
+    choiceRole.addEventListener('click', () => {
+      closeOnboardingModal();
+      enterApp();
+    });
+  }
+
+  const choiceBlank = document.getElementById('choice-blank-canvas');
+  if (choiceBlank) {
+    choiceBlank.addEventListener('click', () => {
+      closeOnboardingModal();
+      // Clear personal input fields for fresh start
+      const nameInput = document.getElementById('input-full-name');
+      if (nameInput) nameInput.value = '';
+      enterBuilderDirectly();
+    });
+  }
+
+  // Close modal when clicking outside on overlay backdrop
+  const onboardingModal = document.getElementById('onboarding-choice-modal');
+  if (onboardingModal) {
+    onboardingModal.addEventListener('click', (e) => {
+      if (e.target === onboardingModal) {
+        closeOnboardingModal();
+      }
+    });
+  }
+
   if (logoLink) {
     logoLink.addEventListener('click', (e) => {
       e.preventDefault();
