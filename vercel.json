@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/:path*.htm",
+      "destination": "/:path*.html",
+      "statusCode": 301
+    },
+    {
       "source": "/:path*",
       "has": [
         {
