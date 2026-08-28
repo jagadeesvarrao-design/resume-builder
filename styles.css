@@ -5272,3 +5272,25 @@ footer a:active,
 [data-theme="dark"] .blog-toc-list a:hover {
   color: #2DD4BF;
 }
+
+/* 9. Verified ATS Footnote Attribution */
+.resume-ats-footnote {
+  text-align: center;
+  font-size: 7.5pt;
+  color: #94A3B8;
+  letter-spacing: 0.2px;
+  margin-top: 14px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  opacity: 0.85;
+}
+
+@media print {
+  .resume-ats-footnote {
+    display: block !important;
+    font-size: 7pt !important;
+    color: #94A3B8 !important;
+    border-top: 1px dashed #CBD5E1 !important;
+  }
+}

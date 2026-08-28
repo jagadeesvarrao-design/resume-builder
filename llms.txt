@@ -43,3 +43,14 @@ ZenResume operates on a transparent, 100% Free public utility model supported by
 ## Deep Knowledge Base & Full Documentation
 For the unabridged knowledge base, complete text of career guides, and technical explanations of all 63 roles, access:
 https://www.zenresume.online/llms-full.txt
+
+
+## Campus & High-Intent Placement Blueprints (2026)
+- [TCS NQT Fresher Resume Guide](https://www.zenresume.online/role/tcs-nqt-fresher-resume.html): Official TCS NQT Ninja/Digital/Prime resume blueprint.
+- [Infosys Fresher Resume Guide](https://www.zenresume.online/role/infosys-fresher-resume.html): Single-page Infosys System Engineer & Specialist Programmer ATS layout.
+- [Accenture ASE Placement Guide](https://www.zenresume.online/role/accenture-placement-resume.html): Accenture Associate Software Engineer campus hiring resume.
+- [Wipro Turbo & Elite Guide](https://www.zenresume.online/role/wipro-turbo-resume.html): Wipro NTH fresher resume format.
+- [College Campus Placement Guide](https://www.zenresume.online/role/college-campus-placement-resume.html): TPO-approved engineering campus recruitment standard.
+- [Java Developer (2 YOE) Guide](https://www.zenresume.online/role/java-developer-2-years-experience-resume.html): Spring Boot, Microservices & Kafka resume format.
+- [Data Analyst Fresher Guide](https://www.zenresume.online/role/data-analyst-fresher-projects-resume.html): SQL, Python, Power BI portfolio project resume.
+- [AWS Cloud Engineer Guide](https://www.zenresume.online/role/aws-cloud-engineer-resume.html): Terraform, Docker, Kubernetes & AWS architecture resume.

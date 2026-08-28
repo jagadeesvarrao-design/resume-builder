@@ -1263,6 +1263,16 @@ function syncFormToPreview() {
         }
       });
     }
+
+    // Append subtle ATS compliance verification footnote if enabled
+    const checkFootnote = document.getElementById('check-ats-footnote');
+    const isFootnoteEnabled = checkFootnote ? checkFootnote.checked : true;
+    if (isFootnoteEnabled) {
+      const footnoteEl = document.createElement('div');
+      footnoteEl.className = 'resume-ats-footnote';
+      footnoteEl.innerHTML = '✓ Formatted for 100% Single-Column ATS Compliance &bull; ZenResume.online';
+      tempDiv.appendChild(footnoteEl);
+    }
     
     paper.innerHTML = tempDiv.innerHTML;
     
@@ -2838,6 +2848,14 @@ function attachEvents() {
         }
       }
       
+      syncFormToPreview();
+    });
+  }
+
+  // ATS Footnote Toggle Listener
+  const checkFootnote = document.getElementById('check-ats-footnote');
+  if (checkFootnote) {
+    checkFootnote.addEventListener('change', () => {
       syncFormToPreview();
     });
   }
