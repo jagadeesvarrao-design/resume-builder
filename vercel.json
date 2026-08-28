@@ -1,21 +1,5 @@
 {
-  "cleanUrls": true,
   "redirects": [
-    {
-      "source": "/role/:slug.htm",
-      "destination": "/role/:slug.html",
-      "statusCode": 301
-    },
-    {
-      "source": "/blog/:slug.htm",
-      "destination": "/blog/:slug.html",
-      "statusCode": 301
-    },
-    {
-      "source": "/:slug.htm",
-      "destination": "/:slug.html",
-      "statusCode": 301
-    },
     {
       "source": "/:path*",
       "has": [
