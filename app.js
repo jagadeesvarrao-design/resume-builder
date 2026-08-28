@@ -3434,6 +3434,12 @@ function enterApp() {
 function openOnboardingModal() {
   const modal = document.getElementById('onboarding-choice-modal');
   if (modal) {
+    // Check if there is an ongoing saved draft in localStorage
+    const savedStateJson = localStorage.getItem('zenresume_state');
+    const existingBanner = document.getElementById('onboarding-resume-existing-banner');
+    if (existingBanner) {
+      existingBanner.style.display = savedStateJson ? 'flex' : 'none';
+    }
     modal.style.display = 'flex';
   }
 }
@@ -3477,12 +3483,16 @@ function setupLandingPageNavigation() {
   if (btnStartBuilding) {
     btnStartBuilding.addEventListener('click', (e) => {
       e.preventDefault();
-      const savedStateJson = localStorage.getItem('zenresume_state');
-      if (savedStateJson) {
-        enterApp();
-      } else {
-        openOnboardingModal();
-      }
+      openOnboardingModal();
+    });
+  }
+  
+  // Continue saved session button inside onboarding modal
+  const btnContinueSaved = document.getElementById('btn-continue-saved-session');
+  if (btnContinueSaved) {
+    btnContinueSaved.addEventListener('click', () => {
+      closeOnboardingModal();
+      enterApp();
     });
   }
   
@@ -3588,7 +3598,7 @@ window.handleHeaderCTAClick = function() {
   if (isEditor) {
     openPrintModal();
   } else {
-    enterApp();
+    openOnboardingModal();
   }
 };
 
