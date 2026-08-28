@@ -358,7 +358,7 @@ body {
   animation: fadeIn 0.4s ease;
 }
 
-/* Mobile Tab Bar styles */
+/* Mobile Tab Bar & Floating Workspace Dock */
 .mobile-tabs {
   display: none; /* Controlled on media queries */
   background: var(--bg-card);
@@ -402,13 +402,42 @@ body {
 @media (max-width: 800px) {
   .mobile-tabs {
     display: flex !important;
-    animation: fadeInDown 0.6s var(--transition-smooth);
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: min(92%, 360px) !important;
+    z-index: 1500 !important;
+    background: rgba(20, 27, 32, 0.92) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(45, 212, 191, 0.3) !important;
+    border-radius: 9999px !important;
+    padding: 6px 8px !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45) !important;
+    margin: 0 !important;
+    animation: fadeInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .mobile-tab-btn {
+    border-radius: 9999px !important;
+    color: #CBD5E1 !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    padding: 8px 14px !important;
+  }
+
+  .mobile-tab-btn.active {
+    background: #00685F !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(0, 104, 95, 0.45) !important;
   }
   
   /* Toggle workspace views dynamically based on the active tab state */
   .builder-workspace {
     grid-template-columns: 1fr;
     gap: 24px;
+    padding-bottom: 80px !important;
   }
   
   .builder-workspace.show-preview .form-panel {
@@ -5182,5 +5211,64 @@ footer a:active,
   text-shadow: none !important;
 }
 
+/* 8. Career Guides Table of Contents Component */
+.blog-toc-card {
+  background: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--border-glass, rgba(0, 104, 86, 0.15));
+  border-left: 4px solid #00685F;
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin: 28px 0 36px 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
 
+.blog-toc-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: #00685F;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
 
+[data-theme="dark"] .blog-toc-title {
+  color: #2DD4BF;
+}
+
+.blog-toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.blog-toc-list li {
+  margin: 0;
+  padding: 0;
+}
+
+.blog-toc-list a {
+  color: var(--text-main, #1E293B);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.blog-toc-list a:hover {
+  color: #00685F;
+  transform: translateX(4px);
+}
+
+[data-theme="dark"] .blog-toc-list a:hover {
+  color: #2DD4BF;
+}

@@ -99,40 +99,105 @@ const resumeForm = document.getElementById('resume-form');
    1. GREETING MANAGER (Removed, handled by firebase-service.js)
    ========================================================================== */
 /* ==========================================================================
-   2. FILTER & CATALOG RENDERER
+   2. FILTER & CATALOG RENDERER WITH LIVE SEARCH & QUICK CHIPS
    ========================================================================== */
+let templateSearchQuery = '';
+
 function initFilters() {
   // Experience Filter Click Handlers
-  expFilters.addEventListener('click', (e) => {
-    if (e.target.classList.contains('btn-filter')) {
-      expFilters.querySelector('.active').classList.remove('active');
-      e.target.classList.add('active');
-      state.selectedExp = e.target.dataset.exp;
-      state.hasLoadedProfile = false; // Reset to reload corresponding mock profile
-      renderTemplatesCatalog();
-    }
-  });
+  if (expFilters) {
+    expFilters.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-filter')) {
+        expFilters.querySelector('.active')?.classList.remove('active');
+        e.target.classList.add('active');
+        state.selectedExp = e.target.dataset.exp;
+        state.hasLoadedProfile = false; // Reset to reload corresponding mock profile
+        renderTemplatesCatalog();
+      }
+    });
+  }
 
   // Industry Filter Click Handlers
-  industryFilters.addEventListener('click', (e) => {
-    if (e.target.classList.contains('btn-filter')) {
-      industryFilters.querySelector('.active').classList.remove('active');
-      e.target.classList.add('active');
-      state.selectedInd = e.target.dataset.ind;
-      state.hasLoadedProfile = false; // Reset to reload corresponding mock profile
+  if (industryFilters) {
+    industryFilters.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-filter')) {
+        industryFilters.querySelector('.active')?.classList.remove('active');
+        e.target.classList.add('active');
+        state.selectedInd = e.target.dataset.ind;
+        state.hasLoadedProfile = false; // Reset to reload corresponding mock profile
+        renderTemplatesCatalog();
+      }
+    });
+  }
+
+  // Live Template Search Input Handler
+  const inputSearch = document.getElementById('input-template-search');
+  const btnClearSearch = document.getElementById('btn-clear-template-search');
+
+  if (inputSearch) {
+    inputSearch.addEventListener('input', (e) => {
+      templateSearchQuery = e.target.value.trim().toLowerCase();
+      if (btnClearSearch) {
+        btnClearSearch.style.display = templateSearchQuery ? 'block' : 'none';
+      }
       renderTemplatesCatalog();
-    }
+    });
+  }
+
+  if (btnClearSearch && inputSearch) {
+    btnClearSearch.addEventListener('click', () => {
+      inputSearch.value = '';
+      templateSearchQuery = '';
+      btnClearSearch.style.display = 'none';
+      renderTemplatesCatalog();
+    });
+  }
+
+  // Quick Role Chips Handler
+  document.querySelectorAll('.btn-role-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const q = chip.dataset.query;
+      if (inputSearch) {
+        inputSearch.value = chip.textContent.replace(/[^\w\s&]/gi, '').trim();
+        templateSearchQuery = q.toLowerCase();
+        if (btnClearSearch) btnClearSearch.style.display = 'block';
+      }
+      // If matching specific industry/experience
+      if (q === 'software') {
+        state.selectedInd = 'software';
+      } else if (q === 'data') {
+        state.selectedInd = 'data_science';
+      } else if (q === 'fresher') {
+        state.selectedExp = 'fresher';
+      }
+      renderTemplatesCatalog();
+    });
   });
 }
 
 function renderTemplatesCatalog() {
+  if (!templatesGrid) return;
   templatesGrid.innerHTML = '';
   
+  let matchesCount = 0;
+
   Object.keys(TEMPLATE_STYLES).forEach(key => {
     const template = TEMPLATE_STYLES[key];
-    if (template.industry !== state.selectedInd || template.experience !== state.selectedExp) {
-      return; // Skip templates that don't match the active filters
+    
+    // If search query is present, search across name, desc, industry, and tags
+    if (templateSearchQuery) {
+      const haystack = `${template.name} ${template.description} ${template.industry} ${template.experience}`.toLowerCase();
+      if (!haystack.includes(templateSearchQuery)) {
+        return;
+      }
+    } else {
+      // Standard filter match
+      if (template.industry !== state.selectedInd || template.experience !== state.selectedExp) {
+        return; // Skip templates that don't match the active filters
+      }
     }
+
+    matchesCount++;
     const card = document.createElement('div');
     card.className = 'template-card';
     card.dataset.id = template.id;
@@ -144,7 +209,7 @@ function renderTemplatesCatalog() {
         <p class="template-card-desc">${template.description}</p>
       </div>
       <div class="template-card-footer">
-        <span class="template-badge">${state.selectedExp} / ${state.selectedInd}</span>
+        <span class="template-badge">${template.experience || state.selectedExp} / ${template.industry || state.selectedInd}</span>
         <button class="btn-select">Select Style</button>
       </div>
     `;
@@ -155,6 +220,15 @@ function renderTemplatesCatalog() {
     
     templatesGrid.appendChild(card);
   });
+
+  if (matchesCount === 0) {
+    templatesGrid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 30px; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px dashed rgba(0,104,95,0.2);">
+        <p style="color: var(--text-sub, #475569); font-weight: 600; margin-bottom: 8px;">No templates directly matched "${templateSearchQuery}".</p>
+        <button type="button" class="btn-primary" onclick="document.getElementById('input-template-search').value=''; templateSearchQuery=''; renderTemplatesCatalog();" style="font-size: 12px; padding: 6px 14px;">Show All Templates</button>
+      </div>
+    `;
+  }
 }
 
 /* ==========================================================================
