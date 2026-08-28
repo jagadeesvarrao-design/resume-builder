@@ -4171,6 +4171,11 @@ textarea.form-input {
     transform: translateY(24px) scale(0.96);
   }
   to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .cloud-sync-details {
   display: flex;
   flex-direction: column;
