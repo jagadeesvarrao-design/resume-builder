@@ -3373,11 +3373,13 @@ function updateHeaderNavCTA() {
 
 function showLandingPage() {
   const landingScreen = document.getElementById('landing-screen');
+  const appContainer = document.getElementById('app-container');
   const selectionScreen = document.getElementById('selection-screen');
   const builderWorkspace = document.getElementById('builder-workspace');
   const welcomeHeader = document.getElementById('app-header-welcome');
   const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
   
+  if (appContainer) appContainer.style.display = 'none';
   if (selectionScreen) selectionScreen.style.display = 'none';
   if (builderWorkspace) builderWorkspace.style.display = 'none';
   if (welcomeHeader) welcomeHeader.style.display = 'none';
@@ -3392,12 +3394,14 @@ function showLandingPage() {
 
 function enterApp() {
   const landingScreen = document.getElementById('landing-screen');
+  const appContainer = document.getElementById('app-container');
   const selectionScreen = document.getElementById('selection-screen');
   const builderWorkspace = document.getElementById('builder-workspace');
   const welcomeHeader = document.getElementById('app-header-welcome');
   const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
   
   if (landingScreen) landingScreen.style.display = 'none';
+  if (appContainer) appContainer.style.display = 'flex';
   
   // Check if they have an active resume session (saved data)
   const savedStateJson = localStorage.getItem('zenresume_state');
@@ -3453,12 +3457,14 @@ function closeOnboardingModal() {
 
 function enterBuilderDirectly() {
   const landingScreen = document.getElementById('landing-screen');
+  const appContainer = document.getElementById('app-container');
   const selectionScreen = document.getElementById('selection-screen');
   const builderWorkspace = document.getElementById('builder-workspace');
   const welcomeHeader = document.getElementById('app-header-welcome');
   const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
   
   if (landingScreen) landingScreen.style.display = 'none';
+  if (appContainer) appContainer.style.display = 'flex';
   if (selectionScreen) selectionScreen.style.display = 'none';
   if (welcomeHeader) welcomeHeader.style.display = 'none';
   if (builderWorkspace) {
@@ -3573,6 +3579,7 @@ function setupLandingPageNavigation() {
 
 // Global Nav Handlers for Flawless Interaction
 window.goToTemplates = function() {
+  const appContainer = document.getElementById('app-container');
   const builderWorkspace = document.getElementById('builder-workspace');
   const selectionScreen = document.getElementById('selection-screen');
   const landingScreen = document.getElementById('landing-screen');
@@ -3580,6 +3587,7 @@ window.goToTemplates = function() {
   const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
   
   if (landingScreen) landingScreen.style.display = 'none';
+  if (appContainer) appContainer.style.display = 'flex';
   if (builderWorkspace) builderWorkspace.style.display = 'none';
   if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
   if (welcomeHeader) welcomeHeader.style.display = 'block';

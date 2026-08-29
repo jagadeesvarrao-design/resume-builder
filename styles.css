@@ -2198,6 +2198,11 @@ textarea.form-input {
    MARKETING LANDING SCREEN STYLING
    ========================================================================== */
 .landing-screen {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
   animation: fadeIn 0.8s var(--transition-smooth);
 }
 
@@ -2621,6 +2626,9 @@ textarea.form-input {
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid rgba(0, 168, 138, 0.2);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 @keyframes ambientPulse {
