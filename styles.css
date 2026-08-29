@@ -5565,3 +5565,232 @@ footer a:active,
     max-width: 1680px !important;
   }
 }
+
+/* ==========================================================================
+   FOUNDER & LEADERSHIP SPOTLIGHT SECTION - DYNAMIC THEME SUPPORT
+   ========================================================================== */
+.stitch-founder-section {
+  padding: 70px 24px 80px 24px;
+  background: var(--bg-main);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .stitch-founder-section {
+  background: radial-gradient(circle at 50% 30%, #152320 0%, #0C1211 60%, #070C0B 100%);
+  border-color: rgba(0, 168, 138, 0.2);
+  color: #FFFFFF;
+}
+
+.stitch-founder-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+}
+
+.founder-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 104, 95, 0.08);
+  border: 1px solid rgba(0, 104, 95, 0.2);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary-calm);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+}
+
+[data-theme="dark"] .founder-pill-badge {
+  background: rgba(0, 104, 95, 0.3);
+  border-color: rgba(45, 212, 191, 0.4);
+  color: #2DD4BF;
+}
+
+.founder-section-title {
+  font-size: 32px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  margin: 0 0 10px 0;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+[data-theme="dark"] .founder-section-title {
+  color: #FFFFFF;
+}
+
+.founder-section-sub {
+  font-size: 14.5px;
+  color: var(--text-sub);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+[data-theme="dark"] .founder-section-sub {
+  color: #94A3B8;
+}
+
+.stitch-founder-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-glass-strong);
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: var(--shadow-peaceful);
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .stitch-founder-card {
+  background: rgba(18, 24, 28, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(45, 212, 191, 0.25);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 104, 95, 0.2);
+}
+
+.founder-img-frame {
+  width: 140px;
+  height: 140px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 2.5px solid var(--primary-calm);
+  box-shadow: 0 8px 24px rgba(0, 104, 95, 0.2);
+  background: var(--bg-surface);
+}
+
+[data-theme="dark"] .founder-img-frame {
+  border-color: rgba(45, 212, 191, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 104, 95, 0.4);
+  background: #12181C;
+}
+
+.founder-status-badge {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-calm);
+  color: #FFFFFF;
+  border: 1px solid var(--primary-calm);
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .founder-status-badge {
+  background: #0B0F12;
+  color: #2DD4BF;
+  border-color: rgba(45, 212, 191, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.founder-role-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--primary-calm);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 4px;
+}
+
+[data-theme="dark"] .founder-role-label {
+  color: #2DD4BF;
+}
+
+.founder-name-text {
+  font-size: 24px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-main);
+  margin: 0 0 4px 0;
+}
+
+[data-theme="dark"] .founder-name-text {
+  color: #FFFFFF;
+}
+
+.founder-meta-text {
+  font-size: 12.5px;
+  color: var(--text-sub);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+[data-theme="dark"] .founder-meta-text {
+  color: #94A3B8;
+}
+
+.founder-quote-box {
+  background: rgba(0, 104, 95, 0.04);
+  border: 1px solid rgba(0, 104, 95, 0.12);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+
+[data-theme="dark"] .founder-quote-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.founder-quote-text {
+  font-size: 13.5px;
+  color: var(--text-main);
+  line-height: 1.6;
+  margin: 0;
+}
+
+[data-theme="dark"] .founder-quote-text {
+  color: #E2E8F0;
+}
+
+.btn-founder-parent {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-founder-parent:hover {
+  background: rgba(0, 104, 95, 0.08);
+  border-color: var(--primary-calm);
+  color: var(--primary-calm);
+}
+
+[data-theme="dark"] .btn-founder-parent {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .btn-founder-parent:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border-color: rgba(45, 212, 191, 0.4);
+}
+
