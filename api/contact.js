@@ -109,6 +109,37 @@ export default async function handler(req, res) {
       }
     }
 
+    // 1b. Server-Side Direct FormSubmit Forwarder Fallback
+    if (!emailDispatched) {
+      try {
+        const fsRes = await fetch('https://formsubmit.co/ajax/aneevarpsolutions@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Referer': 'https://www.zenresume.online/',
+            'Origin': 'https://www.zenresume.online'
+          },
+          body: JSON.stringify({
+            _subject: `[ZenResume Inbound] from ${safeName} (${rating}★)`,
+            _template: 'table',
+            _captcha: 'false',
+            _replyto: email,
+            sender_name: name,
+            sender_email: email,
+            rating: `${rating} / 5`,
+            message: message,
+            submitted_at: new Date().toLocaleString('en-IN')
+          })
+        });
+        if (fsRes.ok) {
+          emailDispatched = true;
+        }
+      } catch (fsErr) {
+        console.warn('Server-side form dispatch notice:', fsErr);
+      }
+    }
+
     // 2. Dispatch Instant WhatsApp Alert via Twilio REST API
     const twilioSid = process.env.TWILIO_ACCOUNT_SID;
     const twilioToken = process.env.TWILIO_AUTH_TOKEN;
