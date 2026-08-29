@@ -88,22 +88,26 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/styles.css?v=4.6">
+  <link rel="stylesheet" href="/styles.css?v=4.7">
   
   <style id="zenresume-critical-header-style">
-    /* Critical Navbar & Brand Layout */
+    /* ==========================================================================
+       Aneevarp Solutions Master Palette Critical Navigation & Hero Header
+       ========================================================================== */
     .stitch-nav {
-      background: #0B0F12 !important;
-      border-bottom: 1px solid rgba(45, 212, 191, 0.15) !important;
-      color: #FFFFFF !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+      background: rgba(252, 250, 245, 0.95) !important;
+      border-bottom: 1px solid rgba(162, 188, 168, 0.35) !important;
+      color: #1A1F1F !important;
+      box-shadow: 0 4px 20px rgba(26, 31, 31, 0.04) !important;
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 2000;
       width: 100%;
       height: auto;
       min-height: 58px;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     }
     .stitch-nav-container {
       display: flex !important;
@@ -126,7 +130,7 @@
       width: 36px !important;
       height: 36px !important;
       border-radius: 10px !important;
-      box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4) !important;
+      box-shadow: 0 2px 10px rgba(71, 101, 80, 0.25) !important;
       object-fit: cover !important;
     }
     .brand-text-column {
@@ -138,13 +142,13 @@
       font-family: 'Outfit', sans-serif !important;
       font-weight: 800 !important;
       font-size: 19px !important;
-      color: #FFFFFF !important;
+      color: #1A1F1F !important;
       line-height: 1.1 !important;
       letter-spacing: -0.3px !important;
     }
     .brand-subtext {
-      font-size: 9px !important;
-      color: #2DD4BF !important;
+      font-size: 9.5px !important;
+      color: #476550 !important;
       font-weight: 700 !important;
       letter-spacing: 0.8px !important;
       text-transform: uppercase !important;
@@ -152,11 +156,11 @@
     }
     .desktop-nav-links {
       display: flex !important;
-      gap: 18px !important;
+      gap: 20px !important;
       align-items: center !important;
     }
     .desktop-nav-links a {
-      color: #CBD5E1 !important;
+      color: #596060 !important;
       text-decoration: none !important;
       font-size: 13.5px !important;
       font-weight: 600 !important;
@@ -167,15 +171,15 @@
       box-shadow: none !important;
     }
     .desktop-nav-links a:hover {
-      color: #FFFFFF !important;
+      color: #476550 !important;
     }
     .desktop-nav-links a.active-link {
-      color: #2DD4BF !important;
-      border-bottom: 2px solid #2DD4BF !important;
+      color: #476550 !important;
+      border-bottom: 2px solid #476550 !important;
       padding-bottom: 2px !important;
     }
 
-    /* Zen Suite Dropdown: Hidden by default, absolute popover on hover */
+    /* Zen Suite Dropdown */
     .zen-suite-wrapper {
       position: relative !important;
       display: inline-block !important;
@@ -184,9 +188,9 @@
       display: inline-flex !important;
       align-items: center !important;
       gap: 6px !important;
-      background: rgba(255, 255, 255, 0.08) !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
-      color: #FFFFFF !important;
+      background: #E8F0EB !important;
+      border: 1px solid rgba(162, 188, 168, 0.45) !important;
+      color: #476550 !important;
       font-size: 12.5px !important;
       font-weight: 700 !important;
       padding: 5px 12px !important;
@@ -195,9 +199,9 @@
       transition: all 0.2s ease !important;
     }
     .zen-suite-btn:hover {
-      background: rgba(45, 212, 191, 0.2) !important;
-      border-color: #2DD4BF !important;
-      color: #2DD4BF !important;
+      background: #476550 !important;
+      border-color: #3A5342 !important;
+      color: #FFFFFF !important;
     }
     .zen-suite-dropdown {
       display: none !important;
@@ -206,11 +210,11 @@
       left: 50% !important;
       transform: translateX(-50%) !important;
       width: 280px !important;
-      background: #141B20 !important;
-      border: 1px solid rgba(45, 212, 191, 0.25) !important;
+      background: #FAF9F6 !important;
+      border: 1px solid rgba(162, 188, 168, 0.4) !important;
       border-radius: 14px !important;
       padding: 6px !important;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7) !important;
+      box-shadow: 0 16px 40px rgba(26, 31, 31, 0.1) !important;
       z-index: 9999 !important;
     }
     .zen-suite-wrapper:hover .zen-suite-dropdown,
@@ -221,10 +225,10 @@
       padding: 6px 10px !important;
       font-size: 9.5px !important;
       font-weight: 800 !important;
-      color: #94A3B8 !important;
+      color: #7D8787 !important;
       text-transform: uppercase !important;
       letter-spacing: 0.6px !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      border-bottom: 1px solid rgba(162, 188, 168, 0.2) !important;
       margin-bottom: 4px !important;
       text-align: left !important;
     }
@@ -242,7 +246,7 @@
       box-shadow: none !important;
     }
     .suite-product-link:hover {
-      background: rgba(255, 255, 255, 0.08) !important;
+      background: #E8F0EB !important;
     }
     .suite-product-icon {
       width: 28px !important;
@@ -262,107 +266,23 @@
     .suite-product-name {
       font-size: 12px !important;
       font-weight: 700 !important;
-      color: #FFFFFF !important;
+      color: #1A1F1F !important;
       line-height: 1.2 !important;
     }
     .suite-product-desc {
       font-size: 10px !important;
-      color: #94A3B8 !important;
+      color: #7D8787 !important;
       font-weight: 400 !important;
     }
 
-    @media (max-width: 992px) {
-      .desktop-nav-links {
-        display: none !important;
-      }
-      .mobile-menu-toggle {
-        display: flex !important;
-      }
-    }
-
-    /* Critical Footer Styling */
-    .stitch-footer {
-      background: #0B0F12 !important;
-      color: #FFFFFF !important;
-      padding: 50px 24px 36px 24px !important;
-      border-top: 1px solid rgba(45, 212, 191, 0.15) !important;
-      margin-top: 60px !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    .stitch-footer-container {
-      max-width: 1200px !important;
-      margin: 0 auto !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 28px !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    .aneevarp-footer-grid {
-      display: grid !important;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
-      gap: 32px !important;
-      text-align: left !important;
-      width: 100% !important;
-      padding: 10px 0 30px 0 !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      box-sizing: border-box !important;
-    }
-    .footer-col-title {
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 12px !important;
-      font-weight: 800 !important;
-      color: #2DD4BF !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.8px !important;
-      margin-bottom: 14px !important;
-    }
-    .footer-col-links {
-      list-style: none !important;
-      list-style-type: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 9px !important;
-    }
-    .footer-col-links li {
-      list-style: none !important;
-      list-style-type: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-    .footer-col-links a {
-      color: #CBD5E1 !important;
-      text-decoration: none !important;
-      font-size: 13px !important;
-      font-weight: 500 !important;
-      transition: all 0.2s ease !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      background: none !important;
-      border: none !important;
-      padding: 0 !important;
-      box-shadow: none !important;
-    }
-    .footer-col-links a:hover {
-      color: #2DD4BF !important;
-      transform: translateX(3px) !important;
-    }
-    .stitch-footer a:link,
-    .stitch-footer a:visited {
-      text-decoration: none !important;
-    }
-
-    /* Full-Bleed Landing Screen & Hero (Zero Side Gaps) */
+    /* Master Palette Landing Hero Section */
     .landing-screen {
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
       padding: 0 !important;
       overflow-x: hidden !important;
+      background-color: #FCFAF5 !important;
     }
     .stitch-hero-section {
       width: 100% !important;
@@ -370,11 +290,21 @@
       margin: 0 !important;
       padding: 130px 24px 85px 24px !important;
       box-sizing: border-box !important;
+      background: radial-gradient(circle at 50% 15%, #EAF2EC 0%, #F5FAF6 50%, #FCFAF5 100%) !important;
+      border-bottom: 1px solid rgba(162, 188, 168, 0.35) !important;
+      color: #1A1F1F !important;
+    }
+    .stitch-hero-title {
+      color: #1A1F1F !important;
+      text-shadow: none !important;
+    }
+    .stitch-hero-subtitle {
+      color: #596060 !important;
     }
     .hero-role-chip {
-      background: rgba(18, 24, 28, 0.75) !important;
-      border: 1px solid rgba(45, 212, 191, 0.3) !important;
-      color: #CBD5E1 !important;
+      background: #FAF9F6 !important;
+      border: 1px solid rgba(162, 188, 168, 0.4) !important;
+      color: #1A1F1F !important;
       font-size: 12px !important;
       font-weight: 600 !important;
       padding: 6px 14px !important;
@@ -383,112 +313,98 @@
       display: inline-flex !important;
       align-items: center !important;
       gap: 6px !important;
-      backdrop-filter: blur(8px) !important;
       transition: all 0.2s ease !important;
+      box-shadow: 0 1px 4px rgba(26, 31, 31, 0.04) !important;
     }
     .hero-role-chip:hover {
-      background: rgba(0, 104, 95, 0.4) !important;
-      border-color: #2DD4BF !important;
-      color: #FFFFFF !important;
+      background: #E8F0EB !important;
+      border-color: #476550 !important;
+      color: #476550 !important;
       transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(71, 101, 80, 0.15) !important;
     }
-    
-    /* 3-Way Instant Onboarding Modal Critical Styles */
-    .onboarding-choices-grid {
-      display: grid !important;
-      grid-template-columns: repeat(3, 1fr) !important;
-      gap: 16px !important;
-      margin-top: 12px !important;
-      width: 100% !important;
-    }
-    .onboarding-choice-box {
-      background: rgba(255, 255, 255, 0.03) !important;
-      border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
-      border-radius: 18px !important;
-      padding: 24px 18px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      text-align: center !important;
-      position: relative !important;
-      transition: all 0.25s ease !important;
-      cursor: pointer !important;
-    }
-    .onboarding-choice-box:hover {
-      background: rgba(255, 255, 255, 0.06) !important;
-      border-color: rgba(45, 212, 191, 0.4) !important;
-      transform: translateY(-4px) !important;
-    }
-    .onboarding-choice-box.featured {
-      border-color: rgba(45, 212, 191, 0.45) !important;
-      background: linear-gradient(180deg, rgba(0, 104, 95, 0.2) 0%, rgba(18, 24, 28, 0.7) 100%) !important;
-    }
-    .choice-badge-popular {
-      position: absolute !important;
-      top: -10px !important;
-      background: linear-gradient(135deg, #7C3AED, #9333EA) !important;
+    .btn-tactile {
+      background: #476550 !important;
       color: #FFFFFF !important;
-      font-size: 10px !important;
-      font-weight: 800 !important;
-      padding: 3px 10px !important;
-      border-radius: 9999px !important;
-      letter-spacing: 0.5px !important;
-    }
-    .choice-icon-wrap {
-      width: 48px !important;
-      height: 48px !important;
-      border-radius: 14px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      font-size: 20px !important;
-      margin-bottom: 14px !important;
-    }
-    .choice-title {
-      font-size: 16px !important;
-      font-weight: 800 !important;
-      color: #FFFFFF !important;
-      font-family: 'Outfit', sans-serif !important;
-      margin: 0 0 8px 0 !important;
-    }
-    .choice-desc {
-      font-size: 12.5px !important;
-      color: #94A3B8 !important;
-      line-height: 1.45 !important;
-      margin: 0 0 18px 0 !important;
-      flex-grow: 1 !important;
-    }
-    .btn-choice-action {
-      width: 100% !important;
-      padding: 10px 14px !important;
-      border-radius: 10px !important;
-      font-size: 13px !important;
+      border: 1px solid #3A5342 !important;
+      box-shadow: 0 8px 24px rgba(71, 101, 80, 0.28) !important;
       font-weight: 700 !important;
-      cursor: pointer !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 6px !important;
-      border: none !important;
+      transition: all 0.2s ease !important;
     }
-    .btn-choice-action.btn-purple {
-      background: linear-gradient(135deg, #7C3AED, #9333EA) !important;
+    .btn-tactile:hover {
+      background: #3A5342 !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 12px 30px rgba(71, 101, 80, 0.38) !important;
+    }
+
+    /* Dark Mode Overrides */
+    [data-theme="dark"] .stitch-nav {
+      background: rgba(11, 15, 18, 0.94) !important;
+      border-bottom-color: rgba(45, 212, 191, 0.15) !important;
       color: #FFFFFF !important;
     }
-    .btn-choice-action.btn-emerald {
-      background: linear-gradient(135deg, #476550, #2DD4BF) !important;
-      color: #061B18 !important;
-      font-weight: 800 !important;
+    [data-theme="dark"] .brand-main-title {
+      color: #FFFFFF !important;
     }
-    .btn-choice-action.btn-outline {
-      background: rgba(255, 255, 255, 0.05) !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    [data-theme="dark"] .brand-subtext {
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .desktop-nav-links a {
       color: #CBD5E1 !important;
     }
-    @media (max-width: 768px) {
-      .onboarding-choices-grid {
-        grid-template-columns: 1fr !important;
-        gap: 14px !important;
+    [data-theme="dark"] .desktop-nav-links a:hover {
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .desktop-nav-links a.active-link {
+      color: #2DD4BF !important;
+      border-bottom-color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .zen-suite-btn {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .zen-suite-dropdown {
+      background: #141B20 !important;
+      border-color: rgba(45, 212, 191, 0.25) !important;
+    }
+    [data-theme="dark"] .suite-product-name {
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .suite-product-desc {
+      color: #94A3B8 !important;
+    }
+    [data-theme="dark"] .landing-screen {
+      background-color: #0B0F12 !important;
+    }
+    [data-theme="dark"] .stitch-hero-section {
+      background: radial-gradient(circle at 50% 15%, #152320 0%, #0C1211 55%, #070C0B 100%) !important;
+      border-bottom-color: rgba(0, 168, 138, 0.2) !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .stitch-hero-title {
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .stitch-hero-subtitle {
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .hero-role-chip {
+      background: rgba(18, 24, 28, 0.75) !important;
+      border-color: rgba(45, 212, 191, 0.3) !important;
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .btn-tactile {
+      background: linear-gradient(135deg, #00685F, #2DD4BF) !important;
+      color: #061B18 !important;
+      border-color: #2DD4BF !important;
+    }
+
+    @media (max-width: 992px) {
+      .desktop-nav-links {
+        display: none !important;
+      }
+      .mobile-menu-toggle {
+        display: flex !important;
       }
     }
   </style>

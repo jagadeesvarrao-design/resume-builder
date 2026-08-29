@@ -2650,16 +2650,23 @@ textarea.form-input {
 
 /* 2. Hero Section with Ambient Glow & Staggered Animations */
 .stitch-hero-section {
-  background: radial-gradient(circle at 50% 15%, #152320 0%, #0C1211 55%, #070C0B 100%);
-  color: #FFFFFF;
+  background: radial-gradient(circle at 50% 15%, #EAF2EC 0%, #F5FAF6 50%, #FCFAF5 100%);
+  color: var(--color-slate-deep);
   padding: 135px 24px 85px 24px;
   text-align: center;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(0, 168, 138, 0.2);
+  border-bottom: 1px solid var(--color-border-sage);
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .stitch-hero-section {
+  background: radial-gradient(circle at 50% 15%, #152320 0%, #0C1211 55%, #070C0B 100%);
+  color: #FFFFFF;
+  border-bottom-color: rgba(0, 168, 138, 0.2);
 }
 
 @keyframes ambientPulse {
@@ -2680,11 +2687,15 @@ textarea.form-input {
   transform: translate(-50%, -50%);
   width: 680px;
   height: 680px;
-  background: radial-gradient(circle, rgba(0, 168, 138, 0.4) 0%, rgba(0, 104, 86, 0.2) 45%, rgba(12, 18, 17, 0) 75%);
+  background: radial-gradient(circle, rgba(162, 188, 168, 0.35) 0%, rgba(71, 101, 80, 0.12) 45%, rgba(252, 250, 245, 0) 75%);
   filter: blur(80px);
   pointer-events: none;
   z-index: 1;
   animation: ambientPulse 8s ease-in-out infinite;
+}
+
+[data-theme="dark"] .stitch-hero-glow {
+  background: radial-gradient(circle, rgba(0, 168, 138, 0.4) 0%, rgba(0, 104, 86, 0.2) 45%, rgba(12, 18, 17, 0) 75%);
 }
 
 .stitch-hero-glow.glow-secondary {
@@ -2692,9 +2703,13 @@ textarea.form-input {
   left: 55%;
   width: 550px;
   height: 550px;
-  background: radial-gradient(circle, rgba(0, 132, 109, 0.3) 0%, rgba(88, 214, 141, 0.12) 50%, rgba(12, 18, 17, 0) 75%);
+  background: radial-gradient(circle, rgba(162, 188, 168, 0.25) 0%, rgba(232, 240, 235, 0.15) 50%, rgba(252, 250, 245, 0) 75%);
   filter: blur(85px);
   animation: ambientPulse 10s ease-in-out infinite reverse;
+}
+
+[data-theme="dark"] .stitch-hero-glow.glow-secondary {
+  background: radial-gradient(circle, rgba(0, 132, 109, 0.3) 0%, rgba(88, 214, 141, 0.12) 50%, rgba(12, 18, 17, 0) 75%);
 }
 
 .stitch-hero-content {
@@ -2719,24 +2734,35 @@ textarea.form-input {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(0, 104, 86, 0.35);
+  background: var(--color-primary-light);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(130, 247, 216, 0.4);
-  color: var(--primary-fixed);
+  border: 1px solid var(--color-border-sage);
+  color: var(--color-primary);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   padding: 7px 18px;
   border-radius: 9999px;
   margin-bottom: 24px;
   letter-spacing: 0.3px;
-  box-shadow: 0 4px 14px rgba(0, 104, 86, 0.25);
+  box-shadow: 0 2px 10px rgba(71, 101, 80, 0.12);
   animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+[data-theme="dark"] .stitch-pill-badge {
+  background: rgba(0, 104, 86, 0.35);
+  border-color: rgba(130, 247, 216, 0.4);
+  color: var(--primary-fixed);
+  box-shadow: 0 4px 14px rgba(0, 104, 86, 0.25);
+}
+
 .stitch-pill-badge i {
-  color: #58D68D;
+  color: var(--color-primary);
   animation: pulseIcon 2s infinite ease-in-out;
+}
+
+[data-theme="dark"] .stitch-pill-badge i {
+  color: #58D68D;
 }
 
 @keyframes pulseIcon {
@@ -2749,22 +2775,30 @@ textarea.form-input {
   font-size: clamp(34px, 5.5vw, 56px);
   font-weight: 800;
   line-height: 1.12;
-  color: #FFFFFF;
+  color: var(--color-slate-deep);
   margin-bottom: 20px;
   letter-spacing: -0.6px;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
   animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+[data-theme="dark"] .stitch-hero-title {
+  color: #FFFFFF;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
 }
 
 .stitch-hero-subtitle {
   font-family: 'Inter', sans-serif;
   font-size: clamp(16px, 2vw, 19px);
-  color: #D1DBDA;
+  color: var(--color-secondary);
   line-height: 1.65;
   max-width: 680px;
   margin: 0 auto 36px auto;
   font-weight: 400;
   animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+[data-theme="dark"] .stitch-hero-subtitle {
+  color: #CBD5E1;
 }
 
 @keyframes buttonShimmer {
@@ -2773,16 +2807,16 @@ textarea.form-input {
 }
 
 .stitch-hero-cta {
-  background: linear-gradient(135deg, #00846D 0%, #476550 100%);
+  background: var(--color-primary);
   color: #FFFFFF;
   font-family: 'Outfit', sans-serif;
   font-size: 18px;
   font-weight: 700;
   padding: 16px 40px;
   border-radius: 9999px;
-  border: 1px solid rgba(130, 247, 216, 0.3);
+  border: 1px solid var(--color-primary-hover);
   cursor: pointer;
-  box-shadow: 0 12px 32px rgba(0, 104, 86, 0.45);
+  box-shadow: 0 10px 28px rgba(71, 101, 80, 0.3);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   display: inline-flex;
   align-items: center;
@@ -2792,22 +2826,20 @@ textarea.form-input {
   animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
 }
 
-.stitch-hero-cta::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 50%;
-  height: 200%;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0) 100%);
-  transform: rotate(25deg);
-  animation: buttonShimmer 4.5s infinite ease-in-out;
-  pointer-events: none;
+.stitch-hero-cta:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(71, 101, 80, 0.45);
 }
 
-.stitch-hero-cta:hover {
+[data-theme="dark"] .stitch-hero-cta {
+  background: linear-gradient(135deg, #00846D 0%, #476550 100%);
+  border-color: rgba(130, 247, 216, 0.3);
+  box-shadow: 0 12px 32px rgba(0, 104, 86, 0.45);
+}
+
+[data-theme="dark"] .stitch-hero-cta:hover {
   background: linear-gradient(135deg, #009E83 0%, #007D67 100%);
-  transform: translateY(-3px) scale(1.02);
   box-shadow: 0 18px 40px rgba(0, 104, 86, 0.6);
   border-color: rgba(130, 247, 216, 0.6);
 }
