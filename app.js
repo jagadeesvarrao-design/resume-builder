@@ -301,6 +301,9 @@ function selectTemplateStyle(templateId) {
   // Sync the form values immediately to screen preview
   syncFormToPreview();
   checkVaultOnboardingBanner();
+  if (typeof window.checkAutoLaunchTour === 'function') {
+    window.checkAutoLaunchTour();
+  }
 }
 
 function loadProfileIntoForm(data) {
@@ -3417,6 +3420,9 @@ function enterApp() {
     if (typeof setMobileTab === 'function') setMobileTab('edit');
     adjustPreviewScale();
     checkVaultOnboardingBanner();
+    if (typeof window.checkAutoLaunchTour === 'function') {
+      window.checkAutoLaunchTour();
+    }
   } else {
     // Show template selection screen
     if (builderWorkspace) builderWorkspace.style.display = 'none';

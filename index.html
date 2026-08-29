@@ -88,7 +88,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/styles.css?v=4.9">
+  <link rel="stylesheet" href="/styles.css?v=5.0">
   
   <style id="zenresume-critical-header-style">
     /* ==========================================================================
@@ -831,84 +831,111 @@
             </div>
 
             <div class="stitch-mac-window">
+              <!-- Window Top Header with Interactive Role Tabs & Accent Picker -->
               <div class="stitch-window-header">
                 <div class="stitch-window-dots">
                   <span class="stitch-dot red"></span>
                   <span class="stitch-dot yellow"></span>
                   <span class="stitch-dot green"></span>
                 </div>
-                <div class="stitch-window-url"><i class="fas fa-lock" style="font-size: 9px; color: #58D68D;"></i> zenresume.online/editor</div>
-                <div class="stitch-window-badge" style="font-size: 11px; font-weight: 600; color: #58D68D; display: flex; align-items: center; gap: 5px;">
-                  <span class="pulse-live-dot"></span> Live Editor
+                
+                <!-- Interactive Playground Preset Role Selector -->
+                <div class="playground-role-selector" style="display: flex; gap: 5px; align-items: center;">
+                  <button type="button" class="playground-role-tab active" data-role="software" onclick="window.switchPlaygroundRole('software')">💻 Software Dev</button>
+                  <button type="button" class="playground-role-tab" data-role="tcs" onclick="window.switchPlaygroundRole('tcs')">🎓 TCS Fresher</button>
+                  <button type="button" class="playground-role-tab" data-role="data" onclick="window.switchPlaygroundRole('data')">📊 Data Analyst</button>
+                  <button type="button" class="playground-role-tab" data-role="cloud" onclick="window.switchPlaygroundRole('cloud')">☁️ Cloud / DevOps</button>
+                </div>
+
+                <!-- Accent Color Picker -->
+                <div class="playground-accents-wrap" style="display: flex; align-items: center; gap: 6px; margin-left: auto;">
+                  <span style="font-size: 10px; font-weight: 700; color: #596060;">Accent:</span>
+                  <span class="playground-color-dot active" data-color="#476550" style="background: #476550;" onclick="window.setPlaygroundAccent('#476550')" title="Forest Sage Emerald"></span>
+                  <span class="playground-color-dot" data-color="#1A1F1F" style="background: #1A1F1F;" onclick="window.setPlaygroundAccent('#1A1F1F')" title="Obsidian Slate"></span>
+                  <span class="playground-color-dot" data-color="#1E3A8A" style="background: #1E3A8A;" onclick="window.setPlaygroundAccent('#1E3A8A')" title="Navy Blue"></span>
+                  <span class="playground-color-dot" data-color="#7C2D12" style="background: #7C2D12;" onclick="window.setPlaygroundAccent('#7C2D12')" title="Burgundy"></span>
                 </div>
               </div>
+
+              <!-- Playground Body (Left Form Inputs + Right Live Preview) -->
               <div class="stitch-window-body">
-                <!-- Left Form Pane -->
+                <!-- Left Live Form Pane -->
                 <div class="stitch-mockup-form-pane">
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div class="stitch-skeleton-title"></div>
-                    <span style="font-size: 10px; font-weight: 700; color: #476550; background: rgba(0,104,86,0.1); padding: 3px 8px; border-radius: 4px;">Step 1 of 3</span>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 11px; font-weight: 800; color: #476550; display: flex; align-items: center; gap: 5px;">
+                      <i class="fas fa-bolt" style="color: #F59E0B;"></i> Live Interactive Editor
+                    </span>
+                    <span style="font-size: 10px; font-weight: 700; color: #596060; background: #E8F0EB; padding: 2px 8px; border-radius: 4px;">Type & Test Live</span>
                   </div>
-                  <div class="stitch-skeleton-line"></div>
-                  <div class="stitch-skeleton-line short"></div>
                   
-                  <div class="stitch-drag-drop-box">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 104, 86, 0.1); display: flex; align-items: center; justify-content: center; color: #476550; font-size: 14px;">
-                      <i class="fas fa-wand-magic-sparkles"></i>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <div class="mockup-input-group">
+                      <label class="mockup-field-label">Full Name</label>
+                      <input type="text" id="playground-input-name" class="mockup-real-input" value="Alex Rivera" placeholder="Your Name">
                     </div>
-                    <div>
-                      <div style="font-weight: 700; color: #476550;">Gemini AI Magic Import</div>
-                      <div style="font-size: 11px; color: var(--text-light); font-weight: 400;">Drop old PDF or paste LinkedIn profile</div>
+                    <div class="mockup-input-group">
+                      <label class="mockup-field-label">Target Role</label>
+                      <input type="text" id="playground-input-title" class="mockup-real-input" value="Full-Stack Software Engineer" placeholder="Target Role">
                     </div>
                   </div>
 
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
-                    <div class="mockup-input-box">
-                      <span class="mockup-input-label">Full Name</span>
-                      <div class="mockup-input-val">Alex Rivera<span class="typing-cursor">|</span></div>
-                    </div>
-                    <div class="mockup-input-box">
-                      <span class="mockup-input-label">Target Role</span>
-                      <div class="mockup-input-val">Lead Architect</div>
-                    </div>
+                  <div class="mockup-input-group" style="margin-bottom: 8px;">
+                    <label class="mockup-field-label">Recent Experience & Title</label>
+                    <input type="text" id="playground-input-company" class="mockup-real-input" value="Software Engineer • TechCorp Solutions" placeholder="Company & Title">
                   </div>
+
+                  <div class="mockup-input-group" style="margin-bottom: 8px;">
+                    <label class="mockup-field-label">Google XYZ Bullet Point</label>
+                    <textarea id="playground-input-bullet" class="mockup-real-textarea" rows="2" placeholder="Accomplished [X] measured by [Y] by doing [Z]">Architected distributed microservices utilizing Node.js and TypeScript, handling 2M+ daily active requests with 99.9% uptime.</textarea>
+                  </div>
+
+                  <div class="mockup-input-group" style="margin-bottom: 12px;">
+                    <label class="mockup-field-label">Skills (Comma-separated)</label>
+                    <input type="text" id="playground-input-skills" class="mockup-real-input" value="React, Node.js, Python, TypeScript, Docker, AWS" placeholder="Skills">
+                  </div>
+
+                  <button type="button" class="btn-playground-launch" onclick="window.transferPlaygroundToBuilder()">
+                    <span>⚡ Transfer to Full Builder in 1 Click</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
                 </div>
 
-                <!-- Right Resume Preview Pane with Laser Scanner -->
+                <!-- Right Live Preview Pane -->
                 <div class="stitch-mockup-preview-pane">
-                  <div class="mockup-resume-card">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #476550; padding-bottom: 8px;">
+                  <div class="mockup-resume-card" id="mockup-preview-card">
+                    <div id="mockup-preview-header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #476550; padding-bottom: 8px;">
                       <div>
-                        <div style="font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800; color: #111;">ALEX RIVERA</div>
-                        <div style="font-size: 10px; font-weight: 600; color: #476550;">Senior Full-Stack Engineer</div>
+                        <div id="mockup-preview-name" style="font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800; color: #111;">ALEX RIVERA</div>
+                        <div id="mockup-preview-title" style="font-size: 10px; font-weight: 700; color: #476550;">Full-Stack Software Engineer</div>
                       </div>
                       <span style="font-size: 9px; color: #666; font-family: monospace;">San Francisco, CA</span>
                     </div>
 
                     <div style="margin-top: 10px;">
-                      <div style="font-size: 10px; font-weight: 800; color: #476550; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Experience</div>
-                      <div style="font-size: 10px; font-weight: 700; color: #222;">Lead Software Architect &bull; TechCorp</div>
-                      <div style="font-size: 9px; color: #555; line-height: 1.4; margin-top: 2px;">
-                        &bull; Architected distributed microservices handling 2M+ daily active requests.<br>
+                      <div class="mockup-preview-section-title" style="font-size: 10px; font-weight: 800; color: #476550; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px;">Experience</div>
+                      <div id="mockup-preview-exptitle" style="font-size: 9.5px; font-weight: 700; color: #222;">Software Engineer &bull; TechCorp Solutions</div>
+                      <div id="mockup-preview-bullet" style="font-size: 8.5px; color: #444; line-height: 1.4; margin-top: 2px;">
+                        &bull; Architected distributed microservices utilizing Node.js and TypeScript, handling 2M+ daily active requests with 99.9% uptime.<br>
                         &bull; Streamlined recruitment pipeline throughput by 65% using cloud automation.
                       </div>
                     </div>
 
                     <div style="margin-top: 10px;">
-                      <div style="font-size: 10px; font-weight: 800; color: #476550; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Skills</div>
-                      <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                      <div class="mockup-preview-section-title" style="font-size: 10px; font-weight: 800; color: #476550; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px;">Skills</div>
+                      <div id="mockup-preview-skills" style="display: flex; gap: 4px; flex-wrap: wrap;">
                         <span class="mockup-skill-chip">React</span>
                         <span class="mockup-skill-chip">Node.js</span>
                         <span class="mockup-skill-chip">Python</span>
                         <span class="mockup-skill-chip">TypeScript</span>
                         <span class="mockup-skill-chip">Docker</span>
+                        <span class="mockup-skill-chip">AWS</span>
                       </div>
                     </div>
                   </div>
 
                   <div class="mockup-scanner-status">
-                    <i class="fas fa-circle-check" style="color: #58D68D;"></i>
-                    <span>ATS Layout: 100% Parsable</span>
+                    <i class="fas fa-circle-check" style="color: #476550;"></i>
+                    <span>ATS Layout: 100% Vector Parsable</span>
                   </div>
                 </div>
               </div>
@@ -1672,6 +1699,9 @@
               </div>
             </div>
 
+            <button type="button" class="stitch-floating-btn" id="btn-zenguide-tour" onclick="window.startZenGuideTour(true)" title="Start Interactive Guided Tour" style="background: #E8F0EB; color: #476550; border-color: rgba(162, 188, 168, 0.5);">
+              <i class="fas fa-compass"></i> Tour
+            </button>
             <button type="button" class="stitch-floating-btn" id="btn-share-preview" onclick="window.openShareModal && window.openShareModal();" title="Share ZenResume">
               <i class="fas fa-share-alt"></i> Share
             </button>
@@ -1797,7 +1827,19 @@
       </div>
 
       <!-- 3-Card Choices Grid -->
-      <div class="onboarding-choices-grid">
+      <div class="onboarding-choices-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;">
+        <!-- Option 0: 1-Click GitHub & LinkedIn Sync -->
+        <div class="onboarding-choice-box" id="choice-profile-sync" onclick="window.openProfileSyncModal();" style="border-color: rgba(71, 101, 80, 0.4); background: rgba(71, 101, 80, 0.08);">
+          <div class="choice-badge-popular" style="background: #476550; color: #FFFFFF;">⚡ AUTO-SYNC</div>
+          <div class="choice-icon-wrap" style="background: rgba(71, 101, 80, 0.2); color: #476550; border: 1px solid rgba(71, 101, 80, 0.4);">
+            <i class="fab fa-github"></i>
+          </div>
+          <h3 class="choice-title" style="color: var(--text-main, #1A1F1F);">GitHub / LinkedIn Sync</h3>
+          <p class="choice-desc" style="color: var(--text-sub, #596060);">Enter your GitHub username or paste LinkedIn text to extract repos, projects & skills in 10s.</p>
+          <button type="button" class="btn-choice-action" style="background: #476550; color: #FFFFFF;">
+            <i class="fas fa-sync-alt"></i> 1-Click Sync
+          </button>
+        </div>
         <!-- Option 1: Magic PDF Import -->
         <div class="onboarding-choice-box" id="choice-magic-import">
           <div class="choice-badge-popular">⚡ FASTEST (10s)</div>
@@ -2359,11 +2401,99 @@
     </div>
   </div>
 
+  
+  <!-- 1-Click Profile Sync Modal (GitHub & LinkedIn) -->
+  <div class="modal-overlay no-print" id="profile-sync-modal" style="display: none; align-items: center; justify-content: center; z-index: 3200; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(26, 31, 31, 0.82); backdrop-filter: blur(12px);">
+    <div class="modal-card" style="background: #FAF9F6; border: 1.5px solid rgba(162, 188, 168, 0.4); border-radius: 24px; box-shadow: 0 25px 50px rgba(26, 31, 31, 0.3); padding: 32px 28px; max-width: 580px; width: 92%; color: #1A1F1F; position: relative;">
+      <button type="button" onclick="closeModal('profile-sync-modal')" style="position: absolute; top: 18px; right: 18px; background: #E8F0EB; border: 1px solid rgba(162, 188, 168, 0.4); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #476550; font-size: 18px; cursor: pointer;">&times;</button>
+      
+      <div style="text-align: center; margin-bottom: 22px;">
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: #E8F0EB; border: 1px solid rgba(162, 188, 168, 0.5); padding: 5px 14px; border-radius: 9999px; font-size: 11px; font-weight: 700; color: #476550; text-transform: uppercase; margin-bottom: 8px;">
+          <i class="fab fa-github" style="font-size: 13px;"></i> 1-Click Profile Auto-Sync
+        </div>
+        <h3 style="font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; color: #1A1F1F; margin: 0 0 6px 0;">Import Your Professional Profile</h3>
+        <p style="font-size: 13px; color: #596060; margin: 0; line-height: 1.45;">Auto-populate projects, skills, and work experience in under 10 seconds.</p>
+      </div>
+
+      <!-- Sync Tabs -->
+      <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid rgba(162, 188, 168, 0.3); padding-bottom: 10px;">
+        <button type="button" id="tab-btn-github" class="btn-sync-tab active" onclick="document.getElementById('sync-pane-github').style.display='block'; document.getElementById('sync-pane-linkedin').style.display='none'; this.classList.add('active'); document.getElementById('tab-btn-linkedin').classList.remove('active');">
+          <i class="fab fa-github"></i> GitHub Sync
+        </button>
+        <button type="button" id="tab-btn-linkedin" class="btn-sync-tab" onclick="document.getElementById('sync-pane-github').style.display='none'; document.getElementById('sync-pane-linkedin').style.display='block'; this.classList.add('active'); document.getElementById('tab-btn-github').classList.remove('active');">
+          <i class="fab fa-linkedin"></i> LinkedIn Summary
+        </button>
+      </div>
+
+      <!-- GitHub Sync Pane -->
+      <div id="sync-pane-github">
+        <label style="display: block; font-size: 12px; font-weight: 700; color: #1A1F1F; margin-bottom: 6px;">GitHub Username</label>
+        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+          <div style="position: relative; flex-grow: 1;">
+            <span style="position: absolute; left: 12px; top: 11px; color: #7D8787; font-weight: 700;">@</span>
+            <input type="text" id="input-github-username" placeholder="e.g. torvalds or your-username" style="width: 100%; padding: 10px 12px 10px 28px; border: 1.5px solid rgba(162, 188, 168, 0.5); border-radius: 10px; font-size: 14px; background: #FFFFFF; color: #1A1F1F; box-sizing: border-box;">
+          </div>
+          <button type="button" id="btn-github-sync-action" onclick="window.syncGitHubProfile(document.getElementById('input-github-username').value)" style="background: #476550; color: #FFFFFF; border: none; font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 10px; cursor: pointer; white-space: nowrap;">
+            <i class="fas fa-bolt"></i> Auto-Sync
+          </button>
+        </div>
+        <p style="font-size: 11.5px; color: #7D8787; margin: 0; line-height: 1.4;">
+          <i class="fas fa-shield-alt" style="color: #476550;"></i> Fetches public profile, bio, languages, and top starred repositories as ATS project bullets.
+        </p>
+      </div>
+
+      <!-- LinkedIn Sync Pane -->
+      <div id="sync-pane-linkedin" style="display: none;">
+        <label style="display: block; font-size: 12px; font-weight: 700; color: #1A1F1F; margin-bottom: 6px;">Paste LinkedIn Profile / Experience Text</label>
+        <textarea id="input-linkedin-rawtext" rows="4" placeholder="Paste your LinkedIn About section, Experience summary, and Skills here..." style="width: 100%; padding: 10px 12px; border: 1.5px solid rgba(162, 188, 168, 0.5); border-radius: 10px; font-size: 13px; background: #FFFFFF; color: #1A1F1F; box-sizing: border-box; resize: vertical; margin-bottom: 12px;"></textarea>
+        <button type="button" onclick="window.syncLinkedInText(document.getElementById('input-linkedin-rawtext').value)" style="width: 100%; background: #476550; color: #FFFFFF; border: none; font-size: 14px; font-weight: 700; padding: 12px; border-radius: 10px; cursor: pointer;">
+          <i class="fas fa-wand-magic-sparkles"></i> Parse & Populate Resume
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Smart Exit-Intent Recovery Modal (Strictly Once Per Session Guard) -->
+  <div class="modal-overlay no-print" id="exit-intent-modal" style="display: none; align-items: center; justify-content: center; z-index: 3300; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(26, 31, 31, 0.82); backdrop-filter: blur(12px);">
+    <div class="modal-card" style="background: #FAF9F6; border: 1.5px solid rgba(162, 188, 168, 0.4); border-radius: 24px; box-shadow: 0 25px 60px rgba(26, 31, 31, 0.4); padding: 34px 28px; max-width: 520px; width: 90%; color: #1A1F1F; text-align: center; position: relative;">
+      <button type="button" onclick="window.closeExitIntentModal()" style="position: absolute; top: 16px; right: 16px; background: #E8F0EB; border: 1px solid rgba(162, 188, 168, 0.4); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #476550; font-size: 16px; cursor: pointer;">&times;</button>
+      
+      <div style="width: 54px; height: 54px; border-radius: 16px; background: #E8F0EB; color: #476550; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px auto; border: 1px solid rgba(162, 188, 168, 0.5);">
+        🎓
+      </div>
+
+      <div style="display: inline-flex; align-items: center; gap: 6px; background: #E8F0EB; border: 1px solid rgba(162, 188, 168, 0.5); padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 800; color: #476550; text-transform: uppercase; margin-bottom: 10px;">
+        100% Free Career Asset
+      </div>
+
+      <h3 style="font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; color: #1A1F1F; margin: 0 0 8px 0; letter-spacing: -0.4px;">
+        Leaving so soon? Build your resume in 60 seconds!
+      </h3>
+      <p style="font-size: 13.5px; color: #596060; margin: 0 0 22px 0; line-height: 1.5;">
+        Get our verified TCS & Tech Fresher single-column ATS Blueprint pre-loaded with recruiter-approved XYZ bullet points — 100% free, zero signup required.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button type="button" class="btn-tactile" onclick="window.loadExitIntentBlueprint('tcs_fresher')" style="width: 100%; background: #476550; color: #FFFFFF; border: none; font-size: 14.5px; font-weight: 700; padding: 13px; border-radius: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+          <span>⚡ Open Verified Blueprint in Editor</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <button type="button" onclick="window.closeExitIntentModal()" style="background: transparent; border: none; color: #7D8787; font-size: 13px; font-weight: 600; cursor: pointer; padding: 6px;">
+          No thanks, continue browsing
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="templates-data.js?v=4.6" defer></script>
   <script src="indexeddb-storage.js" defer></script>
   <script src="firebase-service.js" defer></script>
-  <script src="app.js?v=4.6" defer></script>
+  <script src="app.js?v=4.9" defer></script>
+  <script src="profile-sync.js?v=4.9" defer></script>
+  <script src="exit-intent.js?v=4.9" defer></script>
+  <script src="hero-playground.js?v=4.9" defer></script>
+  <script src="navigator-tour.js?v=4.9" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
