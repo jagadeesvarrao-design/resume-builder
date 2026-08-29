@@ -88,14 +88,14 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/styles.css?v=4.7">
+  <link rel="stylesheet" href="/styles.css?v=4.8">
   
   <style id="zenresume-critical-header-style">
     /* ==========================================================================
        Aneevarp Solutions Master Palette Critical Navigation & Hero Header
        ========================================================================== */
     .stitch-nav {
-      background: rgba(252, 250, 245, 0.95) !important;
+      background: rgba(252, 250, 245, 0.96) !important;
       border-bottom: 1px solid rgba(162, 188, 168, 0.35) !important;
       color: #1A1F1F !important;
       box-shadow: 0 4px 20px rgba(26, 31, 31, 0.04) !important;
@@ -106,7 +106,7 @@
       z-index: 2000;
       width: 100%;
       height: auto;
-      min-height: 58px;
+      min-height: 56px;
       transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     }
     .stitch-nav-container {
@@ -118,6 +118,7 @@
       margin: 0 auto !important;
       width: 100% !important;
       box-sizing: border-box !important;
+      gap: 12px !important;
     }
     .brand-identity-container {
       display: inline-flex !important;
@@ -132,6 +133,7 @@
       border-radius: 10px !important;
       box-shadow: 0 2px 10px rgba(71, 101, 80, 0.25) !important;
       object-fit: cover !important;
+      flex-shrink: 0 !important;
     }
     .brand-text-column {
       display: flex !important;
@@ -177,6 +179,53 @@
       color: #476550 !important;
       border-bottom: 2px solid #476550 !important;
       padding-bottom: 2px !important;
+    }
+
+    /* Header Right Actions Controls */
+    .header-right-actions {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      flex-shrink: 0 !important;
+    }
+    .btn-theme-toggle {
+      background: #E8F0EB !important;
+      border: 1px solid rgba(162, 188, 168, 0.4) !important;
+      color: #476550 !important;
+      width: 38px !important;
+      height: 38px !important;
+      border-radius: 50% !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      font-size: 14px !important;
+      flex-shrink: 0 !important;
+      transition: all 0.2s ease !important;
+    }
+    .btn-theme-toggle:hover {
+      background: #476550 !important;
+      color: #FFFFFF !important;
+      transform: scale(1.05) !important;
+    }
+    .mobile-menu-toggle {
+      background: #FAF9F6 !important;
+      border: 1px solid rgba(162, 188, 168, 0.45) !important;
+      color: #1A1F1F !important;
+      width: 38px !important;
+      height: 38px !important;
+      border-radius: 10px !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      font-size: 16px !important;
+      flex-shrink: 0 !important;
+      transition: all 0.2s ease !important;
+    }
+    .mobile-menu-toggle:hover {
+      background: #E8F0EB !important;
+      color: #476550 !important;
     }
 
     /* Zen Suite Dropdown */
@@ -275,6 +324,47 @@
       font-weight: 400 !important;
     }
 
+    /* Mobile Drawer Menu */
+    .mobile-drawer-menu {
+      display: none;
+      flex-direction: column;
+      background: #FAF9F6 !important;
+      border-top: 1px solid rgba(162, 188, 168, 0.35) !important;
+      border-bottom: 1px solid rgba(162, 188, 168, 0.35) !important;
+      padding: 14px 18px !important;
+      gap: 6px !important;
+      box-shadow: 0 12px 30px rgba(26, 31, 31, 0.08) !important;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .mobile-drawer-menu.open {
+      display: flex !important;
+      animation: mobileMenuSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-nav-link {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      padding: 12px 14px !important;
+      border-radius: 10px !important;
+      color: #1A1F1F !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      text-decoration: none !important;
+      transition: all 0.15s ease !important;
+      background: transparent !important;
+    }
+    .mobile-nav-link i {
+      color: #476550 !important;
+      font-size: 15px !important;
+      width: 20px !important;
+      text-align: center !important;
+    }
+    .mobile-nav-link:hover, .mobile-nav-link:active {
+      background: #E8F0EB !important;
+      color: #476550 !important;
+    }
+
     /* Master Palette Landing Hero Section */
     .landing-screen {
       width: 100% !important;
@@ -288,11 +378,12 @@
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
-      padding: 130px 24px 85px 24px !important;
+      padding: 120px 24px 80px 24px !important;
       box-sizing: border-box !important;
       background: radial-gradient(circle at 50% 15%, #EAF2EC 0%, #F5FAF6 50%, #FCFAF5 100%) !important;
       border-bottom: 1px solid rgba(162, 188, 168, 0.35) !important;
       color: #1A1F1F !important;
+      text-align: center !important;
     }
     .stitch-hero-title {
       color: #1A1F1F !important;
@@ -349,6 +440,28 @@
     [data-theme="dark"] .brand-subtext {
       color: #2DD4BF !important;
     }
+    [data-theme="dark"] .btn-theme-toggle {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-color: rgba(45, 212, 191, 0.25) !important;
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .mobile-menu-toggle {
+      background: #141B20 !important;
+      border-color: rgba(45, 212, 191, 0.3) !important;
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .mobile-drawer-menu {
+      background: #141B20 !important;
+      border-top-color: rgba(45, 212, 191, 0.2) !important;
+      border-bottom-color: rgba(45, 212, 191, 0.2) !important;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6) !important;
+    }
+    [data-theme="dark"] .mobile-nav-link {
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .mobile-nav-link i {
+      color: #2DD4BF !important;
+    }
     [data-theme="dark"] .desktop-nav-links a {
       color: #CBD5E1 !important;
     }
@@ -399,12 +512,60 @@
       border-color: #2DD4BF !important;
     }
 
+    /* Universal Responsive Breakpoints for All Devices */
     @media (max-width: 992px) {
       .desktop-nav-links {
         display: none !important;
       }
       .mobile-menu-toggle {
-        display: flex !important;
+        display: inline-flex !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stitch-nav-cta {
+        display: none !important; /* Prevents mobile header overflow */
+      }
+      .stitch-nav-container {
+        padding: 8px 14px !important;
+      }
+      .brand-logo-img {
+        width: 32px !important;
+        height: 32px !important;
+      }
+      .brand-main-title {
+        font-size: 16.5px !important;
+      }
+      .brand-subtext {
+        font-size: 8px !important;
+      }
+      .stitch-hero-section {
+        padding: 75px 14px 45px 14px !important;
+      }
+      .stitch-hero-title {
+        font-size: clamp(24px, 7.5vw, 34px) !important;
+        line-height: 1.2 !important;
+        margin-bottom: 12px !important;
+      }
+      .stitch-hero-subtitle {
+        font-size: 14px !important;
+        line-height: 1.55 !important;
+        margin-bottom: 22px !important;
+        padding: 0 4px !important;
+      }
+      .stitch-hero-cta {
+        width: 100% !important;
+        max-width: 300px !important;
+        padding: 13px 20px !important;
+        font-size: 15px !important;
+        justify-content: center !important;
+      }
+      .hero-quick-chips {
+        gap: 6px !important;
+      }
+      .hero-role-chip {
+        font-size: 11.5px !important;
+        padding: 5px 11px !important;
       }
     }
   </style>
