@@ -5907,3 +5907,72 @@ footer a:active,
   border-color: rgba(45, 212, 191, 0.4);
 }
 
+/* ==========================================================================
+   12. HERO SOCIAL PROOF & FAST-TRACK ROLES HINT STYLING (HIGH CONTRAST)
+   ========================================================================== */
+.hero-roles-hint-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-theme="dark"] .hero-roles-hint-label {
+  color: #CBD5E1;
+}
+
+.social-proof-heading {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--color-primary);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.social-proof-heading i {
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .social-proof-heading {
+  color: #2DD4BF;
+}
+
+[data-theme="dark"] .social-proof-heading i {
+  color: #2DD4BF;
+}
+
+.social-proof-companies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px 18px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-slate-deep);
+  line-height: 1.6;
+}
+
+.social-proof-companies span {
+  color: var(--color-slate-deep);
+}
+
+.social-proof-companies .company-dot {
+  color: var(--color-sage-muted);
+  font-size: 11px;
+}
+
+[data-theme="dark"] .social-proof-companies span {
+  color: #E2E8F0;
+}
+
+[data-theme="dark"] .social-proof-companies .company-dot {
+  color: rgba(45, 212, 191, 0.4);
+}
+
+

@@ -88,7 +88,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/styles.css?v=4.8">
+  <link rel="stylesheet" href="/styles.css?v=4.9">
   
   <style id="zenresume-critical-header-style">
     /* ==========================================================================
@@ -511,6 +511,56 @@
       color: #061B18 !important;
       border-color: #2DD4BF !important;
     }
+    /* Hero Roles Hint & Social Proof High Contrast */
+    .hero-roles-hint-label {
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      color: #596060 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+    }
+    .social-proof-heading {
+      font-size: 11.5px !important;
+      font-weight: 800 !important;
+      color: #476550 !important;
+      letter-spacing: 0.8px !important;
+      text-transform: uppercase !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+    }
+    .social-proof-companies {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 10px 18px !important;
+      font-size: 13px !important;
+      font-weight: 800 !important;
+      color: #1A1F1F !important;
+      line-height: 1.6 !important;
+    }
+    .social-proof-companies span {
+      color: #1A1F1F !important;
+    }
+    .social-proof-companies .company-dot {
+      color: #A2BCA8 !important;
+      font-size: 11px !important;
+    }
+
+    [data-theme="dark"] .hero-roles-hint-label {
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .social-proof-heading {
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .social-proof-companies span {
+      color: #E2E8F0 !important;
+    }
+    [data-theme="dark"] .social-proof-companies .company-dot {
+      color: rgba(45, 212, 191, 0.4) !important;
+    }
 
     /* Universal Responsive Breakpoints for All Devices */
     @media (max-width: 992px) {
@@ -566,6 +616,10 @@
       .hero-role-chip {
         font-size: 11.5px !important;
         padding: 5px 11px !important;
+      }
+      .social-proof-companies {
+        gap: 8px 12px !important;
+        font-size: 12px !important;
       }
     }
   </style>
@@ -698,7 +752,7 @@
 
             <!-- 1-Click Fast-Track Hero Role Presets -->
             <div class="hero-quick-roles-wrap" style="margin-top: 18px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-              <span style="font-size: 11.5px; font-weight: 700; color: #94A3B8; display: flex; align-items: center; gap: 6px;">
+              <span class="hero-roles-hint-label">
                 <i class="fas fa-bolt" style="color: #F59E0B;"></i> Or launch instantly with pre-filled role bullets:
               </span>
               <div class="hero-quick-chips" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
@@ -722,22 +776,22 @@
 
             <!-- Social Proof Strip: Trusted by Job Seekers -->
             <div class="hero-social-proof" style="margin-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-              <span style="font-size: 11px; font-weight: 700; color: #94A3B8; letter-spacing: 0.8px; text-transform: uppercase;">
-                <i class="fas fa-check-circle" style="color: #2DD4BF; margin-right: 4px;"></i> Trusted by candidates hired at top companies
+              <span class="social-proof-heading">
+                <i class="fas fa-check-circle" style="color: #476550; margin-right: 4px;"></i> Trusted by candidates hired at top companies
               </span>
-              <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px 20px; font-size: 12px; font-weight: 700; color: #CBD5E1; opacity: 0.85;">
+              <div class="social-proof-companies">
                 <span>Google</span>
-                <span>•</span>
+                <span class="company-dot">•</span>
                 <span>Microsoft</span>
-                <span>•</span>
+                <span class="company-dot">•</span>
                 <span>Amazon</span>
-                <span>•</span>
+                <span class="company-dot">•</span>
                 <span>Infosys</span>
-                <span>•</span>
+                <span class="company-dot">•</span>
                 <span>TCS</span>
-                <span>•</span>
+                <span class="company-dot">•</span>
                 <span>Deloitte</span>
-                <span>•</span>
+                <span class="company-dot">•</span>
                 <span>Accenture</span>
               </div>
             </div>
