@@ -615,46 +615,53 @@
       const batch = document.getElementById('campus-batch').value.trim() || 'Not specified';
       const message = document.getElementById('campus-message').value.trim();
 
-      const fullMessage = `College/University: ${college}
-Batch Size: ${batch}
-
-Message:
-${message}`;
-
-      const payload = {
-        name: `${name} (${college})`,
-        email: email,
-        rating: 5,
-        message: fullMessage
+      const emailPayload = {
+        _subject: `🎓 [ZenResume Campus Placement Request] ${college} — ${name}`,
+        _template: 'table',
+        _captcha: 'false',
+        _replyto: email,
+        form_type: 'Campus Placement Kit & Institutional Onboarding',
+        tpo_faculty_name: name,
+        official_college_email: email,
+        institution_college_name: college,
+        estimated_batch_size: batch,
+        placement_drive_requirements: message,
+        submitted_at: new Date().toLocaleString('en-IN')
       };
 
-      let delivered = false;
-
+      // 1. Direct Webhook Dispatch to aneevarpsolutions@gmail.com
       try {
-        const res = await fetch('/api/contact', {
+        await fetch('https://formsubmit.co/ajax/aneevarpsolutions@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(emailPayload)
+        });
+      } catch (err) {
+        console.warn('Direct email dispatch:', err);
+      }
+
+      // 2. Parallel Serverless API Dispatch (/api/contact)
+      try {
+        fetch('/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-          delivered = true;
-        }
-      } catch (err) {
-        console.warn('Campus request error:', err);
-      }
+          body: JSON.stringify({
+            name: `${name} (${college})`,
+            email: email,
+            rating: 5,
+            message: `[CAMPUS PLACEMENT REQUEST]\nCollege: ${college}\nBatch: ${batch}\nTPO: ${name}\n\nRequirements:\n${message}`
+          })
+        }).catch(() => {});
+      } catch (_) {}
 
       btnSubmit.innerHTML = originalText;
       btnSubmit.disabled = false;
 
-      if (delivered) {
-        document.getElementById('campus-contact-form').style.display = 'none';
-        document.getElementById('campus-success-message').style.display = 'block';
-      } else {
-        const subject = `[ZenResume Campus Inquiry] from ${name} - ${college}`;
-        window.location.href = `mailto:aneevarpsolutions@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullMessage)}`;
-        document.getElementById('campus-contact-form').style.display = 'none';
-        document.getElementById('campus-success-message').style.display = 'block';
-      }
+      document.getElementById('campus-contact-form').style.display = 'none';
+      document.getElementById('campus-success-message').style.display = 'block';
     }
   </script>
 </body>

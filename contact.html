@@ -657,34 +657,50 @@
       const email = document.getElementById('contact-email').value.trim();
       const rating = parseInt(document.getElementById('contact-rating').value) || 5;
       const message = document.getElementById('contact-message').value.trim();
+      const generatedTicket = 'ANV-' + Date.now().toString(36).toUpperCase();
 
-      const payload = {
-        name,
-        email,
-        rating,
-        message
+      const emailPayload = {
+        _subject: `📩 [ZenResume Inquiry ${generatedTicket}] from ${name} (${rating}★)`,
+        _template: 'table',
+        _captcha: 'false',
+        _replyto: email,
+        form_type: 'General Contact & Customer Support Inquiry',
+        sender_name: name,
+        sender_email: email,
+        experience_rating: `${rating} / 5 Stars`,
+        inquiry_message: message,
+        ticket_reference: generatedTicket,
+        submitted_at: new Date().toLocaleString('en-IN')
       };
 
-      let delivered = false;
-      let generatedTicket = 'ANV-' + Date.now().toString(36).toUpperCase();
-
-      // 1. Direct Serverless API Route (/api/contact)
+      // 1. Direct Webhook Dispatch to aneevarpsolutions@gmail.com
       try {
-        const res = await fetch('/api/contact', {
+        await fetch('https://formsubmit.co/ajax/aneevarpsolutions@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(emailPayload)
+        });
+      } catch (err) {
+        console.warn('Direct email dispatch:', err);
+      }
+
+      // 2. Parallel Serverless API Dispatch (/api/contact)
+      try {
+        fetch('/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.ticketId) {
-            generatedTicket = data.ticketId;
-          }
-          delivered = true;
-        }
-      } catch (err) {
-        console.warn('/api/contact request encountered network error:', err);
-      }
+          body: JSON.stringify({
+            name,
+            email,
+            rating,
+            message,
+            ticketId: generatedTicket
+          })
+        }).catch(() => {});
+      } catch (_) {}
 
       btnSubmit.innerHTML = originalText;
       btnSubmit.disabled = false;
@@ -692,17 +708,8 @@
       const ticketElem = document.getElementById('ticket-ref-display');
       if (ticketElem) ticketElem.textContent = generatedTicket;
 
-      if (delivered) {
-        document.getElementById('contact-form').style.display = 'none';
-        document.getElementById('success-message').style.display = 'block';
-      } else {
-        // Graceful Mailto Fallback
-        const subject = `[ZenResume Inquiry ${generatedTicket}] from ${name} (${rating}★)`;
-        const body = `Traceable Ticket: ${generatedTicket}\nFrom: ${name} <${email}>\nRating: ${rating}/5\n\nMessage:\n${message}\n\n---\nSent via ZenResume Contact Portal`;
-        window.location.href = `mailto:aneevarpsolutions@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('contact-form').style.display = 'none';
-        document.getElementById('success-message').style.display = 'block';
-      }
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('success-message').style.display = 'block';
     }
 
     function resetForm() {
