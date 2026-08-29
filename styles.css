@@ -6490,3 +6490,347 @@ footer a:active,
   background: rgba(45, 212, 191, 0.15);
   color: #2DD4BF;
 }
+
+
+/* Hide Top Navigation Ribbon completely inside editor */
+body.in-editor .stitch-nav {
+  display: none !important;
+}
+
+body.in-editor .app-container {
+  padding-top: 16px !important;
+  margin-top: 0 !important;
+}
+
+/* ZenGuide Target Spotlight */
+.zenguide-spotlight-active {
+  outline: 2.5px solid #476550 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px rgba(71, 101, 80, 0.25), 0 8px 24px rgba(71, 101, 80, 0.3) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  z-index: 10002 !important;
+  animation: spotlightPulse 1.8s infinite ease-in-out !important;
+}
+
+@keyframes spotlightPulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(71, 101, 80, 0.3), 0 4px 14px rgba(71, 101, 80, 0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(71, 101, 80, 0.45), 0 8px 25px rgba(71, 101, 80, 0.4); }
+}
+
+.zenguide-pointer-arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #FAF9F6;
+  border: 1.5px solid rgba(162, 188, 168, 0.6);
+  transform: rotate(45deg);
+  z-index: 10001;
+}
+
+.zenguide-pointer-arrow.arrow-top {
+  top: -7px;
+  border-bottom: none;
+  border-right: none;
+}
+
+.zenguide-pointer-arrow.arrow-bottom {
+  bottom: -7px;
+  border-top: none;
+  border-left: none;
+}
+
+.zenguide-pointer-arrow.hidden {
+  display: none;
+}
+
+
+/* ==========================================================================
+   ZENGUIDE DYNAMIC ANCHORED NAVIGATOR (CROSS-DEVICE UNIVERSAL STYLING)
+   ========================================================================== */
+.zenguide-overlay {
+  position: fixed;
+  z-index: 100000 !important;
+  display: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  animation: zenguideCardPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes zenguideCardPop {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.zenguide-card {
+  background: #FAF9F6 !important;
+  border: 1.5px solid #476550 !important;
+  border-radius: 20px !important;
+  padding: 20px 22px !important;
+  box-shadow: 0 20px 50px rgba(26, 31, 31, 0.35), 0 0 0 1px rgba(71, 101, 80, 0.15) !important;
+  color: #1A1F1F !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+[data-theme="dark"] .zenguide-card {
+  background: #141B20 !important;
+  border-color: #2DD4BF !important;
+  color: #F8FAFC !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(45, 212, 191, 0.2) !important;
+}
+
+.zenguide-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 12px !important;
+  position: relative !important;
+}
+
+.zenguide-avatar-wrap {
+  position: relative !important;
+  width: 40px !important;
+  height: 40px !important;
+  flex-shrink: 0 !important;
+}
+
+.zenguide-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  background: #E8F0EB !important;
+  border: 1.5px solid rgba(162, 188, 168, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+}
+
+[data-theme="dark"] .zenguide-avatar {
+  background: rgba(45, 212, 191, 0.15) !important;
+  border-color: rgba(45, 212, 191, 0.4) !important;
+}
+
+.zenguide-avatar-pulse {
+  position: absolute !important;
+  top: -3px !important;
+  left: -3px !important;
+  right: -3px !important;
+  bottom: -3px !important;
+  border-radius: 15px !important;
+  background: rgba(71, 101, 80, 0.3) !important;
+  animation: pulseAvatar 2s infinite ease-in-out !important;
+}
+
+@keyframes pulseAvatar {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.18); opacity: 0; }
+}
+
+.zenguide-header-text {
+  flex-grow: 1 !important;
+}
+
+.zenguide-badge {
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  color: #476550 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+[data-theme="dark"] .zenguide-badge {
+  color: #2DD4BF !important;
+}
+
+.zenguide-title {
+  font-size: 15.5px !important;
+  font-weight: 800 !important;
+  color: #1A1F1F !important;
+  margin: 0 !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+[data-theme="dark"] .zenguide-title {
+  color: #FFFFFF !important;
+}
+
+.zenguide-close-btn {
+  background: none !important;
+  border: none !important;
+  font-size: 22px !important;
+  color: #7D8787 !important;
+  cursor: pointer !important;
+  padding: 0 4px !important;
+  line-height: 1 !important;
+}
+
+.zenguide-body {
+  margin-bottom: 16px !important;
+}
+
+.zenguide-desc {
+  font-size: 13px !important;
+  color: #596060 !important;
+  line-height: 1.5 !important;
+  margin: 0 0 10px 0 !important;
+}
+
+[data-theme="dark"] .zenguide-desc {
+  color: #CBD5E1 !important;
+}
+
+.zenguide-tip-box {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  color: #92400E !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  line-height: 1.4 !important;
+}
+
+[data-theme="dark"] .zenguide-tip-box {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  color: #FDE68A !important;
+}
+
+.zenguide-footer {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border-top: 1px solid rgba(162, 188, 168, 0.3) !important;
+  padding-top: 12px !important;
+}
+
+.zenguide-step-counter {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #596060 !important;
+}
+
+[data-theme="dark"] .zenguide-step-counter {
+  color: #94A3B8 !important;
+}
+
+.zenguide-btn-secondary {
+  background: #E8F0EB !important;
+  border: 1px solid rgba(162, 188, 168, 0.5) !important;
+  color: #476550 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 7px 14px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+[data-theme="dark"] .zenguide-btn-secondary {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(45, 212, 191, 0.3) !important;
+  color: #2DD4BF !important;
+}
+
+.zenguide-btn-primary {
+  background: #476550 !important;
+  border: 1px solid #3A5342 !important;
+  color: #FFFFFF !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 7px 16px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  box-shadow: 0 4px 12px rgba(71, 101, 80, 0.25) !important;
+}
+
+.zenguide-btn-primary:hover {
+  background: #3A5342 !important;
+}
+
+.zenguide-btn-primary.btn-finish {
+  background: linear-gradient(135deg, #476550, #2DD4BF) !important;
+  color: #061B18 !important;
+  font-weight: 800 !important;
+  border: none !important;
+}
+
+/* Spotlight Glowing Focus Ring on Active Button */
+.zenguide-spotlight-active {
+  outline: 3px solid #476550 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px rgba(71, 101, 80, 0.25), 0 8px 24px rgba(71, 101, 80, 0.35) !important;
+  position: relative !important;
+  z-index: 10001 !important;
+  animation: spotlightPulse 1.8s infinite ease-in-out !important;
+}
+
+[data-theme="dark"] .zenguide-spotlight-active {
+  outline-color: #2DD4BF !important;
+  box-shadow: 0 0 0 6px rgba(45, 212, 191, 0.3), 0 8px 24px rgba(45, 212, 191, 0.4) !important;
+}
+
+@keyframes spotlightPulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(71, 101, 80, 0.3), 0 4px 14px rgba(71, 101, 80, 0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(71, 101, 80, 0.45), 0 8px 25px rgba(71, 101, 80, 0.4); }
+}
+
+/* Pointer Arrow */
+.zenguide-pointer-arrow {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #FAF9F6;
+  border: 1.5px solid #476550;
+  transform: rotate(45deg);
+  z-index: 100001;
+}
+
+[data-theme="dark"] .zenguide-pointer-arrow {
+  background: #141B20;
+  border-color: #2DD4BF;
+}
+
+.zenguide-pointer-arrow.arrow-top {
+  top: -8px;
+  border-bottom: none;
+  border-right: none;
+}
+
+.zenguide-pointer-arrow.arrow-bottom {
+  bottom: -8px;
+  border-top: none;
+  border-left: none;
+}
+
+.zenguide-pointer-arrow.hidden {
+  display: none !important;
+}
+
+/* Mobile & Tablet Bottom Sheet Adaptations */
+@media (max-width: 768px) {
+  .zenguide-overlay {
+    bottom: 16px !important;
+    left: 12px !important;
+    right: 12px !important;
+    top: auto !important;
+    width: auto !important;
+  }
+  .zenguide-card {
+    padding: 16px 18px !important;
+    border-radius: 16px !important;
+  }
+  .zenguide-pointer-arrow {
+    display: none !important;
+  }
+}

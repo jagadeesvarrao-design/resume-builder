@@ -235,6 +235,9 @@ function renderTemplatesCatalog() {
    3. TEMPLATE INITIALIZATION & DATA LOADING
    ========================================================================== */
 function selectTemplateStyle(templateId) {
+  document.body.classList.add('in-editor');
+  const globalNav = document.querySelector('.stitch-nav');
+  if (globalNav) globalNav.style.display = 'none';
   state.selectedTemplateId = templateId;
   
   // Track GA4 Funnel Event: template_selected
@@ -3375,6 +3378,9 @@ function updateHeaderNavCTA() {
 }
 
 function showLandingPage() {
+  document.body.classList.remove('in-editor');
+  const globalNav = document.querySelector('.stitch-nav');
+  if (globalNav) globalNav.style.display = '';
   const landingScreen = document.getElementById('landing-screen');
   const appContainer = document.getElementById('app-container');
   const selectionScreen = document.getElementById('selection-screen');
@@ -3396,6 +3402,9 @@ function showLandingPage() {
 }
 
 function enterApp() {
+  document.body.classList.add('in-editor');
+  const globalNav = document.querySelector('.stitch-nav');
+  if (globalNav) globalNav.style.display = 'none';
   const landingScreen = document.getElementById('landing-screen');
   const appContainer = document.getElementById('app-container');
   const selectionScreen = document.getElementById('selection-screen');
@@ -3462,6 +3471,9 @@ function closeOnboardingModal() {
 }
 
 function enterBuilderDirectly() {
+  document.body.classList.add('in-editor');
+  const globalNav = document.querySelector('.stitch-nav');
+  if (globalNav) globalNav.style.display = 'none';
   const landingScreen = document.getElementById('landing-screen');
   const appContainer = document.getElementById('app-container');
   const selectionScreen = document.getElementById('selection-screen');
