@@ -335,19 +335,45 @@
     if (overlay) {
       overlay.style.display = 'none';
     }
+    // Permanently mark tour completed so it is never auto-displayed again
     localStorage.setItem(TOUR_COMPLETED_KEY, 'true');
+    localStorage.setItem('zenresume_visited_before', 'true');
   };
 
-  window.checkAutoLaunchTour = function() {
-    const hasSeenTour = localStorage.getItem(TOUR_COMPLETED_KEY);
-    if (!hasSeenTour) {
-      setTimeout(function() {
-        const builderWorkspace = document.getElementById('builder-workspace');
-        if (builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '') {
-          window.startZenGuideTour(false);
-        }
-      }, 700);
+  function isNewVisitor() {
+    // 1. Check if tour was already completed/dismissed
+    if (localStorage.getItem(TOUR_COMPLETED_KEY) || 
+        localStorage.getItem('zenresume_tour_completed_v1') || 
+        localStorage.getItem('zenresume_tour_completed_v2')) {
+      return false;
     }
+
+    // 2. Check if user already has an existing saved resume draft on this device
+    if (localStorage.getItem('zenresume_state') || localStorage.getItem('zenresume_profiles_registry')) {
+      return false;
+    }
+
+    // 3. Check if returning visitor flag is set
+    if (localStorage.getItem('zenresume_visited_before')) {
+      return false;
+    }
+
+    return true;
+  }
+
+  window.checkAutoLaunchTour = function() {
+    // Only auto-launch for brand new first-time visitors
+    if (!isNewVisitor()) {
+      console.log('[ZenGuide] Returning user detected; navigator auto-launch skipped.');
+      return;
+    }
+
+    setTimeout(function() {
+      const builderWorkspace = document.getElementById('builder-workspace');
+      if (builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '') {
+        window.startZenGuideTour(false);
+      }
+    }, 800);
   };
 
   window.addEventListener('resize', function() {
