@@ -50,7 +50,6 @@
   };
 
   let currentRole = 'software';
-  let currentStyle = 'emerald';
   let currentAccent = '#476550';
 
   function renderPlaygroundPreview() {
@@ -100,8 +99,8 @@
     interactionCount++;
     renderPlaygroundPreview();
 
-    // Trigger motivational prompt on 2nd or 3rd interaction
-    if (interactionCount >= 2 && !hasShownMotivation) {
+    // Trigger motivational prompt when user touches 3 to 4 buttons / fields
+    if (interactionCount >= 3 && !hasShownMotivation) {
       hasShownMotivation = true;
       showPlaygroundMotivationPrompt();
     }
@@ -117,14 +116,14 @@
         <div class="prompt-glow-dot"></div>
         <div class="prompt-content">
           <div class="prompt-title">
-            <i class="fas fa-sparkles" style="color: #F59E0B;"></i>
-            <span>Loved your edits? Build your full ATS Resume!</span>
+            <span style="font-size: 16px;">🚀</span>
+            <span>Awesome edits! Ready to build your full ATS Resume?</span>
           </div>
-          <p class="prompt-subtitle">Transfer your playground customizations into the full recruiter-verified ATS builder in 1 click.</p>
+          <p class="prompt-subtitle">You've customized your live playground preview! Transfer your edits straight into the full builder to add education, run AI checks, and export your 100% vector PDF.</p>
         </div>
         <div class="prompt-actions">
           <button type="button" class="btn-prompt-transfer" onclick="window.transferPlaygroundToBuilder()">
-            ⚡ Open Full Builder
+            ⚡ Open Full Builder Free &rarr;
           </button>
           <button type="button" class="btn-prompt-close" onclick="window.closePlaygroundPrompt()" aria-label="Dismiss">&times;</button>
         </div>
@@ -137,7 +136,7 @@
       }
     }
 
-    setTimeout(() => {
+    setTimeout(function() {
       promptEl.classList.add('visible');
     }, 100);
   }
@@ -160,7 +159,6 @@
     const bullet = bulletInput ? bulletInput.value : '';
     const skills = skillsInput ? skillsInput.value : '';
 
-    // Load matching base profile
     let presetKey = 'software_fresher';
     if (currentRole === 'tcs') presetKey = 'tcs_fresher';
     else if (currentRole === 'data') presetKey = 'data_science_fresher';
@@ -170,7 +168,6 @@
       window.loadPreset(presetKey);
     }
 
-    // Override with custom user edits from playground
     if (name) {
       const el = document.getElementById('input-name');
       if (el) el.value = name;
@@ -212,7 +209,6 @@
     if (bulletInput) bulletInput.value = preset.bullet1;
     if (skillsInput) skillsInput.value = preset.skills.join(', ');
 
-    // Update active tab buttons
     document.querySelectorAll('.playground-role-tab').forEach(tab => {
       tab.classList.toggle('active', tab.getAttribute('data-role') === roleKey);
     });
@@ -247,7 +243,6 @@
     renderPlaygroundPreview();
   };
 
-  // Initialize on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', window.initHeroPlayground);
   } else {

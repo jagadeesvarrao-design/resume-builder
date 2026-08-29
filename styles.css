@@ -6418,3 +6418,75 @@ footer a:active,
     width: 100%;
   }
 }
+
+
+/* Interactive Playground Invitation Banner */
+.playground-invitation-badge-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 10;
+}
+
+.playground-invitation-badge {
+  background: #FAF9F6;
+  border: 1.5px solid #476550;
+  box-shadow: 0 8px 24px rgba(71, 101, 80, 0.18), 0 0 0 3px rgba(71, 101, 80, 0.08);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #1A1F1F;
+  font-size: 12.5px;
+  font-family: 'Inter', sans-serif;
+  animation: floatInvitation 3s ease-in-out infinite;
+}
+
+@keyframes floatInvitation {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.invitation-icon-pulse {
+  background: #E8F0EB;
+  color: #476550;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  box-shadow: 0 0 8px rgba(71, 101, 80, 0.3);
+}
+
+.invitation-action-hint {
+  font-size: 11px;
+  font-weight: 800;
+  color: #476550;
+  background: #E8F0EB;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+[data-theme="dark"] .playground-invitation-badge {
+  background: #141B20;
+  border-color: rgba(45, 212, 191, 0.4);
+  color: #F8FAFC;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .invitation-icon-pulse {
+  background: rgba(45, 212, 191, 0.15);
+  color: #2DD4BF;
+}
+
+[data-theme="dark"] .invitation-action-hint {
+  background: rgba(45, 212, 191, 0.15);
+  color: #2DD4BF;
+}
