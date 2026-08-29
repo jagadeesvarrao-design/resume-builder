@@ -3496,6 +3496,9 @@ function enterBuilderDirectly() {
   adjustPreviewScale();
   checkVaultOnboardingBanner();
   updateHeaderNavCTA();
+  if (typeof window.checkAutoLaunchTour === 'function') {
+    window.checkAutoLaunchTour();
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

@@ -2,12 +2,13 @@
  * ZenResume - Universal Cross-Device Editor Navigator ("ZenGuide 🧭")
  * Engineered to work seamlessly across all smartphones, tablets, laptops, and desktops.
  * Intelligently switches mobile tabs, anchors next to active buttons, and spotlights controls.
+ * Strictly auto-launches only for first-time visitors who have not seen the tour.
  */
 
 (function() {
   'use strict';
 
-  const TOUR_COMPLETED_KEY = 'zenresume_tour_completed_v3';
+  const TOUR_SEEN_KEY = 'zenresume_tour_seen_v4';
 
   const TOUR_STEPS = [
     {
@@ -171,20 +172,21 @@
     const isMobile = window.innerWidth <= 768;
 
     if (isMobile) {
-      // Mobile / Tablet: Fixed bottom sheet for ergonomic thumb navigation
+      // Mobile / Smartphone / Tablet layout: fixed bottom drawer
       overlay.style.position = 'fixed';
       overlay.style.top = 'auto';
-      overlay.style.bottom = '16px';
-      overlay.style.left = '12px';
-      overlay.style.right = '12px';
-      overlay.style.width = 'auto';
-      overlay.style.maxWidth = 'none';
+      overlay.style.bottom = '12px';
+      overlay.style.left = '10px';
+      overlay.style.right = '10px';
+      overlay.style.width = 'calc(100vw - 20px)';
+      overlay.style.maxWidth = '100%';
+      overlay.style.zIndex = '999999';
 
       if (arrow) arrow.style.display = 'none';
       return;
     }
 
-    // Desktop / Laptop: Anchor intelligently to target button
+    // Desktop / Laptop: Anchor directly to target button
     if (!targetEl) {
       overlay.style.position = 'fixed';
       overlay.style.top = '40px';
@@ -192,6 +194,7 @@
       overlay.style.left = 'auto';
       overlay.style.bottom = 'auto';
       overlay.style.width = '360px';
+      overlay.style.zIndex = '999999';
       if (arrow) arrow.style.display = 'none';
       return;
     }
@@ -204,7 +207,6 @@
     let left = 0;
     let arrowClass = 'arrow-top';
 
-    // Prefer positioning below element
     if (rect.bottom + cardHeight + 20 < window.innerHeight) {
       top = rect.bottom + 14;
       arrowClass = 'arrow-top';
@@ -216,11 +218,9 @@
       arrowClass = 'hidden';
     }
 
-    // Align horizontally centered with target
     const targetCenterX = rect.left + rect.width / 2;
     left = targetCenterX - cardWidth / 2;
 
-    // Viewport bounds safeguard
     if (left < 20) left = 20;
     if (left + cardWidth > window.innerWidth - 20) {
       left = window.innerWidth - cardWidth - 20;
@@ -232,6 +232,7 @@
     overlay.style.right = 'auto';
     overlay.style.bottom = 'auto';
     overlay.style.width = cardWidth + 'px';
+    overlay.style.zIndex = '999999';
 
     if (arrow) {
       arrow.style.display = 'block';
@@ -251,12 +252,11 @@
     const overlay = ensureTourOverlay();
     overlay.style.display = 'block';
 
-    // Switch mobile workspace tab if necessary so the target button is visible on phones
+    // Switch mobile workspace tab if necessary
     if (window.innerWidth <= 768 && typeof window.setMobileTab === 'function') {
       window.setMobileTab(step.panel);
     }
 
-    // Update text content with defensive checks
     const badgeEl = document.getElementById('zenguide-step-badge');
     const titleEl = document.getElementById('zenguide-title');
     const descEl = document.getElementById('zenguide-desc');
@@ -269,7 +269,6 @@
     if (tipEl) tipEl.innerHTML = step.tip;
     if (counterEl) counterEl.textContent = (index + 1) + ' / ' + TOUR_STEPS.length;
 
-    // Buttons
     const prevBtn = document.getElementById('zenguide-prev-btn');
     const nextBtn = document.getElementById('zenguide-next-btn');
 
@@ -287,7 +286,6 @@
       }
     }
 
-    // Locate target element
     setTimeout(function() {
       const targetEl = document.getElementById(step.targetId);
       if (targetEl) {
@@ -304,12 +302,12 @@
       } else {
         positionTourCard(null, overlay);
       }
-    }, 60);
+    }, 80);
   }
 
   window.startZenGuideTour = function(force) {
     if (force === undefined) force = true;
-    if (!force && localStorage.getItem(TOUR_COMPLETED_KEY)) {
+    if (!force && localStorage.getItem(TOUR_SEEN_KEY)) {
       return;
     }
     renderTourStep(0);
@@ -335,36 +333,14 @@
     if (overlay) {
       overlay.style.display = 'none';
     }
-    // Permanently mark tour completed so it is never auto-displayed again
-    localStorage.setItem(TOUR_COMPLETED_KEY, 'true');
-    localStorage.setItem('zenresume_visited_before', 'true');
+    // Permanently remember tour is seen on this device
+    localStorage.setItem(TOUR_SEEN_KEY, 'true');
   };
 
-  function isNewVisitor() {
-    // 1. Check if tour was already completed/dismissed
-    if (localStorage.getItem(TOUR_COMPLETED_KEY) || 
-        localStorage.getItem('zenresume_tour_completed_v1') || 
-        localStorage.getItem('zenresume_tour_completed_v2')) {
-      return false;
-    }
-
-    // 2. Check if user already has an existing saved resume draft on this device
-    if (localStorage.getItem('zenresume_state') || localStorage.getItem('zenresume_profiles_registry')) {
-      return false;
-    }
-
-    // 3. Check if returning visitor flag is set
-    if (localStorage.getItem('zenresume_visited_before')) {
-      return false;
-    }
-
-    return true;
-  }
-
   window.checkAutoLaunchTour = function() {
-    // Only auto-launch for brand new first-time visitors
-    if (!isNewVisitor()) {
-      console.log('[ZenGuide] Returning user detected; navigator auto-launch skipped.');
+    // Only auto-launch for users who haven't completed or dismissed the tour
+    const hasSeen = localStorage.getItem(TOUR_SEEN_KEY);
+    if (hasSeen) {
       return;
     }
 
@@ -373,7 +349,7 @@
       if (builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '') {
         window.startZenGuideTour(false);
       }
-    }, 800);
+    }, 600);
   };
 
   window.addEventListener('resize', function() {
