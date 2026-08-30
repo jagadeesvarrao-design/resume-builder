@@ -48,7 +48,7 @@ export default async function handler(req, res) {
     // 1. Dispatch Email Alert via Nodemailer (Gmail SMTP)
     const gmailUser = process.env.GMAIL_USER || 'aneevarpsolutions@gmail.com';
     const gmailPass = process.env.GMAIL_APP_PASSWORD;
-    const recipientEmail = process.env.CRM_TEAM_EMAIL || 'aneevarpsolutions@gmail.com';
+    const recipientEmail = process.env.CRM_TEAM_EMAIL || 'support.zenresume@gmail.com';
 
     if (gmailUser && gmailPass) {
       try {
@@ -112,7 +112,7 @@ export default async function handler(req, res) {
     // 1b. Server-Side Direct FormSubmit Forwarder Fallback
     if (!emailDispatched) {
       try {
-        const fsRes = await fetch('https://formsubmit.co/ajax/aneevarpsolutions@gmail.com', {
+        const fsRes = await fetch('https://formsubmit.co/ajax/support.zenresume@gmail.com', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

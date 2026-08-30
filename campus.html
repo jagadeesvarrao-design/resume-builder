@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=6.1">
+  <link rel="stylesheet" href="styles.css?v=6.2">
   <script src="/lazy-load.js" defer></script>
   <link rel="icon" type="image/png" sizes="48x48" href="https://www.zenresume.online/favicon.png">
   <link rel="icon" type="image/png" sizes="96x96" href="https://www.zenresume.online/favicon-96x96.png">
@@ -478,7 +478,7 @@
           </div>
           <h3 style="font-size: 18px; color: var(--primary-dark); font-weight: 800; margin: 0 0 6px 0; font-family: 'Outfit', sans-serif;">Institutional Request Dispatched!</h3>
           <p style="font-size: 13.5px; color: var(--text-sub); margin: 0; line-height: 1.5;">
-            Thank you! Your inquiry was sent directly to our operations desk (<code>aneevarpsolutions@gmail.com</code>). Our campus relations team will respond within 24 business hours.
+            Thank you! Your inquiry was sent directly to our operations desk (<code>support.zenresume@gmail.com</code>). Our campus relations team will respond within 24 business hours.
           </p>
         </div>
 
@@ -627,9 +627,9 @@
         submitted_at: new Date().toLocaleString('en-IN')
       };
 
-      // 1. Direct Webhook Dispatch to aneevarpsolutions@gmail.com
+      // 1. Direct Webhook Dispatch to support.zenresume@gmail.com
       try {
-        await fetch('https://formsubmit.co/ajax/aneevarpsolutions@gmail.com', {
+        await fetch('https://formsubmit.co/ajax/support.zenresume@gmail.com', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
