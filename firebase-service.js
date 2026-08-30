@@ -66,34 +66,37 @@ auth.onAuthStateChanged(user => {
   const profileDiv = document.getElementById('user-profile');
   const userName = document.getElementById('user-name');
   
-  const syncLoggedOut = document.getElementById('cloud-sync-logged-out');
-  const syncLoggedIn = document.getElementById('cloud-sync-logged-in');
-  const syncUserName = document.getElementById('sync-user-name');
-  const syncUserDesc = document.getElementById('sync-user-desc');
+  // Landing Header Auth Elements
+  const landingLoginBtn = document.getElementById('btn-landing-login');
+  const landingProfileDiv = document.getElementById('nav-user-profile');
+  const landingUserName = document.getElementById('nav-user-name');
+  const landingUserAvatar = document.getElementById('nav-user-avatar');
+  const mobileDrawerLogin = document.getElementById('btn-mobile-drawer-login');
 
   updateGreetingBanner(user);
   
   if (user) {
+    let displayName = user.displayName || user.phoneNumber;
+    if (!displayName && user.email) {
+      const emailName = user.email.split('@')[0];
+      displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+    }
+
+    // Update Landing Header Auth UI
+    if (landingLoginBtn) landingLoginBtn.style.display = 'none';
+    if (mobileDrawerLogin) mobileDrawerLogin.style.display = 'none';
+    if (landingProfileDiv) {
+      landingProfileDiv.style.display = 'inline-flex';
+      if (landingUserName) landingUserName.textContent = (displayName || 'User').split(' ')[0];
+      if (landingUserAvatar) landingUserAvatar.src = user.photoURL || 'https://via.placeholder.com/150';
+    }
+
     if (loginOptions) loginOptions.style.display = 'none';
     if (profileDiv) {
       profileDiv.style.display = 'flex';
-      let displayName = user.displayName || user.phoneNumber;
-      if (!displayName && user.email) {
-        const emailName = user.email.split('@')[0];
-        displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
-      }
       if (userName) userName.textContent = displayName || 'Professional';
       const avatar = document.getElementById('user-avatar');
       if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
-    }
-    
-    // Update Multi-Device Cloud Sync Banner State
-    if (syncLoggedOut) syncLoggedOut.style.display = 'none';
-    if (syncLoggedIn) {
-      syncLoggedIn.style.display = 'flex';
-      let displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'Professional');
-      if (syncUserName) syncUserName.textContent = displayName;
-      if (syncUserDesc) syncUserDesc.textContent = `Connected as ${user.email || displayName}. Your resume automatically syncs across all devices in real-time.`;
     }
 
     // Show greeting toast if hasn't been shown this session
@@ -113,13 +116,15 @@ auth.onAuthStateChanged(user => {
       window.state.hasLoadedProfile = true;
     }
   } else {
+    // Reset Landing Header Auth UI
+    if (landingLoginBtn) landingLoginBtn.style.display = 'inline-flex';
+    if (mobileDrawerLogin) mobileDrawerLogin.style.display = 'inline-flex';
+    if (landingProfileDiv) landingProfileDiv.style.display = 'none';
+    if (landingUserName) landingUserName.textContent = '';
+
     if (loginOptions) loginOptions.style.display = 'block';
     if (profileDiv) profileDiv.style.display = 'none';
     if (userName) userName.textContent = '';
-    
-    // Reset Multi-Device Cloud Sync Banner State
-    if (syncLoggedOut) syncLoggedOut.style.display = 'flex';
-    if (syncLoggedIn) syncLoggedIn.style.display = 'none';
 
     if (window.state) {
       window.state.hasLoadedProfile = false;
@@ -130,8 +135,9 @@ auth.onAuthStateChanged(user => {
 window.addEventListener('DOMContentLoaded', () => {
   const loginBtn = document.getElementById('btn-google-login');
   const logoutBtn = document.getElementById('btn-logout');
-  const syncBannerLoginBtn = document.getElementById('btn-sync-banner-login');
-  const syncBannerLogoutBtn = document.getElementById('btn-sync-banner-logout');
+  const landingLoginBtn = document.getElementById('btn-landing-login');
+  const landingLogoutBtn = document.getElementById('btn-landing-logout');
+  const mobileDrawerLogin = document.getElementById('btn-mobile-drawer-login');
 
   const triggerGoogleLogin = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -151,7 +157,8 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   
   if (loginBtn) loginBtn.addEventListener('click', triggerGoogleLogin);
-  if (syncBannerLoginBtn) syncBannerLoginBtn.addEventListener('click', triggerGoogleLogin);
+  if (landingLoginBtn) landingLoginBtn.addEventListener('click', triggerGoogleLogin);
+  if (mobileDrawerLogin) mobileDrawerLogin.addEventListener('click', triggerGoogleLogin);
   
   const triggerLogout = () => {
     sessionStorage.removeItem('loginGreetingShown');
@@ -159,7 +166,7 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   if (logoutBtn) logoutBtn.addEventListener('click', triggerLogout);
-  if (syncBannerLogoutBtn) syncBannerLogoutBtn.addEventListener('click', triggerLogout);
+  if (landingLogoutBtn) landingLogoutBtn.addEventListener('click', triggerLogout);
 
   // Email/Password Auth Logic
   const btnShowEmailLogin = document.getElementById('btn-show-email-login');
