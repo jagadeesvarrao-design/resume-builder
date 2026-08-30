@@ -1,50 +1,46 @@
 /**
- * ZenResume Offline Service Worker (PWA Engine)
- * Provides 100% offline resume editing, draft auto-saving, and instant app loading.
+ * ZenResume Offline Service Worker (PWA Engine) - v6.3
+ * Network-First for HTML navigations to guarantee instant updates on deployment.
+ * Stale-While-Revalidate for static versioned assets (CSS/JS/Fonts/Images).
  */
 
-const CACHE_NAME = 'zenresume-cache-v1.2';
-const STATIC_ASSETS = [
+const CACHE_NAME = 'zenresume-cache-v6.3';
+const STATIC_SHELL = [
   '/',
   '/index.html',
-  '/styles.css?v=3.3',
-  '/app.js',
-  '/indexeddb-storage.js',
+  '/styles.css?v=6.2',
+  '/app.js?v=5.6',
+  '/firebase-service.js?v=5.7',
+  '/role-hub.js?v=5.6',
+  '/live-pulse.js?v=5.9',
   '/manifest.json',
   '/favicon-96x96.png',
   '/apple-touch-icon.png',
+  '/campus.html',
   '/about.html',
-  '/contact.html',
-  '/privacy.html',
-  '/terms.html',
-  '/editorial-policy.html',
-  '/methodology.html',
-  '/role/',
-  '/blog/',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'
+  '/contact.html'
 ];
 
-// Install Event - Pre-cache core shell assets
+// Install Event - Pre-cache shell and immediately activate
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('⚡ [ZenResume ServiceWorker] Pre-caching offline app shell');
-      return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('Some optional static assets could not be cached immediately:', err);
+      return cache.addAll(STATIC_SHELL).catch((err) => {
+        console.warn('[SW] Non-critical asset cache skip:', err);
       });
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
-// Activate Event - Clean up outdated caches
+// Activate Event - Instantly purge all older cache versions
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((name) => {
           if (name !== CACHE_NAME) {
-            console.log('🧹 [ZenResume ServiceWorker] Removing old cache:', name);
+            console.log('🧹 [SW] Purging outdated cache:', name);
             return caches.delete(name);
           }
         })
@@ -53,57 +49,52 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event - Stale-While-Revalidate with Offline Fallback
+// Fetch Event - Strategy routing
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+  const req = event.request;
+  const url = new URL(req.url);
 
-  // Skip non-GET and all API endpoints (let network handle /api/* directly)
-  if (event.request.method !== 'GET' || url.pathname.startsWith('/api/')) {
+  // Ignore non-GET, API routes, and non-HTTP
+  if (req.method !== 'GET' || url.pathname.startsWith('/api/') || !url.protocol.startsWith('http')) {
     return;
   }
 
-  // Skip chrome-extension and unsupported schemes
-  if (!url.protocol.startsWith('http')) {
+  // 1. FOR HTML PAGES & NAVIGATION: Network-First with Cache Fallback
+  // Ensures returning users in standard Chrome ALWAYS receive the newest deployment immediately!
+  const isHtmlRequest = req.mode === 'navigate' || (req.headers.get('accept') && req.headers.get('accept').includes('text/html'));
+  
+  if (isHtmlRequest) {
+    event.respondWith(
+      fetch(req)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          // Offline fallback
+          return caches.match(req).then((cached) => cached || caches.match('/index.html'));
+        })
+    );
     return;
   }
 
+  // 2. FOR STATIC ASSETS (CSS, JS, Images, Fonts): Cache-First with Network Revalidation
   event.respondWith(
-    caches.match(event.request).then(async (cachedResponse) => {
-      if (cachedResponse) {
-        // Fetch fresh version in background without blocking response
-        fetch(event.request)
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
-              const responseToCache = networkResponse.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
-            }
-          })
-          .catch(() => {
-            // Ignore background refresh errors
-          });
-        return cachedResponse;
-      }
+    caches.match(req).then((cachedResponse) => {
+      const fetchPromise = fetch(req)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => cachedResponse);
 
-      // If not in cache, fetch from network
-      try {
-        const networkResponse = await fetch(event.request);
-        if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
-        }
-        return networkResponse;
-      } catch (err) {
-        // Offline HTML navigation fallback
-        if (event.request.headers.get('accept')?.includes('text/html')) {
-          const fallback = await caches.match('/index.html');
-          if (fallback) return fallback;
-        }
-        return new Response('Network error occurred', {
-          status: 408,
-          headers: { 'Content-Type': 'text/plain' },
-        });
-      }
+      return cachedResponse || fetchPromise;
     })
   );
 });
-
