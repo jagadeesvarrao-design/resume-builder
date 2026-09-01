@@ -30,6 +30,7 @@ const db = firebase.firestore();
 
 // Global user state
 let currentUser = null;
+let unsubscribeSubscription = null;
 
 function updateGreetingBanner(user) {
   const banner = document.getElementById('greeting-banner');
@@ -99,6 +100,34 @@ auth.onAuthStateChanged(user => {
       if (avatar) avatar.src = user.photoURL || 'https://via.placeholder.com/150';
     }
 
+    // Cancel old subscription observer before setting new one
+    if (unsubscribeSubscription) {
+      unsubscribeSubscription();
+      unsubscribeSubscription = null;
+    }
+
+    // Real-time Firestore subscription listener (shared across ZenResume, ZenScout, ZenDoc)
+    unsubscribeSubscription = db.collection('users').doc(user.uid).onSnapshot(doc => {
+      let isPremium = false;
+      if (doc.exists) {
+        const data = doc.data();
+        if (data.subscription && data.subscription.status === 'active') {
+          const expiresAt = data.subscription.expiresAt;
+          if (expiresAt) {
+            const expDate = expiresAt.toDate ? expiresAt.toDate() : new Date(expiresAt);
+            if (expDate > new Date()) {
+              isPremium = true;
+            }
+          }
+        }
+      }
+      if (window.state) window.state.isPremium = isPremium;
+      document.dispatchEvent(new CustomEvent('zensuite_premium_status', { detail: { isPremium } }));
+      updatePremiumUI(isPremium);
+    }, err => {
+      console.warn('[ZenSuite] Subscription listener error:', err);
+    });
+
     // Show greeting toast if hasn't been shown this session
     if (!sessionStorage.getItem('loginGreetingShown')) {
       window.showToast(`Login Successful! Welcome, ${user.displayName || user.email || 'Professional'}`);
@@ -116,6 +145,15 @@ auth.onAuthStateChanged(user => {
       window.state.hasLoadedProfile = true;
     }
   } else {
+    // Cancel subscription observer on logout
+    if (unsubscribeSubscription) {
+      unsubscribeSubscription();
+      unsubscribeSubscription = null;
+    }
+    if (window.state) window.state.isPremium = false;
+    document.dispatchEvent(new CustomEvent('zensuite_premium_status', { detail: { isPremium: false } }));
+    updatePremiumUI(false);
+
     // Reset Landing Header Auth UI
     if (landingLoginBtn) landingLoginBtn.style.display = 'inline-flex';
     if (mobileDrawerLogin) mobileDrawerLogin.style.display = 'inline-flex';
@@ -301,3 +339,16 @@ async function loadResumeFromFirestore() {
   }
 }
 
+
+
+function updatePremiumUI(isPremium) {
+  if (isPremium) {
+    document.body.classList.add('zensuite-premium-active');
+    const badge = document.getElementById('nav-user-premium-badge');
+    if (badge) badge.style.display = 'inline-flex';
+  } else {
+    document.body.classList.remove('zensuite-premium-active');
+    const badge = document.getElementById('nav-user-premium-badge');
+    if (badge) badge.style.display = 'none';
+  }
+}

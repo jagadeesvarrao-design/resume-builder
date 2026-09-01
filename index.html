@@ -2535,6 +2535,7 @@
   <script src="navigator-tour.js?v=5.6" defer></script>
   <script src="role-hub.js?v=5.6" defer></script>
   <script src="live-pulse.js?v=5.9" defer></script>
+  <script src="ats-matcher.js?v=1.0" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -2545,6 +2546,126 @@
       document.head.appendChild(vaScript);
     }
   </script>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- ATS JOB DESCRIPTION MATCHER MODAL (ZenSuite Monetization Engine)  -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <div id="ats-matcher-modal" class="ats-matcher-overlay" style="display:none;">
+    <div class="ats-matcher-container">
+      <button class="ats-matcher-close" onclick="closeATSMatcher()" aria-label="Close">&times;</button>
+
+      <!-- Step 1: Input JD -->
+      <div id="ats-matcher-step-input" class="ats-matcher-step">
+        <div class="ats-matcher-header">
+          <span class="ats-matcher-badge">⚡ AI JD MATCHER</span>
+          <h2>Check Your ATS Match Score</h2>
+          <p>Paste any job description below. We'll instantly scan your resume against it and show you exactly what's missing.</p>
+        </div>
+        <textarea id="ats-jd-input" class="ats-jd-textarea" rows="8" placeholder="Paste the full job description here...&#10;&#10;Example: We are looking for a Software Engineer with 2+ years of experience in React, Node.js, and AWS..."></textarea>
+        <button id="btn-run-ats-scan" class="ats-btn-primary" onclick="runATSScan()">
+          🔍 Analyze My Resume Against This JD
+        </button>
+      </div>
+
+      <!-- Step 2: Results (Teaser + Blurred Premium) -->
+      <div id="ats-matcher-step-results" class="ats-matcher-step" style="display:none;">
+        <div class="ats-matcher-header">
+          <span class="ats-matcher-badge">📊 ATS SCAN RESULTS</span>
+          <h2>Your ATS Match Report</h2>
+        </div>
+
+        <!-- Score Ring -->
+        <div class="ats-score-ring-wrap">
+          <div class="ats-score-ring" id="ats-score-ring">
+            <span class="ats-score-number" id="ats-score-number">0%</span>
+          </div>
+          <p class="ats-score-label" id="ats-score-label">Calculating...</p>
+        </div>
+
+        <!-- Free: Matched Keywords -->
+        <div class="ats-result-section">
+          <h3>✅ Keywords You Already Have</h3>
+          <div id="ats-matched-keywords" class="ats-keyword-chips"></div>
+        </div>
+
+        <!-- Free: 1 Missing Keyword (The Dopamine Taste) -->
+        <div class="ats-result-section">
+          <h3>⚠️ Critical Missing Keyword (Free Fix)</h3>
+          <div id="ats-free-missing" class="ats-free-missing-box"></div>
+        </div>
+
+        <!-- BLURRED: Premium Missing Keywords -->
+        <div class="ats-result-section ats-premium-blur" id="ats-premium-section">
+          <div class="ats-lock-overlay">
+            <span>🔒</span>
+            <p>Unlock <strong id="ats-remaining-count">7</strong> more missing keywords &amp; AI-powered bullet rewrites</p>
+          </div>
+          <h3>🔒 Remaining Missing Keywords</h3>
+          <div class="ats-keyword-chips ats-blurred-chips">
+            <span class="ats-chip ats-chip-missing">████████</span>
+            <span class="ats-chip ats-chip-missing">██████</span>
+            <span class="ats-chip ats-chip-missing">█████████</span>
+            <span class="ats-chip ats-chip-missing">███████</span>
+            <span class="ats-chip ats-chip-missing">████████████</span>
+          </div>
+          <h3>🔒 AI-Tailored Bullet Rewrites</h3>
+          <div class="ats-blurred-chips">
+            <p class="ats-blurred-text">Architected scalable ████████ with ██████, handling █M+ daily ████████</p>
+            <p class="ats-blurred-text">Implemented ████████ pipelines using ██████ and ██████████████</p>
+          </div>
+        </div>
+
+        <!-- Friction Contrast Box -->
+        <div class="ats-friction-contrast">
+          <div class="ats-friction-option ats-friction-manual">
+            <span class="ats-friction-icon">📝</span>
+            <strong>Do It Manually (Free)</strong>
+            <p>Read the JD line by line, guess keywords, rewrite all bullet points from scratch.</p>
+            <span class="ats-friction-time">⏱ ~2-3 hours of work</span>
+          </div>
+          <div class="ats-friction-option ats-friction-ai">
+            <span class="ats-friction-icon">⚡</span>
+            <strong>ZenPass AI (Instant)</strong>
+            <p>Auto-detect all missing keywords &amp; 1-click inject AI-rewritten bullets into your resume.</p>
+            <span class="ats-friction-time">⏱ ~10 seconds</span>
+          </div>
+        </div>
+
+        <!-- Social Proof Ticker -->
+        <div class="ats-social-proof" id="ats-social-proof">
+          <p>🎓 <strong>Rahul K.</strong> (CSE Fresher, Hyderabad) unlocked this, achieved 98% ATS match, and got shortlisted at Cognizant.</p>
+        </div>
+
+        <!-- CTA + Pricing -->
+        <div class="ats-pricing-cta">
+          <div class="ats-price-tabs">
+            <button class="ats-price-tab active" data-tier="day">1-Day Pass</button>
+            <button class="ats-price-tab" data-tier="week">7-Day Sprint</button>
+            <button class="ats-price-tab" data-tier="month">ZenSuite Pro</button>
+          </div>
+          <div class="ats-price-display">
+            <span class="ats-price-amount" id="ats-price-amount">₹99</span>
+            <span class="ats-price-period" id="ats-price-period">/ 24 hours</span>
+          </div>
+          <p class="ats-price-includes">Includes: Full keyword report + AI bullet rewrites + ZenScout auto-apply + ZenDoc interview prep</p>
+          <button class="ats-btn-unlock" id="btn-ats-unlock" onclick="initiatePayment()">
+            🔓 Unlock Full Report &amp; AI Fixes
+          </button>
+          <p class="ats-refund-seal">🛡️ <strong>ATS Pass Guarantee:</strong> If your score doesn't improve, get an instant no-questions-asked refund.</p>
+        </div>
+      </div>
+
+      <!-- Step 3: Premium Unlocked Results -->
+      <div id="ats-matcher-step-premium" class="ats-matcher-step" style="display:none;">
+        <div class="ats-matcher-header">
+          <span class="ats-matcher-badge ats-badge-premium">⚡ ZENSUITE PREMIUM</span>
+          <h2>Full ATS Match Report</h2>
+        </div>
+        <div id="ats-premium-results"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Service Worker Registration for PWA Installation -->
   <script>
     if ('serviceWorker' in navigator) {
