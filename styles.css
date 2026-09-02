@@ -8586,3 +8586,425 @@ body.in-editor .top-value-ribbon {
   }
 }
 
+/* ==========================================================================
+   POST-DOWNLOAD CELEBRATORY & RETENTION MODAL
+   ========================================================================== */
+
+.post-dl-modal-card {
+  background: var(--bg-primary, #FCFAF5);
+  max-width: 500px;
+  width: 92%;
+  padding: 28px 24px;
+  border-radius: 22px;
+  position: relative;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+  border: 1.5px solid rgba(71, 101, 80, 0.2);
+  max-height: 88vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+}
+
+[data-theme="dark"] .post-dl-modal-card {
+  background: #141B20;
+  border-color: rgba(45, 212, 191, 0.2);
+  color: #F8FAFC;
+}
+
+.post-dl-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: #888;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.post-dl-close:hover {
+  color: #e74c3c;
+}
+
+.post-dl-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.post-dl-success-ring {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: rgba(39, 174, 96, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 8px rgba(39, 174, 96, 0.08);
+}
+
+.post-dl-success-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  box-shadow: 0 4px 14px rgba(39, 174, 96, 0.35);
+}
+
+.post-dl-title {
+  font-size: 22px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-primary, #2C3E2D);
+  margin: 0 0 6px 0;
+}
+
+[data-theme="dark"] .post-dl-title {
+  color: #F8FAFC;
+}
+
+.post-dl-subtitle {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  line-height: 1.45;
+}
+
+[data-theme="dark"] .post-dl-subtitle {
+  color: #94A3B8;
+}
+
+/* Card 1: Hero ATS Scan Action */
+.post-dl-hero-card {
+  background: linear-gradient(135deg, rgba(71, 101, 80, 0.08), rgba(46, 204, 113, 0.12));
+  border: 1.5px solid rgba(71, 101, 80, 0.25);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+[data-theme="dark"] .post-dl-hero-card {
+  background: rgba(45, 212, 191, 0.06);
+  border-color: rgba(45, 212, 191, 0.25);
+}
+
+.post-dl-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.post-dl-badge-primary {
+  background: #476550;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+[data-theme="dark"] .post-dl-badge-primary {
+  background: #2DD4BF;
+  color: #061B18;
+}
+
+.post-dl-badge-free {
+  background: rgba(39, 174, 96, 0.15);
+  color: #1e8449;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+[data-theme="dark"] .post-dl-badge-free {
+  background: rgba(45, 212, 191, 0.15);
+  color: #2DD4BF;
+}
+
+.post-dl-card-heading {
+  font-size: 15px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-primary, #2C3E2D);
+  margin: 0 0 6px 0;
+}
+
+[data-theme="dark"] .post-dl-card-heading {
+  color: #F8FAFC;
+}
+
+.post-dl-card-desc {
+  font-size: 12.5px;
+  color: #555;
+  line-height: 1.45;
+  margin: 0 0 12px 0;
+}
+
+[data-theme="dark"] .post-dl-card-desc {
+  color: #94A3B8;
+}
+
+.post-dl-btn-launch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #476550, #2ecc71);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(71, 101, 80, 0.25);
+}
+
+.post-dl-btn-launch:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(71, 101, 80, 0.35);
+}
+
+/* Card 2: Versioning Tip Card */
+.post-dl-tip-card {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+[data-theme="dark"] .post-dl-tip-card {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.post-dl-tip-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary, #2C3E2D);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+[data-theme="dark"] .post-dl-tip-header {
+  color: #F8FAFC;
+}
+
+.post-dl-tip-desc {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.45;
+  margin: 0 0 10px 0;
+}
+
+[data-theme="dark"] .post-dl-tip-desc {
+  color: #94A3B8;
+}
+
+.post-dl-btn-secondary {
+  width: 100%;
+  padding: 9px;
+  background: white;
+  border: 1.5px solid rgba(71, 101, 80, 0.3);
+  color: #476550;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.post-dl-btn-secondary:hover {
+  background: rgba(71, 101, 80, 0.08);
+}
+
+[data-theme="dark"] .post-dl-btn-secondary {
+  background: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.3);
+  color: #2DD4BF;
+}
+
+/* Card 3: ZenSuite AI Ecosystem */
+.post-dl-suite-card {
+  background: linear-gradient(145deg, #0F172A, #1E293B);
+  border: 1.5px solid rgba(45, 212, 191, 0.3);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: left;
+  color: white;
+}
+
+.post-dl-suite-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.post-dl-suite-badge {
+  font-size: 10px;
+  font-weight: 800;
+  color: #2DD4BF;
+  letter-spacing: 0.5px;
+}
+
+.post-dl-suite-author {
+  font-size: 9.5px;
+  color: #94A3B8;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 7px;
+  border-radius: 9999px;
+}
+
+.post-dl-suite-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: white;
+  margin: 0 0 4px 0;
+}
+
+.post-dl-suite-desc {
+  font-size: 12px;
+  color: #94A3B8;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+}
+
+.post-dl-suite-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.post-dl-suite-btn-primary {
+  flex: 1.4;
+  background: linear-gradient(135deg, #00846D, #00A88A);
+  color: white;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.post-dl-suite-btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.post-dl-suite-btn-sub {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #CBD5E1;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Card 4: Social Share */
+.post-dl-share-wrap {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.post-dl-share-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary, #2C3E2D);
+  margin: 0 0 8px 0;
+}
+
+[data-theme="dark"] .post-dl-share-title {
+  color: #F8FAFC;
+}
+
+.post-dl-share-buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.post-dl-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.post-dl-share-btn:hover {
+  transform: translateY(-1px);
+}
+
+.share-wa {
+  background: #25D366;
+  color: white;
+  border: none;
+}
+
+.share-li {
+  background: #0077B5;
+  color: white;
+  border: none;
+}
+
+.share-cp {
+  background: var(--bg-secondary, #f1f5f9);
+  color: var(--text-primary, #475569);
+  border: 1px solid var(--border-subtle, #cbd5e1);
+}
+
+.post-dl-dismiss {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 12.5px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px;
+}
+
+.post-dl-dismiss:hover {
+  color: #555;
+}
+

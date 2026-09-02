@@ -2155,62 +2155,98 @@
     </div>
   </div>
 
-  <!-- Post-Download Retention & Job Tailor Modal (Retention Engine) -->
-  <div id="affiliate-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);">
-    <div class="modal-content" style="padding: 36px 28px; width: 90%; max-width: 480px; text-align: center; border-top: 5px solid #00846D; background: #ffffff; border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.2);">
-      <div style="font-size: 44px; color: #2ECC71; margin-bottom: 12px;"><i class="fas fa-circle-check"></i></div>
-      <h3 style="margin-top: 0; color: #0f172a; font-weight: 800; font-size: 22px; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Your ATS Resume is Ready! 🎉</h3>
-      <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px;">Your pure vector, machine-readable PDF has been generated and saved to your device.</p>
+  <!-- Post-Download Celebratory & Retention Modal (ZenSuite Conversion Hub) -->
+  <div id="affiliate-modal" class="modal-overlay no-print" style="display: none; align-items: center; justify-content: center; z-index: 2500; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(11, 15, 18, 0.82); backdrop-filter: blur(12px);">
+    <div class="post-dl-modal-card">
+      <button type="button" class="post-dl-close" id="btn-close-affiliate-modal" aria-label="Close modal">&times;</button>
       
-      <!-- Pro Tip & Retention Hook -->
-      <div style="background: linear-gradient(135deg, rgba(0, 104, 86, 0.08), rgba(88, 214, 141, 0.12)); border: 1.5px solid rgba(0, 104, 86, 0.25); padding: 18px 16px; border-radius: 14px; margin-bottom: 22px; text-align: left;">
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 800; color: #476550; margin-bottom: 6px; font-family: 'Outfit', sans-serif;">
-          <i class="fas fa-lightbulb" style="color: #F59E0B;"></i> Pro Tip for Active Job Seekers:
+      <!-- Celebratory Success Header -->
+      <div class="post-dl-header">
+        <div class="post-dl-success-ring">
+          <div class="post-dl-success-icon">
+            <i class="fas fa-check"></i>
+          </div>
         </div>
-        <p style="margin: 0 0 12px 0; font-size: 12.5px; color: #334155; line-height: 1.55;">
-          Top candidates tailor their keywords for <strong>every single job description</strong>. Bookmark ZenResume (<kbd style="background: white; border: 1px solid #cbd5e1; padding: 2px 5px; border-radius: 4px; font-size: 11px; font-weight: 600;">Ctrl + D</kbd> / <kbd style="background: white; border: 1px solid #cbd5e1; padding: 2px 5px; border-radius: 4px; font-size: 11px; font-weight: 600;">Cmd + D</kbd>) to duplicate and customize your resume in 30 seconds for your next application!
+        <h3 class="post-dl-title">Your ATS Resume is Ready! 🎉</h3>
+        <p class="post-dl-subtitle">
+          Pure vector, machine-readable PDF has been generated and saved to your device.
         </p>
-        <button type="button" id="btn-modal-tailor-new" class="btn-primary" style="width: 100%; justify-content: center; padding: 11px; font-size: 13px; font-weight: 700; border-radius: 9999px; gap: 8px; box-shadow: 0 4px 15px rgba(0, 104, 86, 0.3);">
-          <i class="fas fa-copy"></i> Save as New Job Version (e.g. Google, Amazon)
+      </div>
+
+      <!-- Action 1: Recommended ATS JD Matcher (High Value Conversion Step) -->
+      <div class="post-dl-hero-card">
+        <div class="post-dl-badge-row">
+          <span class="post-dl-badge-primary">
+            <i class="fas fa-bolt"></i> RECOMMENDED NEXT STEP
+          </span>
+          <span class="post-dl-badge-free">Free ATS Scan</span>
+        </div>
+        <h4 class="post-dl-card-heading">🎯 Check Match Score for Your Target Job</h4>
+        <p class="post-dl-card-desc">
+          Paste any Job Description from LinkedIn, Naukri, or Indeed to instantly identify missing keywords and boost your recruiter callback rate before applying.
+        </p>
+        <button type="button" class="post-dl-btn-launch" onclick="window.closePostDownloadAndOpenATS && window.closePostDownloadAndOpenATS();">
+          <i class="fas fa-wand-magic-sparkles"></i>
+          <span>Run Live ATS Matcher</span>
+          <i class="fas fa-arrow-right"></i>
         </button>
       </div>
 
-      <!-- Aneevarp Solutions Ecosystem Bridge: ZenScout AI -->
-      <div style="background: linear-gradient(135deg, #0F172A, #1E293B); border: 1.5px solid rgba(0, 168, 138, 0.4); padding: 18px 16px; border-radius: 16px; margin-bottom: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-          <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #00E5BC; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px;">
-            <i class="fas fa-sparkles"></i> Next Step in Career Suite
-          </span>
-          <span style="font-size: 10px; font-weight: 700; background: rgba(0, 229, 188, 0.15); color: #00E5BC; padding: 2px 8px; border-radius: 9999px; border: 1px solid rgba(0, 229, 188, 0.3);">by Aneevarp Solutions</span>
+      <!-- Action 2: Multi-Job Application Versioning -->
+      <div class="post-dl-tip-card">
+        <div class="post-dl-tip-header">
+          <i class="fas fa-copy" style="color: #476550;"></i>
+          <span>Apply to Multiple Companies?</span>
         </div>
-        <h4 style="margin: 0 0 6px 0; color: #FFFFFF; font-size: 15px; font-weight: 800; font-family: 'Outfit', sans-serif;">Automate Your Job Hunt with ZenScout AI</h4>
-        <p style="margin: 0 0 12px 0; font-size: 12.5px; color: #94A3B8; line-height: 1.5;">
-          Let 4 autonomous AI agents crawl live Google Jobs matching your resume, write tailored cover letters, and coach you through mock interviews for free.
+        <p class="post-dl-tip-desc">
+          Clone this master copy into tailored job versions (e.g. <em>Google</em>, <em>Amazon</em>, <em>TCS</em>) without losing your original progress.
         </p>
-        <a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer" style="background: linear-gradient(135deg, #00846D, #00A88A); color: white; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px; font-size: 13px; font-weight: 700; border-radius: 10px; text-decoration: none; box-shadow: 0 4px 14px rgba(0, 168, 138, 0.35); transition: all 0.2s ease;">
-          <i class="fas fa-robot"></i>
-          <span>Launch ZenScout AI (100% Free)</span>
-          <i class="fas fa-arrow-up-right-from-square" style="font-size: 11px;"></i>
-        </a>
+        <button type="button" id="btn-modal-tailor-new" class="post-dl-btn-secondary">
+          <i class="fas fa-plus"></i> Save as New Job Version
+        </button>
       </div>
 
-      <!-- Share ZenResume Section -->
-      <div style="margin-bottom: 18px; border-bottom: 1px solid #eef2f7; padding-bottom: 16px; text-align: center;">
-        <h4 style="margin: 0 0 6px 0; color: #0f172a; font-size: 13.5px; font-weight: 700;">Help your friends get hired! 🙌</h4>
-        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-          <a id="btn-share-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #25D366; color: white; border: none; padding: 8px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; border-radius: 8px; text-decoration: none;">
+      <!-- Action 3: Aneevarp Solutions Career Suite Ecosystem -->
+      <div class="post-dl-suite-card">
+        <div class="post-dl-suite-top">
+          <span class="post-dl-suite-badge">
+            <i class="fas fa-sparkles"></i> NEXT STEP IN CAREER SUITE
+          </span>
+          <span class="post-dl-suite-author">by Aneevarp Solutions</span>
+        </div>
+        <h4 class="post-dl-suite-title">Automate Your Job Hunt with ZenScout AI</h4>
+        <p class="post-dl-suite-desc">
+          Autonomous AI agents crawl live job openings, match your resume, and auto-submit tailored applications 24/7.
+        </p>
+        <div class="post-dl-suite-actions">
+          <a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer" class="post-dl-suite-btn-primary">
+            <i class="fas fa-robot"></i> Launch ZenScout AI <i class="fas fa-external-link-alt" style="font-size: 10px;"></i>
+          </a>
+          <a href="https://pdf-analizing-and-answering-bot.vercel.app/app.html" target="_blank" rel="noopener noreferrer" class="post-dl-suite-btn-sub">
+            <i class="fas fa-file-pdf"></i> ZenDoc AI
+          </a>
+        </div>
+      </div>
+
+      <!-- Action 4: Viral Social Sharing -->
+      <div class="post-dl-share-wrap">
+        <h5 class="post-dl-share-title">Help your friends get hired! 🙌</h5>
+        <div class="post-dl-share-buttons">
+          <a id="btn-share-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="post-dl-share-btn share-wa">
             <i class="fab fa-whatsapp"></i> WhatsApp
           </a>
-          <a id="btn-share-linkedin" href="#" target="_blank" rel="noopener noreferrer" class="btn-select" style="background: #0077b5; color: white; border: none; padding: 8px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; border-radius: 8px; text-decoration: none;">
+          <a id="btn-share-linkedin" href="#" target="_blank" rel="noopener noreferrer" class="post-dl-share-btn share-li">
             <i class="fab fa-linkedin"></i> LinkedIn
           </a>
-          <button id="btn-share-copy" class="btn-select" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 8px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; border-radius: 8px; cursor: pointer;">
+          <button type="button" id="btn-share-copy" class="post-dl-share-btn share-cp">
             <i class="fas fa-copy"></i> Copy Link
           </button>
         </div>
       </div>
-      
-      <button id="btn-close-affiliate-modal" style="background: none; border: none; color: #94A3B8; font-size: 13px; cursor: pointer; text-decoration: underline;">Done / Close Window</button>
+
+      <button type="button" class="post-dl-dismiss" onclick="document.getElementById('affiliate-modal').style.display='none'">
+        Back to Resume Editor
+      </button>
     </div>
   </div>
 
