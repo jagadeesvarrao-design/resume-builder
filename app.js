@@ -1782,74 +1782,60 @@ function adjustPreviewScale() {
   
   if (!wrapper || !paper) return;
   
-  const isMobile = window.innerWidth <= 800;
+  const isMobile = window.innerWidth <= 992;
   const isLetter = state.paperSize === 'letter';
   const paperWidth = isLetter ? 816 : 794;
   const paperHeight = paper.scrollHeight || (isLetter ? 1056 : 1122);
   
   // Get available container width safely
-  let availableWidth = wrapper.clientWidth || (window.innerWidth - (isMobile ? 24 : 64));
-  if (isMobile) {
-    availableWidth = Math.min(availableWidth, window.innerWidth - 24);
+  let availableWidth = wrapper.clientWidth;
+  if (!availableWidth || availableWidth < 50) {
+    availableWidth = isMobile ? window.innerWidth : (window.innerWidth * 0.5);
   }
   
+  const targetPadding = isMobile ? 16 : 32;
+  const fitWidthScale = (availableWidth - targetPadding) / paperWidth;
+  
   let scale = 1.0;
-  
-  // Calculate fit-to-width scale with padding margin
-  const fitWidthScale = availableWidth > 0 ? (availableWidth / paperWidth) : 0.5;
-  
   if (state.zoomScale !== undefined && state.zoomScale !== null) {
     scale = state.zoomScale;
   } else if (isMobile) {
     // On mobile screens: Always default to clean fit-to-width so text is legible and centered
-    scale = Math.min(1.0, Math.max(0.38, fitWidthScale));
+    scale = Math.min(1.0, Math.max(0.35, fitWidthScale));
   } else if (state.isFitToScreen) {
-    const availableHeight = window.innerHeight - 120;
+    const availableHeight = window.innerHeight - 140;
     const heightScale = availableHeight / paperHeight;
     scale = Math.min(fitWidthScale, heightScale);
-  } else if (availableWidth > 0 && availableWidth < paperWidth) {
-    scale = fitWidthScale;
+  } else if (availableWidth > 0 && availableWidth < (paperWidth + 40)) {
+    scale = Math.min(1.0, fitWidthScale);
   }
   
+  const visualWidth = paperWidth * scale;
+  const visualHeight = paperHeight * scale;
+  const leftOffset = Math.max(8, (availableWidth - visualWidth) / 2);
+  
+  // Apply deterministic, un-clippable transform geometry
+  paper.style.transformOrigin = 'top left';
   paper.style.transform = `scale(${scale})`;
+  paper.style.position = 'absolute';
+  paper.style.left = `${Math.round(leftOffset)}px`;
+  paper.style.top = isMobile ? '12px' : '28px';
+  paper.style.margin = '0';
+  
+  // Wrapper dimensions
+  wrapper.style.position = 'relative';
+  wrapper.style.width = '100%';
+  wrapper.style.boxSizing = 'border-box';
+  wrapper.style.overflowX = 'hidden';
+  wrapper.style.overflowY = 'auto';
   
   if (isMobile) {
-    paper.style.transformOrigin = 'top left';
-    const visualWidth = paperWidth * scale;
-    const centerOffset = Math.max(0, (availableWidth - visualWidth) / 2);
-    paper.style.marginLeft = `${centerOffset}px`;
-    paper.style.marginRight = '0px';
-    paper.style.position = 'relative';
-    paper.style.left = '0';
-    paper.style.top = '0';
+    wrapper.style.height = `${Math.round(visualHeight + 48)}px`;
+    wrapper.style.minHeight = `${Math.round(visualHeight + 48)}px`;
   } else {
-    paper.style.transformOrigin = 'top center';
-    paper.style.marginLeft = 'auto';
-    paper.style.marginRight = 'auto';
-    paper.style.position = 'relative';
-    paper.style.left = '0';
-    paper.style.top = '0';
-  }
-  
-  if (isMobile) {
-    wrapper.style.display = 'block';
-    wrapper.style.width = '100%';
-    wrapper.style.maxWidth = '100%';
-    wrapper.style.overflowX = 'hidden';
-    wrapper.style.paddingLeft = '0px';
-    wrapper.style.paddingRight = '0px';
-    wrapper.scrollLeft = 0;
-    wrapper.style.height = `${(paperHeight * scale) + 30}px`;
-  } else {
-    wrapper.style.display = 'flex';
-    wrapper.style.justifyContent = 'center';
-    wrapper.style.alignItems = 'flex-start';
-    wrapper.style.width = '100%';
     wrapper.style.height = 'auto';
     wrapper.style.minHeight = '100%';
-    wrapper.style.overflowY = 'auto';
-    wrapper.style.overflowX = 'auto';
-    wrapper.style.padding = '32px 16px 80px 16px';
+    wrapper.style.padding = '0';
   }
   
   // Update UI zoom label

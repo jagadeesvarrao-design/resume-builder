@@ -433,7 +433,7 @@ body {
   box-shadow: 0 4px 12px var(--primary-glow-strong);
 }
 
-@media (max-width: 800px) {
+@media (max-width: 992px) {
   .mobile-tabs {
     display: flex !important;
     position: fixed !important;
@@ -505,26 +505,24 @@ body {
 
   /* Dynamic scale container adjustments for mobile-only JavaScript fluid scaling */
   .resume-paper-wrapper {
-    overflow-y: visible !important; /* Allow vertical touch gestures to bubble to body, preventing scroll freeze */
-    overflow-x: hidden !important; /* Disable horizontal scroll shifting */
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
     max-height: none !important;
     padding: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
     position: relative !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
+    display: block !important;
     min-width: 0 !important;
-    -webkit-overflow-scrolling: touch; /* Momentum scrolling for smooth swiping */
+    box-sizing: border-box !important;
   }
 
   .resume-paper {
-    transform-origin: top left; /* Default fallback on mobile, JS will scale and center */
-    margin: 0;
-    box-shadow: none !important; /* Flat look on mobile screens */
+    transform-origin: top left !important;
+    margin: 0 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
     flex-shrink: 0 !important;
+    position: absolute !important;
   }
 }
 
@@ -8507,40 +8505,54 @@ body.in-editor .top-value-ribbon {
     white-space: nowrap !important;
   }
 
-  /* Floating Zoom Pill (Positioned above mobile-tabs dock so it doesn't overlap) */
+  /* Floating Zoom Pill (Centered above mobile-tabs dock) */
   .stitch-floating-zoom {
     position: fixed !important;
     bottom: 78px !important;
-    left: 16px !important;
-    transform: none !important;
-    padding: 4px 10px !important;
-    font-size: 11px !important;
-    background: rgba(20, 27, 32, 0.92) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    padding: 4px 12px !important;
+    font-size: 11.5px !important;
+    background: rgba(20, 27, 32, 0.95) !important;
     backdrop-filter: blur(12px) !important;
     color: #FFFFFF !important;
     border-radius: 9999px !important;
-    border: 1px solid rgba(45, 212, 191, 0.3) !important;
+    border: 1px solid rgba(45, 212, 191, 0.35) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
     z-index: 1450 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .stitch-floating-zoom .stitch-zoom-label {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 11.5px !important;
+  }
+
+  .stitch-floating-zoom .stitch-zoom-btn {
+    color: #2DD4BF !important;
+    font-size: 14px !important;
+    padding: 0 4px !important;
   }
 
   /* Resume Paper Scaling Wrapper */
   .resume-paper-wrapper {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
+    display: block !important;
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
     overflow-x: hidden !important;
-    padding: 4px 0 !important;
+    padding: 0 !important;
+    position: relative !important;
   }
 
   .resume-paper {
     transform-origin: top left !important;
-    position: relative !important;
-    top: 0 !important;
+    margin: 0 !important;
+    position: absolute !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
   }
 
   /* Landing Page Hero Playground Sandbox Card (<= 640px) */
