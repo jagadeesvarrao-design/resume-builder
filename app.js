@@ -1782,66 +1782,65 @@ function adjustPreviewScale() {
   
   if (!wrapper || !paper) return;
   
-  const wrapperWidth = wrapper.clientWidth;
+  const isMobile = window.innerWidth <= 800;
   const isLetter = state.paperSize === 'letter';
   const paperWidth = isLetter ? 816 : 794;
   const paperHeight = paper.scrollHeight || (isLetter ? 1056 : 1122);
   
+  // Get available container width safely
+  let availableWidth = wrapper.clientWidth || (window.innerWidth - (isMobile ? 24 : 64));
+  if (isMobile) {
+    availableWidth = Math.min(availableWidth, window.innerWidth - 24);
+  }
+  
   let scale = 1.0;
   
-  // Calculate automatic fit-to-width scale
-  const fitWidthScale = wrapperWidth > 0 ? (wrapperWidth / paperWidth) : 1.0;
+  // Calculate fit-to-width scale with padding margin
+  const fitWidthScale = availableWidth > 0 ? (availableWidth / paperWidth) : 0.5;
   
   if (state.zoomScale !== undefined && state.zoomScale !== null) {
     scale = state.zoomScale;
+  } else if (isMobile) {
+    // On mobile screens: Always default to clean fit-to-width so text is legible and centered
+    scale = Math.min(1.0, Math.max(0.38, fitWidthScale));
   } else if (state.isFitToScreen) {
-    // Calculate scale to fit the entire height of the paper into the viewport, with a small padding
-    const availableHeight = window.innerHeight - 100; // Account for mobile tabs and preview bar
+    const availableHeight = window.innerHeight - 120;
     const heightScale = availableHeight / paperHeight;
-    // Use the smaller scale so both width and height fit
     scale = Math.min(fitWidthScale, heightScale);
-  } else if (wrapperWidth > 0 && wrapperWidth < paperWidth) {
-    // Default: Fit to width
+  } else if (availableWidth > 0 && availableWidth < paperWidth) {
     scale = fitWidthScale;
   }
   
-  // Apply dynamic scaling and alignment based on viewport boundary fit
-  const visualPaperWidth = paperWidth * scale;
-  
   paper.style.transform = `scale(${scale})`;
   
-  const isMobile = window.innerWidth <= 800;
-  
   if (isMobile) {
-    // Mobile/Tablet views: Use position: absolute to lock layout bounds and prevent horizontal scroll jitter/clipping
     paper.style.transformOrigin = 'top left';
-    paper.style.margin = '0';
-    paper.style.position = 'absolute';
-    paper.style.top = '0';
-    wrapper.style.alignItems = 'flex-start';
-    wrapper.style.paddingLeft = '0px';
-    wrapper.scrollLeft = 0; // Force reset scroll offset to prevent cut-offs
-    
-    if (wrapperWidth > 0 && visualPaperWidth < wrapperWidth) {
-      // Fits inside viewport: visually center using left offset
-      paper.style.left = `${(wrapperWidth - visualPaperWidth) / 2}px`;
-    } else {
-      // Overflows: align to left edge
-      paper.style.left = '0px';
-    }
-  } else {
-    // Desktop views: Use relative positioning to let the wide zoomed child stretch the parent container scrollWidth naturally
-    paper.style.transformOrigin = 'top center';
-    paper.style.margin = '0 auto';
+    const visualWidth = paperWidth * scale;
+    const centerOffset = Math.max(0, (availableWidth - visualWidth) / 2);
+    paper.style.marginLeft = `${centerOffset}px`;
+    paper.style.marginRight = '0px';
     paper.style.position = 'relative';
-    paper.style.top = 'auto';
-    paper.style.left = 'auto';
-    wrapper.style.alignItems = 'center';
-    wrapper.style.paddingLeft = '0px';
+    paper.style.left = '0';
+    paper.style.top = '0';
+  } else {
+    paper.style.transformOrigin = 'top center';
+    paper.style.marginLeft = 'auto';
+    paper.style.marginRight = 'auto';
+    paper.style.position = 'relative';
+    paper.style.left = '0';
+    paper.style.top = '0';
   }
   
-  // Update parent wrapper height so scroll bars and containers match exactly
-  wrapper.style.height = `${paperHeight * scale}px`;
+  wrapper.style.display = 'block';
+  wrapper.style.width = '100%';
+  wrapper.style.maxWidth = '100%';
+  wrapper.style.overflowX = 'hidden';
+  wrapper.style.paddingLeft = '0px';
+  wrapper.style.paddingRight = '0px';
+  wrapper.scrollLeft = 0;
+  
+  // Update parent wrapper height so scroll containers match scaled paper height + padding
+  wrapper.style.height = `${(paperHeight * scale) + (isMobile ? 30 : 50)}px`;
   
   // Update UI zoom label
   if (zoomPercentageEl) {
