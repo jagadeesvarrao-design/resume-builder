@@ -1724,6 +1724,7 @@ async function runPdfGeneration() {
             window.openATSMatcher();
           }
         };
+      }
     }).catch(err => {
       console.error("PDF Engine Error:", err);
       if (btnModalConfirm) btnModalConfirm.innerHTML = "Error generating PDF. Try again.";
