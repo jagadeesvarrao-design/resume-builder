@@ -1683,83 +1683,92 @@
           
           <!-- Floating Top Actions -->
           <div class="stitch-preview-floating-bar no-print">
-            <div class="spacing-popover-wrapper" style="position: relative;">
-              <button type="button" class="stitch-floating-btn" id="btn-spacing-toggle" title="Customize Spacing & Fit to Page">
-                <i class="fas fa-sliders"></i> Spacing
-              </button>
+            <div class="stitch-preview-toolbar-inner">
               
-              <!-- Floating Spacing Control Popover -->
-              <div class="spacing-popover-card" id="spacing-popover-card" style="display: none; position: absolute; top: calc(100% + 10px); left: 0; width: 280px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.08); padding: 18px 20px; z-index: 10000; flex-direction: column; gap: 14px; text-align: left; box-sizing: border-box;">
-                <div class="spacing-popover-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F1F5F9; padding-bottom: 8px; margin-bottom: 2px;">
-                  <span style="font-weight: 800; font-size: 13px; color: #0F172A; display: flex; align-items: center; gap: 6px; font-family: 'Outfit', sans-serif;">
-                    <i class="fas fa-sliders" style="color: #476550;"></i> Spacing &amp; Layout
-                  </span>
-                  <button type="button" id="btn-close-spacing-popover" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94A3B8; padding: 0 4px; line-height: 1;">&times;</button>
-                </div>
-                
-                <!-- 1-Click Fit to 1 Page Button -->
-                <button type="button" id="btn-magic-fit-page" class="btn-magic-fit-page" style="background: linear-gradient(135deg, #476550, #00846D); color: #FFFFFF; border: none; border-radius: 10px; padding: 10px 14px; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.25); width: 100%; box-sizing: border-box;" title="Automatically adjust spacing to fit exactly onto 1 page">
-                  <i class="fas fa-bolt" style="color: #FCD34D;"></i>
-                  <span>⚡ Fit to 1 Single Page</span>
+              <div class="spacing-popover-wrapper" style="position: relative;">
+                <button type="button" class="stitch-floating-btn" id="btn-spacing-toggle" title="Customize Spacing & Fit to Page">
+                  <i class="fas fa-sliders"></i> Spacing
                 </button>
-
-                <div class="spacing-slider-group" style="display: flex; flex-direction: column; gap: 4px;">
-                  <div class="spacing-slider-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #334155;">
-                    <span>Page Margins</span>
-                    <span id="label-val-margin" class="spacing-val-badge" style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); padding: 2px 6px; border-radius: 6px;">24px</span>
+                
+                <!-- Floating Spacing Control Popover -->
+                <div class="spacing-popover-card" id="spacing-popover-card" style="display: none; position: absolute; top: calc(100% + 10px); left: 0; width: 280px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.08); padding: 18px 20px; z-index: 10000; flex-direction: column; gap: 14px; text-align: left; box-sizing: border-box;">
+                  <div class="spacing-popover-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F1F5F9; padding-bottom: 8px; margin-bottom: 2px;">
+                    <span style="font-weight: 800; font-size: 13px; color: #0F172A; display: flex; align-items: center; gap: 6px; font-family: 'Outfit', sans-serif;">
+                      <i class="fas fa-sliders" style="color: #476550;"></i> Spacing &amp; Layout
+                    </span>
+                    <button type="button" id="btn-close-spacing-popover" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #94A3B8; padding: 0 4px; line-height: 1;">&times;</button>
                   </div>
-                  <input type="range" id="slider-page-margin" min="12" max="36" step="2" value="24" class="spacing-range-input" style="width: 100%; accent-color: #476550; cursor: pointer; height: 6px; border-radius: 4px; outline: none; margin: 4px 0;">
-                </div>
+                  
+                  <!-- 1-Click Fit to 1 Page Button -->
+                  <button type="button" id="btn-magic-fit-page" class="btn-magic-fit-page" style="background: linear-gradient(135deg, #476550, #00846D); color: #FFFFFF; border: none; border-radius: 10px; padding: 10px 14px; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.25); width: 100%; box-sizing: border-box;" title="Automatically adjust spacing to fit exactly onto 1 page">
+                    <i class="fas fa-bolt" style="color: #FCD34D;"></i>
+                    <span>⚡ Fit to 1 Single Page</span>
+                  </button>
 
-                <div class="spacing-slider-group" style="display: flex; flex-direction: column; gap: 4px;">
-                  <div class="spacing-slider-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #334155;">
-                    <span>Section Gap</span>
-                    <span id="label-val-section-gap" class="spacing-val-badge" style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); padding: 2px 6px; border-radius: 6px;">16px</span>
+                  <div class="spacing-slider-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <div class="spacing-slider-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #334155;">
+                      <span>Page Margins</span>
+                      <span id="label-val-margin" class="spacing-val-badge" style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); padding: 2px 6px; border-radius: 6px;">24px</span>
+                    </div>
+                    <input type="range" id="slider-page-margin" min="12" max="36" step="2" value="24" class="spacing-range-input" style="width: 100%; accent-color: #476550; cursor: pointer; height: 6px; border-radius: 4px; outline: none; margin: 4px 0;">
                   </div>
-                  <input type="range" id="slider-section-gap" min="6" max="28" step="2" value="16" class="spacing-range-input" style="width: 100%; accent-color: #476550; cursor: pointer; height: 6px; border-radius: 4px; outline: none; margin: 4px 0;">
-                </div>
 
-                <div class="spacing-slider-group" style="display: flex; flex-direction: column; gap: 4px;">
-                  <div class="spacing-slider-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #334155;">
-                    <span>Line Spacing</span>
-                    <span id="label-val-line-height" class="spacing-val-badge" style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); padding: 2px 6px; border-radius: 6px;">1.35x</span>
+                  <div class="spacing-slider-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <div class="spacing-slider-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #334155;">
+                      <span>Section Gap</span>
+                      <span id="label-val-section-gap" class="spacing-val-badge" style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); padding: 2px 6px; border-radius: 6px;">16px</span>
+                    </div>
+                    <input type="range" id="slider-section-gap" min="6" max="28" step="2" value="16" class="spacing-range-input" style="width: 100%; accent-color: #476550; cursor: pointer; height: 6px; border-radius: 4px; outline: none; margin: 4px 0;">
                   </div>
-                  <input type="range" id="slider-line-height" min="1.15" max="1.60" step="0.05" value="1.35" class="spacing-range-input" style="width: 100%; accent-color: #476550; cursor: pointer; height: 6px; border-radius: 4px; outline: none; margin: 4px 0;">
-                </div>
 
-                <div class="spacing-slider-group" style="display: flex; flex-direction: column; gap: 4px;">
-                  <div class="spacing-slider-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #334155;">
-                    <span>Font Scale</span>
-                    <span id="label-val-font-scale" class="spacing-val-badge" style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); padding: 2px 6px; border-radius: 6px;">100%</span>
+                  <div class="spacing-slider-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <div class="spacing-slider-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #334155;">
+                      <span>Line Spacing</span>
+                      <span id="label-val-line-height" class="spacing-val-badge" style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); padding: 2px 6px; border-radius: 6px;">1.35x</span>
+                    </div>
+                    <input type="range" id="slider-line-height" min="1.15" max="1.60" step="0.05" value="1.35" class="spacing-range-input" style="width: 100%; accent-color: #476550; cursor: pointer; height: 6px; border-radius: 4px; outline: none; margin: 4px 0;">
                   </div>
-                  <input type="range" id="slider-font-scale" min="85" max="115" step="5" value="100" class="spacing-range-input" style="width: 100%; accent-color: #476550; cursor: pointer; height: 6px; border-radius: 4px; outline: none; margin: 4px 0;">
-                </div>
 
-                <button type="button" id="btn-reset-spacing" class="btn-reset-spacing" style="background: transparent; border: 1px solid #E2E8F0; border-radius: 8px; color: #64748B; font-size: 11.5px; font-weight: 600; padding: 8px 10px; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; box-sizing: border-box; margin-top: 4px;">
-                  <i class="fas fa-undo" style="font-size: 10px;"></i> Reset Spacing Defaults
+                  <div class="spacing-slider-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <div class="spacing-slider-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: #334155;">
+                      <span>Font Scale</span>
+                      <span id="label-val-font-scale" class="spacing-val-badge" style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); padding: 2px 6px; border-radius: 6px;">100%</span>
+                    </div>
+                    <input type="range" id="slider-font-scale" min="85" max="115" step="5" value="100" class="spacing-range-input" style="width: 100%; accent-color: #476550; cursor: pointer; height: 6px; border-radius: 4px; outline: none; margin: 4px 0;">
+                  </div>
+
+                  <button type="button" id="btn-reset-spacing" class="btn-reset-spacing" style="background: transparent; border: 1px solid #E2E8F0; border-radius: 8px; color: #64748B; font-size: 11.5px; font-weight: 600; padding: 8px 10px; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; box-sizing: border-box; margin-top: 4px;">
+                    <i class="fas fa-undo" style="font-size: 10px;"></i> Reset Spacing Defaults
+                  </button>
+                </div>
+              </div>
+
+              <div class="stitch-preview-tools-group">
+                <div class="quick-size-switch" style="margin: 0;">
+                  <select id="select-paper-size" class="quick-switch-select" style="font-size: 12px; padding: 6px 12px; border-radius: 9999px; font-weight: 600;">
+                    <option value="a4">A4 Sheet</option>
+                    <option value="letter">US Letter</option>
+                  </select>
+                </div>
+                <label class="toggle-footnote-label no-print" title="Display subtle ATS Compliance verification note on resume" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; color: #475569; cursor: pointer; user-select: none; background: rgba(0, 104, 86, 0.08); padding: 5px 11px; border-radius: 9999px; border: 1px solid rgba(0, 104, 86, 0.18); white-space: nowrap;">
+                  <input type="checkbox" id="check-ats-footnote" checked style="accent-color: #476550; cursor: pointer; width: 13px; height: 13px;">
+                  <span>ATS Stamp</span>
+                </label>
+                <button type="button" class="stitch-floating-btn" id="btn-share-preview" onclick="window.openShareModal && window.openShareModal();" title="Share ZenResume">
+                  <i class="fas fa-share-alt"></i> Share
+                </button>
+                <button type="button" class="stitch-floating-btn" id="btn-zenguide-tour" onclick="window.startZenGuideTour(true)" title="Start Interactive Guided Tour" style="background: #E8F0EB; color: #476550; border-color: rgba(162, 188, 168, 0.5);">
+                  <i class="fas fa-compass"></i> Tour
                 </button>
               </div>
-            </div>
 
-            <button type="button" class="stitch-floating-btn" id="btn-zenguide-tour" onclick="window.startZenGuideTour(true)" title="Start Interactive Guided Tour" style="background: #E8F0EB; color: #476550; border-color: rgba(162, 188, 168, 0.5);">
-              <i class="fas fa-compass"></i> Tour
-            </button>
-            <button type="button" class="stitch-floating-btn" id="btn-share-preview" onclick="window.openShareModal && window.openShareModal();" title="Share ZenResume">
-              <i class="fas fa-share-alt"></i> Share
-            </button>
-            <div class="quick-size-switch" style="margin: 0;">
-              <select id="select-paper-size" class="quick-switch-select" style="font-size: 12px; padding: 6px 12px; border-radius: 9999px; font-weight: 600;">
-                <option value="a4">A4 Sheet</option>
-                <option value="letter">US Letter</option>
-              </select>
+              <div class="stitch-preview-cta-group">
+                <button type="button" class="stitch-floating-btn primary btn-main-download" id="btn-trigger-download" onclick="window.triggerDownloadModal && window.triggerDownloadModal();">
+                  <i class="fas fa-download"></i> Download PDF
+                </button>
+              </div>
+
             </div>
-            <label class="toggle-footnote-label no-print" title="Display subtle ATS Compliance verification note on resume" style="display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; color: #475569; cursor: pointer; user-select: none; background: rgba(0, 104, 86, 0.08); padding: 5px 11px; border-radius: 9999px; border: 1px solid rgba(0, 104, 86, 0.18);">
-              <input type="checkbox" id="check-ats-footnote" checked style="accent-color: #476550; cursor: pointer; width: 13px; height: 13px;">
-              <span>ATS Stamp</span>
-            </label>
-            <button type="button" class="stitch-floating-btn primary" id="btn-trigger-download" onclick="window.triggerDownloadModal && window.triggerDownloadModal();">
-              <i class="fas fa-download"></i> Download PDF
-            </button>
           </div>
 
           <!-- Paper-like Printable Sheet Container -->
