@@ -2594,24 +2594,51 @@
           <div id="ats-free-missing" class="ats-free-missing-box"></div>
         </div>
 
-        <!-- BLURRED: Premium Missing Keywords -->
-        <div class="ats-result-section ats-premium-blur" id="ats-premium-section">
-          <div class="ats-lock-overlay">
-            <span>🔒</span>
-            <p>Unlock <strong id="ats-remaining-count">7</strong> more missing keywords &amp; AI-powered bullet rewrites</p>
+        <!-- VISIBLE Premium Features (Clickable - Opens Explanation Popup) -->
+        <div class="ats-result-section" id="ats-premium-section">
+          <h3>🚀 Premium Features — Click to Learn More</h3>
+          <div class="ats-premium-features-grid">
+
+            <div class="ats-premium-card" onclick="showFeaturePreview('missing_keywords')">
+              <span class="ats-premium-card-icon">🔍</span>
+              <strong>All Missing Keywords</strong>
+              <p>See every keyword the ATS scanner is looking for</p>
+              <span class="ats-premium-card-count" id="ats-remaining-count">7</span>
+              <span class="ats-premium-card-badge">TAP TO LEARN MORE</span>
+            </div>
+
+            <div class="ats-premium-card" onclick="showFeaturePreview('ai_rewrites')">
+              <span class="ats-premium-card-icon">✨</span>
+              <strong>AI Bullet Rewrites</strong>
+              <p>1-click rewrite your bullets to match the JD perfectly</p>
+              <span class="ats-premium-card-badge">TAP TO LEARN MORE</span>
+            </div>
+
+            <div class="ats-premium-card" onclick="showFeaturePreview('zenscout')">
+              <span class="ats-premium-card-icon">🤖</span>
+              <strong>ZenScout Auto-Apply</strong>
+              <p>AI bot applies to 200+ jobs for you while you sleep</p>
+              <span class="ats-premium-card-badge">TAP TO LEARN MORE</span>
+            </div>
+
+            <div class="ats-premium-card" onclick="showFeaturePreview('zendoc')">
+              <span class="ats-premium-card-icon">🎤</span>
+              <strong>ZenDoc Interview Prep</strong>
+              <p>AI mock interviewer that prepares you for HR & technical rounds</p>
+              <span class="ats-premium-card-badge">TAP TO LEARN MORE</span>
+            </div>
+
           </div>
-          <h3>🔒 Remaining Missing Keywords</h3>
-          <div class="ats-keyword-chips ats-blurred-chips">
-            <span class="ats-chip ats-chip-missing">████████</span>
-            <span class="ats-chip ats-chip-missing">██████</span>
-            <span class="ats-chip ats-chip-missing">█████████</span>
-            <span class="ats-chip ats-chip-missing">███████</span>
-            <span class="ats-chip ats-chip-missing">████████████</span>
-          </div>
-          <h3>🔒 AI-Tailored Bullet Rewrites</h3>
-          <div class="ats-blurred-chips">
-            <p class="ats-blurred-text">Architected scalable ████████ with ██████, handling █M+ daily ████████</p>
-            <p class="ats-blurred-text">Implemented ████████ pipelines using ██████ and ██████████████</p>
+        </div>
+
+        <!-- Premium Feature Preview Popup (Explains value before showing plans) -->
+        <div id="ats-feature-preview-popup" class="ats-feature-popup" style="display:none;">
+          <div class="ats-feature-popup-content">
+            <button class="ats-feature-popup-close" onclick="closeFeaturePreview()">&times;</button>
+            <div id="ats-feature-popup-body"></div>
+            <button class="ats-btn-view-plans" onclick="scrollToPlanSelection()">
+              📋 View Plans & Pricing
+            </button>
           </div>
         </div>
 

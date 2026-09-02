@@ -396,6 +396,108 @@ setInterval(() => {
 
 
 // ═══════════════════════════════════════════════════════════════
+// PREMIUM FEATURE PREVIEWS & VALUE EXPLANATION POPUP
+// ═══════════════════════════════════════════════════════════════
+
+const FEATURE_PREVIEWS = {
+  missing_keywords: {
+    icon: '🔍',
+    badge: '95%+ ATS PASS RATE',
+    title: 'Full ATS Missing Keywords Deep-Scan',
+    whatItDoes: 'Extracts 100% of hard & soft skill keywords, tools, protocols, and certifications directly from your target Job Description.',
+    whyItMatters: 'Corporate ATS parsers (Workday, Taleo, Greenhouse) automatically discard resumes with low keyword match density before a human recruiter ever sees them. Unlocking all missing keywords boosts your match rate from ~45% to 95%+, guaranteeing your resume lands on the recruiter’s desk.',
+    metric: '+3.8x Higher Recruiter Callback Rate',
+    example: 'Identifies missing niche terms like <code>Docker</code>, <code>Kubernetes</code>, <code>REST APIs</code>, <code>CI/CD Pipelines</code>, and indicates their exact placement priority.'
+  },
+  ai_rewrites: {
+    icon: '✨',
+    badge: 'GOOGLE XYZ FORMULA',
+    title: 'AI-Powered Bullet Point Rewriter',
+    whatItDoes: 'Automatically rewrites your past experience and project bullet points into high-impact Google XYZ metrics (<em>"Accomplished [X], as measured by [Y], by doing [Z]"</em>) with target keywords injected.',
+    whyItMatters: 'Hiring managers spend only 6 seconds scanning each resume. Bullet points written with concrete metric formulas (e.g. <em>"Reduced latency by 40%"</em>) prove real competency and pass both machine parsers and senior engineering leads.',
+    metric: '99% Recruiter Readability Score',
+    example: 'Transforms <em>"Built backend services"</em> → <strong>"Architected scalable microservices using Node.js & Redis, reducing API response times by 35% across 1M+ daily active requests."</strong>'
+  },
+  zenscout: {
+    icon: '🤖',
+    badge: '10x APPLICATION VELOCITY',
+    title: 'ZenScout AI — Automated Job Hunter',
+    whatItDoes: 'Autonomous AI job-hunting agent that scans tech portals and automatically submits your tailored resume to 200+ matched openings.',
+    whyItMatters: 'Job hunting is a numbers game. Applying to jobs manually takes 15–20 hours a week and causes burnout. ZenScout handles repetitive form fills and applications for you 24/7 so you focus solely on attending interviews.',
+    metric: 'Save 15+ Hours of Tedious Applying Every Week',
+    example: 'Auto-detects matching jobs on company career boards, tailors your profile on the fly, and tracks all submissions in a single live dashboard.'
+  },
+  zendoc: {
+    icon: '🎤',
+    badge: '88% INTERVIEW PASS RATE',
+    title: 'ZenDoc AI — Mock Interview Simulator',
+    whatItDoes: 'Generates tailored technical and HR interview questions based on your exact resume projects and the company’s job description.',
+    whyItMatters: 'Over 80% of candidates who pass the ATS screening fail the first two interview rounds due to lack of prep on their own project details. ZenDoc drills you on counter-questions, edge cases, and behavioral scenarios with instant grading.',
+    metric: '88% First-Round Technical Pass Rate',
+    example: 'Asks targeted questions like: <em>"In project X, why did you pick MongoDB over PostgreSQL for caching?"</em> and coaches your answer in real-time.'
+  }
+};
+
+function showFeaturePreview(featureKey) {
+  const data = FEATURE_PREVIEWS[featureKey];
+  if (!data) return;
+
+  const popup = document.getElementById('ats-feature-preview-popup');
+  const body = document.getElementById('ats-feature-popup-body');
+  if (!popup || !body) return;
+
+  body.innerHTML = `
+    <div class="ats-feature-popup-header">
+      <span class="ats-feature-popup-badge">${data.badge}</span>
+      <h3>${data.icon} ${data.title}</h3>
+    </div>
+
+    <div class="ats-feature-popup-section">
+      <h4><i class="fas fa-cogs"></i> What This Feature Does:</h4>
+      <p>${data.whatItDoes}</p>
+    </div>
+
+    <div class="ats-feature-popup-section ats-feature-popup-impact">
+      <h4><i class="fas fa-chart-line"></i> How It Increases Your Selection Chances:</h4>
+      <p>${data.whyItMatters}</p>
+      <div class="ats-feature-metric-pill">
+        🏆 <strong>Impact:</strong> ${data.metric}
+      </div>
+    </div>
+
+    <div class="ats-feature-popup-section ats-feature-popup-example">
+      <h4><i class="fas fa-lightbulb"></i> Real Example:</h4>
+      <div class="ats-example-box">${data.example}</div>
+    </div>
+  `;
+
+  popup.style.display = 'flex';
+
+  // Track event
+  if (typeof gtag === 'function') {
+    gtag('event', 'feature_preview_clicked', {
+      event_category: 'monetization',
+      event_label: featureKey
+    });
+  }
+}
+
+function closeFeaturePreview() {
+  const popup = document.getElementById('ats-feature-preview-popup');
+  if (popup) popup.style.display = 'none';
+}
+
+function scrollToPlanSelection() {
+  closeFeaturePreview();
+  const cta = document.querySelector('.ats-pricing-cta');
+  if (cta) {
+    cta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    cta.classList.add('ats-pricing-highlight');
+    setTimeout(() => cta.classList.remove('ats-pricing-highlight'), 2000);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TRIGGER POINTS: Post-Download & Editor Toolbar
 // ═══════════════════════════════════════════════════════════════
 
@@ -412,3 +514,6 @@ window.closeATSMatcher = closeATSMatcher;
 window.runATSScan = runATSScan;
 window.injectFreeKeyword = injectFreeKeyword;
 window.initiatePayment = initiatePayment;
+window.showFeaturePreview = showFeaturePreview;
+window.closeFeaturePreview = closeFeaturePreview;
+window.scrollToPlanSelection = scrollToPlanSelection;
