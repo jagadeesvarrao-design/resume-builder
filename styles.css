@@ -379,13 +379,16 @@ body {
    ========================================================================== */
 .builder-workspace {
   display: none; /* Controlled via JS */
-  grid-template-columns: minmax(420px, 1fr) minmax(480px, 1.15fr);
-  gap: 24px;
-  align-items: start;
+  grid-template-columns: minmax(440px, 1fr) minmax(520px, 1.25fr);
+  gap: 20px;
+  align-items: stretch;
   width: 100%;
-  max-width: 1560px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 16px 0;
+  height: calc(100vh - 32px);
+  max-height: calc(100vh - 32px);
+  padding: 0 16px 16px 16px;
+  box-sizing: border-box;
   animation: fadeIn 0.4s ease;
 }
 
@@ -466,8 +469,10 @@ body {
   
   /* Toggle workspace views dynamically based on the active tab state */
   .builder-workspace {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    height: auto !important;
+    max-height: none !important;
     padding-bottom: 80px !important;
   }
   
@@ -623,15 +628,15 @@ body {
 .form-panel {
   background: var(--white);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: 18px;
   padding: 0 !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  position: sticky;
-  top: 24px;
-  max-height: calc(100vh - 48px);
+  height: 100%;
+  max-height: 100%;
   overflow: hidden !important;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .workspace-actions {
@@ -1235,18 +1240,15 @@ textarea.form-input {
 .preview-panel {
   background: #EBEFED;
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  position: sticky;
-  top: 24px;
+  border-radius: 18px;
+  padding: 0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  height: 100%;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  max-height: calc(100vh - 48px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  overflow: hidden !important;
+  position: relative;
 }
 
 .preview-bar {
@@ -1339,10 +1341,18 @@ textarea.form-input {
 
 /* Standard A4 Paper-like layout on Screen */
 .resume-paper-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   overflow-x: auto;
-  overflow-y: visible;
-  padding: 24px 0; /* Padding around the paper to prevent shadow clipping */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 32px 16px 80px 16px;
   width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
 .resume-paper {
@@ -3555,15 +3565,21 @@ textarea.form-input {
   border-radius: 9999px;
 }
 
-/* 3. Floating Preview Controls */
+/* 3. Preview Studio Controls Header */
 .stitch-preview-floating-bar {
-  position: absolute;
-  top: 16px;
-  right: 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  z-index: 50;
+  justify-content: flex-start;
+  padding: 12px 18px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 20;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .stitch-floating-btn {
@@ -3574,7 +3590,7 @@ textarea.form-input {
   border-radius: 9999px;
   font-size: 12.5px;
   font-weight: 600;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -3602,18 +3618,18 @@ textarea.form-input {
 /* 4. Bottom Floating Zoom Pill */
 .stitch-floating-zoom {
   position: absolute;
-  bottom: 20px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: 9999px;
-  padding: 5px 14px;
+  padding: 4px 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
-  gap: 10px;
-  z-index: 50;
+  gap: 8px;
+  z-index: 30;
 }
 
 .stitch-zoom-btn {

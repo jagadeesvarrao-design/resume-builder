@@ -1831,16 +1831,26 @@ function adjustPreviewScale() {
     paper.style.top = '0';
   }
   
-  wrapper.style.display = 'block';
-  wrapper.style.width = '100%';
-  wrapper.style.maxWidth = '100%';
-  wrapper.style.overflowX = 'hidden';
-  wrapper.style.paddingLeft = '0px';
-  wrapper.style.paddingRight = '0px';
-  wrapper.scrollLeft = 0;
-  
-  // Update parent wrapper height so scroll containers match scaled paper height + padding
-  wrapper.style.height = `${(paperHeight * scale) + (isMobile ? 30 : 50)}px`;
+  if (isMobile) {
+    wrapper.style.display = 'block';
+    wrapper.style.width = '100%';
+    wrapper.style.maxWidth = '100%';
+    wrapper.style.overflowX = 'hidden';
+    wrapper.style.paddingLeft = '0px';
+    wrapper.style.paddingRight = '0px';
+    wrapper.scrollLeft = 0;
+    wrapper.style.height = `${(paperHeight * scale) + 30}px`;
+  } else {
+    wrapper.style.display = 'flex';
+    wrapper.style.justifyContent = 'center';
+    wrapper.style.alignItems = 'flex-start';
+    wrapper.style.width = '100%';
+    wrapper.style.height = 'auto';
+    wrapper.style.minHeight = '100%';
+    wrapper.style.overflowY = 'auto';
+    wrapper.style.overflowX = 'auto';
+    wrapper.style.padding = '32px 16px 80px 16px';
+  }
   
   // Update UI zoom label
   if (zoomPercentageEl) {
