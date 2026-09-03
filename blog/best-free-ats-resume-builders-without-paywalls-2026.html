@@ -38,10 +38,16 @@
         "@type": "Article",
         "headline": "Top 5 Free ATS Resume Builders Without Paywalls (2026 Comparison)",
         "description": "Looking for a truly free resume builder in 2026? We benchmarked the top 5 ATS resume builders with zero hidden paywalls, watermark traps, or credit card requirements.",
-        "author": {
-          "@type": "Organization",
-          "name": "ZenResume Editorial Board",
-          "url": "https://www.zenresume.online/about.html"
+                "author": {
+          "@type": "Person",
+          "name": "Jagadeeswara Rao Peddada",
+          "jobTitle": "Founder & Chief Technical Architect",
+          "url": "https://www.zenresume.online/about.html#founder",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Aneevarp Solutions",
+            "url": "https://aneevarpsolutions.vercel.app/"
+          }
         },
         "publisher": {
           "@type": "Organization",
@@ -97,12 +103,16 @@
   <link rel="apple-touch-icon" sizes="180x180" href="https://www.zenresume.online/apple-touch-icon.png">
   <link rel="shortcut icon" href="https://www.zenresume.online/favicon.ico">
   <style id="zenresume-critical-header-style">
+    /* ==========================================================================
+       Aneevarp Solutions Master Palette Critical Navigation & Header
+       ========================================================================== */
     .stitch-nav {
       background: #0B0F12 !important;
       border-bottom: 1px solid rgba(45, 212, 191, 0.15) !important;
       color: #FFFFFF !important;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 2000;
@@ -119,6 +129,7 @@
       margin: 0 auto !important;
       width: 100% !important;
       box-sizing: border-box !important;
+      gap: 12px !important;
     }
     .brand-identity-container {
       display: inline-flex !important;
@@ -133,6 +144,7 @@
       border-radius: 10px !important;
       box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4) !important;
       object-fit: cover !important;
+      flex-shrink: 0 !important;
     }
     .brand-text-column {
       display: flex !important;
@@ -197,6 +209,9 @@
       cursor: pointer !important;
       transition: all 0.2s ease !important;
     }
+    .zen-suite-btn:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+    }
     .zen-suite-dropdown {
       display: none !important;
       position: absolute !important;
@@ -221,31 +236,26 @@
       font-weight: 800 !important;
       color: #94A3B8 !important;
       text-transform: uppercase !important;
-      letter-spacing: 0.6px !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      letter-spacing: 0.8px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
       margin-bottom: 4px !important;
-      text-align: left !important;
     }
     .suite-product-link {
       display: flex !important;
       align-items: center !important;
       gap: 10px !important;
       padding: 8px 10px !important;
-      border-radius: 8px !important;
+      border-radius: 10px !important;
       text-decoration: none !important;
-      transition: background 0.15s ease !important;
-      text-align: left !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
+      transition: background 0.2s ease !important;
     }
     .suite-product-link:hover {
-      background: rgba(255, 255, 255, 0.08) !important;
+      background: rgba(45, 212, 191, 0.1) !important;
     }
     .suite-product-icon {
       width: 28px !important;
       height: 28px !important;
-      border-radius: 6px !important;
+      border-radius: 8px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
@@ -268,8 +278,34 @@
       color: #94A3B8 !important;
       font-weight: 400 !important;
     }
+    .header-right-actions {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      flex-shrink: 0 !important;
+    }
+    .btn-header-cta {
+      background: linear-gradient(135deg, #476550, #00846D) !important;
+      color: #FFFFFF !important;
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+      padding: 8px 18px !important;
+      border-radius: 9999px !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      border: 1px solid rgba(45, 212, 191, 0.3) !important;
+      box-shadow: 0 4px 12px rgba(0, 104, 86, 0.3) !important;
+      transition: all 0.2s ease !important;
+      white-space: nowrap !important;
+    }
+    .btn-header-cta:hover {
+      transform: translateY(-1px) !important;
+      box-shadow: 0 6px 16px rgba(0, 104, 86, 0.4) !important;
+    }
 
-    /* Critical Footer Styling */
+    /* Footer Styling */
     .stitch-footer {
       background: #0B0F12 !important;
       color: #FFFFFF !important;
@@ -309,7 +345,6 @@
     }
     .footer-col-links {
       list-style: none !important;
-      list-style-type: none !important;
       padding: 0 !important;
       margin: 0 !important;
       display: flex !important;
@@ -318,7 +353,6 @@
     }
     .footer-col-links li {
       list-style: none !important;
-      list-style-type: none !important;
       padding: 0 !important;
       margin: 0 !important;
     }
@@ -328,13 +362,6 @@
       font-size: 13px !important;
       font-weight: 500 !important;
       transition: all 0.2s ease !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      background: none !important;
-      border: none !important;
-      padding: 0 !important;
-      box-shadow: none !important;
     }
     .footer-col-links a:hover {
       color: #2DD4BF !important;
@@ -345,9 +372,6 @@
       .desktop-nav-links {
         display: none !important;
       }
-      .mobile-menu-toggle {
-        display: flex !important;
-      }
     }
   </style>
 </head>
@@ -355,26 +379,28 @@
   
   <!-- Global Top Header with Complete Navigation -->
     <!-- Global Top Header with Responsive Navigation -->
-    <header class="no-print stitch-nav">
+    <!-- Top Global Navbar (Aneevarp Solutions Unified Standard) -->
+  <!-- Top Global Navbar (Aneevarp Solutions Unified Standard) -->
+  <header class="no-print stitch-nav">
     <div class="stitch-nav-container">
-      <a href="/" id="logo-link" class="brand-identity-container">
-        <img src="https://www.zenresume.online/favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" style="width: 36px; height: 36px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4); object-fit: cover;">
+      <a href="/" class="brand-identity-container">
+        <img src="../favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" />
         <div class="brand-text-column">
           <span class="brand-main-title">ZenResume</span>
-          <span class="brand-subtext">by Aneevarp Solutions</span>
+          <span class="brand-subtext">By Aneevarp Solutions</span>
         </div>
       </a>
-      
+
       <!-- Desktop Navigation Links -->
       <nav class="desktop-nav-links">
         <a href="/">App</a>
-        <a href="/role/">Templates (63 Roles)</a>
+        <a href="/role/">Templates (71 Roles)</a>
         <a href="/campus.html">Campus Suite</a>
-        <a href="/blog/">Career Guides</a>
+        <a href="/blog/" class="active-link">Career Guides</a>
         <a href="/methodology.html">Methodology</a>
         <a href="/about.html">About</a>
 
-        <!-- Zen Suite Ecosystem Interactive Dropdown -->
+        <!-- Zen Suite Ecosystem Dropdown -->
         <div class="zen-suite-wrapper">
           <button class="zen-suite-btn" type="button" aria-label="Zen Suite Ecosystem">
             <i class="fas fa-layer-group" style="color: #F59E0B; font-size: 11px;"></i>
@@ -389,7 +415,7 @@
               </div>
               <div class="suite-product-info">
                 <span class="suite-product-name">ZenScout AI</span>
-                <span class="suite-product-desc">Auto Job Scout &amp; Voice Coach</span>
+                <span class="suite-product-desc">Auto Job Scout &amp; Coach</span>
               </div>
             </a>
             <a href="https://pdf-analizing-and-answering-bot.vercel.app/app.html" target="_blank" rel="noopener noreferrer" class="suite-product-link">
@@ -416,44 +442,10 @@
 
       <!-- Right Action Controls -->
       <div class="header-right-actions">
-        <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme">
-          <i class="fas fa-moon"></i>
-        </button>
-        <a href="/" class="stitch-nav-cta btn-tactile" id="btn-header-cta">
-          Build Resume
+        <a href="/" class="btn-header-cta">
+          <i class="fas fa-bolt"></i> Build Free Resume &rarr;
         </a>
-        <button type="button" class="mobile-menu-toggle" id="btn-mobile-menu" onclick="window.toggleMobileMenu && window.toggleMobileMenu();" aria-label="Toggle Navigation Menu">
-          <i class="fas fa-bars"></i>
-        </button>
       </div>
-    </div>
-
-    <!-- Mobile Slide-Down Drawer Menu -->
-    <div class="mobile-drawer-menu" id="mobile-drawer-menu">
-      <a href="/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-file-invoice"></i> Builder App
-      </a>
-      <a href="/role/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-layer-group"></i> Templates (63 Roles)
-      </a>
-      <a href="/campus.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);" style="color: #2DD4BF; font-weight: 700;">
-        <i class="fas fa-graduation-cap" style="color: #2DD4BF;"></i> Campus Placement Suite
-      </a>
-      <a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link" style="color: #2DD4BF; font-weight: 700;" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-robot" style="color: #2DD4BF;"></i> ZenScout AI (Auto-Job Hunter)
-      </a>
-      <a href="/blog/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-book-open"></i> Career Guides
-      </a>
-      <a href="/methodology.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-flask"></i> ATS Methodology
-      </a>
-      <a href="/about.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-info-circle"></i> About Us
-      </a>
-      <a href="/contact.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-envelope"></i> Contact Support
-      </a>
     </div>
   </header>
 
@@ -476,14 +468,26 @@
         </p>
       </div>
 
-      <!-- E-E-A-T Editorial Credential Box -->
-      <div style="display: flex; align-items: center; gap: 16px; background: rgba(0, 104, 86, 0.04); border: 1px solid rgba(0, 104, 86, 0.15); border-radius: 12px; padding: 16px 20px; margin-bottom: 30px;">
-        <div style="background: #006856; color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
-          <i class="fas fa-user-shield"></i>
+      <!-- E-E-A-T Verified Author & Reviewer Card -->
+      <div class="eeat-author-card" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 14px; padding: 14px 20px; margin: 24px 0 32px 0; font-size: 13px; color: #475569; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="../founder.jpg" alt="Jagadeeswara Rao Peddada" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #006856;" />
+          <div>
+            <div style="font-weight: 800; color: #0F172A; font-size: 14px;">
+              Authored &amp; Verified by <a href="/about.html#founder" style="color: #006856; text-decoration: none;">Jagadeeswara Rao Peddada</a>
+            </div>
+            <div style="font-size: 11.5px; color: #64748B;">
+              Founder &amp; Chief Technical Architect &bull; Aneevarp Solutions (Govt. of India MSME: <code>UDYAM-AP-10-0144446</code>)
+            </div>
+          </div>
         </div>
-        <div style="font-size: 13px; color: var(--text-sub); line-height: 1.5;">
-          <strong>Written by:</strong> ZenResume Career Strategy Team &bull; <strong>Reviewed by:</strong> Senior Technical Recruiting Panel<br>
-          <em>Verified for ATS compliance and 2026 hiring accuracy. Updated August 20, 2026.</em>
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 104, 86, 0.08); color: #006856; font-weight: 700; font-size: 11.5px; padding: 4px 10px; border-radius: 6px;">
+          <i class="fas fa-shield-check" style="color: #10B981;"></i> 2026 Recruiter &amp; ATS Verified
+        </div>
+      </div>
+        </div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 104, 86, 0.08); color: #006856; font-weight: 700; font-size: 11.5px; padding: 4px 10px; border-radius: 6px;">
+          <i class="fas fa-shield-check" style="color: #10B981;"></i> 2026 Recruiter &amp; ATS Verified
         </div>
       </div>
 
@@ -683,29 +687,11 @@
           <!-- Site Footer (Stitch Modern Dark Canvas) -->
     <!-- Site Footer (Stitch Modern Dark Canvas) -->
     <!-- Site Footer (Aneevarp Solutions Unified Ecosystem) -->
-  <footer class="stitch-footer no-print" style="background: #0B0F12; color: #FFFFFF; padding: 60px 24px 40px 24px; border-top: 1px solid rgba(45, 212, 191, 0.15); margin-top: 60px; width: 100%; box-sizing: border-box;">
-    <div class="stitch-footer-container" style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px;">
+  <!-- Site Footer (Aneevarp Solutions Unified Ecosystem) -->
+  <!-- Site Footer (Aneevarp Solutions Unified Ecosystem) -->
+  <footer class="stitch-footer no-print">
+    <div class="stitch-footer-container">
       
-      <!-- Top Brand Row -->
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 24px;">
-        <div class="brand-identity-container">
-          <img src="https://www.zenresume.online/favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" style="width: 36px; height: 36px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4); object-fit: cover;">
-          <div class="brand-text-column">
-            <span class="brand-main-title">ZenResume</span>
-            <span class="brand-subtext">by Aneevarp Solutions</span>
-          </div>
-        </div>
-        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-          <span style="font-size: 11px; color: #94A3B8; font-weight: 600;">Ecosystem:</span>
-          <a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer" style="font-size: 11.5px; font-weight: 700; color: #2DD4BF; background: rgba(0, 104, 95, 0.25); border: 1px solid rgba(45, 212, 191, 0.3); padding: 5px 12px; border-radius: 9999px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
-            <i class="fas fa-robot"></i> ZenScout AI
-          </a>
-          <a href="https://pdf-analizing-and-answering-bot.vercel.app/app.html" target="_blank" rel="noopener noreferrer" style="font-size: 11.5px; font-weight: 700; color: #58D68D; background: rgba(71, 101, 80, 0.25); border: 1px solid rgba(88, 214, 141, 0.3); padding: 5px 12px; border-radius: 9999px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
-            <i class="fas fa-file-pdf"></i> ZenDoc AI
-          </a>
-        </div>
-      </div>
-
       <!-- 4-Column Footer Grid -->
       <div class="aneevarp-footer-grid">
         <!-- Col 1: Career Suite -->
@@ -716,20 +702,21 @@
             <li><a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer"><i class="fas fa-robot"></i> ZenScout AI (Auto Job Hunter)</a></li>
             <li><a href="https://pdf-analizing-and-answering-bot.vercel.app/app.html" target="_blank" rel="noopener noreferrer"><i class="fas fa-brain"></i> ZenDoc AI (Doc Intelligence)</a></li>
             <li><a href="/campus.html"><i class="fas fa-graduation-cap"></i> Campus Placement Suite</a></li>
-            <li><a href="/role/"><i class="fas fa-layer-group"></i> 63 ATS Role Blueprints</a></li>
+            <li><a href="/role/"><i class="fas fa-layer-group"></i> 71 ATS Role Blueprints</a></li>
           </ul>
         </div>
 
-        <!-- Col 2: Popular Role Templates -->
+        <!-- Col 2: Popular Role Blueprints -->
         <div>
           <div class="footer-col-title">Popular Role Blueprints</div>
           <ul class="footer-col-links">
             <li><a href="/role/software-engineer-resume.html">Software Engineer</a></li>
+            <li><a href="/role/ai-engineer-resume.html">AI &amp; ML Engineer</a></li>
+            <li><a href="/role/mechanical-engineer-resume.html">Mechanical Design Engineer</a></li>
             <li><a href="/role/data-scientist-resume.html">Data Scientist</a></li>
-            <li><a href="/role/ai-engineer-resume.html">AI Engineer</a></li>
-            <li><a href="/role/cloud-engineer-resume.html">Cloud Engineer</a></li>
             <li><a href="/role/product-manager-resume.html">Product Manager</a></li>
-            <li><a href="/role/" style="color: #2DD4BF !important; font-weight: 700;">Explore All 63 Templates &rarr;</a></li>
+            <li><a href="/role/tcs-nqt-fresher-resume.html">TCS NQT / Fresher Placement</a></li>
+            <li><a href="/role/" style="color: #2DD4BF !important; font-weight: 700;">Explore All 71 Roles &rarr;</a></li>
           </ul>
         </div>
 
@@ -737,7 +724,7 @@
         <div>
           <div class="footer-col-title">Research &amp; Standards</div>
           <ul class="footer-col-links">
-            <li><a href="/blog/">Career Resource Hub (21 Guides)</a></li>
+            <li><a href="/blog/">Career Resource Hub (24 Guides)</a></li>
             <li><a href="/blog/best-free-ats-resume-builders-without-paywalls-2026.html">Top 5 Resume Builders 2026</a></li>
             <li><a href="/blog/local-first-vs-cloud-resume-builders.html">Local-First Data Privacy</a></li>
             <li><a href="/methodology.html">ATS Parser Methodology</a></li>
