@@ -387,19 +387,56 @@ function loadProfileIntoForm(data) {
    4. DYNAMIC CARD ADDITIONS (FORM FIELDS)
    ========================================================================== */
 
+// --- Helper to refresh card index badges and pill counts ---
+function refreshCardIndexes(container) {
+  if (!container) return;
+  const cards = container.querySelectorAll('.list-item-card');
+  cards.forEach((card, idx) => {
+    const badge = card.querySelector('.card-order-badge');
+    if (badge) badge.textContent = `#${idx + 1}`;
+  });
+  updatePillBadges();
+}
+
+function updatePillBadges() {
+  const expCount = document.querySelectorAll('.experience-item-card').length;
+  const projCount = document.querySelectorAll('.project-item-card').length;
+  const eduCount = document.querySelectorAll('.education-item-card').length;
+  const certCount = document.querySelectorAll('.certification-item-card').length;
+
+  const bExp = document.getElementById('badge-exp-count');
+  const bProj = document.getElementById('badge-proj-count');
+  const bEdu = document.getElementById('badge-edu-count');
+  const bCert = document.getElementById('badge-cert-count');
+
+  if (bExp) bExp.textContent = expCount;
+  if (bProj) bProj.textContent = projCount;
+  if (bEdu) bEdu.textContent = eduCount;
+  if (bCert) bCert.textContent = certCount;
+}
+
 // --- A. EXPERIENCE CARD ---
 function addExperienceCard(data = null) {
   const card = document.createElement('div');
   card.className = 'list-item-card experience-item-card';
   
-  const company = data ? data.company : '';
-  const role = data ? data.role : '';
-  const location = data ? data.location : '';
-  const dates = data ? data.dates : '';
-  const desc = data ? (data.descriptions || []).join('\n') : '';
+  const company = data ? (data.company || '') : '';
+  const role = data ? (data.role || '') : '';
+  const location = data ? (data.location || '') : '';
+  const dates = data ? (data.dates || '') : '';
+  const desc = data ? ((Array.isArray(data.descriptions) ? data.descriptions.join('\n') : data.description) || '') : '';
   
   card.innerHTML = `
-    <button type="button" class="btn-remove-item">Remove</button>
+    <div class="card-header-bar">
+      <div class="card-order-badge">#1</div>
+      <div class="card-title-preview">${role || company || 'New Experience Entry'}</div>
+      <div class="card-actions-group">
+        <button type="button" class="btn-card-action btn-move-up" title="Move Position Up"><i class="fas fa-arrow-up"></i></button>
+        <button type="button" class="btn-card-action btn-move-down" title="Move Position Down"><i class="fas fa-arrow-down"></i></button>
+        <button type="button" class="btn-card-action btn-clone-card" title="Duplicate Position"><i class="fas fa-copy"></i></button>
+        <button type="button" class="btn-remove-item" title="Delete Position"><i class="fas fa-trash-alt"></i> Delete</button>
+      </div>
+    </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Job Title / Role</label>
@@ -421,29 +458,72 @@ function addExperienceCard(data = null) {
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Key Achievements (One bullet per line)</label>
-      <textarea class="form-input input-exp-desc" style="min-height: 90px;" placeholder="Optimized system bandwidth...&#10;Supervised team of junior..."></textarea>
+      <label class="form-label">Key Achievements &amp; Impact (One bullet per line)</label>
+      <textarea class="form-input input-exp-desc" style="min-height: 90px;" placeholder="Optimized system bandwidth by 35% using asynchronous message queues...&#10;Supervised team of 4 junior developers..."></textarea>
     </div>
   `;
   
   // Set values programmatically to avoid quote breaks & HTML injection
-  card.querySelector('.input-exp-role').value = role;
-  card.querySelector('.input-exp-company').value = company;
+  const roleInput = card.querySelector('.input-exp-role');
+  const compInput = card.querySelector('.input-exp-company');
+  const titlePreview = card.querySelector('.card-title-preview');
+  
+  roleInput.value = role;
+  compInput.value = company;
   card.querySelector('.input-exp-dates').value = dates;
   card.querySelector('.input-exp-location').value = location;
   card.querySelector('.input-exp-desc').value = desc;
   
+  function updateTitle() {
+    titlePreview.textContent = roleInput.value || compInput.value || 'New Experience Entry';
+  }
+  roleInput.addEventListener('input', updateTitle);
+  compInput.addEventListener('input', updateTitle);
+
   // Attach change listeners to live preview
   card.querySelectorAll('.form-input').forEach(input => {
     input.addEventListener('input', debouncedSyncFormToPreview);
   });
   
+  // Card reordering handlers
+  card.querySelector('.btn-move-up').addEventListener('click', () => {
+    const prev = card.previousElementSibling;
+    if (prev) {
+      card.parentNode.insertBefore(card, prev);
+      refreshCardIndexes(experienceListContainer);
+      syncFormToPreview();
+    }
+  });
+
+  card.querySelector('.btn-move-down').addEventListener('click', () => {
+    const next = card.nextElementSibling;
+    if (next) {
+      card.parentNode.insertBefore(next, card);
+      refreshCardIndexes(experienceListContainer);
+      syncFormToPreview();
+    }
+  });
+
+  card.querySelector('.btn-clone-card').addEventListener('click', () => {
+    const clonedData = {
+      role: roleInput.value ? `${roleInput.value} (Copy)` : '',
+      company: compInput.value,
+      dates: card.querySelector('.input-exp-dates').value,
+      location: card.querySelector('.input-exp-location').value,
+      descriptions: card.querySelector('.input-exp-desc').value.split('\n').filter(Boolean)
+    };
+    addExperienceCard(clonedData);
+    syncFormToPreview();
+  });
+
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
     card.remove();
+    refreshCardIndexes(experienceListContainer);
     syncFormToPreview();
   });
   
   experienceListContainer.appendChild(card);
+  refreshCardIndexes(experienceListContainer);
 }
 
 // --- B. PROJECT CARD ---
@@ -451,13 +531,22 @@ function addProjectCard(data = null) {
   const card = document.createElement('div');
   card.className = 'list-item-card project-item-card';
   
-  const title = data ? data.title : '';
-  const technologies = data ? data.technologies : '';
-  const description = data ? data.description : '';
-  const link = data ? data.link : '';
+  const title = data ? (data.title || '') : '';
+  const technologies = data ? (data.technologies || '') : '';
+  const description = data ? (data.description || '') : '';
+  const link = data ? (data.link || '') : '';
   
   card.innerHTML = `
-    <button type="button" class="btn-remove-item">Remove</button>
+    <div class="card-header-bar">
+      <div class="card-order-badge">#1</div>
+      <div class="card-title-preview">${title || 'New Project Entry'}</div>
+      <div class="card-actions-group">
+        <button type="button" class="btn-card-action btn-move-up" title="Move Project Up"><i class="fas fa-arrow-up"></i></button>
+        <button type="button" class="btn-card-action btn-move-down" title="Move Project Down"><i class="fas fa-arrow-down"></i></button>
+        <button type="button" class="btn-card-action btn-clone-card" title="Duplicate Project"><i class="fas fa-copy"></i></button>
+        <button type="button" class="btn-remove-item" title="Delete Project"><i class="fas fa-trash-alt"></i> Delete</button>
+      </div>
+    </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Project Title</label>
@@ -470,32 +559,67 @@ function addProjectCard(data = null) {
     </div>
     <div class="form-group">
       <label class="form-label">Project Details / Link</label>
-      <div class="form-row">
-        <input type="text" class="form-input input-proj-link" placeholder="e.g. github.com/username/project">
-      </div>
+      <input type="text" class="form-input input-proj-link" placeholder="e.g. github.com/username/project">
     </div>
     <div class="form-group">
-      <label class="form-label">Short Description</label>
-      <textarea class="form-input input-proj-desc" style="min-height: 70px;" placeholder="Describe what you built and the core objectives reached..."></textarea>
+      <label class="form-label">Short Description / Key Accomplishments</label>
+      <textarea class="form-input input-proj-desc" style="min-height: 70px;" placeholder="Describe what you built, key architectural design decisions, and quantifiable results..."></textarea>
     </div>
   `;
   
-  // Set values programmatically to avoid quote breaks & HTML injection
-  card.querySelector('.input-proj-title').value = title;
+  const titleInput = card.querySelector('.input-proj-title');
+  const titlePreview = card.querySelector('.card-title-preview');
+  
+  titleInput.value = title;
   card.querySelector('.input-proj-tech').value = technologies;
   card.querySelector('.input-proj-link').value = link;
   card.querySelector('.input-proj-desc').value = description;
   
+  titleInput.addEventListener('input', () => {
+    titlePreview.textContent = titleInput.value || 'New Project Entry';
+  });
+
   card.querySelectorAll('.form-input').forEach(input => {
     input.addEventListener('input', debouncedSyncFormToPreview);
   });
   
+  card.querySelector('.btn-move-up').addEventListener('click', () => {
+    const prev = card.previousElementSibling;
+    if (prev) {
+      card.parentNode.insertBefore(card, prev);
+      refreshCardIndexes(projectsListContainer);
+      syncFormToPreview();
+    }
+  });
+
+  card.querySelector('.btn-move-down').addEventListener('click', () => {
+    const next = card.nextElementSibling;
+    if (next) {
+      card.parentNode.insertBefore(next, card);
+      refreshCardIndexes(projectsListContainer);
+      syncFormToPreview();
+    }
+  });
+
+  card.querySelector('.btn-clone-card').addEventListener('click', () => {
+    const clonedData = {
+      title: titleInput.value ? `${titleInput.value} (Copy)` : '',
+      technologies: card.querySelector('.input-proj-tech').value,
+      link: card.querySelector('.input-proj-link').value,
+      description: card.querySelector('.input-proj-desc').value
+    };
+    addProjectCard(clonedData);
+    syncFormToPreview();
+  });
+
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
     card.remove();
+    refreshCardIndexes(projectsListContainer);
     syncFormToPreview();
   });
   
   projectsListContainer.appendChild(card);
+  refreshCardIndexes(projectsListContainer);
 }
 
 // --- C. EDUCATION CARD ---
@@ -503,22 +627,31 @@ function addEducationCard(data = null) {
   const card = document.createElement('div');
   card.className = 'list-item-card education-item-card';
   
-  const degree = data ? data.degree : '';
-  const institution = data ? data.institution : '';
-  const location = data ? data.location : '';
-  const dates = data ? data.dates : '';
-  const gpa = data ? data.gpa : '';
+  const degree = data ? (data.degree || '') : '';
+  const institution = data ? (data.institution || '') : '';
+  const location = data ? (data.location || '') : '';
+  const dates = data ? (data.dates || '') : '';
+  const gpa = data ? (data.gpa || '') : '';
   
   card.innerHTML = `
-    <button type="button" class="btn-remove-item">Remove</button>
+    <div class="card-header-bar">
+      <div class="card-order-badge">#1</div>
+      <div class="card-title-preview">${degree || institution || 'New Education Entry'}</div>
+      <div class="card-actions-group">
+        <button type="button" class="btn-card-action btn-move-up" title="Move Education Up"><i class="fas fa-arrow-up"></i></button>
+        <button type="button" class="btn-card-action btn-move-down" title="Move Education Down"><i class="fas fa-arrow-down"></i></button>
+        <button type="button" class="btn-card-action btn-clone-card" title="Duplicate Education"><i class="fas fa-copy"></i></button>
+        <button type="button" class="btn-remove-item" title="Delete Education"><i class="fas fa-trash-alt"></i> Delete</button>
+      </div>
+    </div>
     <div class="form-row">
       <div class="form-group">
-        <label class="form-label">Degree & Specialization</label>
-        <input type="text" class="form-input input-edu-degree" placeholder="e.g. B.Tech in CSE">
+        <label class="form-label">Degree &amp; Specialization</label>
+        <input type="text" class="form-input input-edu-degree" placeholder="e.g. B.Tech in Computer Science">
       </div>
       <div class="form-group">
         <label class="form-label">University / Institution</label>
-        <input type="text" class="form-input input-edu-institution" placeholder="e.g. VIT University">
+        <input type="text" class="form-input input-edu-institution" placeholder="e.g. Andhra University">
       </div>
     </div>
     <div class="form-row">
@@ -528,32 +661,73 @@ function addEducationCard(data = null) {
       </div>
       <div class="form-group">
         <label class="form-label">Location</label>
-        <input type="text" class="form-input input-edu-location" placeholder="e.g. Vellore, India">
+        <input type="text" class="form-input input-edu-location" placeholder="e.g. Visakhapatnam, India">
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Grade / CGPA</label>
-      <input type="text" class="form-input input-edu-gpa" placeholder="e.g. 9.1/10.0 CGPA">
+      <input type="text" class="form-input input-edu-gpa" placeholder="e.g. 8.8 / 10.0 CGPA">
     </div>
   `;
   
-  // Set values programmatically to avoid quote breaks & HTML injection
-  card.querySelector('.input-edu-degree').value = degree;
-  card.querySelector('.input-edu-institution').value = institution;
+  const degInput = card.querySelector('.input-edu-degree');
+  const instInput = card.querySelector('.input-edu-institution');
+  const titlePreview = card.querySelector('.card-title-preview');
+  
+  degInput.value = degree;
+  instInput.value = institution;
   card.querySelector('.input-edu-dates').value = dates;
   card.querySelector('.input-edu-location').value = location;
   card.querySelector('.input-edu-gpa').value = gpa;
+  
+  function updateTitle() {
+    titlePreview.textContent = degInput.value || instInput.value || 'New Education Entry';
+  }
+  degInput.addEventListener('input', updateTitle);
+  instInput.addEventListener('input', updateTitle);
   
   card.querySelectorAll('.form-input').forEach(input => {
     input.addEventListener('input', debouncedSyncFormToPreview);
   });
   
+  card.querySelector('.btn-move-up').addEventListener('click', () => {
+    const prev = card.previousElementSibling;
+    if (prev) {
+      card.parentNode.insertBefore(card, prev);
+      refreshCardIndexes(educationListContainer);
+      syncFormToPreview();
+    }
+  });
+
+  card.querySelector('.btn-move-down').addEventListener('click', () => {
+    const next = card.nextElementSibling;
+    if (next) {
+      card.parentNode.insertBefore(next, card);
+      refreshCardIndexes(educationListContainer);
+      syncFormToPreview();
+    }
+  });
+
+  card.querySelector('.btn-clone-card').addEventListener('click', () => {
+    const clonedData = {
+      degree: degInput.value ? `${degInput.value} (Copy)` : '',
+      institution: instInput.value,
+      dates: card.querySelector('.input-edu-dates').value,
+      location: card.querySelector('.input-edu-location').value,
+      gpa: card.querySelector('.input-edu-gpa').value
+    };
+    addEducationCard(clonedData);
+    syncFormToPreview();
+  });
+
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
     card.remove();
+    refreshCardIndexes(educationListContainer);
     syncFormToPreview();
   });
   
   educationListContainer.appendChild(card);
+  refreshCardIndexes(educationListContainer);
 }
 
 // --- D. CERTIFICATION CARD ---
@@ -561,13 +735,22 @@ function addCertificationCard(data = null) {
   const card = document.createElement('div');
   card.className = 'list-item-card certification-item-card';
   
-  const name = (typeof data === 'string') ? data : (data ? data.name : '');
-  const issuer = (data && typeof data === 'object') ? data.issuer : '';
-  const date = (data && typeof data === 'object') ? data.date : '';
-  const desc = (data && typeof data === 'object') ? data.desc : '';
+  const name = (typeof data === 'string') ? data : (data ? (data.name || '') : '');
+  const issuer = (data && typeof data === 'object') ? (data.issuer || '') : '';
+  const date = (data && typeof data === 'object') ? (data.date || '') : '';
+  const desc = (data && typeof data === 'object') ? (data.desc || '') : '';
   
   card.innerHTML = `
-    <button type="button" class="btn-remove-item">Remove</button>
+    <div class="card-header-bar">
+      <div class="card-order-badge">#1</div>
+      <div class="card-title-preview">${name || issuer || 'New Certification Entry'}</div>
+      <div class="card-actions-group">
+        <button type="button" class="btn-card-action btn-move-up" title="Move Certification Up"><i class="fas fa-arrow-up"></i></button>
+        <button type="button" class="btn-card-action btn-move-down" title="Move Certification Down"><i class="fas fa-arrow-down"></i></button>
+        <button type="button" class="btn-card-action btn-clone-card" title="Duplicate Certification"><i class="fas fa-copy"></i></button>
+        <button type="button" class="btn-remove-item" title="Delete Certification"><i class="fas fa-trash-alt"></i> Delete</button>
+      </div>
+    </div>
     <div class="form-group-row">
       <div class="form-group" style="flex: 2;">
         <label class="form-label">Certification Name</label>
@@ -583,25 +766,66 @@ function addCertificationCard(data = null) {
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Description / ID</label>
+      <label class="form-label">Description / Credential ID</label>
       <input type="text" class="form-input input-cert-desc" placeholder="e.g. Credential ID: 123456">
     </div>
   `;
   
-  card.querySelector('.input-cert-name').value = name || '';
-  card.querySelector('.input-cert-issuer').value = issuer || '';
+  const nameInput = card.querySelector('.input-cert-name');
+  const issuerInput = card.querySelector('.input-cert-issuer');
+  const titlePreview = card.querySelector('.card-title-preview');
+
+  nameInput.value = name || '';
+  issuerInput.value = issuer || '';
   card.querySelector('.input-cert-date').value = date || '';
   card.querySelector('.input-cert-desc').value = desc || '';
   
+  function updateTitle() {
+    titlePreview.textContent = nameInput.value || issuerInput.value || 'New Certification Entry';
+  }
+  nameInput.addEventListener('input', updateTitle);
+  issuerInput.addEventListener('input', updateTitle);
+
   const inputs = card.querySelectorAll('.form-input');
   inputs.forEach(input => input.addEventListener('input', debouncedSyncFormToPreview));
   
+  card.querySelector('.btn-move-up').addEventListener('click', () => {
+    const prev = card.previousElementSibling;
+    if (prev) {
+      card.parentNode.insertBefore(card, prev);
+      refreshCardIndexes(certificationsListContainer);
+      syncFormToPreview();
+    }
+  });
+
+  card.querySelector('.btn-move-down').addEventListener('click', () => {
+    const next = card.nextElementSibling;
+    if (next) {
+      card.parentNode.insertBefore(next, card);
+      refreshCardIndexes(certificationsListContainer);
+      syncFormToPreview();
+    }
+  });
+
+  card.querySelector('.btn-clone-card').addEventListener('click', () => {
+    const clonedData = {
+      name: nameInput.value ? `${nameInput.value} (Copy)` : '',
+      issuer: issuerInput.value,
+      date: card.querySelector('.input-cert-date').value,
+      desc: card.querySelector('.input-cert-desc').value
+    };
+    addCertificationCard(clonedData);
+    syncFormToPreview();
+  });
+
   card.querySelector('.btn-remove-item').addEventListener('click', () => {
     card.remove();
+    refreshCardIndexes(certificationsListContainer);
     syncFormToPreview();
   });
   
   certificationsListContainer.appendChild(card);
+  refreshCardIndexes(certificationsListContainer);
 }
 
 /* ==========================================================================
@@ -1554,12 +1778,29 @@ function updateProgressDots() {
       dot.classList.add('completed');
     }
   });
+
+  // Sync horizontal section navigation pills
+  const pills = document.querySelectorAll('.section-nav-pill');
+  pills.forEach(pill => {
+    const pillStep = parseInt(pill.getAttribute('data-nav-step'), 10);
+    if (pillStep === current) {
+      pill.classList.add('active');
+      pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // Sync pill count badges
+  if (typeof updatePillBadges === 'function') {
+    updatePillBadges();
+  }
 }
 
-// Global Step Switcher for Vertical Nav
+// Global Step Switcher for Vertical Nav & Section Pills
 window.goToStep = function(stepNum) {
   const step = parseInt(stepNum, 10);
-  if (isNaN(step) || step < 1 || step > state.totalSteps) return;
+  if (isNaN(step) || step < 1 || step > (state.totalSteps || 7)) return;
   showStep(step);
   autoSaveResume();
 };
@@ -1588,6 +1829,13 @@ function showStep(stepNum) {
   // 4. Generate dynamic summary suggestions when step 2 is active
   if (n === 2) {
     generateSummarySuggestions();
+    const wordCountSpan = document.getElementById('summary-word-count');
+    const summaryInput = document.getElementById('input-summary');
+    if (wordCountSpan && summaryInput) {
+      const text = (summaryInput.value || '').trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      wordCountSpan.textContent = `${words} words ${words >= 30 && words <= 70 ? '• Optimal ATS Length' : ''}`;
+    }
   }
   
   // 5. Update Navigation Controls Visibility
@@ -1609,7 +1857,7 @@ function showStep(stepNum) {
     }
   }
 
-  // 6. Update Progress Dots and Vertical Sidebar Navigation Icons
+  // 6. Update Progress Dots, Navigation Pills, and Section Badges
   updateProgressDots();
 }
 
@@ -3001,6 +3249,164 @@ function initAtsMatcher() {
 }
 
 /* ==========================================================================
+   FEATURE: SUMMARY PRESETS, CLEAR ACTIONS, & BOTTOM ADD SHORTCUTS
+   ========================================================================== */
+function initSummaryPresetsAndActions() {
+  const btnClearSummary = document.getElementById('btn-clear-summary');
+  const btnClearSkills = document.getElementById('btn-clear-skills');
+  const summaryInput = document.getElementById('input-summary');
+  const wordCountSpan = document.getElementById('summary-word-count');
+
+  function updateSummaryWordCount() {
+    if (!wordCountSpan || !summaryInput) return;
+    const text = (summaryInput.value || '').trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    wordCountSpan.textContent = `${words} words ${words >= 30 && words <= 70 ? '• Optimal ATS Length' : ''}`;
+  }
+
+  if (summaryInput) {
+    summaryInput.addEventListener('input', updateSummaryWordCount);
+    updateSummaryWordCount();
+  }
+
+  if (btnClearSummary && summaryInput) {
+    btnClearSummary.addEventListener('click', () => {
+      summaryInput.value = '';
+      updateSummaryWordCount();
+      syncFormToPreview();
+      autoSaveResume();
+      showToast('Summary cleared from resume');
+    });
+  }
+
+  if (btnClearSkills) {
+    btnClearSkills.addEventListener('click', () => {
+      const skillsInput = document.getElementById('input-skills');
+      if (skillsInput) {
+        skillsInput.value = '';
+        syncFormToPreview();
+        autoSaveResume();
+        showToast('Skills cleared from resume');
+      }
+    });
+  }
+
+  // Pre-crafted ATS Summary Presets
+  const PRESET_SUMMARIES = {
+    fresher: "Motivated and detail-oriented graduate engineer with strong foundational knowledge in modern software architecture, algorithms, and agile product development. Eager to contribute high-quality code and problem-solving skills to scalable engineering initiatives.",
+    experienced: "Results-driven Senior Engineer with hands-on expertise building enterprise cloud platforms, resilient microservices, and high-throughput data processing pipelines. Proven track record of optimizing system performance and mentoring cross-functional engineering teams.",
+    lead: "Engineering Leader with extensive experience architecting distributed systems, leading high-performance agile teams, and aligning technological strategy with core business objectives. Adept at driving CI/CD automation, cloud migrations, and product velocity."
+  };
+
+  document.querySelectorAll('.btn-summary-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const presetKey = btn.getAttribute('data-preset');
+      if (PRESET_SUMMARIES[presetKey] && summaryInput) {
+        summaryInput.value = PRESET_SUMMARIES[presetKey];
+        updateSummaryWordCount();
+        syncFormToPreview();
+        autoSaveResume();
+        showToast(`🌿 Applied ${btn.textContent} preset!`);
+      }
+    });
+  });
+
+  // Bottom Add Buttons
+  const btnExpBottom = document.getElementById('btn-add-experience-bottom');
+  if (btnExpBottom) {
+    btnExpBottom.addEventListener('click', () => {
+      addExperienceCard();
+      syncFormToPreview();
+      // Scroll to new card
+      const lastCard = experienceListContainer.lastElementChild;
+      if (lastCard) lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  const btnProjBottom = document.getElementById('btn-add-project-bottom');
+  if (btnProjBottom) {
+    btnProjBottom.addEventListener('click', () => {
+      addProjectCard();
+      syncFormToPreview();
+      const lastCard = projectsListContainer.lastElementChild;
+      if (lastCard) lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  const btnEduBottom = document.getElementById('btn-add-education-bottom');
+  if (btnEduBottom) {
+    btnEduBottom.addEventListener('click', () => {
+      addEducationCard();
+      syncFormToPreview();
+      const lastCard = educationListContainer.lastElementChild;
+      if (lastCard) lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  const btnCertBottom = document.getElementById('btn-add-certification-bottom');
+  if (btnCertBottom) {
+    btnCertBottom.addEventListener('click', () => {
+      addCertificationCard();
+      syncFormToPreview();
+      const lastCard = certificationsListContainer.lastElementChild;
+      if (lastCard) lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+}
+
+/* ==========================================================================
+   FEATURE: LIVE PREVIEW INTERACTIVE CLICK-TO-EDIT ENGINE
+   ========================================================================== */
+function initPreviewClickToEdit() {
+  const paper = document.getElementById('resume-print-area');
+  if (!paper) return;
+
+  paper.addEventListener('click', (e) => {
+    // 1. Check if clicked inside a specific resume section
+    const sec = e.target.closest('[data-section]');
+    if (sec) {
+      const secType = sec.getAttribute('data-section');
+      const stepMap = {
+        'summary': 2,
+        'skills': 3,
+        'experience': 4,
+        'projects': 5,
+        'education': 6,
+        'certifications': 7
+      };
+      if (stepMap[secType]) {
+        goToStep(stepMap[secType]);
+        if (secType === 'summary') {
+          const el = document.getElementById('input-summary');
+          if (el) el.focus();
+        } else if (secType === 'skills') {
+          const el = document.getElementById('input-skills');
+          if (el) el.focus();
+        }
+        return;
+      }
+    }
+
+    // 2. Check if clicked on personal details / header area
+    const headerSec = e.target.closest('.resume-header, header, [data-section="personal"]');
+    if (headerSec || e.target.closest('#resume-print-area > div:first-child')) {
+      goToStep(1);
+      const nameInput = document.getElementById('input-name');
+      if (nameInput) nameInput.focus();
+    }
+  });
+
+  // Add interactive hover styling to preview sections
+  paper.addEventListener('mouseover', (e) => {
+    const sec = e.target.closest('[data-section]');
+    if (sec) {
+      sec.classList.add('resume-section-interactive');
+      sec.title = `Click to edit ${sec.getAttribute('data-section')}`;
+    }
+  });
+}
+
+/* ==========================================================================
    8. ATTACH GENERAL EVENT LISTENERS
    ========================================================================== */
 function attachEvents() {
@@ -3013,6 +3419,12 @@ function attachEvents() {
 
   // Initialize Feature 3: Live Client-Side ATS Job Description Keyword Matcher
   initAtsMatcher();
+
+  // Initialize Summary presets, Clear actions, & Bottom Add buttons
+  initSummaryPresetsAndActions();
+
+  // Initialize Live Preview Click-to-Edit
+  initPreviewClickToEdit();
 
   // Go back to the Greeting & Catalog screen
   btnBackToTemplates.addEventListener('click', () => {

@@ -1505,6 +1505,35 @@
             <div class="wizard-progress-track" style="height: 3px; background: rgba(0, 104, 86, 0.08); width: 100%; border-radius: 2px; overflow: hidden; margin-top: 2px;">
               <div id="wizard-progress-fill" style="height: 100%; width: 14.3%; background: linear-gradient(90deg, #476550, #2DD4BF); transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);"></div>
             </div>
+
+            <!-- Sticky Horizontal Section Navigation Pill Bar -->
+            <div class="editor-section-nav-pills" id="editor-section-nav-pills">
+              <button type="button" class="section-nav-pill active" data-nav-step="1" onclick="window.goToStep && window.goToStep(1);">
+                <i class="fas fa-user"></i> <span>Contact</span>
+              </button>
+              <button type="button" class="section-nav-pill" data-nav-step="2" onclick="window.goToStep && window.goToStep(2);">
+                <i class="fas fa-user-pen"></i> <span>Summary</span>
+              </button>
+              <button type="button" class="section-nav-pill" data-nav-step="3" onclick="window.goToStep && window.goToStep(3);">
+                <i class="fas fa-code"></i> <span>Skills</span>
+              </button>
+              <button type="button" class="section-nav-pill" data-nav-step="4" onclick="window.goToStep && window.goToStep(4);">
+                <i class="fas fa-briefcase"></i> <span>Experience</span>
+                <span class="pill-badge" id="badge-exp-count">0</span>
+              </button>
+              <button type="button" class="section-nav-pill" data-nav-step="5" onclick="window.goToStep && window.goToStep(5);">
+                <i class="fas fa-laptop-code"></i> <span>Projects</span>
+                <span class="pill-badge" id="badge-proj-count">0</span>
+              </button>
+              <button type="button" class="section-nav-pill" data-nav-step="6" onclick="window.goToStep && window.goToStep(6);">
+                <i class="fas fa-graduation-cap"></i> <span>Education</span>
+                <span class="pill-badge" id="badge-edu-count">0</span>
+              </button>
+              <button type="button" class="section-nav-pill" data-nav-step="7" onclick="window.goToStep && window.goToStep(7);">
+                <i class="fas fa-certificate"></i> <span>Certifications</span>
+                <span class="pill-badge" id="badge-cert-count">0</span>
+              </button>
+            </div>
             <div class="wizard-progress" id="wizard-progress-dots" style="display: none;"></div>
           </div>
 
@@ -1588,17 +1617,35 @@
 
                 <!-- Step 2: Professional Summary -->
                 <div class="form-step" data-step="2">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <h2 class="step-title" style="margin: 0;">Professional Summary</h2>
-                    <button type="button" class="btn-regenerate-suggestions" id="btn-regenerate-suggestions" style="font-size: 11px; font-weight: 600; color: #476550;">
-                      <i class="fas fa-magic"></i> AI Suggestions
-                    </button>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <h2 class="step-title" style="margin: 0;">Professional Summary</h2>
+                      <p class="step-desc" style="margin: 4px 0 0 0;">Write or edit your 3-4 sentence summary highlighting your core capabilities.</p>
+                    </div>
+                    <div style="display: flex; gap: 6px;">
+                      <button type="button" class="btn-regenerate-suggestions" id="btn-regenerate-suggestions" style="font-size: 11.5px; font-weight: 600; color: #476550; padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(0, 104, 86, 0.25); background: rgba(0, 104, 86, 0.05); cursor: pointer;">
+                        <i class="fas fa-magic"></i> AI Suggestions
+                      </button>
+                      <button type="button" class="btn-clear-summary" id="btn-clear-summary" style="font-size: 11.5px; font-weight: 600; color: #dc2626; padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(220, 38, 38, 0.25); background: rgba(220, 38, 38, 0.04); cursor: pointer;" title="Clear or Remove Summary from Resume">
+                        <i class="fas fa-trash-alt"></i> Clear Summary
+                      </button>
+                    </div>
                   </div>
-                  <p class="step-desc">Write a concise, 3-4 sentence paragraph highlighting your core capabilities, technical goals, and credentials.</p>
                   
-                  <div class="form-group">
-                    <label class="form-label" for="input-summary">Summary Statement</label>
-                    <textarea id="input-summary" class="form-input" placeholder="Highly motivated engineer with expertise in..."></textarea>
+                  <div class="form-group" style="position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                      <label class="form-label" for="input-summary" style="margin: 0;">Summary Statement</label>
+                      <span id="summary-word-count" style="font-size: 11.5px; color: var(--text-sub); font-weight: 500;">0 words</span>
+                    </div>
+                    <textarea id="input-summary" class="form-input" style="min-height: 140px; font-size: 13.5px; line-height: 1.6;" placeholder="Dedicated software engineer with hands-on expertise in full-stack web applications, distributed backend services, and scalable cloud architectures..."></textarea>
+                  </div>
+
+                  <!-- Quick Presets for 1-Click Summary Injection -->
+                  <div class="summary-presets-bar" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px 12px; background: rgba(0, 104, 86, 0.04); border-radius: 8px; border: 1px dashed rgba(0, 104, 86, 0.2);">
+                    <span style="font-size: 11px; font-weight: 700; color: #006856;">🌿 1-Click Presets:</span>
+                    <button type="button" class="btn-summary-chip" data-preset="fresher" style="font-size: 11px; font-weight: 600; background: #ffffff; border: 1px solid rgba(0,104,86,0.25); color: #006856; border-radius: 12px; padding: 3px 10px; cursor: pointer;">Fresher / Graduate</button>
+                    <button type="button" class="btn-summary-chip" data-preset="experienced" style="font-size: 11px; font-weight: 600; background: #ffffff; border: 1px solid rgba(0,104,86,0.25); color: #006856; border-radius: 12px; padding: 3px 10px; cursor: pointer;">Experienced Pro</button>
+                    <button type="button" class="btn-summary-chip" data-preset="lead" style="font-size: 11px; font-weight: 600; background: #ffffff; border: 1px solid rgba(0,104,86,0.25); color: #006856; border-radius: 12px; padding: 3px 10px; cursor: pointer;">Tech Lead / Manager</button>
                   </div>
 
                   <div class="summary-suggestions-panel" id="summary-suggestions-panel" style="display: none;">
@@ -1613,73 +1660,104 @@
 
                 <!-- Step 3: Core Competencies / Skills -->
                 <div class="form-step" data-step="3">
-                  <h2 class="step-title">Skills &amp; Keywords</h2>
-                  <p class="step-desc">List your technical skills and domain expertise. Separating them with commas makes it easy for the ATS to parse.</p>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <div>
+                      <h2 class="step-title" style="margin: 0;">Skills &amp; Keywords</h2>
+                      <p class="step-desc" style="margin: 4px 0 0 0;">List your technical skills and domain keywords separated by commas.</p>
+                    </div>
+                    <button type="button" class="btn-clear-skills" id="btn-clear-skills" style="font-size: 11.5px; font-weight: 600; color: #dc2626; padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(220, 38, 38, 0.25); background: rgba(220, 38, 38, 0.04); cursor: pointer;" title="Clear Skills">
+                      <i class="fas fa-trash-alt"></i> Clear
+                    </button>
+                  </div>
                   
                   <div class="form-group">
                     <label class="form-label" for="input-skills">Skills (Comma-separated)</label>
-                    <textarea id="input-skills" class="form-input" style="min-height: 120px;" placeholder="e.g. AutoCAD, SolidWorks, FEA, GD&T, CNC, Project Planning"></textarea>
+                    <textarea id="input-skills" class="form-input" style="min-height: 130px; font-size: 13.5px; line-height: 1.5;" placeholder="e.g. Python, JavaScript, React, Node.js, REST APIs, SQL, Git, Linux, Docker"></textarea>
                   </div>
                 </div>
 
                 <!-- Step 4: Professional Timeline (Experience) -->
                 <div class="form-step" data-step="4">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <h2 class="step-title" style="margin: 0;">Work Experience</h2>
-                    <button type="button" class="btn-add-item" id="btn-add-experience" style="margin: 0; padding: 6px 12px; font-size: 12px;">
-                      <i class="fas fa-plus"></i> Add Entry
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <h2 class="step-title" style="margin: 0;">Work Experience</h2>
+                      <p class="step-desc" style="margin: 4px 0 0 0;">Add, edit, reorder (▲/▼), or delete your professional work history &amp; internships.</p>
+                    </div>
+                    <button type="button" class="btn-add-item" id="btn-add-experience" style="margin: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 700;">
+                      <i class="fas fa-plus"></i> Add Work Experience
                     </button>
                   </div>
-                  <p class="step-desc">Detail your recent professional history, internships, or leadership positions.</p>
                   
                   <div class="list-container" id="experience-list-container">
                     <!-- Dynamically generated entries -->
                   </div>
+
+                  <button type="button" class="btn-add-item btn-add-bottom" id="btn-add-experience-bottom" style="margin-top: 12px; width: 100%; justify-content: center; padding: 10px; font-size: 13px;">
+                    <i class="fas fa-plus-circle"></i> Add Another Work Experience
+                  </button>
                 </div>
 
                 <!-- Step 5: Key Projects -->
                 <div class="form-step" data-step="5">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <h2 class="step-title" style="margin: 0;">Technical Projects</h2>
-                    <button type="button" class="btn-add-item" id="btn-add-project" style="margin: 0; padding: 6px 12px; font-size: 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <h2 class="step-title" style="margin: 0;">Technical Projects</h2>
+                      <p class="step-desc" style="margin: 4px 0 0 0;">Showcase major repositories, capstones, client deliverables, and prototypes.</p>
+                    </div>
+                    <button type="button" class="btn-add-item" id="btn-add-project" style="margin: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 700;">
                       <i class="fas fa-plus"></i> Add Project
                     </button>
                   </div>
-                  <p class="step-desc">List key academic capstone works, personal engineering repositories, or major prototypes built.</p>
                   
                   <div class="list-container" id="projects-list-container">
                     <!-- Dynamically generated entries -->
                   </div>
+
+                  <button type="button" class="btn-add-item btn-add-bottom" id="btn-add-project-bottom" style="margin-top: 12px; width: 100%; justify-content: center; padding: 10px; font-size: 13px;">
+                    <i class="fas fa-plus-circle"></i> Add Another Project
+                  </button>
                 </div>
 
                 <!-- Step 6: Education -->
                 <div class="form-step" data-step="6">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <h2 class="step-title" style="margin: 0;">Education</h2>
-                    <button type="button" class="btn-add-item" id="btn-add-education" style="margin: 0; padding: 6px 12px; font-size: 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <h2 class="step-title" style="margin: 0;">Education</h2>
+                      <p class="step-desc" style="margin: 4px 0 0 0;">Add your degrees, universities, graduation years, and GPA credentials.</p>
+                    </div>
+                    <button type="button" class="btn-add-item" id="btn-add-education" style="margin: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 700;">
                       <i class="fas fa-plus"></i> Add Education
                     </button>
                   </div>
-                  <p class="step-desc">Add your formal degrees, universities, graduation timelines, and grade credentials.</p>
                   
                   <div class="list-container" id="education-list-container">
                     <!-- Dynamically generated entries -->
                   </div>
+
+                  <button type="button" class="btn-add-item btn-add-bottom" id="btn-add-education-bottom" style="margin-top: 12px; width: 100%; justify-content: center; padding: 10px; font-size: 13px;">
+                    <i class="fas fa-plus-circle"></i> Add Another Education Entry
+                  </button>
                 </div>
 
                 <!-- Step 7: Certifications -->
                 <div class="form-step" data-step="7">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <h2 class="step-title" style="margin: 0;">Certifications</h2>
-                    <button type="button" class="btn-add-item" id="btn-add-certification" style="margin: 0; padding: 6px 12px; font-size: 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <h2 class="step-title" style="margin: 0;">Certifications</h2>
+                      <p class="step-desc" style="margin: 4px 0 0 0;">Add your cloud badges, professional certifications, and licensing.</p>
+                    </div>
+                    <button type="button" class="btn-add-item" id="btn-add-certification" style="margin: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 700;">
                       <i class="fas fa-plus"></i> Add Certification
                     </button>
                   </div>
-                  <p class="step-desc">Add professional licensing, training courses, and verified developer badges to strengthen your profile.</p>
                   
                   <div class="list-container" id="certifications-list-container">
                     <!-- Dynamically generated entries -->
                   </div>
+
+                  <button type="button" class="btn-add-item btn-add-bottom" id="btn-add-certification-bottom" style="margin-top: 12px; width: 100%; justify-content: center; padding: 10px; font-size: 13px;">
+                    <i class="fas fa-plus-circle"></i> Add Another Certification
+                  </button>
                 </div>
 
                 <!-- Navigation Actions -->
@@ -2017,7 +2095,10 @@
       <ul id="reorder-list" class="reorder-sections-list" style="list-style: none; padding: 0; margin: 0 0 20px 0; display: flex; flex-direction: column; gap: 8px;">
         <li data-id="summary" class="reorder-item">
           <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
-          <div class="reorder-title"><i class="fas fa-user-pen"></i> Professional Summary</div>
+          <div class="reorder-title" onclick="window.goToStep && window.goToStep(2); document.getElementById('reorder-modal').style.display='none';" style="cursor: pointer;" title="Click to Edit Summary"><i class="fas fa-user-pen"></i> Professional Summary</div>
+          <button type="button" class="btn-reorder-jump" onclick="window.goToStep && window.goToStep(2); document.getElementById('reorder-modal').style.display='none';" title="Edit Professional Summary" style="margin-left: auto; margin-right: 8px; font-size: 11px; padding: 4px 8px; background: rgba(0, 104, 86, 0.08); color: #006856; border: 1px solid rgba(0, 104, 86, 0.2); border-radius: 6px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-pen"></i> Edit
+          </button>
           <div class="reorder-arrows">
             <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
             <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
@@ -2025,7 +2106,10 @@
         </li>
         <li data-id="skills" class="reorder-item">
           <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
-          <div class="reorder-title"><i class="fas fa-code"></i> Skills &amp; Keywords</div>
+          <div class="reorder-title" onclick="window.goToStep && window.goToStep(3); document.getElementById('reorder-modal').style.display='none';" style="cursor: pointer;" title="Click to Edit Skills"><i class="fas fa-code"></i> Skills &amp; Keywords</div>
+          <button type="button" class="btn-reorder-jump" onclick="window.goToStep && window.goToStep(3); document.getElementById('reorder-modal').style.display='none';" title="Edit Skills" style="margin-left: auto; margin-right: 8px; font-size: 11px; padding: 4px 8px; background: rgba(0, 104, 86, 0.08); color: #006856; border: 1px solid rgba(0, 104, 86, 0.2); border-radius: 6px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-pen"></i> Edit
+          </button>
           <div class="reorder-arrows">
             <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
             <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
@@ -2033,7 +2117,10 @@
         </li>
         <li data-id="experience" class="reorder-item">
           <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
-          <div class="reorder-title"><i class="fas fa-briefcase"></i> Work Experience</div>
+          <div class="reorder-title" onclick="window.goToStep && window.goToStep(4); document.getElementById('reorder-modal').style.display='none';" style="cursor: pointer;" title="Click to Edit Experience"><i class="fas fa-briefcase"></i> Work Experience</div>
+          <button type="button" class="btn-reorder-jump" onclick="window.goToStep && window.goToStep(4); document.getElementById('reorder-modal').style.display='none';" title="Edit Experience" style="margin-left: auto; margin-right: 8px; font-size: 11px; padding: 4px 8px; background: rgba(0, 104, 86, 0.08); color: #006856; border: 1px solid rgba(0, 104, 86, 0.2); border-radius: 6px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-pen"></i> Edit
+          </button>
           <div class="reorder-arrows">
             <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
             <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
@@ -2041,7 +2128,10 @@
         </li>
         <li data-id="projects" class="reorder-item">
           <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
-          <div class="reorder-title"><i class="fas fa-laptop-code"></i> Technical Projects</div>
+          <div class="reorder-title" onclick="window.goToStep && window.goToStep(5); document.getElementById('reorder-modal').style.display='none';" style="cursor: pointer;" title="Click to Edit Projects"><i class="fas fa-laptop-code"></i> Technical Projects</div>
+          <button type="button" class="btn-reorder-jump" onclick="window.goToStep && window.goToStep(5); document.getElementById('reorder-modal').style.display='none';" title="Edit Projects" style="margin-left: auto; margin-right: 8px; font-size: 11px; padding: 4px 8px; background: rgba(0, 104, 86, 0.08); color: #006856; border: 1px solid rgba(0, 104, 86, 0.2); border-radius: 6px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-pen"></i> Edit
+          </button>
           <div class="reorder-arrows">
             <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
             <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
@@ -2049,7 +2139,10 @@
         </li>
         <li data-id="education" class="reorder-item">
           <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
-          <div class="reorder-title"><i class="fas fa-graduation-cap"></i> Education</div>
+          <div class="reorder-title" onclick="window.goToStep && window.goToStep(6); document.getElementById('reorder-modal').style.display='none';" style="cursor: pointer;" title="Click to Edit Education"><i class="fas fa-graduation-cap"></i> Education</div>
+          <button type="button" class="btn-reorder-jump" onclick="window.goToStep && window.goToStep(6); document.getElementById('reorder-modal').style.display='none';" title="Edit Education" style="margin-left: auto; margin-right: 8px; font-size: 11px; padding: 4px 8px; background: rgba(0, 104, 86, 0.08); color: #006856; border: 1px solid rgba(0, 104, 86, 0.2); border-radius: 6px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-pen"></i> Edit
+          </button>
           <div class="reorder-arrows">
             <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
             <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>
@@ -2057,7 +2150,10 @@
         </li>
         <li data-id="certifications" class="reorder-item">
           <div class="reorder-handle"><i class="fas fa-grip-vertical"></i></div>
-          <div class="reorder-title"><i class="fas fa-certificate"></i> Certifications</div>
+          <div class="reorder-title" onclick="window.goToStep && window.goToStep(7); document.getElementById('reorder-modal').style.display='none';" style="cursor: pointer;" title="Click to Edit Certifications"><i class="fas fa-certificate"></i> Certifications</div>
+          <button type="button" class="btn-reorder-jump" onclick="window.goToStep && window.goToStep(7); document.getElementById('reorder-modal').style.display='none';" title="Edit Certifications" style="margin-left: auto; margin-right: 8px; font-size: 11px; padding: 4px 8px; background: rgba(0, 104, 86, 0.08); color: #006856; border: 1px solid rgba(0, 104, 86, 0.2); border-radius: 6px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-pen"></i> Edit
+          </button>
           <div class="reorder-arrows">
             <button type="button" class="btn-reorder-arrow btn-arrow-up" data-action="up" title="Move Up"><i class="fas fa-chevron-up"></i></button>
             <button type="button" class="btn-reorder-arrow btn-arrow-down" data-action="down" title="Move Down"><i class="fas fa-chevron-down"></i></button>

@@ -1506,6 +1506,68 @@ textarea.form-input {
   min-height: 90px;
 }
 
+/* Section Navigation Pills (Sticky Horizontal Tab Bar) */
+.editor-section-nav-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px 4px 4px 4px;
+  margin-top: 4px;
+  scrollbar-width: none; /* Hide scrollbar for clean look */
+}
+
+.editor-section-nav-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.section-nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-sub, #475569);
+  background: rgba(0, 104, 86, 0.04);
+  border: 1px solid rgba(0, 104, 86, 0.12);
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.section-nav-pill:hover {
+  background: rgba(0, 104, 86, 0.08);
+  border-color: rgba(0, 104, 86, 0.25);
+  color: #006856;
+  transform: translateY(-1px);
+}
+
+.section-nav-pill.active {
+  background: #006856;
+  color: #FFFFFF;
+  border-color: #006856;
+  box-shadow: 0 2px 8px rgba(0, 104, 86, 0.25);
+}
+
+.section-nav-pill.active .pill-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+.pill-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(0, 104, 86, 0.15);
+  color: #006856;
+  line-height: 1.2;
+}
+
 /* Nested Dynamic Repeating Lists (Experience, Projects, Education) */
 .list-container {
   display: flex;
@@ -1515,56 +1577,144 @@ textarea.form-input {
 
 .list-item-card {
   background: #F7FAF9;
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  padding: 20px;
+  border: 1px solid var(--border-subtle, #E2E8F0);
+  border-radius: 12px;
+  padding: 18px 20px;
   position: relative;
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  animation: fadeIn 0.4s var(--transition-smooth);
+  gap: 12px;
+  animation: fadeIn 0.3s ease-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.list-item-card:hover {
+  border-color: rgba(0, 104, 86, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Card Header Action Bar */
+.card-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 104, 86, 0.1);
+  margin-bottom: 4px;
+}
+
+.card-order-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #006856;
+  background: rgba(0, 104, 86, 0.1);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.card-title-preview {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-left: 8px;
+  margin-right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.card-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-card-action {
+  background: transparent;
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  color: #64748b;
+  font-size: 11px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-card-action:hover {
+  background: rgba(100, 116, 139, 0.1);
+  color: #0f172a;
+  border-color: #94a3b8;
 }
 
 .btn-remove-item {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: transparent;
-  border: none;
-  color: #c97d7d;
+  background: rgba(220, 38, 38, 0.06);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #dc2626;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: var(--transition-smooth);
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .btn-remove-item:hover {
-  background: rgba(201, 125, 125, 0.08);
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
 }
 
 .btn-add-item {
   align-self: flex-start;
-  background: transparent;
-  border: 1.5px dashed var(--primary-calm);
-  color: var(--primary-calm);
+  background: rgba(0, 104, 86, 0.05);
+  border: 1.5px dashed #006856;
+  color: #006856;
   padding: 8px 16px;
   font-size: 12px;
-  font-weight: 600;
-  border-radius: var(--radius-sm);
+  font-weight: 700;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: var(--transition-smooth);
+  transition: all 0.2s ease;
 }
 
 .btn-add-item:hover {
-  background: var(--primary-glow);
+  background: #006856;
+  color: #ffffff;
   border-style: solid;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 104, 86, 0.2);
+}
+
+.btn-add-bottom {
+  border-style: solid;
+  background: rgba(0, 104, 86, 0.08);
+}
+
+/* Interactive Preview Section Click-to-Edit Styles */
+.resume-section-interactive {
+  cursor: pointer;
+  transition: outline 0.15s ease, background-color 0.15s ease;
+  border-radius: 3px;
+}
+
+.resume-section-interactive:hover {
+  outline: 2px dashed rgba(0, 104, 86, 0.45) !important;
+  outline-offset: 3px;
+  background-color: rgba(0, 104, 86, 0.02) !important;
 }
 
 /* Wizard Navigation Controls */
