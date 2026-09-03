@@ -430,16 +430,12 @@
   </style>
 
   <style id="zenresume-critical-header-style">
-    /* ==========================================================================
-       Aneevarp Solutions Master Palette Critical Navigation & Header
-       ========================================================================== */
     .stitch-nav {
       background: #0B0F12 !important;
       border-bottom: 1px solid rgba(45, 212, 191, 0.15) !important;
       color: #FFFFFF !important;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 2000;
@@ -456,7 +452,6 @@
       margin: 0 auto !important;
       width: 100% !important;
       box-sizing: border-box !important;
-      gap: 12px !important;
     }
     .brand-identity-container {
       display: inline-flex !important;
@@ -471,7 +466,6 @@
       border-radius: 10px !important;
       box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4) !important;
       object-fit: cover !important;
-      flex-shrink: 0 !important;
     }
     .brand-text-column {
       display: flex !important;
@@ -496,7 +490,7 @@
     }
     .desktop-nav-links {
       display: flex !important;
-      gap: 18px !important;
+      gap: 22px !important;
       align-items: center !important;
     }
     .desktop-nav-links a {
@@ -574,10 +568,10 @@
       padding: 8px 10px !important;
       border-radius: 10px !important;
       text-decoration: none !important;
-      transition: background 0.2s ease !important;
+      transition: background 0.15s ease !important;
     }
     .suite-product-link:hover {
-      background: rgba(45, 212, 191, 0.1) !important;
+      background: rgba(255, 255, 255, 0.06) !important;
     }
     .suite-product-icon {
       width: 28px !important;
@@ -631,75 +625,6 @@
       transform: translateY(-1px) !important;
       box-shadow: 0 6px 16px rgba(0, 104, 86, 0.4) !important;
     }
-
-    /* Footer Styling */
-    .stitch-footer {
-      background: #0B0F12 !important;
-      color: #FFFFFF !important;
-      padding: 50px 24px 36px 24px !important;
-      border-top: 1px solid rgba(45, 212, 191, 0.15) !important;
-      margin-top: 60px !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    .stitch-footer-container {
-      max-width: 1200px !important;
-      margin: 0 auto !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 28px !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    .aneevarp-footer-grid {
-      display: grid !important;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
-      gap: 32px !important;
-      text-align: left !important;
-      width: 100% !important;
-      padding: 10px 0 30px 0 !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      box-sizing: border-box !important;
-    }
-    .footer-col-title {
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 12px !important;
-      font-weight: 800 !important;
-      color: #2DD4BF !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.8px !important;
-      margin-bottom: 14px !important;
-    }
-    .footer-col-links {
-      list-style: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 9px !important;
-    }
-    .footer-col-links li {
-      list-style: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-    .footer-col-links a {
-      color: #CBD5E1 !important;
-      text-decoration: none !important;
-      font-size: 13px !important;
-      font-weight: 500 !important;
-      transition: all 0.2s ease !important;
-    }
-    .footer-col-links a:hover {
-      color: #2DD4BF !important;
-      transform: translateX(3px) !important;
-    }
-
-    @media (max-width: 992px) {
-      .desktop-nav-links {
-        display: none !important;
-      }
-    }
   </style>
 
 </head>
@@ -712,6 +637,7 @@
   <!-- Top Global Navbar (Aneevarp Solutions Unified Standard) -->
   <!-- Top Global Navbar (Aneevarp Solutions Unified Standard) -->
   <!-- Top Global Navbar (Aneevarp Solutions Unified Standard) -->
+  <!-- Top Global Clean Navigation Ribbon -->
   <header class="no-print stitch-nav">
     <div class="stitch-nav-container">
       <a href="/" class="brand-identity-container">
@@ -722,14 +648,12 @@
         </div>
       </a>
 
-      <!-- Desktop Navigation Links -->
+      <!-- Streamlined Desktop Navigation Links (Clean & Uncluttered) -->
       <nav class="desktop-nav-links">
-        <a href="/">App</a>
         <a href="/role/" class="active-link">Templates (71 Roles)</a>
         <a href="/campus.html">Campus Suite</a>
         <a href="/blog/">Career Guides</a>
-        <a href="/methodology.html">Methodology</a>
-        <a href="/about.html">About</a>
+        <a href="/#pricing">Pricing</a>
 
         <!-- Zen Suite Ecosystem Dropdown -->
         <div class="zen-suite-wrapper">
@@ -774,7 +698,7 @@
       <!-- Right Action Controls -->
       <div class="header-right-actions">
         <a href="/?role=marketing-manager&autofill=true" class="btn-header-cta">
-          <i class="fas fa-bolt"></i> Build Growth Marketing Manager Resume &rarr;
+          ⚡ Build Growth Marketing Manager Resume &rarr;
         </a>
       </div>
     </div>

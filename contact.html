@@ -108,7 +108,7 @@
     }
     .desktop-nav-links {
       display: flex !important;
-      gap: 18px !important;
+      gap: 22px !important;
       align-items: center !important;
     }
     .desktop-nav-links a {
@@ -148,6 +148,9 @@
       cursor: pointer !important;
       transition: all 0.2s ease !important;
     }
+    .zen-suite-btn:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+    }
     .zen-suite-dropdown {
       display: none !important;
       position: absolute !important;
@@ -172,31 +175,26 @@
       font-weight: 800 !important;
       color: #94A3B8 !important;
       text-transform: uppercase !important;
-      letter-spacing: 0.6px !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      letter-spacing: 0.8px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
       margin-bottom: 4px !important;
-      text-align: left !important;
     }
     .suite-product-link {
       display: flex !important;
       align-items: center !important;
       gap: 10px !important;
       padding: 8px 10px !important;
-      border-radius: 8px !important;
+      border-radius: 10px !important;
       text-decoration: none !important;
       transition: background 0.15s ease !important;
-      text-align: left !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
     }
     .suite-product-link:hover {
-      background: rgba(255, 255, 255, 0.08) !important;
+      background: rgba(255, 255, 255, 0.06) !important;
     }
     .suite-product-icon {
       width: 28px !important;
       height: 28px !important;
-      border-radius: 6px !important;
+      border-radius: 8px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
@@ -219,86 +217,31 @@
       color: #94A3B8 !important;
       font-weight: 400 !important;
     }
-
-    /* Critical Footer Styling */
-    .stitch-footer {
-      background: #0B0F12 !important;
+    .header-right-actions {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      flex-shrink: 0 !important;
+    }
+    .btn-header-cta {
+      background: linear-gradient(135deg, #476550, #00846D) !important;
       color: #FFFFFF !important;
-      padding: 50px 24px 36px 24px !important;
-      border-top: 1px solid rgba(45, 212, 191, 0.15) !important;
-      margin-top: 60px !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    .stitch-footer-container {
-      max-width: 1200px !important;
-      margin: 0 auto !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 28px !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    .aneevarp-footer-grid {
-      display: grid !important;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
-      gap: 32px !important;
-      text-align: left !important;
-      width: 100% !important;
-      padding: 10px 0 30px 0 !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      box-sizing: border-box !important;
-    }
-    .footer-col-title {
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 12px !important;
-      font-weight: 800 !important;
-      color: #2DD4BF !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.8px !important;
-      margin-bottom: 14px !important;
-    }
-    .footer-col-links {
-      list-style: none !important;
-      list-style-type: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 9px !important;
-    }
-    .footer-col-links li {
-      list-style: none !important;
-      list-style-type: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-    .footer-col-links a {
-      color: #CBD5E1 !important;
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+      padding: 8px 18px !important;
+      border-radius: 9999px !important;
       text-decoration: none !important;
-      font-size: 13px !important;
-      font-weight: 500 !important;
-      transition: all 0.2s ease !important;
       display: inline-flex !important;
       align-items: center !important;
       gap: 6px !important;
-      background: none !important;
-      border: none !important;
-      padding: 0 !important;
-      box-shadow: none !important;
+      border: 1px solid rgba(45, 212, 191, 0.3) !important;
+      box-shadow: 0 4px 12px rgba(0, 104, 86, 0.3) !important;
+      transition: all 0.2s ease !important;
+      white-space: nowrap !important;
     }
-    .footer-col-links a:hover {
-      color: #2DD4BF !important;
-      transform: translateX(3px) !important;
-    }
-
-    @media (max-width: 992px) {
-      .desktop-nav-links {
-        display: none !important;
-      }
-      .mobile-menu-toggle {
-        display: flex !important;
-      }
+    .btn-header-cta:hover {
+      transform: translateY(-1px) !important;
+      box-shadow: 0 6px 16px rgba(0, 104, 86, 0.4) !important;
     }
   </style>
 </head>
@@ -306,24 +249,25 @@
   
   <!-- Global Top Header with Complete Navigation -->
     <!-- Global Top Header with Responsive Navigation -->
-    <header class="no-print stitch-nav">
+    <!-- Top Global Clean Navigation Ribbon -->
+  <header class="no-print stitch-nav">
     <div class="stitch-nav-container">
-      <a href="/" id="logo-link" class="brand-identity-container">
-        <img src="https://www.zenresume.online/favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" style="width: 36px; height: 36px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4); object-fit: cover;">
+      <a href="/" class="brand-identity-container">
+        <img src="favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" />
         <div class="brand-text-column">
           <span class="brand-main-title">ZenResume</span>
-          <span class="brand-subtext">by Aneevarp Solutions</span>
+          <span class="brand-subtext">By Aneevarp Solutions</span>
         </div>
       </a>
-      
-      <!-- Desktop Navigation Links -->
+
+      <!-- Streamlined Desktop Navigation Links (Clean & Uncluttered) -->
       <nav class="desktop-nav-links">
-        <a href="/role/">Templates (63 Roles)</a>
+        <a href="/role/">Templates (71 Roles)</a>
         <a href="/campus.html">Campus Suite</a>
         <a href="/blog/">Career Guides</a>
-        <a href="/about.html">About</a>
+        <a href="/#pricing">Pricing</a>
 
-        <!-- Zen Suite Ecosystem Interactive Dropdown -->
+        <!-- Zen Suite Ecosystem Dropdown -->
         <div class="zen-suite-wrapper">
           <button class="zen-suite-btn" type="button" aria-label="Zen Suite Ecosystem">
             <i class="fas fa-layer-group" style="color: #F59E0B; font-size: 11px;"></i>
@@ -338,7 +282,7 @@
               </div>
               <div class="suite-product-info">
                 <span class="suite-product-name">ZenScout AI</span>
-                <span class="suite-product-desc">Auto Job Scout &amp; Voice Coach</span>
+                <span class="suite-product-desc">Auto Job Scout &amp; Coach</span>
               </div>
             </a>
             <a href="https://pdf-analizing-and-answering-bot.vercel.app/app.html" target="_blank" rel="noopener noreferrer" class="suite-product-link">
@@ -365,44 +309,10 @@
 
       <!-- Right Action Controls -->
       <div class="header-right-actions">
-        <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme">
-          <i class="fas fa-moon"></i>
-        </button>
-        <a href="/" class="stitch-nav-cta btn-tactile" id="btn-header-cta">
-          Build Resume
+        <a href="/" class="btn-header-cta">
+          ⚡ Build Free Resume →
         </a>
-        <button type="button" class="mobile-menu-toggle" id="btn-mobile-menu" onclick="window.toggleMobileMenu && window.toggleMobileMenu();" aria-label="Toggle Navigation Menu">
-          <i class="fas fa-bars"></i>
-        </button>
       </div>
-    </div>
-
-    <!-- Mobile Slide-Down Drawer Menu -->
-    <div class="mobile-drawer-menu" id="mobile-drawer-menu">
-      <a href="/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-file-invoice"></i> Builder App
-      </a>
-      <a href="/role/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-layer-group"></i> Templates (63 Roles)
-      </a>
-      <a href="/campus.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);" style="color: #2DD4BF; font-weight: 700;">
-        <i class="fas fa-graduation-cap" style="color: #2DD4BF;"></i> Campus Placement Suite
-      </a>
-      <a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link" style="color: #2DD4BF; font-weight: 700;" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-robot" style="color: #2DD4BF;"></i> ZenScout AI (Auto-Job Hunter)
-      </a>
-      <a href="/blog/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-book-open"></i> Career Guides
-      </a>
-      <a href="/methodology.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-flask"></i> ATS Methodology
-      </a>
-      <a href="/about.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-info-circle"></i> About Us
-      </a>
-      <a href="/contact.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-envelope"></i> Contact Support
-      </a>
     </div>
   </header>
 
