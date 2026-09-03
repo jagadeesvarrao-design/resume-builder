@@ -4252,14 +4252,19 @@ window.detectUserCurrency = function() {
     return saved;
   }
 
-  // 2. Fast synchronous heuristic: Check browser timezone and language
+  // 2. High-precision synchronous heuristic: Check IST timezone offset (-330 mins = UTC+5:30)
   try {
+    const offset = new Date().getTimezoneOffset();
+    if (offset === -330) {
+      return 'INR'; // Exact match for Indian Standard Time (IST)
+    }
+
     const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
     const lang = (navigator.language || '').toLowerCase();
     const langs = (navigator.languages || []).map(l => l.toLowerCase()).join(' ');
 
-    const isIndianTz = tz.includes('calcutta') || tz.includes('kolkata') || tz.includes('asia/colombo') || tz.includes('ist');
-    const isIndianLang = lang.includes('-in') || lang === 'hi' || langs.includes('-in') || langs.includes('hi');
+    const isIndianTz = tz.includes('calcutta') || tz.includes('kolkata') || tz.includes('asia/colombo') || tz.includes('ist') || tz.includes('india');
+    const isIndianLang = lang.includes('-in') || lang === 'hi' || lang === 'te' || lang === 'ta' || lang === 'mr' || lang === 'bn' || lang === 'gu' || lang === 'kn' || lang === 'ml' || langs.includes('-in') || langs.includes('hi');
 
     if (isIndianTz || isIndianLang) {
       return 'INR';
@@ -4268,7 +4273,7 @@ window.detectUserCurrency = function() {
     console.warn('Currency timezone check:', e);
   }
 
-  // 3. Non-Indian users default to USD
+  // 3. Non-Indian users default to USD ($)
   return 'USD';
 };
 
@@ -4276,7 +4281,7 @@ window.initBackgroundGeoDetection = function() {
   // Only auto-resolve via IP if user hasn't explicitly set a preference
   if (localStorage.getItem('zen_user_currency')) return;
 
-  // Asynchronous non-blocking IP country lookup
+  // Fast asynchronous IP country lookup
   fetch('https://ipapi.co/json/', { mode: 'cors' })
     .then(res => res.json())
     .then(data => {
@@ -4288,7 +4293,6 @@ window.initBackgroundGeoDetection = function() {
       }
     })
     .catch(() => {
-      // Fallback endpoint if primary is unreachable
       fetch('https://api.country.is/')
         .then(r => r.json())
         .then(d => {
