@@ -195,39 +195,118 @@ function runATSScan() {
   scoreEl.textContent = score + '%';
   labelEl.textContent = labelText;
   
-  // Render matched keywords (all free)
+  // Check user tier & quotas
+  const subManager = window.SubscriptionManager;
+  const userTier = subManager ? subManager.getUserTier() : 'free';
+
+  // Render matched keywords
   const matchedContainer = document.getElementById('ats-matched-keywords');
-  matchedContainer.innerHTML = matched.map(k => 
-    `<span class="ats-chip ats-chip-matched">✓ ${k}</span>`
-  ).join('');
-  
-  // Render 1 free missing keyword (The Dopamine Taste)
-  const freeMissingBox = document.getElementById('ats-free-missing');
-  if (missing.length > 0) {
-    const freeKeyword = missing[0];
-    freeMissingBox.innerHTML = `
-      <div class="ats-free-fix-card">
-        <p>Your resume is missing: <strong class="ats-highlight-keyword">${freeKeyword}</strong></p>
-        <p class="ats-free-fix-hint">This keyword appears in the job description but is not in your resume. Add it to your Skills section to improve your score.</p>
-        <button class="ats-btn-free-fix" onclick="injectFreeKeyword('${freeKeyword.replace(/'/g, "\\'")}')">
-          ✨ Auto-Add "${freeKeyword}" to My Resume (Free)
-        </button>
-      </div>
-    `;
-  } else {
-    freeMissingBox.innerHTML = '<p style="color:#27ae60;font-weight:600;">🎉 Perfect! No critical keywords missing.</p>';
+  if (matchedContainer) {
+    matchedContainer.innerHTML = matched.map(k => 
+      `<span class="ats-chip ats-chip-matched">✓ ${k}</span>`
+    ).join('');
   }
   
-  // Update remaining count for blurred section
-  const remainingCount = Math.max(0, missing.length - 1);
-  document.getElementById('ats-remaining-count').textContent = remainingCount;
-  
-  // Show/hide premium blur section
+  const freeMissingBox = document.getElementById('ats-free-missing');
   const premiumSection = document.getElementById('ats-premium-section');
-  if (remainingCount > 0) {
-    premiumSection.style.display = 'block';
+
+  if (userTier === 'free') {
+    // FREE TIER: Strictly ONE (1) Free Missing Keyword Fix!
+    const freeKwClaimed = localStorage.getItem('zen_free_kw_claimed');
+    const curSymbol = subManager && subManager.getCurrency() === 'USD' ? '$' : '₹';
+    const dayPrice = subManager && subManager.getCurrency() === 'USD' ? '$4.99' : '₹49';
+
+    if (missing.length === 0) {
+      freeMissingBox.innerHTML = '<p style="color:#27ae60;font-weight:600;">🎉 Perfect! No critical keywords missing.</p>';
+      if (premiumSection) premiumSection.style.display = 'none';
+    } else if (!freeKwClaimed) {
+      const freeKeyword = missing[0];
+      freeMissingBox.innerHTML = `
+        <div class="ats-free-fix-card">
+          <p>Your resume is missing: <strong class="ats-highlight-keyword">${freeKeyword}</strong></p>
+          <p class="ats-free-fix-hint">Free tier includes 1 instant keyword fix. Add it to your Skills section to improve your score.</p>
+          <button class="ats-btn-free-fix" onclick="localStorage.setItem('zen_free_kw_claimed', '${freeKeyword.replace(/'/g, "\\'")}'); injectFreeKeyword('${freeKeyword.replace(/'/g, "\\'")}');">
+            ✨ Auto-Add "${freeKeyword}" to My Resume (Free)
+          </button>
+        </div>
+      `;
+
+      const remainingCount = Math.max(0, missing.length - 1);
+      const remEl = document.getElementById('ats-remaining-count');
+      if (remEl) remEl.textContent = remainingCount;
+      
+      if (premiumSection) {
+        if (remainingCount > 0) {
+          premiumSection.style.display = 'block';
+          const promoMsg = document.getElementById('ats-premium-teaser-msg');
+          if (promoMsg) {
+            promoMsg.innerHTML = `🔒 <strong>+${remainingCount} more critical keywords hidden.</strong> Find &amp; paste more keywords manually, or unlock full ATS Keyword Gap Analysis &amp; AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!`;
+          }
+        } else {
+          premiumSection.style.display = 'none';
+        }
+      }
+    } else {
+      // Free fix ALREADY used: Lock completely
+      freeMissingBox.innerHTML = `
+        <div class="ats-free-fix-card" style="border-left: 4px solid #476550;">
+          <p style="margin: 0 0 4px 0; font-weight: 700; color: #476550;"><i class="fas fa-check-circle"></i> 1 Free Keyword Fix Applied ("${freeKwClaimed}")</p>
+          <p style="margin: 0; font-size: 12px; color: #64748B;">You have used your 1 free keyword fix. Remaining ${missing.length} missing keywords are locked behind Pro.</p>
+        </div>
+      `;
+      if (premiumSection) {
+        premiumSection.style.display = 'block';
+        const remEl = document.getElementById('ats-remaining-count');
+        if (remEl) remEl.textContent = missing.length;
+        const promoMsg = document.getElementById('ats-premium-teaser-msg');
+        if (promoMsg) {
+          promoMsg.innerHTML = `🔒 <strong>+${missing.length} more critical keywords hidden.</strong> Unlock full ATS Keyword Gap Analysis &amp; AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!`;
+        }
+      }
+    }
   } else {
-    premiumSection.style.display = 'none';
+    // PAID TIERS (1-Day, 7-Day, ZenSuite)
+    const maxQuota = userTier === 'day' ? 2 : 4;
+    const currentUsage = subManager ? subManager.getDailyUsage('kw_review') : 0;
+
+    if (currentUsage >= maxQuota) {
+      if (freeMissingBox) {
+        freeMissingBox.innerHTML = `
+          <div class="ats-free-fix-card" style="border-left: 4px solid #F59E0B; background: rgba(245, 158, 11, 0.08);">
+            <p style="margin: 0 0 6px 0; font-weight: 700; color: #B45309;">⚠️ Daily Keyword Review Quota Reached (${maxQuota}/${maxQuota} JDs today)</p>
+            <p style="margin: 0; font-size: 12.5px; color: #78350F;">You have completed your ${maxQuota} JD keyword reviews for today on your ${userTier === 'day' ? '1-Day Plan' : '7-Day / ZenSuite Plan'}. Daily quota resets at midnight!</p>
+          </div>
+        `;
+      }
+      if (premiumSection) premiumSection.style.display = 'none';
+    } else {
+      if (subManager) subManager.incrementDailyUsage('kw_review');
+      const newUsage = currentUsage + 1;
+
+      // Show ALL missing keywords with auto-add buttons
+      if (freeMissingBox) {
+        if (missing.length > 0) {
+          freeMissingBox.innerHTML = `
+            <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-weight: 800; font-size: 13px; color: #DC2626;"><i class="fas fa-circle-exclamation"></i> All ${missing.length} Missing Keywords (Tap to Auto-Add):</span>
+                <span style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.1); padding: 3px 8px; border-radius: 9999px;">${newUsage}/${maxQuota} JDs Today</span>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                ${missing.map(k => `
+                  <button type="button" class="ats-chip ats-chip-missing" onclick="injectFreeKeyword('${k.replace(/'/g, "\\'")}')" style="cursor: pointer; border: 1px solid rgba(220, 38, 38, 0.3); background: #FEF2F2; color: #DC2626; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600;">
+                    + ${k}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else {
+          freeMissingBox.innerHTML = '<p style="color:#27ae60;font-weight:600;">🎉 Perfect! No critical keywords missing.</p>';
+        }
+      }
+      if (premiumSection) premiumSection.style.display = 'none';
+    }
   }
   
   // Store scan results for premium unlock
@@ -250,7 +329,7 @@ function runATSScan() {
 
 function injectFreeKeyword(keyword) {
   // Try to add the keyword to the Skills section
-  const skillsInput = document.querySelector('#skills-input') || document.querySelector('[data-field="skills"]');
+  const skillsInput = document.querySelector('#skills-input') || document.querySelector('[data-field="skills"]') || document.querySelector('#input-skills');
   if (skillsInput) {
     const currentSkills = skillsInput.value || '';
     if (!currentSkills.toLowerCase().includes(keyword.toLowerCase())) {
@@ -270,6 +349,7 @@ function injectFreeKeyword(keyword) {
   // Trigger preview refresh
   if (typeof renderPreview === 'function') renderPreview();
   if (typeof updatePreview === 'function') updatePreview();
+  if (typeof syncFormToPreview === 'function') syncFormToPreview();
   
   window.showToast && window.showToast(`✨ "${keyword}" added to your resume! Your ATS score just improved.`);
   
@@ -289,14 +369,14 @@ function injectFreeKeyword(keyword) {
 
 const PRICING_TIERS = {
   INR: {
-    day:   { amount: '₹99',  period: '/ 24 hours',  value: 99 },
+    day:   { amount: '₹49',  period: '/ 24 hours',  value: 49 },
     week:  { amount: '₹199', period: '/ 7 days',    value: 199 },
-    month: { amount: '₹599', period: '/ 30 days',   value: 599 }
+    month: { amount: '₹599', period: '/ 1 month',   value: 599 }
   },
   USD: {
     day:   { amount: '$4.99',  period: '/ 24 hours',  value: 499 },
-    week:  { amount: '$9.99',  period: '/ 7 days',    value: 999 },
-    month: { amount: '$24.99', period: '/ 30 days',   value: 2499 }
+    week:  { amount: '$11.99', period: '/ 7 days',    value: 1199 },
+    month: { amount: '$49.99', period: '/ 1 month',   value: 4999 }
   }
 };
 

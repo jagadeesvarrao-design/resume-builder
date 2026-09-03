@@ -644,7 +644,7 @@
       <nav class="desktop-nav-links">
         <a href="/role/" id="nav-roles-link">Templates (63 Roles)</a>
         <a href="/campus.html" style="color: #2DD4BF; font-weight: 700;">Campus Suite</a>
-        <a href="/blog/" id="nav-resources-link">Career Guides</a>
+        <a href="#pricing" id="nav-pricing-link" style="color: #476550; font-weight: 700;"><i class="fas fa-bolt" style="color: #F59E0B; font-size: 11px; margin-right: 2px;"></i> Pricing</a>
         <a href="/about.html">About</a>
 
         <!-- Zen Suite Ecosystem Interactive Dropdown -->
@@ -691,14 +691,14 @@
       <div class="header-right-actions">
         <!-- Landing Page Google Auth / Profile Widget -->
         <div class="nav-auth-wrap" id="nav-auth-wrap">
-          <button type="button" class="btn-nav-login" id="btn-landing-login" title="Sign In with Google to sync across devices">
+          <button type="button" class="btn-nav-login" id="btn-landing-login" onclick="window.triggerGoogleLogin && window.triggerGoogleLogin();" title="Sign In with Google to sync across devices">
             <svg width="15" height="15" viewBox="0 0 24 24" style="margin-right: 5px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
             <span>Sign In</span>
           </button>
           <div class="nav-user-profile" id="nav-user-profile" style="display: none;">
             <img id="nav-user-avatar" class="nav-user-avatar" src="" alt="Avatar">
             <span id="nav-user-name" class="nav-user-name">User</span>
-            <button type="button" class="btn-nav-logout" id="btn-landing-logout" title="Sign Out">
+            <button type="button" class="btn-nav-logout" id="btn-landing-logout" onclick="window.triggerLogout && window.triggerLogout();" title="Sign Out">
               <i class="fas fa-sign-out-alt"></i>
             </button>
           </div>
@@ -719,7 +719,7 @@
     <!-- Mobile Slide-Down Drawer Menu -->
     <div class="mobile-drawer-menu" id="mobile-drawer-menu">
       <div class="mobile-auth-row" style="padding: 10px 16px; border-bottom: 1px solid rgba(162, 188, 168, 0.3);">
-        <button type="button" class="btn-nav-login" id="btn-mobile-drawer-login" style="width: 100%; justify-content: center; padding: 9px 16px;">
+        <button type="button" class="btn-nav-login" id="btn-mobile-drawer-login" onclick="window.triggerGoogleLogin && window.triggerGoogleLogin();" style="width: 100%; justify-content: center; padding: 9px 16px;">
           <svg width="16" height="16" viewBox="0 0 24 24" style="margin-right: 6px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           <span>Sign In with Google</span>
         </button>
@@ -737,8 +737,8 @@
         <i class="fas fa-robot" style="color: #00E5BC;"></i> ZenScout AI (Auto-Job Hunter)
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left: auto; opacity: 0.7;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
       </a>
-      <a href="/blog/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-book-open"></i> Career Guides
+      <a href="#pricing" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);" style="color: #476550; font-weight: 700;">
+        <i class="fas fa-bolt" style="color: #F59E0B;"></i> Pricing &amp; Pro Plans
       </a>
       <a href="/about.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
         <i class="fas fa-info-circle"></i> About Us
@@ -975,6 +975,153 @@
           </div>
         </div>
 
+        <!-- SCREEN 0.5: TRANSPARENT PRICING & PAYMENT SECTION (TOP RIBBON ANCHORED) -->
+        <section class="landing-section pricing-landing-section" id="pricing" style="padding-top: 36px; padding-bottom: 30px; scroll-margin-top: 70px;">
+          <div style="text-align: center; max-width: 680px; margin: 0 auto 28px auto;">
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 104, 86, 0.08); border: 1px solid rgba(0, 104, 86, 0.2); padding: 5px 14px; border-radius: 9999px; font-size: 11.5px; font-weight: 800; color: #476550; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px;">
+              <i class="fas fa-gem" style="color: #F59E0B;"></i> Simple, Transparent Plans
+            </div>
+            <h2 class="stitch-section-heading" style="margin-bottom: 10px;">Invest in Your Career, Not Costly Paywalls</h2>
+            <p id="pricing-header-subtitle" style="font-size: 14.5px; color: var(--text-sub, #64748B); line-height: 1.6; margin: 0 0 16px 0;">
+              Most resume builders charge ₹1,500+ after you finish editing. ZenResume gives you unlimited single-column ATS resumes for <strong>free</strong>, with optional high-powered AI tailoring.
+            </p>
+
+            <!-- Dynamic Currency Switcher Pill -->
+            <div class="pricing-currency-toggle-wrap" style="display: inline-flex; align-items: center; background: #FFFFFF; border: 1.5px solid var(--border-subtle, #CBD5E1); border-radius: 9999px; padding: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+              <button type="button" id="btn-currency-inr" class="btn-currency-tab active" onclick="window.switchCurrency('INR');" style="border: none; background: #476550; color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 9999px; cursor: pointer; transition: all 0.2s ease;">
+                🇮🇳 INR (₹)
+              </button>
+              <button type="button" id="btn-currency-usd" class="btn-currency-tab" onclick="window.switchCurrency('USD');" style="border: none; background: transparent; color: #64748B; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 9999px; cursor: pointer; transition: all 0.2s ease;">
+                🌐 USD ($)
+              </button>
+            </div>
+          </div>
+
+          <div class="pricing-cards-grid">
+            
+            <!-- Plan 1: Free Forever -->
+            <div class="pricing-card free-tier-card">
+              <div class="pricing-card-top">
+                <div class="pricing-plan-badge badge-free">COMMUNITY</div>
+                <h3 class="pricing-plan-title">Free Forever</h3>
+                <p class="pricing-plan-subtitle">Everything you need to build &amp; export a verified ATS resume.</p>
+                <div class="pricing-price-wrap">
+                  <span class="pricing-currency" id="price-cur-free">₹</span>
+                  <span class="pricing-amount" id="price-val-free">0</span>
+                  <span class="pricing-period" id="price-per-free">/ free always</span>
+                </div>
+              </div>
+              
+              <ul class="pricing-features-list">
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>63+ Role-Tailored Templates</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>100% Vector ATS PDF Export</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Real-Time ATS Health Meter</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Zero Watermarks &amp; Paywalls</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>100% Client-Side Privacy</strong></li>
+              </ul>
+              
+              <button type="button" class="btn-pricing-cta btn-pricing-free" onclick="window.enterApp && window.enterApp();">
+                <span>Start Free</span>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <!-- Plan 2: 1-Day Pass (24-Hour Access) -->
+            <div class="pricing-card day-tier-card">
+              <div class="pricing-card-top">
+                <div class="pricing-plan-badge badge-pro">24-HOUR PASS</div>
+                <h3 class="pricing-plan-title">1-Day Sprint</h3>
+                <p class="pricing-plan-subtitle">Perfect for tailoring a single urgent job application today.</p>
+                <div class="pricing-price-wrap">
+                  <span class="pricing-currency" id="price-cur-day">₹</span>
+                  <span class="pricing-amount" id="price-val-day">49</span>
+                  <span class="pricing-period" id="price-per-day">/ 24 hours</span>
+                </div>
+              </div>
+              
+              <ul class="pricing-features-list">
+                <li><i class="fas fa-bolt" style="color: #F59E0B;"></i> <strong>Everything in Free Forever</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>24-Hour AI Job Description Matcher</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Gemini 2.5 AI Bullet Rewriting</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Unlimited PDF Downloads (24 hrs)</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Instant Activation &amp; Direct PDF</strong></li>
+              </ul>
+              
+              <button type="button" class="btn-pricing-cta btn-pricing-pro" onclick="window.openProPaymentModal && window.openProPaymentModal('day');">
+                <i class="fas fa-bolt"></i>
+                <span id="btn-pricing-day-text">Get 1-Day — ₹49</span>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <!-- Plan 3: 7-Day Fast-Track Sprint -->
+            <div class="pricing-card sprint-tier-card">
+              <div class="pricing-card-top">
+                <div class="pricing-plan-badge badge-pro">7-DAY PASS</div>
+                <h3 class="pricing-plan-title">7-Day Fast Track</h3>
+                <p class="pricing-plan-subtitle">Ideal for active interview rounds &amp; multiple job applications this week.</p>
+                <div class="pricing-price-wrap">
+                  <span class="pricing-currency" id="price-cur-sprint">₹</span>
+                  <span class="pricing-amount" id="price-val-sprint">199</span>
+                  <span class="pricing-period" id="price-per-sprint">/ 7 days access</span>
+                </div>
+              </div>
+              
+              <ul class="pricing-features-list">
+                <li><i class="fas fa-bolt" style="color: #F59E0B;"></i> <strong>Everything in 1-Day Pass</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>7 Days Unlimited AI JD Matcher</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Multi-Job Resume Profile Cloner</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>AI Action Verb &amp; Metrics Improver</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Priority ATS Layout Verification</strong></li>
+              </ul>
+              
+              <button type="button" class="btn-pricing-cta btn-pricing-pro" onclick="window.openProPaymentModal && window.openProPaymentModal('sprint');">
+                <i class="fas fa-bolt"></i>
+                <span id="btn-pricing-sprint-text">Get 7-Day — ₹199</span>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <!-- Plan 4: Entire ZenSuite (1 Month Access) -->
+            <div class="pricing-card suite-tier-card featured">
+              <div class="pricing-popular-ribbon">🔥 BEST VALUE • ALL SUITE PRODUCTS</div>
+              <div class="pricing-card-top">
+                <div class="pricing-plan-badge badge-campus">ALL-IN-ONE ECOSYSTEM</div>
+                <h3 class="pricing-plan-title">Entire ZenSuite</h3>
+                <p class="pricing-plan-subtitle">Complete career acceleration suite by Aneevarp Solutions.</p>
+                <div class="pricing-price-wrap">
+                  <span class="pricing-currency" id="price-cur-suite">₹</span>
+                  <span class="pricing-amount" id="price-val-suite">599</span>
+                  <span class="pricing-period" id="price-per-suite">/ 1 month access</span>
+                </div>
+              </div>
+              
+              <ul class="pricing-features-list">
+                <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>ZenResume Pro (Unlimited AI Matcher)</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>ZenScout AI (24/7 Job Search Agent)</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>ZenDoc AI (Doc Intelligence Bot)</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>Campus Placement Suite (Blueprints)</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>Priority 24/7 Fast-Track Support</strong></li>
+              </ul>
+              
+              <button type="button" class="btn-pricing-cta btn-pricing-suite" onclick="window.openProPaymentModal && window.openProPaymentModal('suite');">
+                <i class="fas fa-crown"></i>
+                <span id="btn-pricing-suite-text">Get ZenSuite — ₹599</span>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Payment Security & Trust Ribbon -->
+          <div class="payment-trust-bar">
+            <div class="trust-item"><i class="fas fa-shield-halved" style="color: #476550;"></i> <span>256-Bit Encrypted Payments</span></div>
+            <div class="trust-item"><i class="fas fa-bolt" style="color: #F59E0B;"></i> <span>Instant Activation</span></div>
+            <div class="trust-item"><i class="fas fa-qrcode" style="color: #2DD4BF;"></i> <span>UPI, GPay, PhonePe, Cards &amp; NetBanking</span></div>
+            <div class="trust-item"><i class="fas fa-award" style="color: #476550;"></i> <span>Aneevarp Solutions MSME Certified</span></div>
+          </div>
+        </section>
+
         <!-- Why Build With ZenResume (5 Feature Cards) -->
         <div class="landing-section" style="padding-top: 20px;">
           <h2 class="stitch-section-heading">Why Build With ZenResume?</h2>
@@ -983,9 +1130,9 @@
               <div class="stitch-card-icon" style="color: #00846D; background: rgba(0, 132, 109, 0.12);">
                 <i class="fas fa-folder-tree"></i>
               </div>
-              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 6px;">
                 <h3 style="margin: 0;">Master Resume Vault</h3>
-                <span style="font-size: 10px; font-weight: 800; background: #476550; color: white; padding: 2px 6px; border-radius: 4px;">1-CLICK TAILOR</span>
+                <span style="font-size: 9.5px; font-weight: 800; background: #476550; color: white; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">1-CLICK TAILOR</span>
               </div>
               <p>Keep one master profile saved in your browser. Duplicate and tailor customized versions for specific job postings in seconds without retyping.</p>
             </div>
@@ -1020,6 +1167,14 @@
               </div>
               <h3>Pure Vector PDF Exports</h3>
               <p>Renders selectable, searchable vector text without bitmap rasterization. Ensures automated parsers and human recruiters can read every bullet point.</p>
+            </div>
+
+            <div class="stitch-card">
+              <div class="stitch-card-icon" style="color: #7C3AED; background: rgba(124, 58, 237, 0.1);">
+                <i class="fas fa-layer-group"></i>
+              </div>
+              <h3>63+ Verified Role Blueprints</h3>
+              <p>Instant access to recruiter-tested Google XYZ bullet points and high-priority ATS keywords across Software, AI, Cloud, Finance, and Fresher roles.</p>
             </div>
 
           </div>
@@ -1254,99 +1409,71 @@
     <header class="app-header no-print" id="app-header-welcome" style="display: none;">
       <!-- Hidden H1 for SEO -->
       <h1 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">ZenResume - Free AI ATS Resume Builder</h1>
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
         <div>
-          <h2 class="greeting-text" id="greeting-banner" style="margin: 0; margin-bottom: 8px;">Welcome, Professional</h2>
-          <p class="sub-greeting">Select a highly-approved ATS template tailored for your industry and experience, fill in your details, and download a beautiful vector-text PDF.</p>
-          <a href="https://www.producthunt.com/products/zenresume" target="_blank" rel="noopener noreferrer nofollow" style="display: inline-flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: white; border: 1px solid #ea532a; border-radius: 6px; text-decoration: none; color: #333; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-shadow: 0 4px 12px rgba(234, 83, 42, 0.15); margin-top: 14px; transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="background: #ea532a; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 18px; line-height: 1;">P</div>
-              <div style="display: flex; flex-direction: column;">
-                <span style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; font-weight: 600;">Featured on</span>
-                <span style="font-size: 15px; font-weight: 800; color: #ea532a; line-height: 1.1;">Product Hunt</span>
-              </div>
-            </div>
-            <div style="border-left: 1px solid #fce8e3; padding-left: 12px; margin-left: 12px; display: flex; flex-direction: column; align-items: center;">
-              <span style="font-size: 14px; font-weight: 800; color: #ea532a;">▲ VOTE</span>
-            </div>
-          </a>
-        </div>
-        <div id="auth-container" style="min-width: 200px; text-align: right; position: relative;">
-          <div id="user-profile" style="display: none; align-items: center; justify-content: flex-end; gap: 10px;">
-            <div style="display: flex; flex-direction: column; align-items: flex-end;">
-              <span id="user-name" style="font-size: 13px; font-weight: 600; color: #2c3e50; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; text-align: right;"></span>
-              <button id="btn-logout" style="background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 11px; padding: 0; text-decoration: underline;">Sign Out</button>
-            </div>
-            <img id="user-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2395a5a6'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" alt="Avatar" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #3498db; object-fit: cover;">
-          </div>
+          <h2 class="greeting-text" id="greeting-banner" style="margin: 0 0 4px 0; font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif;">Welcome, Professional</h2>
+          <p class="sub-greeting" style="margin: 0; font-size: 13.5px; color: var(--text-sub);">Select a recruiter-approved ATS template tailored for your industry and experience, fill in your details, and download a beautiful vector-text PDF.</p>
         </div>
       </div>
     </header>
 
     <main>
 
-
       <!-- SCREEN 1: GREETING & SELECTING TEMPLATES (NO-PRINT) -->
-      <section class="selection-screen no-print" id="selection-screen" style="display: none;">
+      <section class="selection-screen no-print" id="selection-screen" style="display: none; padding: 20px 0;">
         
-        <!-- AdSense: Top Leaderboard -->
-        <div id="promo-banner-top" style="width: 100%; max-width: 728px; min-height: 90px; margin: 0 auto 20px auto; background: rgba(255,255,255,0.4); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <ins class="adsbygoogle"
-               style="display:block; width:100%; height:90px;"
-               data-ad-client="ca-pub-1993051486567311"
-               data-ad-slot="5649020299"
-               data-ad-format="auto"
-               data-full-width-responsive="true"></ins>
-        </div>
-        
-        <!-- Smart Search & Quick-Role Chips Panel -->
-        <div class="template-search-container" style="max-width: 900px; margin: 0 auto 20px auto; padding: 18px 20px; background: rgba(0, 104, 95, 0.05); border: 1px solid rgba(45, 212, 191, 0.25); border-radius: 16px; backdrop-filter: blur(8px);">
-          <div style="display: flex; align-items: center; gap: 10px; background: var(--bg-surface, #FFFFFF); border: 1px solid var(--border-subtle, #E2E8F0); border-radius: 12px; padding: 10px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.04);">
-            <i class="fas fa-magnifying-glass" style="color: #476550; font-size: 15px;"></i>
-            <input type="text" id="input-template-search" placeholder="Quick search by role or layout (e.g. Software, Data Science, Fresher, Executive, Minimalist)..." style="border: none; outline: none; background: transparent; width: 100%; font-size: 13.5px; font-weight: 500; color: var(--text-main, #09090B);">
-            <button type="button" id="btn-clear-template-search" style="display: none; background: none; border: none; color: #94A3B8; cursor: pointer; font-size: 13px;">✕</button>
-          </div>
-
-          <!-- Predictive Role Chips -->
-          <div style="display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
-            <span style="font-size: 11px; font-weight: 700; color: var(--text-light, #64748B); text-transform: uppercase; letter-spacing: 0.5px;">Quick Match:</span>
-            <button type="button" class="btn-role-chip" data-query="software" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">💻 Software</button>
-            <button type="button" class="btn-role-chip" data-query="data" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">📊 Data &amp; AI</button>
-            <button type="button" class="btn-role-chip" data-query="fresher" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">🎓 Fresher</button>
-            <button type="button" class="btn-role-chip" data-query="cloud" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">☁️ Cloud</button>
-            <button type="button" class="btn-role-chip" data-query="executive" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">📈 Executive</button>
-          </div>
-        </div>
-        
-        <!-- Interactive Category Filters -->
-        <div class="filters-panel">
+        <!-- Unified Smart Search & Category Filter Bar -->
+        <div class="template-unified-controls" style="max-width: 1100px; margin: 0 auto 24px auto; display: flex; flex-direction: column; gap: 12px;">
           
-          <div class="filter-group">
-            <span class="filter-label">1. Choose Experience Level</span>
-            <div class="filter-buttons" id="exp-filters">
-              <button class="btn-filter active" data-exp="fresher">Fresher</button>
-              <button class="btn-filter" data-exp="experienced">Experienced</button>
+          <!-- Search & Quick Match Bar -->
+          <div class="template-search-card" style="padding: 14px 18px; background: rgba(0, 104, 95, 0.05); border: 1px solid rgba(45, 212, 191, 0.25); border-radius: 16px; backdrop-filter: blur(8px);">
+            <div style="display: flex; align-items: center; gap: 10px; background: var(--bg-surface, #FFFFFF); border: 1px solid var(--border-subtle, #E2E8F0); border-radius: 12px; padding: 10px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <i class="fas fa-magnifying-glass" style="color: #476550; font-size: 15px;"></i>
+              <input type="text" id="input-template-search" placeholder="Quick search by role or layout (e.g. Software, Data Science, Fresher, Executive, Minimalist)..." style="border: none; outline: none; background: transparent; width: 100%; font-size: 13.5px; font-weight: 500; color: var(--text-main, #09090B);">
+              <button type="button" id="btn-clear-template-search" style="display: none; background: none; border: none; color: #94A3B8; cursor: pointer; font-size: 13px;">✕</button>
+            </div>
+
+            <!-- Predictive Role Chips -->
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+              <span style="font-size: 11px; font-weight: 700; color: var(--text-light, #64748B); text-transform: uppercase; letter-spacing: 0.5px;">Quick Match:</span>
+              <button type="button" class="btn-role-chip" data-query="software" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">💻 Software</button>
+              <button type="button" class="btn-role-chip" data-query="data" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">📊 Data &amp; AI</button>
+              <button type="button" class="btn-role-chip" data-query="fresher" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">🎓 Fresher</button>
+              <button type="button" class="btn-role-chip" data-query="cloud" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">☁️ Cloud</button>
+              <button type="button" class="btn-role-chip" data-query="executive" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">📈 Executive</button>
             </div>
           </div>
 
-          <div class="filter-group">
-            <span class="filter-label">2. Select Your Industry</span>
-            <div class="filter-buttons" id="industry-filters">
-              <button class="btn-filter active" data-ind="software">Software Industry</button>
-              <button class="btn-filter" data-ind="data_science">Data Science & AI</button>
-              <button class="btn-filter" data-ind="electrical">Electrical Industry</button>
-              <button class="btn-filter" data-ind="mechanical">Mechanical Industry</button>
-              <button class="btn-filter" data-ind="civil">Civil Industry</button>
-              <button class="btn-filter" data-ind="medical">Medical & Clinical</button>
-              <button class="btn-filter" data-ind="law">Law & Legal</button>
+          <!-- Unified Experience & Industry Control Strip -->
+          <div class="template-category-filter-strip">
+            <div class="exp-toggle-segmented" id="exp-filters">
+              <button type="button" class="btn-filter active" data-exp="fresher"><i class="fas fa-graduation-cap"></i> Fresher</button>
+              <button type="button" class="btn-filter" data-exp="experienced"><i class="fas fa-briefcase"></i> Experienced</button>
+            </div>
+
+            <div class="industry-scroll-chips" id="industry-filters">
+              <button type="button" class="btn-filter active" data-ind="software">💻 Software</button>
+              <button type="button" class="btn-filter" data-ind="data_science">📊 Data Science &amp; AI</button>
+              <button type="button" class="btn-filter" data-ind="electrical">⚡ Electrical</button>
+              <button type="button" class="btn-filter" data-ind="mechanical">⚙️ Mechanical</button>
+              <button type="button" class="btn-filter" data-ind="civil">🏗️ Civil</button>
+              <button type="button" class="btn-filter" data-ind="medical">🏥 Medical</button>
+              <button type="button" class="btn-filter" data-ind="law">⚖️ Law</button>
             </div>
           </div>
 
         </div>
 
         <!-- Template Layout Catalog -->
-        <div class="filters-panel" style="padding-top: 15px;">
-          <span class="filter-label" style="margin-bottom: 12px; display: block;">3. Select A Layout Style</span>
+        <div style="max-width: 1100px; margin: 0 auto;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 16px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-main); margin: 0;">
+              ✨ Choose Your Resume Layout
+            </h3>
+            <span style="font-size: 12px; color: var(--primary-calm); font-weight: 700; background: rgba(0, 104, 86, 0.08); padding: 3px 10px; border-radius: 9999px;">
+              <i class="fas fa-check-circle"></i> 100% Machine-Parsable ATS Templates
+            </span>
+          </div>
           <div class="templates-grid" id="templates-grid">
             <!-- Dynamically Rendered by JS -->
           </div>
@@ -1410,8 +1537,9 @@
           
           <!-- Stitch Editor Top Bar -->
           <div class="stitch-editor-top-bar">
+            <!-- Row 1: Back, Title, Profiles & Save Status -->
             <div class="stitch-editor-top-row">
-              <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
                 <button class="btn-back" id="btn-back-to-templates" onclick="window.goToTemplates && window.goToTemplates();" style="padding: 6px 12px; font-size: 12px; margin: 0;">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                   Templates
@@ -1420,6 +1548,20 @@
               </div>
 
               <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- Real-Time Universal ATS Score Badge -->
+                <div id="editor-realtime-ats" class="editor-ats-score-pill score-elite" title="Live ATS Quality Score based on formatting, action verbs, metrics & completeness">
+                  <span class="ats-score-meter-circle" id="realtime-ats-circle">
+                    <svg width="22" height="22" viewBox="0 0 36 36" class="circular-chart" style="display: block;">
+                      <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E2E8F0" stroke-width="3.5" />
+                      <path class="circle" id="realtime-ats-svg-path" stroke-dasharray="92, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#476550" stroke-width="3.5" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <div style="display: flex; flex-direction: column; line-height: 1.1;">
+                    <span style="font-size: 9.5px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">ATS Health</span>
+                    <span style="font-size: 12.5px; font-weight: 800; color: #476550;"><span id="realtime-ats-number">92</span><small style="font-size: 9.5px; font-weight: 600; opacity: 0.7;">/100</small></span>
+                  </div>
+                </div>
+
                 <!-- Application Profile / Job Version Selector (Retention Engine) -->
                 <div class="version-profile-switch" style="display: flex; align-items: center; gap: 4px; background: rgba(0, 104, 86, 0.08); padding: 4px 8px; border-radius: 8px; border: 1px solid rgba(0, 104, 86, 0.18);">
                   <i class="fas fa-folder-open" style="color: #476550; font-size: 11px;"></i>
@@ -1438,11 +1580,11 @@
               </div>
             </div>
 
-            <!-- Quick Template Selector & Actions Row -->
+            <!-- Row 2: Quick Template Selector & Actions Row -->
             <div class="stitch-editor-actions-row">
               <div class="quick-layout-switch" style="margin: 0;">
-                <label for="select-layout-inline" class="quick-switch-label" style="font-size: 12px; font-weight: 600;">Style:</label>
-                <select id="select-layout-inline" class="quick-switch-select" style="font-size: 12px; padding: 4px 10px;">
+                <label for="select-layout-inline" class="quick-switch-label"><i class="fas fa-palette" style="color: #476550; font-size: 11px;"></i> Style:</label>
+                <select id="select-layout-inline" class="quick-switch-select">
                   <option value="classic">Minimalist Classic</option>
                   <option value="modern">Serene Modern</option>
                   <option value="grid">Technical Grid</option>
@@ -1479,9 +1621,11 @@
               </div>
             </div>
             
-            <div class="wizard-progress" id="wizard-progress-dots">
-              <!-- Handled by wizard progress dots -->
+            <!-- 3px Sleek Progress Bar Line -->
+            <div class="wizard-progress-track" style="height: 3px; background: rgba(0, 104, 86, 0.08); width: 100%; border-radius: 2px; overflow: hidden; margin-top: 2px;">
+              <div id="wizard-progress-fill" style="height: 100%; width: 14.3%; background: linear-gradient(90deg, #476550, #2DD4BF); transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);"></div>
             </div>
+            <div class="wizard-progress" id="wizard-progress-dots" style="display: none;"></div>
           </div>
 
           <!-- Wizard Form Container -->
@@ -1746,6 +1890,19 @@
               </div>
 
               <div class="stitch-preview-tools-group">
+                <!-- Live Preview Real-Time ATS Quality Badge (Non-Printing) -->
+                <div id="preview-realtime-ats" class="preview-ats-badge no-print" title="Live General ATS Quality Score" onclick="window.toggleATSScoreDrawer && window.toggleATSScoreDrawer();">
+                  <span class="preview-ats-circle-mini">
+                    <svg width="20" height="20" viewBox="0 0 36 36" class="circular-chart" style="display: block;">
+                      <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E2E8F0" stroke-width="3.5" />
+                      <path class="circle" id="preview-ats-svg-path" stroke-dasharray="92, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#476550" stroke-width="3.5" stroke-linecap="round" />
+                    </svg>
+                  </span>
+                  <span style="font-size: 11.5px; font-weight: 800; color: #476550; display: inline-flex; align-items: center; gap: 3px;">
+                    ATS: <strong id="preview-ats-number">92</strong><small style="font-size: 9px; font-weight: 600; opacity: 0.7;">/100</small>
+                  </span>
+                </div>
+
                 <div class="quick-size-switch" style="margin: 0;">
                   <select id="select-paper-size" class="quick-switch-select" style="font-size: 12px; padding: 6px 12px; border-radius: 9999px; font-weight: 600;">
                     <option value="a4">A4 Sheet</option>
@@ -1800,54 +1957,87 @@
   </div>
 
   <!-- Modernized ATS Export & Download Modal Overlay -->
-  <div class="modal-overlay no-print" id="print-modal" style="backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.75);">
-    <div class="modal-card" style="background: #ffffff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1.5px solid rgba(0, 104, 86, 0.2); padding: 32px; max-width: 450px; transform: scale(1); transition: all 0.3s ease; text-align: center;">
+  <div class="modal-overlay no-print" id="print-modal" style="backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.75); z-index: 5000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: none; align-items: center; justify-content: center;">
+    <div class="modal-card" style="background: #ffffff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1.5px solid rgba(0, 104, 86, 0.2); padding: 32px; max-width: 480px; transform: scale(1); transition: all 0.3s ease; text-align: center;">
       
       <div id="ai-upgrade-step-1">
-        <div style="width: 56px; height: 56px; background: rgba(0, 104, 86, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: #476550; font-size: 26px;">
-          <i class="fas fa-file-arrow-down"></i>
+        <!-- Live ATS Score Mini Meter -->
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 104, 86, 0.08); border: 1px solid rgba(0, 104, 86, 0.2); padding: 6px 14px; border-radius: 9999px; margin-bottom: 16px;">
+          <i class="fas fa-bullseye" style="color: #476550; font-size: 13px;"></i>
+          <span style="font-size: 12px; font-weight: 700; color: #476550;">General ATS Score: <strong id="modal-general-ats-score">92/100</strong> (Strong)</span>
         </div>
 
-        <h3 style="margin-top: 0; color: #0f172a; font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; margin-bottom: 8px;">Export Your ATS Resume</h3>
-        <p style="color: #64748b; font-size: 14px; line-height: 1.5; margin-bottom: 24px;">Your resume compiles into pure vector ATS text for maximum recruiter compatibility. 100% Free.</p>
+        <h3 style="margin-top: 0; color: #0f172a; font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px; margin-bottom: 8px;">Ready to Download! 🚀</h3>
+        <p style="color: #64748b; font-size: 13.5px; line-height: 1.5; margin-bottom: 22px;">
+          Your resume is ATS-compliant. Before downloading, would you like our AI to calculate your match score against a specific <strong>Job Description</strong> to ensure you don't miss key recruiter filters?
+        </p>
 
-        <div class="modal-buttons" id="ai-buttons-step-1" style="display: flex; flex-direction: column; gap: 12px;">
-          <!-- Primary Instant Free Download -->
-          <button class="btn-modal btn-confirm" id="btn-skip-ai" style="background: #476550; border: none; border-radius: 12px; color: white; padding: 14px 18px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); transition: all 0.2s ease; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <div class="modal-buttons" id="ai-buttons-step-1" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Primary CTA: AI Job Matcher -->
+          <button class="btn-modal btn-confirm" id="btn-yes-ai" style="background: linear-gradient(135deg, #7C3AED, #9333EA); border: none; border-radius: 12px; color: white; padding: 14px 18px; font-weight: 700; font-size: 14px; cursor: pointer; width: 100%; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            <span>🎯 Calculate Job-Specific ATS Score (AI)</span>
+          </button>
+
+          <!-- Secondary CTA: Direct PDF Download -->
+          <button class="btn-modal btn-confirm" id="btn-skip-ai" style="background: #476550; border: none; border-radius: 12px; color: white; padding: 13px 18px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 12px rgba(0, 104, 86, 0.25); transition: all 0.2s ease; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
             <i class="fas fa-bolt" style="color: #FCD34D;"></i>
-            <span>Download ATS Vector PDF (Free &amp; Instant)</span>
-          </button>
-          
-          <!-- Optional Gemini AI Keyword Matcher -->
-          <button class="btn-modal btn-confirm" id="btn-yes-ai" style="background: rgba(139, 92, 246, 0.08); border: 1.5px solid rgba(139, 92, 246, 0.3); border-radius: 12px; color: #7C3AED; padding: 13px 18px; font-weight: 700; font-size: 14px; cursor: pointer; width: 100%; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <i class="fas fa-wand-magic-sparkles" style="color: #8B5CF6;"></i>
-            <span>Tailor Keywords with Gemini AI (Optional)</span>
+            <span>⚡ Download PDF Directly (Free &amp; Instant)</span>
           </button>
 
-          <button class="btn-modal btn-cancel" id="btn-modal-close" style="background: transparent; border: none; color: #94a3b8; font-size: 13.5px; cursor: pointer; padding: 8px; margin-top: 4px; text-decoration: underline;">Back to Editor</button>
+          <button class="btn-modal btn-cancel" id="btn-modal-close" style="background: transparent; border: none; color: #94a3b8; font-size: 13px; cursor: pointer; padding: 6px; margin-top: 2px; text-decoration: underline;">Back to Editor</button>
         </div>
       </div>
 
+      <!-- Step 2: Job Description Input & Instant AI Scoring -->
       <div class="modal-instruction" id="ai-upgrade-step-2" style="display: none; text-align: left;">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-          <div style="background: rgba(139, 92, 246, 0.15); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #7C3AED;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <div style="background: rgba(124, 58, 237, 0.15); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #7C3AED; font-size: 16px;">
             <i class="fas fa-wand-magic-sparkles"></i>
           </div>
           <div>
-            <h4 style="margin: 0; font-size: 15px; font-weight: 800; color: #0F172A;">Tailor for Target Job Description</h4>
-            <p style="margin: 0; font-size: 12px; color: #64748B;">Gemini 2.5 will align Summary &amp; Skills with job keywords.</p>
+            <h4 style="margin: 0; font-size: 15px; font-weight: 800; color: #0F172A;">Paste Target Job Description</h4>
+            <p style="margin: 0; font-size: 12px; color: #64748B;">AI will analyze keyword overlap &amp; generate tailored enhancements.</p>
           </div>
         </div>
-        <textarea id="input-job-description" rows="5" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 13px; color: #334155; resize: none; box-sizing: border-box; outline: none;" placeholder="Paste the job description or required skills here..."></textarea>
+        <textarea id="input-job-description" rows="5" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 13px; color: #334155; resize: none; box-sizing: border-box; outline: none;" placeholder="Paste the job description or required skills from LinkedIn, Indeed, or company portal..."></textarea>
         
-        <div class="modal-buttons" id="ai-buttons-step-2" style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
-          <button class="btn-modal btn-confirm" id="btn-generate-ai" style="background: linear-gradient(135deg, #7C3AED, #9333EA); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14.5px; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); cursor: pointer; width: 100%;">
-            <i class="fas fa-wand-magic-sparkles" style="margin-right: 6px;"></i> Tailor &amp; Download PDF
+        <div class="modal-buttons" id="ai-buttons-step-2" style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
+          <button class="btn-modal btn-confirm" id="btn-generate-ai" style="background: linear-gradient(135deg, #7C3AED, #9333EA); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); cursor: pointer; width: 100%;">
+            <i class="fas fa-search" style="margin-right: 6px;"></i> Scan Match &amp; Download PDF
           </button>
-          <button class="btn-modal btn-cancel" id="btn-back-ai" style="background: transparent; border: 1px solid #CBD5E1; border-radius: 12px; color: #64748B; padding: 10px; font-weight: 600; font-size: 13.5px; cursor: pointer; width: 100%;">Back</button>
+          <button class="btn-modal btn-cancel" id="btn-back-ai" style="background: transparent; border: 1px solid #CBD5E1; border-radius: 12px; color: #64748B; padding: 10px; font-weight: 600; font-size: 13px; cursor: pointer; width: 100%;">Back</button>
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Free Tier Download Limit Reached Modal -->
+  <div class="modal-overlay no-print" id="download-limit-modal" style="backdrop-filter: blur(8px); background: rgba(15, 23, 42, 0.75); z-index: 5500; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: none; align-items: center; justify-content: center;">
+    <div class="modal-card" style="background: #ffffff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1.5px solid rgba(239, 68, 68, 0.3); padding: 32px; max-width: 480px; text-align: center; position: relative;">
+      <button type="button" class="btn-close" onclick="document.getElementById('download-limit-modal').style.display='none'" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 24px; cursor: pointer; color: #94A3B8;">&times;</button>
+      
+      <div style="width: 56px; height: 56px; background: rgba(239, 68, 68, 0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #EF4444; font-size: 24px; margin-bottom: 16px;">
+        <i class="fas fa-lock"></i>
+      </div>
+
+      <h3 style="margin: 0 0 8px 0; color: #0F172A; font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif;">Free Download Limit Reached</h3>
+      <p style="color: #64748B; font-size: 13.5px; line-height: 1.6; margin: 0 0 20px 0;">
+        You have created and downloaded <strong>2 free resumes</strong>. Upgrade to <strong>1-Day Sprint (₹49 / $4.99)</strong> or <strong>7-Day Fast Track (₹199 / $11.99)</strong> for <strong>unlimited resume downloads</strong>, ad-free experience, and AI Job Description tailoring!
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button type="button" class="btn-modal btn-confirm" onclick="document.getElementById('download-limit-modal').style.display='none'; window.openProPaymentModal('day');" style="background: linear-gradient(135deg, #476550, #00846D); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fas fa-bolt" style="color: #FCD34D;"></i>
+          <span>Get 1-Day Pass (Unlimited Downloads)</span>
+        </button>
+
+        <button type="button" class="btn-modal btn-confirm" onclick="document.getElementById('download-limit-modal').style.display='none'; window.openProPaymentModal('sprint');" style="background: linear-gradient(135deg, #7C3AED, #9333EA); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fas fa-crown" style="color: #FCD34D;"></i>
+          <span>Get 7-Day Fast Track Sprint</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2114,6 +2304,63 @@
       </form>
       
       <button id="btn-close-email-modal" class="btn-select" style="margin-top: 25px; width: 100%; justify-content: center; border: 1px solid var(--border-glass);">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Pro Upgrade & Payment Modal -->
+  <div id="pro-payment-modal" class="modal-overlay no-print" style="display: none; align-items: center; justify-content: center; z-index: 5500; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px);">
+    <div class="modal-card" style="background: #FFFFFF; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); border: 1.5px solid rgba(0, 104, 86, 0.25); padding: 30px 24px; max-width: 480px; width: 92%; text-align: center; position: relative;">
+      <button type="button" class="btn-close" onclick="window.closeProPaymentModal && window.closeProPaymentModal();" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 22px; cursor: pointer; color: #94A3B8;">&times;</button>
+      
+      <div style="width: 50px; height: 50px; background: rgba(0, 104, 86, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; color: #476550; font-size: 22px;">
+        <i class="fas fa-crown"></i>
+      </div>
+      
+      <h3 style="margin: 0 0 6px 0; color: #0F172A; font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif;">Upgrade Your Career Stack</h3>
+      <p style="color: #64748B; font-size: 13px; line-height: 1.5; margin: 0 0 16px 0;">
+        Choose your plan to unlock Gemini 2.5 AI Resume Matcher and the full ZenSuite.
+      </p>
+
+      <!-- Plan Selector Tabs (3 Plans) -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
+        <button type="button" id="pay-plan-btn-day" onclick="window.selectPaymentPlan('day');" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+          <div style="font-size: 10px; font-weight: 800; color: #64748B; text-transform: uppercase;">1-Day</div>
+          <div style="font-size: 17px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="modal-tab-amount-day">₹49</div>
+          <div style="font-size: 9.5px; color: #64748B;">24 Hours</div>
+        </button>
+
+        <button type="button" id="pay-plan-btn-sprint" onclick="window.selectPaymentPlan('sprint');" style="background: rgba(0, 104, 86, 0.08); border: 2px solid #476550; border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+          <div style="font-size: 10px; font-weight: 800; color: #476550; text-transform: uppercase;">7-Day</div>
+          <div style="font-size: 17px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="modal-tab-amount-sprint">₹199</div>
+          <div style="font-size: 9.5px; color: #64748B;">Full Week</div>
+        </button>
+        
+        <button type="button" id="pay-plan-btn-suite" onclick="window.selectPaymentPlan('suite');" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(0, 229, 188, 0.08)); border: 2px solid #F59E0B; border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative;">
+          <span style="position: absolute; top: -7px; right: 4px; background: #F59E0B; color: white; font-size: 8px; font-weight: 800; padding: 1px 5px; border-radius: 9999px;">BEST</span>
+          <div style="font-size: 10px; font-weight: 800; color: #D97706; text-transform: uppercase;">ZenSuite</div>
+          <div style="font-size: 17px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="modal-tab-amount-suite">₹599</div>
+          <div style="font-size: 9.5px; color: #64748B;">1 Month</div>
+        </button>
+      </div>
+      
+      <!-- Selected Plan Summary Box -->
+      <div id="payment-selected-summary" style="background: rgba(0, 104, 86, 0.04); border: 1px solid rgba(0, 104, 86, 0.15); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: left; font-size: 12px; color: #334155;">
+        <i class="fas fa-check" style="color: #476550; margin-right: 6px;"></i> <span id="payment-summary-text">Includes 7 days unlimited AI Job Description Matcher, AI Rewriter &amp; PDF Exports.</span>
+      </div>
+      
+      <!-- Instant UPI & Card Actions -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+        <button type="button" id="btn-pay-primary" class="btn-modal btn-confirm" onclick="alert('Payment Gateway: Processing ' + window.currentPaymentAmount + ' (' + (window.currentCurrency || 'INR') + ')... Redirecting to secure gateway...');" style="background: linear-gradient(135deg, #476550, #00846D); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i id="btn-pay-primary-icon" class="fas fa-qrcode"></i> <span id="btn-pay-primary-text">Pay ₹199 via UPI / GPay / PhonePe</span>
+        </button>
+        <button type="button" id="btn-pay-secondary" class="btn-modal btn-confirm" onclick="alert('Payment Gateway: Card / NetBanking checkout opening for ' + window.currentPaymentAmount + '...');" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; color: #334155; padding: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i id="btn-pay-secondary-icon" class="fas fa-credit-card"></i> <span id="btn-pay-secondary-text">Pay via Credit / Debit Card</span>
+        </button>
+      </div>
+      
+      <div style="font-size: 11px; color: #94A3B8; display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <i class="fas fa-lock" style="font-size: 10px;"></i> Secured by 256-Bit SSL • Instant Account Unlock
+      </div>
     </div>
   </div>
 

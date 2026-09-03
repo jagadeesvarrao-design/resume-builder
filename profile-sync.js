@@ -10,7 +10,9 @@
   // --- GitHub Profile & Repositories Sync ---
   async function syncGitHubProfile(username) {
     if (!username || !username.trim()) {
-      alert('Please enter a valid GitHub username.');
+      if (typeof window.showToast === 'function') {
+        window.showToast('Please enter a valid GitHub username.', 'warning');
+      }
       return false;
     }
 
@@ -162,11 +164,15 @@
         window.enterApp();
       }
 
-      showSyncSuccessToast('⚡ Synced GitHub profile for @' + cleanUser + '! Name, bio, and ' + projects.length + ' repository projects pre-loaded.');
+      if (typeof window.showToast === 'function') {
+        window.showToast('⚡ Synced GitHub profile for @' + cleanUser + '! Name, bio, and ' + projects.length + ' repository projects pre-loaded.', 'success');
+      }
       return true;
 
     } catch (err) {
-      alert('GitHub Sync Error: ' + err.message);
+      if (typeof window.showToast === 'function') {
+        window.showToast('GitHub Sync Error: ' + err.message, 'error');
+      }
       return false;
     } finally {
       if (syncBtn) {
@@ -179,7 +185,9 @@
   // --- LinkedIn Text / Summary Parser ---
   function syncLinkedInText(rawText) {
     if (!rawText || !rawText.trim()) {
-      alert('Please paste your LinkedIn profile text or Experience summary.');
+      if (typeof window.showToast === 'function') {
+        window.showToast('Please paste your LinkedIn profile text or Experience summary.', 'warning');
+      }
       return false;
     }
 

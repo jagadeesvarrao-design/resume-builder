@@ -205,12 +205,15 @@ function renderTemplatesCatalog() {
     // Create card element structure
     card.innerHTML = `
       <div>
-        <h3 class="template-card-title">${template.name}</h3>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px;">
+          <h3 class="template-card-title">${template.name}</h3>
+          <span style="font-size: 10px; font-weight: 800; color: #476550; background: rgba(0, 104, 86, 0.1); padding: 2px 8px; border-radius: 9999px; white-space: nowrap;"><i class="fas fa-check-circle"></i> ATS Safe</span>
+        </div>
         <p class="template-card-desc">${template.description}</p>
       </div>
       <div class="template-card-footer">
-        <span class="template-badge">${template.experience || state.selectedExp} / ${template.industry || state.selectedInd}</span>
-        <button class="btn-select">Select Style</button>
+        <span class="template-badge">${(template.experience || state.selectedExp).toUpperCase()} / ${(template.industry || state.selectedInd).replace('_', ' ').toUpperCase()}</span>
+        <button class="btn-select">Use Template <i class="fas fa-arrow-right"></i></button>
       </div>
     `;
     
@@ -1226,7 +1229,135 @@ function debouncedSyncFormToPreview() {
   syncTimeout = setTimeout(syncFormToPreview, 250);
 }
 
+/* ==========================================================================
+   REAL-TIME UNIVERSAL ATS QUALITY SCORING ENGINE
+   ========================================================================== */
+function calculateGeneralATSScore() {
+  let score = 0;
+  const breakdown = {
+    layout: 25, // All ZenResume templates are single-column ATS layouts
+    contact: 0,
+    summary: 0,
+    bullets: 0,
+    skills: 0,
+    education: 0
+  };
+
+  score += breakdown.layout;
+
+  // 1. Contact Info (15 pts)
+  const name = (document.getElementById('input-name')?.value || '').trim();
+  const title = (document.getElementById('input-title')?.value || '').trim();
+  const email = (document.getElementById('input-email')?.value || '').trim();
+  const phone = (document.getElementById('input-phone')?.value || '').trim();
+  const linkedin = (document.getElementById('input-linkedin')?.value || '').trim();
+  const github = (document.getElementById('input-github')?.value || '').trim();
+  const website = (document.getElementById('input-website')?.value || '').trim();
+
+  let contactPts = 0;
+  if (name.length >= 2 && title.length >= 2) contactPts += 5;
+  if (email.includes('@') && email.includes('.') && phone.length >= 6) contactPts += 5;
+  if (linkedin.length > 3 || github.length > 3 || website.length > 3) contactPts += 5;
+  breakdown.contact = contactPts;
+  score += contactPts;
+
+  // 2. Summary Quality (15 pts)
+  const summary = (document.getElementById('input-summary')?.value || '').trim();
+  const summaryWords = summary ? summary.split(/\s+/).filter(w => w.length > 0).length : 0;
+  let summaryPts = 0;
+  if (summaryWords >= 18) summaryPts += 10;
+  else if (summaryWords >= 8) summaryPts += 5;
+  if (summaryWords >= 25 && summaryWords <= 120) summaryPts += 5;
+  breakdown.summary = summaryPts;
+  score += summaryPts;
+
+  // 3. Experience Bullets & Action Verbs + Metrics (25 pts)
+  const expBullets = [];
+  document.querySelectorAll('.experience-card textarea').forEach(ta => {
+    if (ta.value) expBullets.push(ta.value);
+  });
+  const bulletsText = expBullets.join(' ');
+  const actionVerbs = /\b(Led|Engineered|Architected|Developed|Built|Created|Designed|Optimized|Spearheaded|Delivered|Implemented|Reduced|Increased|Automated|Managed|Configured|Scaled|Orchestrated|Accelerated|Authored|Streamlined|Analyzed)\b/i;
+  const metricsPattern = /(\d+[\d,.]*|\b\d+%\b|\$\d+|\b\d+k\b|\b\d+x\b|\b\d+M\b)/i;
+
+  let bulletPts = 0;
+  if (expBullets.length >= 1) bulletPts += 10;
+  if (actionVerbs.test(bulletsText)) bulletPts += 8;
+  if (metricsPattern.test(bulletsText)) bulletPts += 7;
+  breakdown.bullets = bulletPts;
+  score += bulletPts;
+
+  // 4. Skills Matrix (15 pts)
+  const skills = (document.getElementById('input-skills')?.value || '').trim();
+  const skillCount = skills ? skills.split(',').filter(s => s.trim().length > 1).length : 0;
+  let skillPts = 0;
+  if (skillCount >= 6) skillPts = 15;
+  else if (skillCount >= 3) skillPts = 10;
+  else if (skillCount >= 1) skillPts = 5;
+  breakdown.skills = skillPts;
+  score += skillPts;
+
+  // 5. Education & Credentials (10 pts)
+  const eduCards = document.querySelectorAll('.education-card');
+  let eduPts = 0;
+  if (eduCards.length >= 1) {
+    const deg = eduCards[0].querySelector('input[placeholder*="Degree"]')?.value || '';
+    const inst = eduCards[0].querySelector('input[placeholder*="Institution"]')?.value || '';
+    if (deg.trim() || inst.trim()) eduPts = 10;
+    else eduPts = 5;
+  }
+  breakdown.education = eduPts;
+  score += eduPts;
+
+  // Clamp 0-100
+  score = Math.min(100, Math.max(0, score));
+
+  // Update Editor Header DOM Badge
+  const atsEl = document.getElementById('realtime-ats-number');
+  const atsPill = document.getElementById('editor-realtime-ats');
+  const atsCircle = document.getElementById('realtime-ats-svg-path');
+  if (atsEl) atsEl.textContent = score;
+  if (atsCircle) {
+    atsCircle.setAttribute('stroke-dasharray', `${score}, 100`);
+    if (score >= 85) atsCircle.setAttribute('stroke', '#476550');
+    else if (score >= 70) atsCircle.setAttribute('stroke', '#2DD4BF');
+    else if (score >= 50) atsCircle.setAttribute('stroke', '#F59E0B');
+    else atsCircle.setAttribute('stroke', '#EF4444');
+  }
+  if (atsPill) {
+    atsPill.className = 'editor-ats-score-pill ' + (score >= 85 ? 'score-elite' : (score >= 70 ? 'score-strong' : (score >= 50 ? 'score-warning' : 'score-danger')));
+    atsPill.title = `Universal ATS Score: ${score}/100\n• Single-Column Layout: 25/25\n• Contact Info: ${breakdown.contact}/15\n• Summary Quality: ${breakdown.summary}/15\n• Bullet Strength & Metrics: ${breakdown.bullets}/25\n• Skills Depth: ${breakdown.skills}/15\n• Education: ${breakdown.education}/10`;
+  }
+
+  // Update Live Preview Panel DOM Badge
+  const previewAtsEl = document.getElementById('preview-ats-number');
+  const previewAtsPill = document.getElementById('preview-realtime-ats');
+  const previewAtsCircle = document.getElementById('preview-ats-svg-path');
+  if (previewAtsEl) previewAtsEl.textContent = score;
+  if (previewAtsCircle) {
+    previewAtsCircle.setAttribute('stroke-dasharray', `${score}, 100`);
+    if (score >= 85) previewAtsCircle.setAttribute('stroke', '#476550');
+    else if (score >= 70) previewAtsCircle.setAttribute('stroke', '#2DD4BF');
+    else if (score >= 50) previewAtsCircle.setAttribute('stroke', '#F59E0B');
+    else previewAtsCircle.setAttribute('stroke', '#EF4444');
+  }
+  if (previewAtsPill) {
+    previewAtsPill.className = 'preview-ats-badge no-print ' + (score >= 85 ? 'score-elite' : (score >= 70 ? 'score-strong' : (score >= 50 ? 'score-warning' : 'score-danger')));
+    previewAtsPill.title = `Live ATS Score: ${score}/100\nClick for detailed breakdown`;
+  }
+
+  // Update Pre-Download Modal Preview if open
+  const modalScore = document.getElementById('modal-general-ats-score');
+  if (modalScore) modalScore.textContent = `${score}/100`;
+
+  return { score, breakdown };
+}
+window.calculateGeneralATSScore = calculateGeneralATSScore;
+
 function syncFormToPreview() {
+  // Calculate real-time General ATS Score
+  calculateGeneralATSScore();
+
   // Always trigger LocalStorage Auto-Save synchronously to avoid losing inputs
   autoSaveResume();
 
@@ -1331,7 +1462,9 @@ function updateInlineLayoutSwitcher() {
    6. WIZARD STEPS NAVIGATOR
    ========================================================================== */
 function setupWizardDots() {
-  wizardProgressDots.innerHTML = '';
+  const dotsContainer = document.getElementById('wizard-progress-dots');
+  if (!dotsContainer) return;
+  dotsContainer.innerHTML = '';
   for (let i = 1; i <= state.totalSteps; i++) {
     const dot = document.createElement('span');
     dot.className = `progress-dot ${i === 1 ? 'active' : ''}`;
@@ -1346,14 +1479,22 @@ function setupWizardDots() {
       autoSaveResume();
     });
     
-    wizardProgressDots.appendChild(dot);
+    dotsContainer.appendChild(dot);
   }
 }
 
 function updateProgressDots() {
   const current = parseInt(state.currentStep, 10) || 1;
 
-  // Sync wizard progress dots
+  // Sync wizard progress fill bar
+  const progressFill = document.getElementById('wizard-progress-fill');
+  if (progressFill) {
+    const total = state.totalSteps || 7;
+    const pct = Math.max(14.3, Math.min(100, Math.round((current / total) * 100)));
+    progressFill.style.width = `${pct}%`;
+  }
+
+  // Sync wizard progress dots (if present)
   const dots = wizardProgressDots ? wizardProgressDots.querySelectorAll('.progress-dot') : [];
   dots.forEach((dot, index) => {
     const stepNum = index + 1;
@@ -1447,6 +1588,27 @@ window.wizardPrev = handleWizardPrev;
    7. PRINT DIALOG, AI UPGRADE, & PDF EXPORT
    ========================================================================== */
 function openPrintModal() {
+  // Check if free user has reached 2 downloads limit
+  if (window.SubscriptionManager && !window.SubscriptionManager.canDownloadResume()) {
+    const limitModal = document.getElementById('download-limit-modal');
+    if (limitModal) {
+      limitModal.style.display = 'flex';
+      return;
+    }
+  }
+
+  if (typeof window.closeZenGuideTour === 'function') {
+    window.closeZenGuideTour();
+  }
+  if (typeof window.dismissTour === 'function') {
+    window.dismissTour();
+  }
+
+  // Refresh latest real-time General ATS score
+  if (typeof calculateGeneralATSScore === 'function') {
+    calculateGeneralATSScore();
+  }
+
   // Track GA4 Funnel Event: ats_score_checked
   trackGAEvent('ats_score_checked', {
     template_id: state.selectedTemplateId,
@@ -1481,7 +1643,18 @@ window.triggerActualPrint = function() {
 };
 
 function executeSystemPrint() {
+  // Double-check quota before downloading
+  if (window.SubscriptionManager && !window.SubscriptionManager.canDownloadResume()) {
+    closePrintModal();
+    const limitModal = document.getElementById('download-limit-modal');
+    if (limitModal) limitModal.style.display = 'flex';
+    return;
+  }
+
   closePrintModal();
+  if (window.SubscriptionManager) {
+    window.SubscriptionManager.recordDownload();
+  }
   runPdfGeneration();
 }
 
@@ -1766,10 +1939,10 @@ function setMobileTab(activeTab) {
     // Trigger full preview rendering and layout fitting on tab entry
     syncFormToPreview();
     
-    // Trigger dynamic fluid preview scaling on mobile view tab switch (fallback for non-observer browsers)
     setTimeout(adjustPreviewScale, 150);
   }
 }
+window.setMobileTab = setMobileTab;
 
 /* ==========================================================================
    7C. FLUID MOBILE PREVIEW SCALING
@@ -2419,14 +2592,21 @@ function initReorderController() {
    FEATURE 3: LIVE CLIENT-SIDE ATS JOB DESCRIPTION KEYWORD MATCHER
    ========================================================================== */
 const COMMON_TECH_SKILLS = [
+  // Programming & Web
   'Python', 'JavaScript', 'TypeScript', 'Java', 'C++', 'C#', '.NET', 'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin',
   'React', 'React.js', 'Next.js', 'Vue', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Django', 'Flask', 'FastAPI', 'Spring Boot',
   'HTML5', 'CSS3', 'Tailwind CSS', 'Bootstrap', 'SASS', 'Redux', 'GraphQL', 'REST API', 'Microservices',
   'SQL', 'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Cassandra', 'Elasticsearch', 'DynamoDB',
+  // Cloud & DevOps
   'AWS', 'Amazon Web Services', 'Azure', 'GCP', 'Google Cloud', 'Docker', 'Kubernetes', 'CI/CD', 'Jenkins', 'GitHub Actions', 'Terraform', 'Ansible', 'Linux',
+  // AI, Data Science & Generative AI
   'Machine Learning', 'Deep Learning', 'AI', 'NLP', 'Computer Vision', 'PyTorch', 'TensorFlow', 'Scikit-Learn', 'Pandas', 'NumPy', 'Data Science', 'Data Engineering', 'Spark', 'Kafka',
+  'Generative AI', 'LLMs', 'Large Language Models', 'RAG', 'LangChain', 'LlamaIndex', 'Prompt Engineering', 'Vector Databases', 'Pinecone', 'Milvus', 'Transformer',
+  // Mechanical & Hardware Engineering
+  'SolidWorks', 'AutoCAD', 'CATIA', 'ANSYS', 'FEA', 'CFD', 'GD&T', 'DFM', 'DFA', 'CNC Machining', 'Thermodynamics', 'Fluid Dynamics', 'Sheet Metal', 'Injection Molding', 'Root Cause Analysis', 'FMEA', 'BOM', 'PLM', '3D Printing', 'Materials Science', 'Prototyping', 'CAD Modeling', 'Stress Analysis', 'ASME Y14.5',
+  // Tools & Methodologies
   'Agile', 'Scrum', 'Jira', 'Git', 'GitHub', 'GitLab', 'Unit Testing', 'Jest', 'Cypress', 'Selenium', 'TDD', 'Figma', 'UI/UX',
-  'Cybersecurity', 'SIEM', 'Cloud Security', 'DevOps', 'SRE', 'System Design', 'AutoCAD', 'SolidWorks', 'MATLAB', 'Tableau', 'Power BI', 'Excel'
+  'Cybersecurity', 'SIEM', 'Cloud Security', 'DevOps', 'SRE', 'System Design', 'MATLAB', 'Tableau', 'Power BI', 'Excel'
 ];
 
 function initAtsMatcher() {
@@ -2450,6 +2630,9 @@ function initAtsMatcher() {
 
   if (btnOpen && modal) {
     btnOpen.addEventListener('click', () => {
+      if (typeof window.closeZenGuideTour === 'function') {
+        window.closeZenGuideTour();
+      }
       // Sync stored JD into textarea
       if (state.targetJobDescription && inputJd) {
         inputJd.value = state.targetJobDescription;
@@ -2480,6 +2663,41 @@ function initAtsMatcher() {
     btnScan.addEventListener('click', runAtsScan);
   }
 
+  // 1-Click Keyword Injection helper that syncs directly into Live Preview
+  function injectKeywordsIntoResume(keywords) {
+    const skillsInput = document.getElementById('input-skills') || document.querySelector('#skills-input');
+    const toAddList = Array.isArray(keywords) ? keywords : [keywords];
+    
+    if (skillsInput) {
+      let currentVal = skillsInput.value.trim();
+      let currentSkills = currentVal ? currentVal.split(',').map(s => s.trim().toLowerCase()) : [];
+      
+      const newItems = [];
+      toAddList.forEach(kw => {
+        if (kw && !currentSkills.includes(kw.toLowerCase())) {
+          newItems.push(kw);
+          currentSkills.push(kw.toLowerCase());
+        }
+      });
+      
+      if (newItems.length > 0) {
+        skillsInput.value = currentVal ? `${currentVal}, ${newItems.join(', ')}` : newItems.join(', ');
+        
+        // Trigger input event to update state
+        skillsInput.dispatchEvent(new Event('input', { bubbles: true }));
+        
+        // Force synchronous render to Live Preview & Print Area
+        if (typeof syncFormToPreview === 'function') syncFormToPreview();
+        if (typeof autoSaveResume === 'function') autoSaveResume();
+        
+        showToast(`✨ Added "${newItems.join(', ')}" to your Resume Skills!`);
+        
+        // Re-run scan to update score and tags reactively
+        setTimeout(runAtsScan, 100);
+      }
+    }
+  }
+
   function runAtsScan() {
     const jd = inputJd ? inputJd.value.trim() : '';
     if (!jd) {
@@ -2495,8 +2713,7 @@ function initAtsMatcher() {
     const aiJdInput = document.getElementById('input-job-description');
     if (aiJdInput) aiJdInput.value = jd;
 
-    // 1. Extract keywords from JD
-    const jdLower = jd.toLowerCase();
+    // 1. Extract keywords from JD using strict dictionary and vetted patterns
     const extractedKeywords = [];
 
     COMMON_TECH_SKILLS.forEach(skill => {
@@ -2508,9 +2725,16 @@ function initAtsMatcher() {
       }
     });
 
-    // Also extract capitalized technical keywords (e.g., specific acronyms/libraries)
+    // Extract acronyms and specialized capitalized words while filtering out structural headers
     const customWords = jd.match(/\b[A-Z][a-zA-Z0-9#+.-]{2,}\b/g) || [];
-    const stopWords = ['The', 'And', 'For', 'With', 'You', 'Will', 'Are', 'This', 'Our', 'Job', 'Team', 'Work', 'Role', 'Company', 'Must', 'Have', 'Able', 'Join', 'From', 'About', 'Full', 'Time', 'Year', 'Years', 'Plus', 'Ideal', 'Good', 'Self', 'Fast', 'Looking', 'Required', 'Requirements'];
+    const stopWords = [
+      'The', 'And', 'For', 'With', 'You', 'Will', 'Are', 'This', 'Our', 'Job', 'Team', 'Work', 'Role', 'Company', 
+      'Must', 'Have', 'Able', 'Join', 'From', 'About', 'Full', 'Time', 'Year', 'Years', 'Plus', 'Ideal', 'Good', 
+      'Self', 'Fast', 'Looking', 'Required', 'Requirements', 'Title', 'Location', 'Employment', 'Type', 'Responsibilities', 
+      'Perform', 'Finite', 'Element', 'Candidate', 'Qualifications', 'Key', 'Overview', 'Experience', 'Summary', 'Description',
+      'Location', 'On-site', 'Hybrid', 'Remote', 'Create', 'Leading', 'Related', 'Field', 'Degree'
+    ];
+    
     customWords.forEach(w => {
       if (!stopWords.includes(w) && w.length >= 3 && !extractedKeywords.some(k => k.toLowerCase() === w.toLowerCase())) {
         if (extractedKeywords.length < 25) {
@@ -2574,26 +2798,153 @@ function initAtsMatcher() {
         : '<span style="font-size: 12px; color: #94A3B8;">No target keywords detected in your resume yet.</span>';
     }
 
-    if (missingContainer) {
-      missingContainer.innerHTML = missing.length > 0
-        ? missing.map(k => `<button type="button" class="ats-keyword-tag missing" data-keyword="${escapeHTML(k)}" title="Click to add to Skills"><i class="fas fa-plus"></i> ${escapeHTML(k)}</button>`).join('')
-        : '<span style="font-size: 12px; color: #16A34A;">🎉 Excellent! All extracted keywords are in your resume.</span>';
+    // 5. Tier-Based Missing Keywords Rendering
+    const subManager = window.SubscriptionManager;
+    const userTier = subManager ? subManager.getUserTier() : 'free';
 
-      // 1-Click add to skills handler
-      missingContainer.querySelectorAll('.ats-keyword-tag.missing').forEach(tagBtn => {
-        tagBtn.addEventListener('click', () => {
-          const kw = tagBtn.getAttribute('data-keyword');
-          const skillsInput = document.getElementById('input-skills');
-          if (skillsInput) {
-            const currentSkills = skillsInput.value.trim();
-            skillsInput.value = currentSkills ? `${currentSkills}, ${kw}` : kw;
-            syncFormToPreview();
-            tagBtn.remove();
-            showToast(`Added "${kw}" to Skills!`);
-            runAtsScan(); // Re-evaluate score reactively!
+    if (missingContainer) {
+      if (missing.length === 0) {
+        // CONGRATULATIONS SCREEN (100% MATCH)
+        missingContainer.innerHTML = `
+          <div style="background: rgba(46, 204, 113, 0.08); border: 1.5px solid rgba(46, 204, 113, 0.35); border-radius: 12px; padding: 16px; text-align: center; width: 100%;">
+            <div style="font-size: 26px; margin-bottom: 6px;">🎉</div>
+            <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 800; color: #27AE60;">Outstanding! 100% Keyword Match!</h4>
+            <p style="margin: 0; font-size: 12.5px; color: #334155;">No keywords from this job description are missing inside your resume. Your resume is fully ATS-optimized for this role!</p>
+          </div>
+        `;
+      } else if (userTier === 'free') {
+        // FREE TIER: Strictly ONE (1) Free Missing Keyword Fix!
+        const freeKwClaimed = localStorage.getItem('zen_free_kw_claimed');
+        const curSymbol = subManager && subManager.getCurrency() === 'USD' ? '$' : '₹';
+        const dayPrice = subManager && subManager.getCurrency() === 'USD' ? '$4.99' : '₹49';
+
+        if (!freeKwClaimed) {
+          // Free fix NOT used yet: Offer 1 free keyword with 1-click button
+          const freeKeyword = missing[0];
+          const remainingCount = missing.length - 1;
+
+          missingContainer.innerHTML = `
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+              <!-- 1 Free Keyword Action Card -->
+              <div style="background: rgba(0, 104, 86, 0.06); border: 1.5px solid rgba(0, 104, 86, 0.25); border-radius: 12px; padding: 14px 16px;">
+                <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 4px;">
+                  🎯 1 Free Missing Keyword: <strong style="color: #476550; font-size: 14.5px;">"${escapeHTML(freeKeyword)}"</strong>
+                </div>
+                <p style="font-size: 12px; color: #64748B; margin: 0 0 10px 0;">
+                  Free tier includes 1 instant keyword fix. Click below to add it to your resume.
+                </p>
+                <button type="button" id="btn-free-add-single-kw" style="background: linear-gradient(135deg, #476550, #00846D); color: white; border: none; border-radius: 10px; padding: 9px 16px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0, 104, 86, 0.25);">
+                  <i class="fas fa-magic"></i>
+                  <span>✨ 1-Click Auto-Add "${escapeHTML(freeKeyword)}" to Resume (Free)</span>
+                </button>
+              </div>
+
+              <!-- Blurred Remaining Keywords Box -->
+              ${remainingCount > 0 ? `
+                <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1.5px dashed #CBD5E1; padding: 14px; background: #F8FAFC;">
+                  <div style="filter: blur(4.5px); user-select: none; pointer-events: none; display: flex; flex-wrap: wrap; gap: 6px;">
+                    ${missing.slice(1).map(k => `<span class="ats-keyword-tag missing"><i class="fas fa-plus"></i> ${escapeHTML(k)}</span>`).join('')}
+                  </div>
+                  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; text-align: center;">
+                    <div style="font-size: 13px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
+                      🔒 +${remainingCount} More Critical Keywords Hidden
+                    </div>
+                    <p style="font-size: 11.5px; color: #64748B; margin: 0 0 8px 0; max-width: 420px; line-height: 1.4;">
+                      Find &amp; paste more keywords manually, or unlock full ATS Keyword Gap Analysis &amp; 1-Click AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!
+                    </p>
+                    <button type="button" onclick="document.getElementById('ats-matcher-modal').style.display='none'; window.openProPaymentModal('day');" style="background: linear-gradient(135deg, #7C3AED, #9333EA); color: white; border: none; border-radius: 8px; padding: 7px 16px; font-weight: 700; font-size: 12px; cursor: pointer; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);">
+                      ⚡ Unlock All ${missing.length} Keywords &amp; AI Tailor &rarr;
+                    </button>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+
+          const btnFreeAdd = document.getElementById('btn-free-add-single-kw');
+          if (btnFreeAdd) {
+            btnFreeAdd.addEventListener('click', () => {
+              localStorage.setItem('zen_free_kw_claimed', freeKeyword);
+              injectKeywordsIntoResume(freeKeyword);
+            });
           }
+        } else {
+          // Free fix ALREADY claimed: Lock all remaining keywords completely! No more free adds!
+          missingContainer.innerHTML = `
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+              <!-- Notice that Free Fix was already used -->
+              <div style="background: rgba(0, 104, 86, 0.06); border: 1.5px solid rgba(0, 104, 86, 0.25); border-radius: 12px; padding: 12px 14px;">
+                <div style="font-size: 12.5px; font-weight: 700; color: #006856; margin-bottom: 3px;">
+                  <i class="fas fa-check-circle"></i> 1 Free Keyword Fix Applied: <strong>"${escapeHTML(freeKwClaimed)}"</strong>
+                </div>
+                <p style="font-size: 11.5px; color: #475569; margin: 0;">
+                  Your 1 free keyword fix for this session is complete. Remaining missing keywords are locked behind Pro.
+                </p>
+              </div>
+
+              <!-- 100% Blurred Locked Container for ALL remaining keywords -->
+              <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1.5px dashed #CBD5E1; padding: 14px; background: #F8FAFC;">
+                <div style="filter: blur(4.5px); user-select: none; pointer-events: none; display: flex; flex-wrap: wrap; gap: 6px;">
+                  ${missing.map(k => `<span class="ats-keyword-tag missing"><i class="fas fa-plus"></i> ${escapeHTML(k)}</span>`).join('')}
+                </div>
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px; text-align: center;">
+                  <div style="font-size: 13.5px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
+                    🔒 ${missing.length} Critical Missing Keywords Hidden
+                  </div>
+                  <p style="font-size: 11.5px; color: #64748B; margin: 0 0 10px 0; max-width: 420px; line-height: 1.4;">
+                    Find &amp; paste more keywords manually, or unlock full ATS Keyword Gap Analysis &amp; 1-Click AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!
+                  </p>
+                  <button type="button" onclick="document.getElementById('ats-matcher-modal').style.display='none'; window.openProPaymentModal('day');" style="background: linear-gradient(135deg, #7C3AED, #9333EA); color: white; border: none; border-radius: 8px; padding: 8px 18px; font-weight: 700; font-size: 12.5px; cursor: pointer; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);">
+                    ⚡ Unlock All ${missing.length} Keywords &amp; AI Tailor &rarr;
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+      } else {
+        // PAID TIERS (1-Day, 7-Day, ZenSuite): Full Unlock with 1-Click Add All Button
+        const maxQuota = userTier === 'day' ? 2 : 4;
+        const currentUsage = subManager ? subManager.getDailyUsage('kw_review') : 0;
+        
+        missingContainer.innerHTML = `
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <span style="font-size: 12.5px; font-weight: 700; color: #DC2626;">
+                <i class="fas fa-circle-exclamation"></i> Missing Keywords (${missing.length}):
+              </span>
+              <button type="button" id="btn-add-all-missing-kw" style="background: linear-gradient(135deg, #476550, #00846D); color: white; border: none; border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0, 104, 86, 0.25);">
+                <i class="fas fa-magic"></i> ✨ Add All Missing (${missing.length}) in 1-Click
+              </button>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+              ${missing.map(k => `
+                <button type="button" class="ats-keyword-tag missing btn-inject-single-kw" data-keyword="${escapeHTML(k)}" title="Click to add to Skills">
+                  <i class="fas fa-plus"></i> ${escapeHTML(k)}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+
+        // Attach 1-click add all handler
+        const btnAddAll = document.getElementById('btn-add-all-missing-kw');
+        if (btnAddAll) {
+          btnAddAll.addEventListener('click', () => {
+            injectKeywordsIntoResume(missing);
+          });
+        }
+
+        // Attach individual pill clicks
+        missingContainer.querySelectorAll('.btn-inject-single-kw').forEach(tagBtn => {
+          tagBtn.addEventListener('click', () => {
+            const kw = tagBtn.getAttribute('data-keyword');
+            injectKeywordsIntoResume(kw);
+          });
         });
-      });
+      }
     }
 
     if (resultsContainer) resultsContainer.style.display = 'block';
@@ -2665,6 +3016,17 @@ function attachEvents() {
   btnWizardNext.addEventListener('click', handleWizardNext);
   btnWizardPrev.addEventListener('click', handleWizardPrev);
 
+  // Real-Time ATS Score Pill Click Handler
+  const realtimeAtsPill = document.getElementById('editor-realtime-ats');
+  if (realtimeAtsPill) {
+    realtimeAtsPill.addEventListener('click', () => {
+      const result = calculateGeneralATSScore();
+      if (typeof showToast === 'function') {
+        showToast(`🎯 ATS Score: ${result.score}/100 (${result.score >= 85 ? 'Elite' : 'Strong'})`);
+      }
+    });
+  }
+
   // Quick Action download button in Live Preview
   btnTriggerDownload.addEventListener('click', openPrintModal);
   
@@ -2719,6 +3081,26 @@ function attachEvents() {
         alert("Please paste a job description first.");
         return;
       }
+
+      // Check Subscription & Daily Quota
+      const subManager = window.SubscriptionManager;
+      const userTier = subManager ? subManager.getUserTier() : 'free';
+
+      if (userTier === 'free') {
+        alert("AI Resume Tailoring is a Pro feature! Free tier includes 100% vector single-column ATS PDF creation & 1 free missing keyword check. Upgrade to 1-Day Sprint (₹49 / $4.99) or 7-Day Fast Track for full AI tailoring!");
+        closePrintModal();
+        if (window.openProPaymentModal) window.openProPaymentModal('day');
+        return;
+      }
+
+      const maxQuota = userTier === 'day' ? 2 : 4;
+      const usedToday = subManager ? subManager.getDailyUsage('tailor') : 0;
+      if (usedToday >= maxQuota) {
+        alert(`You have completed your ${maxQuota} AI Job Tailoring runs for today on your ${userTier === 'day' ? '1-Day Plan' : '7-Day / ZenSuite Plan'}. Quota resets daily at midnight!`);
+        return;
+      }
+
+      if (subManager) subManager.incrementDailyUsage('tailor');
       
       const _gk2 = () => { const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]; const _s = "ZenResume2026"; return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
       
@@ -3445,6 +3827,21 @@ function enterApp() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Mobile Menu Toggle & Auto-Close Controller
+window.toggleMobileMenu = function(forceClose = false) {
+  const drawer = document.getElementById('mobile-drawer-menu');
+  const btn = document.getElementById('btn-mobile-menu');
+  if (!drawer) return;
+  
+  if (forceClose || drawer.classList.contains('open')) {
+    drawer.classList.remove('open');
+    if (btn) btn.innerHTML = '<i class="fas fa-bars"></i>';
+  } else {
+    drawer.classList.add('open');
+    if (btn) btn.innerHTML = '<i class="fas fa-times"></i>';
+  }
+};
+
 function openOnboardingModal() {
   const modal = document.getElementById('onboarding-choice-modal');
   if (modal) {
@@ -3662,5 +4059,335 @@ window.zoomFit = function() {
   const btnZoomToggle = document.getElementById('btn-zoom-toggle');
   if (btnZoomToggle) btnZoomToggle.click();
 };
+
+// ==========================================================================
+// SUBSCRIPTION TIER & DAILY QUOTA CONTROLLER
+// ==========================================================================
+window.SubscriptionManager = {
+  getUserTier: function() {
+    const tier = localStorage.getItem('zen_user_tier') || 'free';
+    if (tier !== 'free') {
+      const expiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+      if (expiry && Date.now() > expiry) {
+        localStorage.setItem('zen_user_tier', 'free');
+        this.applyAdVisibility();
+        return 'free';
+      }
+    }
+    return tier;
+  },
+  setUserTier: function(tier, durationDays = 0) {
+    if (!['free', 'day', 'sprint', 'suite'].includes(tier)) tier = 'free';
+    localStorage.setItem('zen_user_tier', tier);
+    if (durationDays > 0) {
+      const expiry = Date.now() + (durationDays * 24 * 60 * 60 * 1000);
+      localStorage.setItem('zen_tier_expiry', expiry.toString());
+    } else {
+      localStorage.removeItem('zen_tier_expiry');
+    }
+    this.applyAdVisibility();
+  },
+  getCurrency: function() {
+    return window.currentCurrency || localStorage.getItem('zen_user_currency') || 'INR';
+  },
+  getFreeDownloadsCount: function() {
+    return parseInt(localStorage.getItem('zen_free_downloads_count') || '0', 10);
+  },
+  canDownloadResume: function() {
+    const tier = this.getUserTier();
+    if (tier !== 'free') return true;
+    return this.getFreeDownloadsCount() < 2;
+  },
+  recordDownload: function() {
+    const tier = this.getUserTier();
+    if (tier === 'free') {
+      const count = this.getFreeDownloadsCount() + 1;
+      localStorage.setItem('zen_free_downloads_count', count.toString());
+      return count;
+    }
+    return 0;
+  },
+  getDailyUsage: function(featureKey) {
+    const today = new Date().toISOString().slice(0, 10);
+    const key = `zen_daily_${featureKey}_${today}`;
+    return parseInt(localStorage.getItem(key) || '0', 10);
+  },
+  incrementDailyUsage: function(featureKey) {
+    const today = new Date().toISOString().slice(0, 10);
+    const key = `zen_daily_${featureKey}_${today}`;
+    const count = this.getDailyUsage(featureKey) + 1;
+    localStorage.setItem(key, count.toString());
+    return count;
+  },
+  applyAdVisibility: function() {
+    const tier = this.getUserTier();
+    const isAdFree = tier !== 'free';
+    const adElements = document.querySelectorAll('.ad-banner, .ad-slot, .developer-support-note, [id*="adsbygoogle"], [class*="ad-"]');
+    adElements.forEach(el => {
+      if (isAdFree) {
+        el.classList.add('ad-hidden');
+        el.style.display = 'none';
+      } else {
+        el.classList.remove('ad-hidden');
+        el.style.display = '';
+      }
+    });
+  }
+};
+
+// ==========================================================================
+// DYNAMIC DUAL-CURRENCY ENGINE (INDIA INR vs INTERNATIONAL USD)
+// ==========================================================================
+window.PRICING_CATALOG = {
+  INR: {
+    currencySymbol: '₹',
+    subtitle: 'Most resume builders charge ₹1,500+ after you finish editing. ZenResume gives you unlimited single-column ATS resumes for <strong>free</strong>, with optional high-powered AI tailoring.',
+    plans: {
+      free: { amount: '0', period: '/ free always', btnText: 'Start Free' },
+      day: { amount: '49', period: '/ 24 hours', btnText: 'Get 1-Day — ₹49', modalTab: '₹49', payPrimary: 'Pay ₹49 via UPI / GPay / PhonePe' },
+      sprint: { amount: '199', period: '/ 7 days access', btnText: 'Get 7-Day — ₹199', modalTab: '₹199', payPrimary: 'Pay ₹199 via UPI / GPay / PhonePe' },
+      suite: { amount: '599', period: '/ 1 month access', btnText: 'Get ZenSuite — ₹599', modalTab: '₹599', payPrimary: 'Pay ₹599 for Entire ZenSuite' }
+    },
+    primaryIcon: 'fas fa-qrcode',
+    secondaryText: 'Pay via Credit / Debit Card',
+    secondaryIcon: 'fas fa-credit-card'
+  },
+  USD: {
+    currencySymbol: '$',
+    subtitle: 'Most resume builders charge $20+ after you finish editing. ZenResume gives you unlimited single-column ATS resumes for <strong>free</strong>, with optional high-powered AI tailoring.',
+    plans: {
+      free: { amount: '0', period: '/ free always', btnText: 'Start Free' },
+      day: { amount: '4.99', period: '/ 24 hours', btnText: 'Get 1-Day — $4.99', modalTab: '$4.99', payPrimary: 'Pay $4.99 via Stripe / Card' },
+      sprint: { amount: '11.99', period: '/ 7 days access', btnText: 'Get 7-Day — $11.99', modalTab: '$11.99', payPrimary: 'Pay $11.99 via Stripe / Card' },
+      suite: { amount: '49.99', period: '/ 1 month access', btnText: 'Get ZenSuite — $49.99', modalTab: '$49.99', payPrimary: 'Pay $49.99 for Entire ZenSuite' }
+    },
+    primaryIcon: 'fab fa-stripe',
+    secondaryText: 'Pay via PayPal / Apple Pay',
+    secondaryIcon: 'fab fa-paypal'
+  }
+};
+
+window.currentCurrency = 'INR';
+window.currentPaymentPlan = 'sprint';
+window.currentPaymentAmount = '₹199';
+
+window.detectUserCurrency = function() {
+  // 1. Check saved user preference in localStorage
+  const saved = localStorage.getItem('zen_user_currency');
+  if (saved === 'INR' || saved === 'USD') {
+    return saved;
+  }
+
+  // 2. Fast synchronous heuristic: Check browser timezone and language
+  try {
+    const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
+    const lang = (navigator.language || '').toLowerCase();
+    const langs = (navigator.languages || []).map(l => l.toLowerCase()).join(' ');
+
+    const isIndianTz = tz.includes('calcutta') || tz.includes('kolkata') || tz.includes('asia/colombo') || tz.includes('ist');
+    const isIndianLang = lang.includes('-in') || lang === 'hi' || langs.includes('-in') || langs.includes('hi');
+
+    if (isIndianTz || isIndianLang) {
+      return 'INR';
+    }
+  } catch (e) {
+    console.warn('Currency timezone check:', e);
+  }
+
+  // 3. Non-Indian users default to USD
+  return 'USD';
+};
+
+window.initBackgroundGeoDetection = function() {
+  // Only auto-resolve via IP if user hasn't explicitly set a preference
+  if (localStorage.getItem('zen_user_currency')) return;
+
+  // Asynchronous non-blocking IP country lookup
+  fetch('https://ipapi.co/json/', { mode: 'cors' })
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.country_code) {
+        const countryCurr = data.country_code === 'IN' ? 'INR' : 'USD';
+        if (window.currentCurrency !== countryCurr && !localStorage.getItem('zen_user_currency')) {
+          window.switchCurrency(countryCurr, false);
+        }
+      }
+    })
+    .catch(() => {
+      // Fallback endpoint if primary is unreachable
+      fetch('https://api.country.is/')
+        .then(r => r.json())
+        .then(d => {
+          if (d && d.country) {
+            const countryCurr = d.country === 'IN' ? 'INR' : 'USD';
+            if (window.currentCurrency !== countryCurr && !localStorage.getItem('zen_user_currency')) {
+              window.switchCurrency(countryCurr, false);
+            }
+          }
+        })
+        .catch(() => {});
+    });
+};
+
+window.switchCurrency = function(targetCurrency, persist = true) {
+  if (targetCurrency !== 'INR' && targetCurrency !== 'USD') targetCurrency = 'USD';
+  window.currentCurrency = targetCurrency;
+  if (persist) {
+    try { localStorage.setItem('zen_user_currency', targetCurrency); } catch (e) {}
+  }
+
+  const catalog = window.PRICING_CATALOG[targetCurrency];
+  if (!catalog) return;
+
+  // 1. Update Currency Switcher buttons
+  const btnInr = document.getElementById('btn-currency-inr');
+  const btnUsd = document.getElementById('btn-currency-usd');
+  if (btnInr && btnUsd) {
+    if (targetCurrency === 'INR') {
+      btnInr.style.background = '#476550';
+      btnInr.style.color = '#FFFFFF';
+      btnUsd.style.background = 'transparent';
+      btnUsd.style.color = '#64748B';
+    } else {
+      btnUsd.style.background = '#476550';
+      btnUsd.style.color = '#FFFFFF';
+      btnInr.style.background = 'transparent';
+      btnInr.style.color = '#64748B';
+    }
+  }
+
+  // 2. Update Subtitle
+  const subEl = document.getElementById('pricing-header-subtitle');
+  if (subEl) subEl.innerHTML = catalog.subtitle;
+
+  // 3. Update Pricing Cards in Landing Page
+  const curSymbol = catalog.currencySymbol;
+  ['free', 'day', 'sprint', 'suite'].forEach(planKey => {
+    const pData = catalog.plans[planKey];
+    const curEl = document.getElementById('price-cur-' + planKey);
+    const valEl = document.getElementById('price-val-' + planKey);
+    const perEl = document.getElementById('price-per-' + planKey);
+    const btnTextEl = document.getElementById('btn-pricing-' + planKey + '-text');
+
+    if (curEl) curEl.textContent = curSymbol;
+    if (valEl) valEl.textContent = pData.amount;
+    if (perEl) perEl.textContent = pData.period;
+    if (btnTextEl) btnTextEl.textContent = pData.btnText;
+  });
+
+  // 4. Update Modal Tab Amounts
+  const modalTabDay = document.getElementById('modal-tab-amount-day');
+  const modalTabSprint = document.getElementById('modal-tab-amount-sprint');
+  const modalTabSuite = document.getElementById('modal-tab-amount-suite');
+  if (modalTabDay) modalTabDay.textContent = catalog.plans.day.modalTab;
+  if (modalTabSprint) modalTabSprint.textContent = catalog.plans.sprint.modalTab;
+  if (modalTabSuite) modalTabSuite.textContent = catalog.plans.suite.modalTab;
+
+  // 5. Re-render modal selection state
+  window.selectPaymentPlan(window.currentPaymentPlan || 'sprint');
+};
+
+window.selectPaymentPlan = function(planKey) {
+  window.currentPaymentPlan = planKey;
+  const currency = window.currentCurrency || 'INR';
+  const catalog = window.PRICING_CATALOG[currency] || window.PRICING_CATALOG.INR;
+  const planData = catalog.plans[planKey] || catalog.plans.sprint;
+
+  window.currentPaymentAmount = planData.modalTab;
+
+  const btnDay = document.getElementById('pay-plan-btn-day');
+  const btnSprint = document.getElementById('pay-plan-btn-sprint');
+  const btnSuite = document.getElementById('pay-plan-btn-suite');
+  const summaryText = document.getElementById('payment-summary-text');
+  const btnPayPrimaryText = document.getElementById('btn-pay-primary-text');
+  const btnPayPrimaryIcon = document.getElementById('btn-pay-primary-icon');
+  const btnPaySecondaryText = document.getElementById('btn-pay-secondary-text');
+  const btnPaySecondaryIcon = document.getElementById('btn-pay-secondary-icon');
+
+  // Reset all buttons
+  if (btnDay) {
+    btnDay.style.borderColor = '#CBD5E1';
+    btnDay.style.background = '#FFFFFF';
+  }
+  if (btnSprint) {
+    btnSprint.style.borderColor = '#CBD5E1';
+    btnSprint.style.background = '#FFFFFF';
+  }
+  if (btnSuite) {
+    btnSuite.style.borderColor = '#CBD5E1';
+    btnSuite.style.background = '#FFFFFF';
+  }
+
+  // Highlight active
+  if (planKey === 'day') {
+    if (btnDay) {
+      btnDay.style.borderColor = '#476550';
+      btnDay.style.background = 'rgba(0, 104, 86, 0.08)';
+    }
+    if (summaryText) {
+      summaryText.innerHTML = '<strong>1-Day Sprint:</strong> 24 hours unlimited AI Job Matcher, Gemini 2.5 AI Rewriter &amp; PDF Exports.';
+    }
+  } else if (planKey === 'suite') {
+    if (btnSuite) {
+      btnSuite.style.borderColor = '#F59E0B';
+      btnSuite.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(0, 229, 188, 0.12))';
+    }
+    if (summaryText) {
+      summaryText.innerHTML = '<strong>Entire ZenSuite (1 Month):</strong> Unlimited access to ZenResume Pro, ZenScout AI Auto-Hunter, ZenDoc AI &amp; Campus Suite.';
+    }
+  } else {
+    if (btnSprint) {
+      btnSprint.style.borderColor = '#476550';
+      btnSprint.style.background = 'rgba(0, 104, 86, 0.08)';
+    }
+    if (summaryText) {
+      summaryText.innerHTML = '<strong>7-Day Sprint:</strong> Unlimited AI Job Matcher, Gemini 2.5 AI Rewriter &amp; PDF Exports for 7 full days.';
+    }
+  }
+
+  // Update Pay Button labels & icons based on Currency
+  if (btnPayPrimaryText) {
+    btnPayPrimaryText.textContent = planData.payPrimary;
+  }
+  if (btnPayPrimaryIcon) {
+    btnPayPrimaryIcon.className = catalog.primaryIcon;
+  }
+  if (btnPaySecondaryText) {
+    btnPaySecondaryText.textContent = catalog.secondaryText;
+  }
+  if (btnPaySecondaryIcon) {
+    btnPaySecondaryIcon.className = catalog.secondaryIcon;
+  }
+};
+
+window.openProPaymentModal = function(initialPlan) {
+  const modal = document.getElementById('pro-payment-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    window.selectPaymentPlan(initialPlan || 'sprint');
+  }
+};
+
+window.closeProPaymentModal = function() {
+  const modal = document.getElementById('pro-payment-modal');
+  if (modal) modal.style.display = 'none';
+};
+
+// Initialize currency and subscription state on startup
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    if (window.SubscriptionManager) {
+      window.SubscriptionManager.applyAdVisibility();
+    }
+    const detectedCurr = window.detectUserCurrency();
+    window.switchCurrency(detectedCurr, false);
+    if (typeof window.initBackgroundGeoDetection === 'function') {
+      window.initBackgroundGeoDetection();
+    }
+  } catch (e) {
+    console.warn('Currency init error:', e);
+  }
+});
+
 
 
