@@ -447,7 +447,7 @@
       display: flex !important;
       align-items: center !important;
       justify-content: space-between !important;
-      padding: 10px 20px !important;
+      padding: 10px 24px !important;
       max-width: 1300px !important;
       margin: 0 auto !important;
       width: 100% !important;
@@ -488,30 +488,6 @@
       letter-spacing: 0.8px !important;
       text-transform: uppercase !important;
       margin-top: 1px !important;
-    }
-
-    /* Back Button for Laptop / Desktop / Systems */
-    .btn-nav-back {
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      background: rgba(255, 255, 255, 0.08) !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
-      color: #CBD5E1 !important;
-      font-size: 12.5px !important;
-      font-weight: 600 !important;
-      padding: 6px 12px !important;
-      border-radius: 8px !important;
-      cursor: pointer !important;
-      transition: all 0.2s ease !important;
-      text-decoration: none !important;
-      flex-shrink: 0 !important;
-    }
-    .btn-nav-back:hover {
-      background: rgba(255, 255, 255, 0.18) !important;
-      color: #FFFFFF !important;
-      border-color: rgba(45, 212, 191, 0.4) !important;
-      transform: translateX(-2px) !important;
     }
 
     /* Desktop Navigation Links */
@@ -631,7 +607,7 @@
     .header-right-actions {
       display: flex !important;
       align-items: center !important;
-      gap: 8px !important;
+      gap: 10px !important;
       flex-shrink: 0 !important;
     }
     .btn-theme-toggle {
@@ -723,13 +699,74 @@
       color: #FFFFFF;
     }
 
+    /* Contextual In-Page Back Button (Senior UI/UX Standard) */
+    .breadcrumb-nav-row {
+      display: flex !important;
+      align-items: center !important;
+      gap: 14px !important;
+      margin-bottom: 22px !important;
+      flex-wrap: wrap !important;
+      width: 100% !important;
+    }
+    .btn-page-back {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      background: #FFFFFF !important;
+      border: 1px solid rgba(0, 104, 95, 0.2) !important;
+      color: #0F172A !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      padding: 7px 16px !important;
+      border-radius: 9999px !important;
+      cursor: pointer !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05) !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      text-decoration: none !important;
+      user-select: none !important;
+      flex-shrink: 0 !important;
+      line-height: 1 !important;
+    }
+    .btn-page-back i {
+      font-size: 11px !important;
+      transition: transform 0.2s ease !important;
+      color: #00685F !important;
+    }
+    .btn-page-back:hover {
+      background: #F0FDF4 !important;
+      border-color: #2DD4BF !important;
+      color: #004D40 !important;
+      box-shadow: 0 4px 12px rgba(45, 212, 191, 0.25) !important;
+      transform: translateX(-3px) !important;
+    }
+    .btn-page-back:hover i {
+      transform: translateX(-2px) !important;
+      color: #00846D !important;
+    }
+    .btn-page-back:active {
+      transform: scale(0.97) !important;
+    }
+
+    [data-theme="dark"] .btn-page-back {
+      background: #141B20 !important;
+      border-color: rgba(45, 212, 191, 0.28) !important;
+      color: #E2E8F0 !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+    }
+    [data-theme="dark"] .btn-page-back i {
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .btn-page-back:hover {
+      background: #1E293B !important;
+      border-color: #2DD4BF !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 16px rgba(45, 212, 191, 0.3) !important;
+    }
+
     @media (max-width: 992px) {
       .desktop-nav-links { display: none !important; }
       .mobile-menu-toggle { display: flex !important; }
       .btn-header-cta { display: none !important; }
-    }
-    @media (max-width: 768px) {
-      .btn-nav-back { display: none !important; }
     }
   </style>
 
@@ -806,22 +843,16 @@
   <!-- Top Global Navigation Ribbon -->
   <!-- Top Global Navigation Ribbon -->
   <!-- Top Global Navigation Ribbon -->
+  <!-- Top Global Clean Navigation Ribbon -->
   <header class="no-print stitch-nav">
     <div class="stitch-nav-container">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <a href="/" class="brand-identity-container">
-          <img src="../favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" />
-          <div class="brand-text-column">
-            <span class="brand-main-title">ZenResume</span>
-            <span class="brand-subtext">By Aneevarp Solutions</span>
-          </div>
-        </a>
-        
-        <button type="button" class="btn-nav-back" onclick="window.handleNavigationBack && window.handleNavigationBack();" title="Go back to previous page" aria-label="Go Back">
-          <i class="fas fa-arrow-left"></i>
-          <span>Back</span>
-        </button>
-      </div>
+      <a href="/" class="brand-identity-container">
+        <img src="../favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" />
+        <div class="brand-text-column">
+          <span class="brand-main-title">ZenResume</span>
+          <span class="brand-subtext">By Aneevarp Solutions</span>
+        </div>
+      </a>
 
       <!-- Desktop Navigation Links -->
       <nav class="desktop-nav-links">
@@ -919,11 +950,18 @@
   <div class="guide-page-wrapper">
     
     <!-- Breadcrumb Navigation -->
-    <nav class="guide-breadcrumb">
-      <a href="/">Home</a> <span>/</span>
-      <a href="/blog/">Career Guides</a> <span>/</span>
-      <span>Senior Bookkeeper Resume Guide</span>
-    </nav>
+    <!-- Contextual In-Page Back Navigation & Breadcrumb -->
+    <div class="breadcrumb-nav-row">
+      <button type="button" class="btn-page-back" onclick="window.handleNavigationBack && window.handleNavigationBack();" aria-label="Go back to previous page" title="Go back to previous page">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+      </button>
+      <nav class="guide-breadcrumb" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-sub, #64748B); font-weight: 500;">
+        <a href="/" style="color: var(--text-main, #0F172A); text-decoration: none;">Home</a> <span>/</span>
+        <a href="/role/" style="color: var(--text-main, #0F172A); text-decoration: none;">Resume Guides</a> <span>/</span>
+        <span style="color: var(--primary, #00685F); font-weight: 600;">Senior Bookkeeper Resume Guide</span>
+      </nav>
+    </div>
 
     <!-- Hero Section -->
     <section class="guide-hero">
