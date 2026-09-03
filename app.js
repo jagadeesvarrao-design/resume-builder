@@ -237,7 +237,7 @@ function renderTemplatesCatalog() {
 /* ==========================================================================
    3. TEMPLATE INITIALIZATION & DATA LOADING
    ========================================================================== */
-function selectTemplateStyle(templateId) {
+window.selectTemplateStyle = function selectTemplateStyle(templateId) {
   document.body.classList.add('in-editor');
   const globalNav = document.querySelector('.stitch-nav');
   if (globalNav) globalNav.style.display = 'none';
@@ -1614,14 +1614,6 @@ function syncFormToPreview() {
 
   // Always trigger LocalStorage Auto-Save synchronously to avoid losing inputs
   autoSaveResume();
-
-  const isMobile = window.innerWidth <= 800;
-  const isPreviewHidden = isMobile && (!builderWorkspace || !builderWorkspace.classList.contains('show-preview'));
-  
-  // If preview is hidden, skip expensive DOM compilation and layout iterations
-  if (isPreviewHidden) {
-    return;
-  }
 
   const currentData = extractCurrentFormData();
   
