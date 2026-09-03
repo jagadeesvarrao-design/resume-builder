@@ -4373,21 +4373,29 @@ window.closeProPaymentModal = function() {
   if (modal) modal.style.display = 'none';
 };
 
-// Initialize currency and subscription state on startup
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize currency and subscription state on startup immediately & safely
+function initCurrencyAndSubscriptionStartup() {
   try {
     if (window.SubscriptionManager) {
       window.SubscriptionManager.applyAdVisibility();
     }
-    const detectedCurr = window.detectUserCurrency();
-    window.switchCurrency(detectedCurr, false);
+    const detectedCurr = typeof window.detectUserCurrency === 'function' ? window.detectUserCurrency() : 'INR';
+    if (typeof window.switchCurrency === 'function') {
+      window.switchCurrency(detectedCurr, false);
+    }
     if (typeof window.initBackgroundGeoDetection === 'function') {
       window.initBackgroundGeoDetection();
     }
   } catch (e) {
     console.warn('Currency init error:', e);
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCurrencyAndSubscriptionStartup);
+} else {
+  initCurrencyAndSubscriptionStartup();
+}
 
 
 

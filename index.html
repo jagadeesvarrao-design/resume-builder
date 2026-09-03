@@ -88,7 +88,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=6.3">
+  <link rel="stylesheet" href="styles.css?v=7.5">
   
   <style id="zenresume-critical-header-style">
     /* ==========================================================================
@@ -622,7 +622,224 @@
         font-size: 12px !important;
       }
     }
+
+    /* ── Critical Inlined Pricing Section Styles (Zero Unstyled Flash) ── */
+    .pricing-landing-section { position: relative; z-index: 5; }
+    .pricing-cards-grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+      gap: 18px !important;
+      max-width: 1320px !important;
+      margin: 0 auto 36px auto !important;
+      align-items: stretch !important;
+    }
+    @media (min-width: 1100px) {
+      .pricing-cards-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+    }
+    .pricing-card {
+      background: #FFFFFF !important;
+      border: 1.5px solid var(--border-subtle, #E2E8F0) !important;
+      border-radius: 18px !important;
+      padding: 26px 18px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+      position: relative !important;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
+      box-sizing: border-box !important;
+    }
+    .pricing-card:hover {
+      transform: translateY(-4px) !important;
+      box-shadow: 0 16px 36px rgba(0, 104, 86, 0.12) !important;
+      border-color: rgba(0, 104, 86, 0.35) !important;
+    }
+    .pricing-card.featured {
+      background: linear-gradient(165deg, #FFFFFF, #F4FAF7) !important;
+      border: 2px solid #476550 !important;
+      box-shadow: 0 8px 30px rgba(0, 104, 86, 0.16) !important;
+    }
+    @media (min-width: 993px) {
+      .pricing-card.featured { transform: scale(1.03) !important; }
+      .pricing-card.featured:hover { transform: scale(1.03) translateY(-4px) !important; }
+    }
+    .pricing-popular-ribbon {
+      position: absolute !important;
+      top: -12px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+      color: #FFFFFF !important;
+      font-size: 11px !important;
+      font-weight: 800 !important;
+      padding: 4px 14px !important;
+      border-radius: 9999px !important;
+      letter-spacing: 0.5px !important;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35) !important;
+      white-space: nowrap !important;
+    }
+    .pricing-plan-badge {
+      display: inline-block !important;
+      font-size: 10px !important;
+      font-weight: 800 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.6px !important;
+      padding: 3px 8px !important;
+      border-radius: 6px !important;
+      margin-bottom: 8px !important;
+    }
+    .badge-free { background: rgba(100, 116, 139, 0.1) !important; color: #64748B !important; }
+    .badge-pro { background: rgba(0, 104, 86, 0.12) !important; color: #476550 !important; }
+    .badge-campus { background: rgba(0, 229, 188, 0.15) !important; color: #00846D !important; }
+    .pricing-plan-title {
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 22px !important;
+      font-weight: 800 !important;
+      color: #0F172A !important;
+      margin: 0 0 6px 0 !important;
+    }
+    .pricing-plan-subtitle {
+      font-size: 13px !important;
+      color: #64748B !important;
+      line-height: 1.5 !important;
+      margin: 0 0 16px 0 !important;
+      min-height: 40px !important;
+    }
+    .pricing-price-wrap {
+      display: flex !important;
+      align-items: baseline !important;
+      gap: 4px !important;
+      margin-bottom: 20px !important;
+      padding-bottom: 16px !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    }
+    .pricing-currency {
+      font-size: 20px !important;
+      font-weight: 700 !important;
+      color: #0F172A !important;
+    }
+    .pricing-amount {
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 38px !important;
+      font-weight: 800 !important;
+      color: #0F172A !important;
+      line-height: 1 !important;
+    }
+    .pricing-period {
+      font-size: 12.5px !important;
+      color: #64748B !important;
+      font-weight: 500 !important;
+    }
+    .pricing-features-list {
+      list-style: none !important;
+      padding: 0 !important;
+      margin: 0 0 24px 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 10px !important;
+      flex: 1 !important;
+    }
+    .pricing-features-list li {
+      font-size: 13px !important;
+      color: #334155 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      line-height: 1.4 !important;
+    }
+    .btn-pricing-cta {
+      width: 100% !important;
+      padding: 13px 18px !important;
+      border-radius: 12px !important;
+      font-size: 13.5px !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      text-decoration: none !important;
+      transition: all 0.2s ease !important;
+      box-sizing: border-box !important;
+    }
+    .btn-pricing-free {
+      background: #F1F5F9 !important;
+      color: #334155 !important;
+      border: 1px solid #CBD5E1 !important;
+    }
+    .btn-pricing-free:hover {
+      background: #E2E8F0 !important;
+      color: #0F172A !important;
+    }
+    .btn-pricing-pro {
+      background: linear-gradient(135deg, #476550, #00846D) !important;
+      color: #FFFFFF !important;
+      border: none !important;
+      box-shadow: 0 4px 14px rgba(0, 104, 86, 0.25) !important;
+    }
+    .btn-pricing-pro:hover {
+      background: linear-gradient(135deg, #344c3c, #006856) !important;
+      box-shadow: 0 6px 20px rgba(0, 104, 86, 0.4) !important;
+    }
+    .btn-pricing-suite {
+      background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+      color: #FFFFFF !important;
+      border: none !important;
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35) !important;
+    }
+    .btn-pricing-suite:hover {
+      background: linear-gradient(135deg, #D97706, #B45309) !important;
+      box-shadow: 0 6px 22px rgba(245, 158, 11, 0.5) !important;
+    }
+    .payment-trust-bar {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-wrap: wrap !important;
+      gap: 20px !important;
+      margin-top: 24px !important;
+      padding: 14px 20px !important;
+      background: rgba(0, 104, 86, 0.04) !important;
+      border: 1px solid rgba(0, 104, 86, 0.15) !important;
+      border-radius: 12px !important;
+    }
+    .trust-item {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      color: var(--text-sub, #475569) !important;
+    }
   </style>
+
+  <!-- Instant Pre-Render Currency Localization Script -->
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('zen_user_currency');
+        var isIndia = true;
+        if (saved === 'USD') {
+          isIndia = false;
+        } else if (saved === 'INR') {
+          isIndia = true;
+        } else {
+          var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
+          var lang = (navigator.language || '').toLowerCase();
+          var isIndianTz = tz.indexOf('calcutta') !== -1 || tz.indexOf('kolkata') !== -1 || tz.indexOf('asia/colombo') !== -1 || tz.indexOf('ist') !== -1;
+          var isIndianLang = lang.indexOf('-in') !== -1 || lang === 'hi';
+          isIndia = isIndianTz || isIndianLang;
+        }
+        window.__initialIsIndia = isIndia;
+        window.__initialCurrency = isIndia ? 'INR' : 'USD';
+      } catch (e) {
+        window.__initialIsIndia = true;
+        window.__initialCurrency = 'INR';
+      }
+    })();
+  </script>
 </head>
 <body>
   <!-- Accessibility: Skip to Main Content Link (WCAG 2.1 AA / RPwD Act 2016) -->
@@ -2819,17 +3036,17 @@
   </div>
 
   <!-- Scripts -->
-  <script src="templates-data.js?v=4.6" defer></script>
-  <script src="indexeddb-storage.js" defer></script>
-  <script src="firebase-service.js?v=5.7" defer></script>
-  <script src="app.js?v=5.6" defer></script>
-  <script src="profile-sync.js?v=4.9" defer></script>
-  <script src="exit-intent.js?v=4.9" defer></script>
-  <script src="hero-playground.js?v=5.1" defer></script>
-  <script src="navigator-tour.js?v=5.6" defer></script>
-  <script src="role-hub.js?v=5.6" defer></script>
-  <script src="live-pulse.js?v=5.9" defer></script>
-  <script src="ats-matcher.js?v=1.0" defer></script>
+  <script src="templates-data.js?v=7.5" defer></script>
+  <script src="indexeddb-storage.js?v=7.5" defer></script>
+  <script src="firebase-service.js?v=7.5" defer></script>
+  <script src="app.js?v=7.5" defer></script>
+  <script src="profile-sync.js?v=7.5" defer></script>
+  <script src="exit-intent.js?v=7.5" defer></script>
+  <script src="hero-playground.js?v=7.5" defer></script>
+  <script src="navigator-tour.js?v=7.5" defer></script>
+  <script src="role-hub.js?v=7.5" defer></script>
+  <script src="live-pulse.js?v=7.5" defer></script>
+  <script src="ats-matcher.js?v=7.5" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
