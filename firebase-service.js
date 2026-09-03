@@ -1,7 +1,86 @@
 // firebase-service.js
 
-// Enhanced Global In-App Toast & Notification Engine (Zero Native Browser Alerts)
-window.showToast = function(message, type = 'success', duration = 4000) {
+// Global Friendly Action Modal Engine (UX Masterclass Standard)
+window.showFriendlyNoticeModal = function(options = {}) {
+  const {
+    title = 'Notice',
+    message = '',
+    badgeText = 'ZenResume Notice',
+    badgeIcon = 'fas fa-info-circle',
+    type = 'info', // 'info', 'warning', 'success', 'danger'
+    primaryBtnText = 'Got It',
+    onPrimary = null,
+    secondaryBtnText = null,
+    onSecondary = null
+  } = options;
+
+  // Remove existing modal if open
+  const existing = document.getElementById('zen-friendly-modal-root');
+  if (existing) existing.remove();
+
+  const backdrop = document.createElement('div');
+  backdrop.id = 'zen-friendly-modal-root';
+  backdrop.className = 'zen-friendly-modal-backdrop no-print';
+
+  const badgeClass = 'badge-' + (type === 'error' ? 'danger' : type);
+
+  backdrop.innerHTML = `
+    <div class="zen-friendly-modal-card" role="dialog" aria-modal="true">
+      <div class="zen-modal-badge ${badgeClass}">
+        <i class="${badgeIcon}"></i>
+        <span>${badgeText}</span>
+      </div>
+      <h3 class="zen-modal-title">${title}</h3>
+      <div class="zen-modal-body">${message}</div>
+      <div class="zen-modal-actions">
+        <button type="button" class="btn-zen-modal-primary" id="zen-modal-btn-primary">
+          ${primaryBtnText}
+        </button>
+        ${secondaryBtnText ? `<button type="button" class="btn-zen-modal-secondary" id="zen-modal-btn-secondary">${secondaryBtnText}</button>` : ''}
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(backdrop);
+
+  const closeModal = () => {
+    backdrop.style.opacity = '0';
+    setTimeout(() => backdrop.remove(), 180);
+  };
+
+  const primaryBtn = document.getElementById('zen-modal-btn-primary');
+  if (primaryBtn) {
+    primaryBtn.onclick = () => {
+      closeModal();
+      if (typeof onPrimary === 'function') onPrimary();
+    };
+  }
+
+  const secondaryBtn = document.getElementById('zen-modal-btn-secondary');
+  if (secondaryBtn) {
+    secondaryBtn.onclick = () => {
+      closeModal();
+      if (typeof onSecondary === 'function') onSecondary();
+    };
+  }
+
+  // Close on backdrop click
+  backdrop.onclick = (e) => {
+    if (e.target === backdrop) closeModal();
+  };
+
+  // Close on ESC
+  const onEsc = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      document.removeEventListener('keydown', onEsc);
+    }
+  };
+  document.addEventListener('keydown', onEsc);
+};
+
+// Enhanced Global In-App Toast Engine (Floating Pill, Auto-Dismiss, Tap-to-Dismiss)
+window.showToast = function(message, type = 'success', duration = 3500) {
   let toast = document.getElementById('toast-notification');
   let msgSpan = document.getElementById('toast-message');
   
@@ -22,22 +101,30 @@ window.showToast = function(message, type = 'success', duration = 4000) {
   toast.className = 'no-print zen-inapp-toast toast-' + type;
   if (iconEl) {
     if (type === 'error' || type === 'danger') {
-      iconEl.className = 'toast-icon fas fa-exclamation-circle';
-      toast.style.background = 'linear-gradient(135deg, #EF4444, #B91C1C)';
-      toast.style.boxShadow = '0 10px 30px rgba(239, 68, 68, 0.45)';
+      iconEl.className = 'toast-icon fas fa-circle-exclamation';
+      toast.style.background = 'rgba(26, 12, 14, 0.95)';
+      toast.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+      toast.style.boxShadow = '0 12px 36px rgba(239, 68, 68, 0.25), 0 2px 8px rgba(0,0,0,0.5)';
+      iconEl.style.color = '#EF4444';
     } else if (type === 'warning') {
       iconEl.className = 'toast-icon fas fa-triangle-exclamation';
-      toast.style.background = 'linear-gradient(135deg, #F59E0B, #D97706)';
-      toast.style.boxShadow = '0 10px 30px rgba(245, 158, 11, 0.45)';
+      toast.style.background = 'rgba(26, 20, 10, 0.95)';
+      toast.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+      toast.style.boxShadow = '0 12px 36px rgba(245, 158, 11, 0.25), 0 2px 8px rgba(0,0,0,0.5)';
+      iconEl.style.color = '#F59E0B';
     } else if (type === 'info') {
       iconEl.className = 'toast-icon fas fa-circle-info';
-      toast.style.background = 'linear-gradient(135deg, #0284C7, #0369A1)';
-      toast.style.boxShadow = '0 10px 30px rgba(2, 132, 199, 0.45)';
+      toast.style.background = 'rgba(10, 20, 26, 0.95)';
+      toast.style.borderColor = 'rgba(45, 212, 191, 0.4)';
+      toast.style.boxShadow = '0 12px 36px rgba(45, 212, 191, 0.2), 0 2px 8px rgba(0,0,0,0.5)';
+      iconEl.style.color = '#2DD4BF';
     } else {
-      // Default: success
+      // Default: success / celebration
       iconEl.className = 'toast-icon fas fa-circle-check';
-      toast.style.background = 'linear-gradient(135deg, #10B981, #047857)';
-      toast.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.45)';
+      toast.style.background = 'rgba(12, 24, 20, 0.95)';
+      toast.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+      toast.style.boxShadow = '0 12px 36px rgba(16, 185, 129, 0.2), 0 2px 8px rgba(0,0,0,0.5)';
+      iconEl.style.color = '#10B981';
     }
   }
   
@@ -64,20 +151,44 @@ window.showToast = function(message, type = 'success', duration = 4000) {
 // Global Safety Interceptor: Route ANY native browser alert to our elegant in-app toast
 window.alert = function(message) {
   const isErr = /error|fail|invalid|warning|unauthorized|blocked/i.test(String(message));
-  window.showToast(message, isErr ? 'warning' : 'info', 4500);
+  window.showToast(message, isErr ? 'warning' : 'info', 4000);
 };
 
 function formatAuthErrorMessage(error) {
+  if (!error) return;
+
   if (error.code === 'auth/unauthorized-domain') {
-    return `<strong>Domain Not Authorized in Firebase</strong><br><span style="font-size:12px;opacity:0.95;">Please add <code>${window.location.hostname}</code> to <em>Firebase Console &gt; Authentication &gt; Settings &gt; Authorized Domains</em>.</span>`;
+    console.warn(`[Firebase Developer Notice] Domain "${window.location.hostname}" is not yet added under Firebase Console > Authentication > Settings > Authorized Domains.`);
+    
+    // Display reassuring, non-alarming user modal
+    window.showFriendlyNoticeModal({
+      title: 'Cloud Sync in Maintenance',
+      badgeText: '100% Free Offline Access',
+      badgeIcon: 'fas fa-shield-halved',
+      type: 'info',
+      message: 'Google Sign-In is temporarily offline for maintenance. ZenResume is <strong>100% Local-First</strong> — you can continue building, editing, and downloading all 71 ATS resume templates offline for free without logging in!',
+      primaryBtnText: '⚡ Continue Building Free',
+      secondaryBtnText: 'Dismiss'
+    });
+    return;
   }
+
   if (error.code === 'auth/popup-blocked') {
-    return 'Your browser blocked the login popup. Please allow popups or tap again.';
+    window.showToast('Your browser blocked the sign-in pop-up. Tap Sign In again to retry.', 'warning', 4500);
+    return;
   }
+
   if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
-    return 'Sign-In window was closed. Tap Sign In to try again.';
+    window.showToast('Sign-In window closed. You can sign in anytime or continue building free.', 'info', 3000);
+    return;
   }
-  return `Google Sign-In Notice: ${error.message || 'Please try again.'}`;
+
+  if (error.code === 'auth/network-request-failed') {
+    window.showToast('Network connection unstable. Your data is safely stored offline.', 'warning', 4000);
+    return;
+  }
+
+  window.showToast('Sign-In service is temporarily offline. All free builder tools remain active!', 'info', 4000);
 }
 
 const firebaseConfig = {

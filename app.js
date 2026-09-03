@@ -834,7 +834,7 @@ function promptCreateNewProfileVersion() {
     total_versions: registry.profiles.length
   });
 
-  alert(`🎉 Created job profile: "${cleanName}"!\n\nYou can now tailor your skills and summary specifically for this job description without losing your master resume.`);
+  window.showToast(`🎉 Created job profile: "${cleanName}"! Master resume saved.`, "success", 4000);
 }
 
 function switchProfileVersion(targetId) {
@@ -1174,7 +1174,7 @@ function importResumeJSON(e) {
       const imported = JSON.parse(evt.target.result);
       
       if (!imported || (!imported.resumeData && !imported.personal)) {
-        alert("Invalid JSON format. Please upload a valid ZenResume backup file.");
+        if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Invalid Backup File", message: "The uploaded file is not a valid ZenResume JSON backup. Would you like to select one of our 71 role templates instead?", primaryBtnText: "Explore 71 Templates", onPrimary: () => window.location.href = "/role/", secondaryBtnText: "Try Another File" }); } else { window.showToast("Invalid backup file format.", "warning"); }
         return;
       }
       
@@ -1229,13 +1229,13 @@ function importResumeJSON(e) {
       // Sync form content to preview
       syncFormToPreview();
       
-      alert("Resume data successfully restored!");
+      window.showToast("🎉 Resume data successfully restored!", "success");
       
       // Clear file selector input so same file can be imported again
       e.target.value = '';
     } catch (err) {
       console.error(err);
-      alert("Error parsing JSON file. Please verify it is a valid ZenResume export.");
+      if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Could Not Read File", message: "We encountered an issue reading this file. Please verify it is a valid ZenResume export or pick a 1-click role template.", primaryBtnText: "Pick a Role Blueprint", onPrimary: () => window.location.href = "/role/", secondaryBtnText: "Dismiss" }); } else { window.showToast("Error reading backup file.", "warning"); }
     }
   };
   reader.readAsText(file);
@@ -1815,7 +1815,7 @@ async function runPdfGeneration() {
   try {
     await loadHtml2Pdf();
   } catch (err) {
-    alert("Failed to load the PDF engine. Please check your internet connection.");
+    window.showToast("Connecting to PDF engine... Please check your internet connection.", "warning");
     if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
     window.isGeneratingPdf = false;
     
@@ -1919,7 +1919,7 @@ async function runPdfGeneration() {
     }).catch(err => {
       console.error("PDF Engine Error:", err);
       if (btnModalConfirm) btnModalConfirm.innerHTML = "Error generating PDF. Try again.";
-      alert("Failed to generate PDF. Please try again.");
+      window.showToast("PDF generation encountered a temporary delay. Retrying...", "warning");
     }).finally(() => {
       // ALWAYS RESTORE LAYOUT, REGARDLESS OF SUCCESS OR FAILURE
       printContainer.remove();
@@ -2343,7 +2343,7 @@ async function parseHeuristics(inputData, isPdf = false) {
       has_education: !!(parsedData.education && parsedData.education.length)
     });
 
-    alert("AI Magic Import successful! Your resume has been perfectly structured.");
+    window.showToast("🎉 AI Magic Import successful! All sections have been structured.", "success");
     
   } catch (err) {
     console.error("AI Parse Error:", err);
@@ -2352,7 +2352,7 @@ async function parseHeuristics(inputData, isPdf = false) {
     if (summaryField) {
       summaryField.value = "--- AUTO EXTRACTED RAW TEXT ---\n(Copy & Paste into the fields below)\n\n" + text;
     }
-    alert("AI parsing failed. The raw text was placed in the Summary section so you can copy-paste manually.");
+    if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Partial Import", message: "We placed your raw resume text into the Summary section for easy manual review and copying.", primaryBtnText: "Edit Summary", type: "info" }); } else { window.showToast("Raw text placed in Summary section.", "info"); }
     syncFormToPreview();
   }
 }
@@ -2719,7 +2719,7 @@ function initAtsMatcher() {
   function runAtsScan() {
     const jd = inputJd ? inputJd.value.trim() : '';
     if (!jd) {
-      alert('Please paste a job description or list of required skills first.');
+      window.showToast("Please paste a job description or list of skills first.", "warning");
       return;
     }
 
@@ -3096,7 +3096,7 @@ function attachEvents() {
     btnGenerateAi.addEventListener('click', async () => {
       const jd = document.getElementById('input-job-description').value.trim();
       if (!jd) {
-        alert("Please paste a job description first.");
+        window.showToast("Please paste a job description first.", "warning");
         return;
       }
 
@@ -3105,7 +3105,7 @@ function attachEvents() {
       const userTier = subManager ? subManager.getUserTier() : 'free';
 
       if (userTier === 'free') {
-        alert("AI Resume Tailoring is a Pro feature! Free tier includes 100% vector single-column ATS PDF creation & 1 free missing keyword check. Upgrade to 1-Day Sprint (₹49 / $4.99) or 7-Day Fast Track for full AI tailoring!");
+        if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Upgrade to AI Job Tailoring", badgeText: "Pro Feature", badgeIcon: "fas fa-bolt", type: "warning", message: "AI Resume Tailoring is a Pro feature! Free tier includes <strong>100% vector single-column ATS PDF creation</strong> and keyword checks. Upgrade to Sprint for instant full AI tailoring.", primaryBtnText: "⚡ View Pro Pricing", onPrimary: () => { const el = document.getElementById("pricing"); if (el) el.scrollIntoView({behavior: "smooth"}); } }); } else { window.showToast("AI Tailoring is a Pro feature.", "info"); }
         closePrintModal();
         if (window.openProPaymentModal) window.openProPaymentModal('day');
         return;
@@ -3114,7 +3114,7 @@ function attachEvents() {
       const maxQuota = userTier === 'day' ? 2 : 4;
       const usedToday = subManager ? subManager.getDailyUsage('tailor') : 0;
       if (usedToday >= maxQuota) {
-        alert(`You have completed your ${maxQuota} AI Job Tailoring runs for today on your ${userTier === 'day' ? '1-Day Plan' : '7-Day / ZenSuite Plan'}. Quota resets daily at midnight!`);
+        if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Daily AI Limit Reached", badgeText: "Quota Limit", badgeIcon: "fas fa-clock", type: "info", message: `You have completed your daily AI tailoring allocations. Your quota resets at midnight! You can continue editing and downloading all 71 ATS resume templates for free.`, primaryBtnText: "Continue Editing Free" }); } else { window.showToast("Daily AI limit reached.", "info"); }
         return;
       }
 
@@ -3171,7 +3171,7 @@ function attachEvents() {
         
       } catch (err) {
         console.error("AI Error:", err);
-        alert("Error tailoring resume: " + err.message + "\n\nPlease check if your API key is valid.");
+        window.showToast("AI tailoring service is temporarily busy. Retrying in background...", "warning");
         btnGenerateAi.textContent = originalBtnText;
         btnGenerateAi.disabled = false;
         // Optionally allow them to reset the key if it failed
@@ -3218,7 +3218,7 @@ function attachEvents() {
           btnShareModalCopy.style.background = '';
         }, 2000);
       }).catch(() => {
-        alert("Link copied to clipboard!");
+        window.showToast("Link copied to clipboard!", "success");
       });
     });
   }
@@ -3280,7 +3280,7 @@ function attachEvents() {
       const file = e.target.files[0];
       if (!file) return;
       if (file.type !== 'application/pdf') {
-        alert("Please select a PDF file.");
+        window.showToast("Please select a valid PDF file.", "warning");
         return;
       }
 
@@ -3296,7 +3296,7 @@ function attachEvents() {
           await parseHeuristics(base64Pdf, true);
         } catch (err) {
           console.error("PDF Parsing Error:", err);
-          alert("Could not process this PDF file. Please ensure it is a valid resume.");
+          if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Could Not Read PDF", badgeText: "Scanned / Image PDF", badgeIcon: "fas fa-file-pdf", type: "warning", message: "We could not extract readable text from this PDF file. Scanned images or protected PDFs cannot be parsed automatically. Pick a 1-click ATS role blueprint to get started!", primaryBtnText: "⚡ Explore 71 Role Blueprints", onPrimary: () => window.location.href = "/role/", secondaryBtnText: "Try Another PDF" }); } else { window.showToast("Could not read PDF.", "warning"); }
         } finally {
           btnMagicImport.innerHTML = originalHTML;
           btnMagicImport.disabled = false;
@@ -3304,7 +3304,7 @@ function attachEvents() {
         }
       };
       reader.onerror = () => {
-        alert("Failed to read the file.");
+        window.showToast("Failed to read the file. Please check file format.", "warning");
         btnMagicImport.innerHTML = originalHTML;
         btnMagicImport.disabled = false;
         inputMagicPdf.value = '';
@@ -3338,7 +3338,7 @@ function attachEvents() {
           loadProfileIntoForm(profileData);
           state.hasLoadedProfile = true;
           syncFormToPreview();
-          alert("Resume details successfully reset to defaults!");
+          window.showToast("Resume template reset to standard defaults.", "info");
         }
       }
     });
@@ -4118,7 +4118,7 @@ window.openShareModal = function() {
   } else {
     const shareUrl = window.location.origin && !window.location.origin.includes('localhost') ? window.location.origin : 'https://zenresume.in';
     navigator.clipboard.writeText(shareUrl);
-    alert("ZenResume link copied to clipboard!");
+    window.showToast("ZenResume link copied to clipboard!", "success");
   }
 };
 

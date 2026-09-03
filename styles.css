@@ -9787,31 +9787,31 @@ body.in-editor .top-value-ribbon {
   bottom: -120px;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  max-width: min(92vw, 560px) !important;
-  min-width: 280px !important;
-  padding: 14px 22px !important;
-  border-radius: 16px !important;
+  max-width: min(92vw, 480px) !important;
+  min-width: 260px !important;
+  padding: 10px 18px !important;
+  border-radius: 9999px !important;
   font-family: 'Inter', -apple-system, sans-serif !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
-  line-height: 1.45 !important;
+  line-height: 1.4 !important;
   color: #FFFFFF !important;
   z-index: 2147483647 !important;
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.12) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  pointer-events: none !important;
-  cursor: default !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  gap: 10px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.25) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   box-sizing: border-box !important;
 }
 
 #toast-notification .toast-icon {
-  font-size: 18px !important;
+  font-size: 15px !important;
   flex-shrink: 0 !important;
 }
 
@@ -9820,13 +9820,149 @@ body.in-editor .top-value-ribbon {
   word-break: break-word !important;
 }
 
-#toast-notification #toast-message code {
-  background: rgba(0, 0, 0, 0.25) !important;
-  padding: 2px 6px !important;
-  border-radius: 6px !important;
-  font-family: monospace !important;
-  font-size: 12px !important;
+/* Friendly Action Modal */
+.zen-friendly-modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 18px !important;
+  animation: zenFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+
+.zen-friendly-modal-card {
+  background: #0F172A !important;
+  border: 1px solid rgba(45, 212, 191, 0.25) !important;
+  border-radius: 20px !important;
+  max-width: 440px !important;
+  width: 100% !important;
+  padding: 28px 24px 22px !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7) !important;
+  text-align: center !important;
+  position: relative !important;
+  animation: zenModalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  color: #FFFFFF !important;
+  box-sizing: border-box !important;
+}
+
+[data-theme="light"] .zen-friendly-modal-card {
+  background: #FFFFFF !important;
+  border-color: rgba(0, 104, 86, 0.18) !important;
+  box-shadow: 0 20px 50px rgba(0, 50, 40, 0.18) !important;
+  color: #0F172A !important;
+}
+
+.zen-modal-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 12px !important;
+  border-radius: 9999px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.6px !important;
+  margin-bottom: 14px !important;
+}
+
+.zen-modal-badge.badge-success { background: rgba(16, 185, 129, 0.15) !important; color: #10B981 !important; }
+.zen-modal-badge.badge-warning { background: rgba(245, 158, 11, 0.15) !important; color: #F59E0B !important; }
+.zen-modal-badge.badge-info { background: rgba(45, 212, 191, 0.15) !important; color: #2DD4BF !important; }
+.zen-modal-badge.badge-danger { background: rgba(239, 68, 68, 0.15) !important; color: #EF4444 !important; }
+
+.zen-modal-title {
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  margin-bottom: 10px !important;
+  line-height: 1.25 !important;
+  color: inherit !important;
+}
+
+.zen-modal-body {
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+  color: #94A3B8 !important;
+  margin-bottom: 22px !important;
+}
+
+[data-theme="light"] .zen-modal-body {
+  color: #475569 !important;
+}
+
+.zen-modal-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.btn-zen-modal-primary {
+  background: linear-gradient(135deg, #00846D, #005F4E) !important;
+  border: 1px solid rgba(45, 212, 191, 0.4) !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 12px 20px !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 14px rgba(0, 104, 86, 0.35) !important;
+}
+
+.btn-zen-modal-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(0, 104, 86, 0.5) !important;
+  background: linear-gradient(135deg, #00967D, #006D5A) !important;
+}
+
+.btn-zen-modal-secondary {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #CBD5E1 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 10px 16px !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-theme="light"] .btn-zen-modal-secondary {
+  border-color: #E2E8F0 !important;
+  color: #64748B !important;
+}
+
+.btn-zen-modal-secondary:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="light"] .btn-zen-modal-secondary:hover {
+  background: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+@keyframes zenFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zenModalPop {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+
 
 
 
