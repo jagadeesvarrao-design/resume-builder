@@ -611,23 +611,35 @@ function addCertificationCard(data = null) {
    5. EXTRACT & RE-HYDRATE DATA WITH LOCALSTORAGE PERSISTENCE
    ========================================================================== */
 function extractCurrentFormData() {
+  const nameEl = document.getElementById('input-name');
+  const titleEl = document.getElementById('input-title');
+  const emailEl = document.getElementById('input-email');
+  const phoneEl = document.getElementById('input-phone');
+  const locEl = document.getElementById('input-location');
+  const webEl = document.getElementById('input-website');
+  const liEl = document.getElementById('input-linkedin');
+  const ghEl = document.getElementById('input-github');
+  const socEl = document.getElementById('input-custom-social');
+  const sumEl = document.getElementById('input-summary');
+  const skEl = document.getElementById('input-skills');
+
   const currentData = {
     personal: {
-      name: document.getElementById('input-name').value,
-      title: document.getElementById('input-title').value,
-      email: document.getElementById('input-email').value,
-      phone: document.getElementById('input-phone').value,
-      location: document.getElementById('input-location').value,
-      website: document.getElementById('input-website').value,
-      linkedin: document.getElementById('input-linkedin').value,
-      github: document.getElementById('input-github').value,
-      customSocial: document.getElementById('input-custom-social').value
+      name: (nameEl ? nameEl.value : '').trim(),
+      title: (titleEl ? titleEl.value : '').trim(),
+      email: (emailEl ? emailEl.value : '').trim(),
+      phone: (phoneEl ? phoneEl.value : '').trim(),
+      location: (locEl ? locEl.value : '').trim(),
+      website: (webEl ? webEl.value : '').trim(),
+      linkedin: (liEl ? liEl.value : '').trim(),
+      github: (ghEl ? ghEl.value : '').trim(),
+      customSocial: (socEl ? socEl.value : '').trim()
     },
-    summary: document.getElementById('input-summary').value,
+    summary: (sumEl ? sumEl.value : '').trim(),
     
-    // Split skills by commas
-    skills: document.getElementById('input-skills').value
-      .split(',')
+    // Split skills by commas, semicolons, or newlines
+    skills: (skEl ? skEl.value : '')
+      .split(/[,;\n]+/)
       .map(item => item.trim())
       .filter(item => item.length > 0),
       
@@ -1399,25 +1411,44 @@ function syncFormToPreview() {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = rawHTML;
     
+    // Self-healing: Ensure state.sectionOrder is a valid array containing all standard sections
+    const CORE_SECTIONS = ['summary', 'skills', 'experience', 'projects', 'education', 'certifications'];
+    if (!state.sectionOrder || !Array.isArray(state.sectionOrder) || state.sectionOrder.length === 0) {
+      state.sectionOrder = [...CORE_SECTIONS];
+    } else {
+      CORE_SECTIONS.forEach(secKey => {
+        if (!state.sectionOrder.includes(secKey)) {
+          state.sectionOrder.push(secKey);
+        }
+      });
+    }
+
     const sectionMap = {};
     const sections = tempDiv.querySelectorAll('[data-section]');
     
     sections.forEach(sec => {
       const sectionName = sec.getAttribute('data-section');
-      if (['summary', 'skills', 'experience', 'projects', 'education', 'certifications'].includes(sectionName)) {
+      if (sectionName) {
         sectionMap[sectionName] = sec;
         sec.parentNode.removeChild(sec);
       }
     });
     
     // Re-append in user-defined order
-    if (state.sectionOrder) {
-      state.sectionOrder.forEach(secName => {
-        if (sectionMap[secName]) {
-          tempDiv.appendChild(sectionMap[secName]);
-        }
-      });
-    }
+    const appendedKeys = new Set();
+    state.sectionOrder.forEach(secName => {
+      if (sectionMap[secName]) {
+        tempDiv.appendChild(sectionMap[secName]);
+        appendedKeys.add(secName);
+      }
+    });
+
+    // Safety guarantee: append any remaining rendered sections that were not in sectionOrder
+    Object.keys(sectionMap).forEach(secName => {
+      if (!appendedKeys.has(secName)) {
+        tempDiv.appendChild(sectionMap[secName]);
+      }
+    });
 
     // Append subtle ATS compliance verification footnote if enabled
     const checkFootnote = document.getElementById('check-ats-footnote');
@@ -3000,17 +3031,15 @@ function attachEvents() {
   });
 
   // Attach Static Form Listeners (Top level details)
-  document.getElementById('input-name').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-title').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-email').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-phone').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-location').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-website').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-linkedin').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-github').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-custom-social').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-summary').addEventListener('input', debouncedSyncFormToPreview);
-  document.getElementById('input-skills').addEventListener('input', debouncedSyncFormToPreview);
+  ['input-name', 'input-title', 'input-email', 'input-phone', 'input-location', 'input-website', 'input-linkedin', 'input-github', 'input-custom-social', 'input-summary', 'input-skills'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', debouncedSyncFormToPreview);
+      el.addEventListener('change', syncFormToPreview);
+      el.addEventListener('keyup', debouncedSyncFormToPreview);
+      el.addEventListener('paste', () => setTimeout(syncFormToPreview, 20));
+    }
+  });
 
   // Dynamic Add item listeners
   btnAddExperience.addEventListener('click', () => {

@@ -1950,18 +1950,18 @@ const TEMPLATE_STYLES = {
             <!-- Left Side Grid column (Summary, Skills, Education) -->
             <div>
               ${data.summary ? `
-                <div style="margin-bottom:14px;">
+                <div class="resume-section" data-section="summary" style="margin-bottom:14px;">
                   <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Profile Summary</h3>
                   <p style="font-size:9.5px; color:${textLight}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
                 </div>
               ` : ''}
               
-              <div style="margin-bottom:14px;">
+              <div class="resume-section" data-section="skills" style="margin-bottom:14px;">
                 <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Skill Progress</h3>
                 ${skillsHTML}
               </div>
 
-              <div>
+              <div class="resume-section" data-section="education">
                 <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Education</h3>
                 ${eduHTML}
               </div>
@@ -1969,12 +1969,12 @@ const TEMPLATE_STYLES = {
             
             <!-- Right Side Grid column (Experience & Projects) -->
             <div>
-              <div style="margin-bottom:14px;">
+              <div class="resume-section" data-section="experience" style="margin-bottom:14px;">
                 <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Employment Timeline</h3>
                 ${expHTML}
               </div>
 
-              <div>
+              <div class="resume-section" data-section="projects">
                 <h3 style="font-size:11px; font-weight:bold; color:${neonTeal}; border-bottom:1px solid #334155; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Key Initiatives</h3>
                 ${projHTML}
               </div>
@@ -2100,7 +2100,7 @@ const TEMPLATE_STYLES = {
               ${email} ${phone} ${loc} ${web} ${linkedin} ${github} ${customSocial}
             </div>
 
-            <div>
+            <div class="resume-section" data-section="skills">
               <h3 style="font-size:10px; font-weight:bold; color:#ffffff; border-bottom:1px solid #334155; padding-bottom:3px; text-transform:uppercase; margin:0 0 6px 0;">Analytical Toolkit</h3>
               ${skillsHTML}
             </div>
@@ -2109,23 +2109,23 @@ const TEMPLATE_STYLES = {
           <!-- Right Grid Area -->
           <div style="padding:22px; display:flex; flex-direction:column; gap:16px; background:#fafafa;">
             ${data.summary ? `
-              <div>
+              <div class="resume-section" data-section="summary">
                 <h3 style="font-size:11px; font-weight:bold; color:${accent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Data Science Profile</h3>
                 <p style="font-size:10px; color:${textSub}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
               </div>
             ` : ''}
 
-            <div>
+            <div class="resume-section" data-section="experience">
               <h3 style="font-size:11px; font-weight:bold; color:${accent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Model Development & History</h3>
               ${expHTML}
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-              <div>
+              <div class="resume-section" data-section="projects">
                 <h3 style="font-size:11px; font-weight:bold; color:${accent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Kaggle & Portfolios</h3>
                 ${projHTML}
               </div>
-              <div>
+              <div class="resume-section" data-section="education">
                 <h3 style="font-size:11px; font-weight:bold; color:${accent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Education & Degrees</h3>
                 ${eduHTML}
               </div>
@@ -2252,7 +2252,7 @@ const TEMPLATE_STYLES = {
           </div>
           
           ${data.summary ? `
-            <div style="margin-bottom:16px; background:#fffcf2; border-left:4px solid ${copper}; padding:10px 14px; border-radius: 0 6px 6px 0;">
+            <div class="resume-section" data-section="summary" style="margin-bottom:16px; background:#fffcf2; border-left:4px solid ${copper}; padding:10px 14px; border-radius: 0 6px 6px 0;">
               <h3 style="font-size:11px; font-weight:bold; color:${copper}; text-transform:uppercase; margin:0 0 4px 0;">Career Objective</h3>
               <p style="font-size:10px; color:${textSub}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
             </div>
@@ -2262,12 +2262,12 @@ const TEMPLATE_STYLES = {
           <div style="display:grid; grid-template-columns:1.8fr 1.2fr; gap:20px;">
             <!-- Left Panel (Timeline & Projects) -->
             <div>
-              <div style="margin-bottom:16px;">
+              <div class="resume-section" data-section="experience" style="margin-bottom:16px;">
                 <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Engineering Operations</h3>
                 ${expHTML}
               </div>
 
-              <div>
+              <div class="resume-section" data-section="projects">
                 <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Hardware Prototype Designs</h3>
                 ${projHTML}
               </div>
@@ -2275,18 +2275,18 @@ const TEMPLATE_STYLES = {
 
             <!-- Right Panel (Skills, Education, Certs) -->
             <div>
-              <div style="margin-bottom:16px;">
+              <div class="resume-section" data-section="skills" style="margin-bottom:16px;">
                 <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">EE Instrument Toolkit</h3>
                 ${skillsHTML}
               </div>
 
-              <div style="margin-bottom:16px;">
+              <div class="resume-section" data-section="education" style="margin-bottom:16px;">
                 <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Education</h3>
                 ${eduHTML}
               </div>
 
               ${data.certifications && data.certifications.length > 0 ? `
-                <div>
+                <div class="resume-section" data-section="certifications">
                   <h3 style="font-size:11.5px; font-weight:bold; color:${copper}; border-bottom:1px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Safety & PE Accreditations</h3>
                   <ul style="margin:0; padding-left:14px; font-size:10px; color:${textSub}; line-height:1.45;">
                     ${data.certifications.map(cert => typeof cert === 'string' ? `<li style="margin-bottom:2px;">${cert}</li>` : `<li style="margin-bottom:6px;">${cert.name ? `<strong>${cert.name}</strong>` : ''}${cert.issuer ? ` <span style="opacity:0.8">(${cert.issuer})</span>` : ''}${cert.desc ? `<br><span style="opacity:0.7">${cert.desc}</span>` : ''}</li>`).join('')}
@@ -2418,18 +2418,18 @@ const TEMPLATE_STYLES = {
             <!-- Left Side Grid Column (Summary, Skills, Education) -->
             <div>
               ${data.summary ? `
-                <div style="margin-bottom:14px;">
+                <div class="resume-section" data-section="summary" style="margin-bottom:14px;">
                   <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Objective</h3>
                   <p style="font-size:9.5px; color:${textSub}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
                 </div>
               ` : ''}
               
-              <div style="margin-bottom:14px;">
+              <div class="resume-section" data-section="skills" style="margin-bottom:14px;">
                 <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">CAD & FEA Toolkit</h3>
                 ${skillsHTML}
               </div>
 
-              <div>
+              <div class="resume-section" data-section="education">
                 <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Education</h3>
                 ${eduHTML}
               </div>
@@ -2437,12 +2437,12 @@ const TEMPLATE_STYLES = {
             
             <!-- Right Side Grid Column (Experience & Projects) -->
             <div>
-              <div style="margin-bottom:14px;">
+              <div class="resume-section" data-section="experience" style="margin-bottom:14px;">
                 <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Professional Design Timeline</h3>
                 ${expHTML}
               </div>
 
-              <div>
+              <div class="resume-section" data-section="projects">
                 <h3 style="font-size:11px; font-weight:bold; color:${steelBlue}; border-bottom:2px solid ${steelBlue}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Key CAD & Prototype Projects</h3>
                 ${projHTML}
               </div>
@@ -2519,12 +2519,14 @@ const TEMPLATE_STYLES = {
       if (data.projects && data.projects.length > 0) {
         data.projects.forEach(proj => {
           projHTML += `
-            <div style="border-left:3px solid ${greenAccent}; background:#f4fbf7; padding:8px 12px; margin-bottom:8px; font-size:9.5px;">
-              <div style="display:flex; justify-content:space-between; font-weight:bold; color:${textMain}; margin-bottom:2px;">
-                <span>${proj.title || ""}</span>
-                <span style="color:${greenAccent}; font-family:monospace; font-size:8.5px;">${proj.technologies || ""}</span>
-              </div>
-              <p style="margin:0; color:${textSub};">${proj.description || ""}</p>
+            <div style="background:#ffffff; border:1px solid ${cardBorder}; padding:10px 14px; border-radius:8px; margin-bottom:8px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+              <table style="width:100%; border-collapse:collapse; font-size:10px; margin-bottom:3px;">
+                <tr>
+                  <td style="font-weight:bold; color:${textMain};">${proj.title || ""}</td>
+                  <td style="font-style:italic; text-align:right; color:${greenAccent}; font-weight:bold;">${proj.technologies || ""}</td>
+                </tr>
+              </table>
+              <p style="font-size:9.5px; color:${textSub}; margin:0;">${proj.description || ""}</p>
             </div>
           `;
         });
@@ -2535,19 +2537,21 @@ const TEMPLATE_STYLES = {
       if (data.education && data.education.length > 0) {
         data.education.forEach(edu => {
           eduHTML += `
-            <div style="margin-bottom:6px; font-size:9.5px; border-bottom:1px dashed ${cardBorder}; padding-bottom:4px;">
+            <div style="margin-bottom:6px; font-size:10px;">
               <table style="width:100%; border-collapse:collapse; margin-bottom:1px;">
                 <tr>
                   <td style="font-weight:bold; color:${textMain};">${edu.degree || ""}</td>
                   <td style="font-weight:bold; text-align:right; color:${greenAccent}">${edu.dates || ""}</td>
                 </tr>
+                <tr>
+                  <td style="font-style:italic; color:${textSub};">
+                    ${edu.institution || ""}
+                    ${(edu.institution && edu.location) ? ', ' : ''}
+                    ${edu.location || ""}
+                  </td>
+                  <td style="text-align:right; font-weight:bold; color:${textMain};">${edu.gpa ? `Grade: ${edu.gpa}` : ""}</td>
+                </tr>
               </table>
-              <div style="color:${textSub}; font-size:9px;">
-                ${edu.institution || ""}
-                ${(edu.institution && edu.location) ? ', ' : ''}
-                ${edu.location || ""}
-                ${edu.gpa ? `| GPA: ${edu.gpa}` : ""}
-              </div>
             </div>
           `;
         });
@@ -2567,7 +2571,7 @@ const TEMPLATE_STYLES = {
               ${email} ${phone} ${loc} ${web} ${linkedin} ${github} ${customSocial}
             </div>
 
-            <div>
+            <div class="resume-section" data-section="skills">
               <h3 style="font-size:10px; font-weight:bold; color:#ffffff; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:3px; text-transform:uppercase; margin:0 0 6px 0;">Structural Competencies</h3>
               ${skillsHTML}
             </div>
@@ -2576,23 +2580,23 @@ const TEMPLATE_STYLES = {
           <!-- Right Grid Area -->
           <div style="padding:22px; display:flex; flex-direction:column; gap:16px; background:#fafafa;">
             ${data.summary ? `
-              <div>
+              <div class="resume-section" data-section="summary">
                 <h3 style="font-size:11px; font-weight:bold; color:${greenAccent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase;">Civil Profile Summary</h3>
                 <p style="font-size:10px; color:${textSub}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
               </div>
             ` : ''}
 
-            <div>
+            <div class="resume-section" data-section="experience">
               <h3 style="font-size:11px; font-weight:bold; color:${greenAccent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Infrastructure Timeline</h3>
               ${expHTML}
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-              <div>
+              <div class="resume-section" data-section="projects">
                 <h3 style="font-size:11px; font-weight:bold; color:${greenAccent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Large Scale Works</h3>
                 ${projHTML}
               </div>
-              <div>
+              <div class="resume-section" data-section="education">
                 <h3 style="font-size:11px; font-weight:bold; color:${greenAccent}; border-bottom:2px solid ${cardBorder}; padding-bottom:3px; margin:0 0 8px 0; text-transform:uppercase;">Education & Degrees</h3>
                 ${eduHTML}
               </div>
@@ -2630,7 +2634,7 @@ const TEMPLATE_STYLES = {
       let skillsHTML = '';
       if (data.skills && data.skills.length > 0) {
         skillsHTML = `
-          <div style="margin-top:16px;">
+          <div class="resume-section" data-section="skills" style="margin-top:16px;">
             <h3 style="font-size:10.5px; font-weight:bold; color:${primaryDark}; border-bottom:1.5px solid #cbd5e1; padding-bottom:3px; text-transform:uppercase; margin:0 0 8px 0; letter-spacing:0.5px;">Skills</h3>
             <div style="display:flex; flex-wrap:wrap; gap:4px;">
               ${data.skills.map(skill => `<span style="font-size:9px; background:#e2e8f0; color:${secondaryDark}; padding:3px 6px; border-radius:4px; font-weight:500;">${skill}</span>`).join('')}
@@ -2643,7 +2647,7 @@ const TEMPLATE_STYLES = {
       let certsHTML = '';
       if (data.certifications && data.certifications.length > 0) {
         certsHTML = `
-          <div style="margin-top:16px;">
+          <div class="resume-section" data-section="certifications" style="margin-top:16px;">
             <h3 style="font-size:10.5px; font-weight:bold; color:${primaryDark}; border-bottom:1.5px solid #cbd5e1; padding-bottom:3px; text-transform:uppercase; margin:0 0 8px 0; letter-spacing:0.5px;">Certifications</h3>
             <div style="display:flex; flex-direction:column; gap:6px;">
               ${data.certifications.map(c => `
@@ -2661,7 +2665,7 @@ const TEMPLATE_STYLES = {
       let eduHTML = '';
       if (data.education && data.education.length > 0) {
         eduHTML = `
-          <div style="margin-top:16px;">
+          <div class="resume-section" data-section="education" style="margin-top:16px;">
             <h3 style="font-size:10.5px; font-weight:bold; color:${primaryDark}; border-bottom:1.5px solid #cbd5e1; padding-bottom:3px; text-transform:uppercase; margin:0 0 8px 0; letter-spacing:0.5px;">Education</h3>
             <div style="display:flex; flex-direction:column; gap:8px;">
               ${data.education.map(e => `
@@ -2730,21 +2734,21 @@ const TEMPLATE_STYLES = {
           <!-- Main column -->
           <div style="padding:30px 25px; box-sizing:border-box; display:flex; flex-direction:column; gap:16px;">
             ${data.summary ? `
-              <div>
+              <div class="resume-section" data-section="summary">
                 <h3 style="font-size:11px; font-weight:bold; color:${primaryDark}; border-bottom:2px solid ${primaryDark}; padding-bottom:3px; margin:0 0 6px 0; text-transform:uppercase; letter-spacing:0.5px;">Professional Summary</h3>
                 <p style="font-size:9.5px; color:${textMain}; line-height:1.45; text-align:justify; margin:0;">${data.summary}</p>
               </div>
             ` : ''}
 
             ${expHTML ? `
-              <div>
+              <div class="resume-section" data-section="experience">
                 <h3 style="font-size:11px; font-weight:bold; color:${primaryDark}; border-bottom:2px solid ${primaryDark}; padding-bottom:3px; margin:0 0 10px 0; text-transform:uppercase; letter-spacing:0.5px;">Work Experience</h3>
                 ${expHTML}
               </div>
             ` : ''}
 
             ${projHTML ? `
-              <div>
+              <div class="resume-section" data-section="projects">
                 <h3 style="font-size:11px; font-weight:bold; color:${primaryDark}; border-bottom:2px solid ${primaryDark}; padding-bottom:3px; margin:0 0 10px 0; text-transform:uppercase; letter-spacing:0.5px;">Key Projects</h3>
                 ${projHTML}
               </div>
