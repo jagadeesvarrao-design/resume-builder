@@ -447,11 +447,12 @@
       display: flex !important;
       align-items: center !important;
       justify-content: space-between !important;
-      padding: 10px 24px !important;
+      padding: 10px 20px !important;
       max-width: 1300px !important;
       margin: 0 auto !important;
       width: 100% !important;
       box-sizing: border-box !important;
+      gap: 12px !important;
     }
     .brand-identity-container {
       display: inline-flex !important;
@@ -488,9 +489,35 @@
       text-transform: uppercase !important;
       margin-top: 1px !important;
     }
+
+    /* Back Button for Laptop / Desktop / Systems */
+    .btn-nav-back {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #CBD5E1 !important;
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      padding: 6px 12px !important;
+      border-radius: 8px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      text-decoration: none !important;
+      flex-shrink: 0 !important;
+    }
+    .btn-nav-back:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+      color: #FFFFFF !important;
+      border-color: rgba(45, 212, 191, 0.4) !important;
+      transform: translateX(-2px) !important;
+    }
+
+    /* Desktop Navigation Links */
     .desktop-nav-links {
       display: flex !important;
-      gap: 22px !important;
+      gap: 20px !important;
       align-items: center !important;
     }
     .desktop-nav-links a {
@@ -599,11 +626,33 @@
       color: #94A3B8 !important;
       font-weight: 400 !important;
     }
+
+    /* Right Action Controls */
     .header-right-actions {
       display: flex !important;
       align-items: center !important;
-      gap: 12px !important;
+      gap: 8px !important;
       flex-shrink: 0 !important;
+    }
+    .btn-theme-toggle {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #CBD5E1 !important;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 14px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      outline: none !important;
+    }
+    .btn-theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+      color: #FFFFFF !important;
+      border-color: rgba(45, 212, 191, 0.4) !important;
     }
     .btn-header-cta {
       background: linear-gradient(135deg, #476550, #00846D) !important;
@@ -625,8 +674,124 @@
       transform: translateY(-1px) !important;
       box-shadow: 0 6px 16px rgba(0, 104, 86, 0.4) !important;
     }
+    .mobile-menu-toggle {
+      display: none !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #FFFFFF !important;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 8px !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 16px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+    .mobile-menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+    }
+
+    /* Mobile Drawer Menu */
+    .mobile-drawer-menu {
+      display: none;
+      flex-direction: column;
+      background: #0C1211;
+      border-top: 1px solid rgba(45, 212, 191, 0.15);
+      padding: 14px 20px;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+    .mobile-drawer-menu.open {
+      display: flex !important;
+      animation: mobileMenuSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #CBD5E1;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+    .mobile-nav-link:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+    }
+
+    @media (max-width: 992px) {
+      .desktop-nav-links { display: none !important; }
+      .mobile-menu-toggle { display: flex !important; }
+      .btn-header-cta { display: none !important; }
+    }
+    @media (max-width: 768px) {
+      .btn-nav-back { display: none !important; }
+    }
   </style>
 
+  <script>
+    // Global Navigation Back Handler for Laptop/Desktop
+    window.handleNavigationBack = function() {
+      if (window.history.length > 1 && document.referrer && (document.referrer.includes(window.location.host) || document.referrer.includes('zenresume'))) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    };
+
+    // Global Dark/Light Theme Toggle
+    window.toggleTheme = function() {
+      const current = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      
+      const icons = document.querySelectorAll('.btn-theme-toggle i');
+      icons.forEach(function(icon) {
+        if (next === 'dark') {
+          icon.className = 'fas fa-sun';
+          icon.style.color = '#F59E0B';
+        } else {
+          icon.className = 'fas fa-moon';
+          icon.style.color = '';
+        }
+      });
+    };
+
+    // Sync theme icon on initial load
+    document.addEventListener('DOMContentLoaded', function() {
+      const theme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      const icons = document.querySelectorAll('.btn-theme-toggle i');
+      icons.forEach(function(icon) {
+        if (theme === 'dark') {
+          icon.className = 'fas fa-sun';
+          icon.style.color = '#F59E0B';
+        } else {
+          icon.className = 'fas fa-moon';
+          icon.style.color = '';
+        }
+      });
+    });
+
+    // Global Mobile Menu Toggle
+    window.toggleMobileMenu = function(forceClose) {
+      const drawer = document.getElementById('mobile-drawer-menu');
+      const btn = document.getElementById('btn-mobile-menu');
+      if (!drawer) return;
+      if (forceClose === true || drawer.classList.contains('open')) {
+        drawer.classList.remove('open');
+        if (btn) btn.innerHTML = '<i class="fas fa-bars"></i>';
+      } else {
+        drawer.classList.add('open');
+        if (btn) btn.innerHTML = '<i class="fas fa-times"></i>';
+      }
+    };
+  </script>
 </head>
 <body>
 
@@ -638,17 +803,27 @@
   <!-- Top Global Navbar (Aneevarp Solutions Unified Standard) -->
   <!-- Top Global Navbar (Aneevarp Solutions Unified Standard) -->
   <!-- Top Global Clean Navigation Ribbon -->
+  <!-- Top Global Navigation Ribbon -->
+  <!-- Top Global Navigation Ribbon -->
+  <!-- Top Global Navigation Ribbon -->
   <header class="no-print stitch-nav">
     <div class="stitch-nav-container">
-      <a href="/" class="brand-identity-container">
-        <img src="../favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" />
-        <div class="brand-text-column">
-          <span class="brand-main-title">ZenResume</span>
-          <span class="brand-subtext">By Aneevarp Solutions</span>
-        </div>
-      </a>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <a href="/" class="brand-identity-container">
+          <img src="../favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" />
+          <div class="brand-text-column">
+            <span class="brand-main-title">ZenResume</span>
+            <span class="brand-subtext">By Aneevarp Solutions</span>
+          </div>
+        </a>
+        
+        <button type="button" class="btn-nav-back" onclick="window.handleNavigationBack && window.handleNavigationBack();" title="Go back to previous page" aria-label="Go Back">
+          <i class="fas fa-arrow-left"></i>
+          <span>Back</span>
+        </button>
+      </div>
 
-      <!-- Streamlined Desktop Navigation Links (Clean & Uncluttered) -->
+      <!-- Desktop Navigation Links -->
       <nav class="desktop-nav-links">
         <a href="/role/" class="active-link">Templates (71 Roles)</a>
         <a href="/campus.html">Campus Suite</a>
@@ -697,10 +872,47 @@
 
       <!-- Right Action Controls -->
       <div class="header-right-actions">
+        <button type="button" id="btn-theme-toggle" class="btn-theme-toggle" onclick="window.toggleTheme && window.toggleTheme();" aria-label="Toggle Dark/Light Mode" title="Toggle Dark/Light Mode">
+          <i class="fas fa-moon"></i>
+        </button>
         <a href="/?role=customer-success-manager&autofill=true" class="btn-header-cta">
           ⚡ Build Customer Success Manager Resume &rarr;
         </a>
+        <button type="button" class="mobile-menu-toggle" id="btn-mobile-menu" onclick="window.toggleMobileMenu && window.toggleMobileMenu();" aria-label="Toggle Navigation Menu">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
+    </div>
+
+    <!-- Mobile Slide-Down Drawer Menu -->
+    <div class="mobile-drawer-menu" id="mobile-drawer-menu">
+      <div class="mobile-auth-row" style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+        <button type="button" class="btn-nav-login" id="btn-mobile-drawer-login" onclick="window.triggerGoogleLogin && window.triggerGoogleLogin();" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFFFFF; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13.5px; cursor: pointer;">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <span>Sign In with Google</span>
+        </button>
+      </div>
+      <a href="/role/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-layer-group" style="color: #2DD4BF;"></i> Templates (71 Roles)
+      </a>
+      <a href="/campus.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);" style="color: #00E5BC; font-weight: 700;">
+        <i class="fas fa-graduation-cap" style="color: #00E5BC;"></i> Campus Placement Suite
+      </a>
+      <a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link" style="color: #2DD4BF;" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-robot" style="color: #2DD4BF;"></i> ZenScout AI (Auto-Job Hunter)
+      </a>
+      <a href="/#pricing" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-bolt" style="color: #F59E0B;"></i> Pricing &amp; Pro Plans
+      </a>
+      <a href="/blog/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-book-open"></i> Career Guides
+      </a>
+      <a href="/about.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-info-circle"></i> About Us
+      </a>
+      <a href="/contact.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-envelope"></i> Contact Support
+      </a>
     </div>
   </header>
 

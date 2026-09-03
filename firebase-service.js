@@ -145,35 +145,23 @@ window.triggerGoogleLogin = function() {
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
 
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
-
-  // On mobile devices, popup windows are blocked by iOS/Android browser sandboxes
-  if (isMobile) {
-    console.log("[Firebase] Mobile device detected, initiating redirect sign-in...");
-    auth.signInWithRedirect(provider).catch(err => {
-      console.warn("[Firebase] Redirect failed, falling back to popup:", err);
-      auth.signInWithPopup(provider).catch(popupErr => {
-        console.error("[Firebase] Sign-in error:", popupErr);
-        window.showToast(formatAuthErrorMessage(popupErr), "warning", 6000);
-      });
-    });
-    return;
-  }
-
-  // On desktop / laptops, try popup first, with automatic redirect fallback if blocked
+  // Try popup first across both mobile & desktop for smooth, zero-page-reload login
   auth.signInWithPopup(provider)
     .then((result) => {
-      console.log("[Firebase] Logged in via popup");
+      console.log("[Firebase] Logged in successfully via popup:", result.user.email);
       window.showToast("Cloud Sync Active! Welcome, " + (result.user.displayName || result.user.email), "success");
+      // Auto-close mobile drawer if open
+      if (typeof window.toggleMobileMenu === 'function') {
+        window.toggleMobileMenu(true);
+      }
     })
     .catch((error) => {
       console.warn("[Firebase] Popup sign-in error, attempting redirect fallback:", error);
       if (error.code === 'auth/popup-blocked' || 
           error.code === 'auth/cancelled-popup-request' || 
           error.code === 'auth/popup-closed-by-user' ||
-          error.code === 'auth/unauthorized-domain' ||
           error.code === 'auth/internal-error') {
-        // Smooth redirect fallback
+        // Smooth redirect fallback for mobile browsers blocking popups
         auth.signInWithRedirect(provider).catch(redirectErr => {
           console.error("[Firebase] Redirect sign-in error:", redirectErr);
           window.showToast(formatAuthErrorMessage(redirectErr || error), "warning", 6000);

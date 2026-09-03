@@ -91,29 +91,24 @@
   <link rel="stylesheet" href="styles.css?v=7.5">
   
   <style id="zenresume-critical-header-style">
-    /* ==========================================================================
-       Aneevarp Solutions Master Palette Critical Navigation & Hero Header
-       ========================================================================== */
     .stitch-nav {
-      background: rgba(252, 250, 245, 0.96) !important;
-      border-bottom: 1px solid rgba(162, 188, 168, 0.35) !important;
-      color: #1A1F1F !important;
-      box-shadow: 0 4px 20px rgba(26, 31, 31, 0.04) !important;
+      background: #0B0F12 !important;
+      border-bottom: 1px solid rgba(45, 212, 191, 0.15) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 2000;
       width: 100%;
       height: auto;
-      min-height: 56px;
-      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      min-height: 58px;
     }
     .stitch-nav-container {
       display: flex !important;
       align-items: center !important;
       justify-content: space-between !important;
-      padding: 10px 24px !important;
+      padding: 10px 20px !important;
       max-width: 1300px !important;
       margin: 0 auto !important;
       width: 100% !important;
@@ -131,9 +126,8 @@
       width: 36px !important;
       height: 36px !important;
       border-radius: 10px !important;
-      box-shadow: 0 2px 10px rgba(71, 101, 80, 0.25) !important;
+      box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4) !important;
       object-fit: cover !important;
-      flex-shrink: 0 !important;
     }
     .brand-text-column {
       display: flex !important;
@@ -144,25 +138,51 @@
       font-family: 'Outfit', sans-serif !important;
       font-weight: 800 !important;
       font-size: 19px !important;
-      color: #1A1F1F !important;
+      color: #FFFFFF !important;
       line-height: 1.1 !important;
       letter-spacing: -0.3px !important;
     }
     .brand-subtext {
-      font-size: 9.5px !important;
-      color: #476550 !important;
+      font-size: 9px !important;
+      color: #2DD4BF !important;
       font-weight: 700 !important;
       letter-spacing: 0.8px !important;
       text-transform: uppercase !important;
       margin-top: 1px !important;
     }
+
+    /* Back Button for Laptop / Desktop / Systems */
+    .btn-nav-back {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #CBD5E1 !important;
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      padding: 6px 12px !important;
+      border-radius: 8px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      text-decoration: none !important;
+      flex-shrink: 0 !important;
+    }
+    .btn-nav-back:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+      color: #FFFFFF !important;
+      border-color: rgba(45, 212, 191, 0.4) !important;
+      transform: translateX(-2px) !important;
+    }
+
+    /* Desktop Navigation Links */
     .desktop-nav-links {
       display: flex !important;
       gap: 20px !important;
       align-items: center !important;
     }
     .desktop-nav-links a {
-      color: #596060 !important;
+      color: #CBD5E1 !important;
       text-decoration: none !important;
       font-size: 13.5px !important;
       font-weight: 600 !important;
@@ -173,62 +193,13 @@
       box-shadow: none !important;
     }
     .desktop-nav-links a:hover {
-      color: #476550 !important;
+      color: #FFFFFF !important;
     }
     .desktop-nav-links a.active-link {
-      color: #476550 !important;
-      border-bottom: 2px solid #476550 !important;
+      color: #2DD4BF !important;
+      border-bottom: 2px solid #2DD4BF !important;
       padding-bottom: 2px !important;
     }
-
-    /* Header Right Actions Controls */
-    .header-right-actions {
-      display: flex !important;
-      align-items: center !important;
-      gap: 10px !important;
-      flex-shrink: 0 !important;
-    }
-    .btn-theme-toggle {
-      background: #E8F0EB !important;
-      border: 1px solid rgba(162, 188, 168, 0.4) !important;
-      color: #476550 !important;
-      width: 38px !important;
-      height: 38px !important;
-      border-radius: 50% !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      cursor: pointer !important;
-      font-size: 14px !important;
-      flex-shrink: 0 !important;
-      transition: all 0.2s ease !important;
-    }
-    .btn-theme-toggle:hover {
-      background: #476550 !important;
-      color: #FFFFFF !important;
-      transform: scale(1.05) !important;
-    }
-    .mobile-menu-toggle {
-      background: #FAF9F6 !important;
-      border: 1px solid rgba(162, 188, 168, 0.45) !important;
-      color: #1A1F1F !important;
-      width: 38px !important;
-      height: 38px !important;
-      border-radius: 10px !important;
-      display: none !important;
-      align-items: center !important;
-      justify-content: center !important;
-      cursor: pointer !important;
-      font-size: 16px !important;
-      flex-shrink: 0 !important;
-      transition: all 0.2s ease !important;
-    }
-    .mobile-menu-toggle:hover {
-      background: #E8F0EB !important;
-      color: #476550 !important;
-    }
-
-    /* Zen Suite Dropdown */
     .zen-suite-wrapper {
       position: relative !important;
       display: inline-block !important;
@@ -237,9 +208,9 @@
       display: inline-flex !important;
       align-items: center !important;
       gap: 6px !important;
-      background: #E8F0EB !important;
-      border: 1px solid rgba(162, 188, 168, 0.45) !important;
-      color: #476550 !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #FFFFFF !important;
       font-size: 12.5px !important;
       font-weight: 700 !important;
       padding: 5px 12px !important;
@@ -248,9 +219,7 @@
       transition: all 0.2s ease !important;
     }
     .zen-suite-btn:hover {
-      background: #476550 !important;
-      border-color: #3A5342 !important;
-      color: #FFFFFF !important;
+      background: rgba(255, 255, 255, 0.15) !important;
     }
     .zen-suite-dropdown {
       display: none !important;
@@ -259,11 +228,11 @@
       left: 50% !important;
       transform: translateX(-50%) !important;
       width: 280px !important;
-      background: #FAF9F6 !important;
-      border: 1px solid rgba(162, 188, 168, 0.4) !important;
+      background: #141B20 !important;
+      border: 1px solid rgba(45, 212, 191, 0.25) !important;
       border-radius: 14px !important;
       padding: 6px !important;
-      box-shadow: 0 16px 40px rgba(26, 31, 31, 0.1) !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7) !important;
       z-index: 9999 !important;
     }
     .zen-suite-wrapper:hover .zen-suite-dropdown,
@@ -274,33 +243,28 @@
       padding: 6px 10px !important;
       font-size: 9.5px !important;
       font-weight: 800 !important;
-      color: #7D8787 !important;
+      color: #94A3B8 !important;
       text-transform: uppercase !important;
-      letter-spacing: 0.6px !important;
-      border-bottom: 1px solid rgba(162, 188, 168, 0.2) !important;
+      letter-spacing: 0.8px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
       margin-bottom: 4px !important;
-      text-align: left !important;
     }
     .suite-product-link {
       display: flex !important;
       align-items: center !important;
       gap: 10px !important;
       padding: 8px 10px !important;
-      border-radius: 8px !important;
+      border-radius: 10px !important;
       text-decoration: none !important;
       transition: background 0.15s ease !important;
-      text-align: left !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
     }
     .suite-product-link:hover {
-      background: #E8F0EB !important;
+      background: rgba(255, 255, 255, 0.06) !important;
     }
     .suite-product-icon {
       width: 28px !important;
       height: 28px !important;
-      border-radius: 6px !important;
+      border-radius: 8px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
@@ -315,503 +279,118 @@
     .suite-product-name {
       font-size: 12px !important;
       font-weight: 700 !important;
-      color: #1A1F1F !important;
+      color: #FFFFFF !important;
       line-height: 1.2 !important;
     }
     .suite-product-desc {
       font-size: 10px !important;
-      color: #7D8787 !important;
+      color: #94A3B8 !important;
       font-weight: 400 !important;
+    }
+
+    /* Right Action Controls */
+    .header-right-actions {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      flex-shrink: 0 !important;
+    }
+    .btn-theme-toggle {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #CBD5E1 !important;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 14px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      outline: none !important;
+    }
+    .btn-theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+      color: #FFFFFF !important;
+      border-color: rgba(45, 212, 191, 0.4) !important;
+    }
+    .btn-header-cta {
+      background: linear-gradient(135deg, #476550, #00846D) !important;
+      color: #FFFFFF !important;
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+      padding: 8px 18px !important;
+      border-radius: 9999px !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      border: 1px solid rgba(45, 212, 191, 0.3) !important;
+      box-shadow: 0 4px 12px rgba(0, 104, 86, 0.3) !important;
+      transition: all 0.2s ease !important;
+      white-space: nowrap !important;
+    }
+    .btn-header-cta:hover {
+      transform: translateY(-1px) !important;
+      box-shadow: 0 6px 16px rgba(0, 104, 86, 0.4) !important;
+    }
+    .mobile-menu-toggle {
+      display: none !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #FFFFFF !important;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 8px !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 16px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+    .mobile-menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
     }
 
     /* Mobile Drawer Menu */
     .mobile-drawer-menu {
       display: none;
       flex-direction: column;
-      background: #FAF9F6 !important;
-      border-top: 1px solid rgba(162, 188, 168, 0.35) !important;
-      border-bottom: 1px solid rgba(162, 188, 168, 0.35) !important;
-      padding: 14px 18px !important;
-      gap: 6px !important;
-      box-shadow: 0 12px 30px rgba(26, 31, 31, 0.08) !important;
-      width: 100%;
-      box-sizing: border-box;
+      background: #0C1211;
+      border-top: 1px solid rgba(45, 212, 191, 0.15);
+      padding: 14px 20px;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
     }
     .mobile-drawer-menu.open {
       display: flex !important;
       animation: mobileMenuSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .mobile-nav-link {
-      display: flex !important;
-      align-items: center !important;
-      gap: 12px !important;
-      padding: 12px 14px !important;
-      border-radius: 10px !important;
-      color: #1A1F1F !important;
-      font-size: 14px !important;
-      font-weight: 600 !important;
-      text-decoration: none !important;
-      transition: all 0.15s ease !important;
-      background: transparent !important;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #CBD5E1;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
     }
-    .mobile-nav-link i {
-      color: #476550 !important;
-      font-size: 15px !important;
-      width: 20px !important;
-      text-align: center !important;
-    }
-    .mobile-nav-link:hover, .mobile-nav-link:active {
-      background: #E8F0EB !important;
-      color: #476550 !important;
+    .mobile-nav-link:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
     }
 
-    /* Master Palette Landing Hero Section */
-    .landing-screen {
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      overflow-x: hidden !important;
-      background-color: #FCFAF5 !important;
-    }
-    .stitch-hero-section {
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      padding: 120px 24px 80px 24px !important;
-      box-sizing: border-box !important;
-      background: radial-gradient(circle at 50% 15%, #EAF2EC 0%, #F5FAF6 50%, #FCFAF5 100%) !important;
-      border-bottom: 1px solid rgba(162, 188, 168, 0.35) !important;
-      color: #1A1F1F !important;
-      text-align: center !important;
-    }
-    .stitch-hero-title {
-      color: #1A1F1F !important;
-      text-shadow: none !important;
-    }
-    .stitch-hero-subtitle {
-      color: #596060 !important;
-    }
-    .hero-role-chip {
-      background: #FAF9F6 !important;
-      border: 1px solid rgba(162, 188, 168, 0.4) !important;
-      color: #1A1F1F !important;
-      font-size: 12px !important;
-      font-weight: 600 !important;
-      padding: 6px 14px !important;
-      border-radius: 9999px !important;
-      cursor: pointer !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      transition: all 0.2s ease !important;
-      box-shadow: 0 1px 4px rgba(26, 31, 31, 0.04) !important;
-    }
-    .hero-role-chip:hover {
-      background: #E8F0EB !important;
-      border-color: #476550 !important;
-      color: #476550 !important;
-      transform: translateY(-2px) !important;
-      box-shadow: 0 4px 12px rgba(71, 101, 80, 0.15) !important;
-    }
-    .btn-tactile {
-      background: #476550 !important;
-      color: #FFFFFF !important;
-      border: 1px solid #3A5342 !important;
-      box-shadow: 0 8px 24px rgba(71, 101, 80, 0.28) !important;
-      font-weight: 700 !important;
-      transition: all 0.2s ease !important;
-    }
-    .btn-tactile:hover {
-      background: #3A5342 !important;
-      transform: translateY(-2px) !important;
-      box-shadow: 0 12px 30px rgba(71, 101, 80, 0.38) !important;
-    }
-
-    /* Dark Mode Overrides */
-    [data-theme="dark"] .stitch-nav {
-      background: rgba(11, 15, 18, 0.94) !important;
-      border-bottom-color: rgba(45, 212, 191, 0.15) !important;
-      color: #FFFFFF !important;
-    }
-    [data-theme="dark"] .brand-main-title {
-      color: #FFFFFF !important;
-    }
-    [data-theme="dark"] .brand-subtext {
-      color: #2DD4BF !important;
-    }
-    [data-theme="dark"] .btn-theme-toggle {
-      background: rgba(255, 255, 255, 0.08) !important;
-      border-color: rgba(45, 212, 191, 0.25) !important;
-      color: #2DD4BF !important;
-    }
-    [data-theme="dark"] .mobile-menu-toggle {
-      background: #141B20 !important;
-      border-color: rgba(45, 212, 191, 0.3) !important;
-      color: #F8FAFC !important;
-    }
-    [data-theme="dark"] .mobile-drawer-menu {
-      background: #141B20 !important;
-      border-top-color: rgba(45, 212, 191, 0.2) !important;
-      border-bottom-color: rgba(45, 212, 191, 0.2) !important;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6) !important;
-    }
-    [data-theme="dark"] .mobile-nav-link {
-      color: #F8FAFC !important;
-    }
-    [data-theme="dark"] .mobile-nav-link i {
-      color: #2DD4BF !important;
-    }
-    [data-theme="dark"] .desktop-nav-links a {
-      color: #CBD5E1 !important;
-    }
-    [data-theme="dark"] .desktop-nav-links a:hover {
-      color: #FFFFFF !important;
-    }
-    [data-theme="dark"] .desktop-nav-links a.active-link {
-      color: #2DD4BF !important;
-      border-bottom-color: #2DD4BF !important;
-    }
-    [data-theme="dark"] .zen-suite-btn {
-      background: rgba(255, 255, 255, 0.08) !important;
-      border-color: rgba(255, 255, 255, 0.15) !important;
-      color: #FFFFFF !important;
-    }
-    [data-theme="dark"] .zen-suite-dropdown {
-      background: #141B20 !important;
-      border-color: rgba(45, 212, 191, 0.25) !important;
-    }
-    [data-theme="dark"] .suite-product-name {
-      color: #FFFFFF !important;
-    }
-    [data-theme="dark"] .suite-product-desc {
-      color: #94A3B8 !important;
-    }
-    [data-theme="dark"] .landing-screen {
-      background-color: #0B0F12 !important;
-    }
-    [data-theme="dark"] .stitch-hero-section {
-      background: radial-gradient(circle at 50% 15%, #152320 0%, #0C1211 55%, #070C0B 100%) !important;
-      border-bottom-color: rgba(0, 168, 138, 0.2) !important;
-      color: #FFFFFF !important;
-    }
-    [data-theme="dark"] .stitch-hero-title {
-      color: #FFFFFF !important;
-    }
-    [data-theme="dark"] .stitch-hero-subtitle {
-      color: #CBD5E1 !important;
-    }
-    [data-theme="dark"] .hero-role-chip {
-      background: rgba(18, 24, 28, 0.75) !important;
-      border-color: rgba(45, 212, 191, 0.3) !important;
-      color: #CBD5E1 !important;
-    }
-    [data-theme="dark"] .btn-tactile {
-      background: linear-gradient(135deg, #00685F, #2DD4BF) !important;
-      color: #061B18 !important;
-      border-color: #2DD4BF !important;
-    }
-    /* Hero Roles Hint & Social Proof High Contrast */
-    .hero-roles-hint-label {
-      font-size: 12px !important;
-      font-weight: 700 !important;
-      color: #596060 !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-    }
-    .social-proof-heading {
-      font-size: 11.5px !important;
-      font-weight: 800 !important;
-      color: #476550 !important;
-      letter-spacing: 0.8px !important;
-      text-transform: uppercase !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 5px !important;
-    }
-    .social-proof-companies {
-      display: flex !important;
-      flex-wrap: wrap !important;
-      justify-content: center !important;
-      align-items: center !important;
-      gap: 10px 18px !important;
-      font-size: 13px !important;
-      font-weight: 800 !important;
-      color: #1A1F1F !important;
-      line-height: 1.6 !important;
-    }
-    .social-proof-companies span {
-      color: #1A1F1F !important;
-    }
-    .social-proof-companies .company-dot {
-      color: #A2BCA8 !important;
-      font-size: 11px !important;
-    }
-
-    [data-theme="dark"] .hero-roles-hint-label {
-      color: #CBD5E1 !important;
-    }
-    [data-theme="dark"] .social-proof-heading {
-      color: #2DD4BF !important;
-    }
-    [data-theme="dark"] .social-proof-companies span {
-      color: #E2E8F0 !important;
-    }
-    [data-theme="dark"] .social-proof-companies .company-dot {
-      color: rgba(45, 212, 191, 0.4) !important;
-    }
-
-    /* Universal Responsive Breakpoints for All Devices */
     @media (max-width: 992px) {
-      .desktop-nav-links {
-        display: none !important;
-      }
-      .mobile-menu-toggle {
-        display: inline-flex !important;
-      }
+      .desktop-nav-links { display: none !important; }
+      .mobile-menu-toggle { display: flex !important; }
+      .btn-header-cta { display: none !important; }
     }
-
-    @media (max-width: 640px) {
-      .stitch-nav-cta {
-        display: none !important; /* Prevents mobile header overflow */
-      }
-      .stitch-nav-container {
-        padding: 8px 14px !important;
-      }
-      .brand-logo-img {
-        width: 32px !important;
-        height: 32px !important;
-      }
-      .brand-main-title {
-        font-size: 16.5px !important;
-      }
-      .brand-subtext {
-        font-size: 8px !important;
-      }
-      .stitch-hero-section {
-        padding: 75px 14px 45px 14px !important;
-      }
-      .stitch-hero-title {
-        font-size: clamp(24px, 7.5vw, 34px) !important;
-        line-height: 1.2 !important;
-        margin-bottom: 12px !important;
-      }
-      .stitch-hero-subtitle {
-        font-size: 14px !important;
-        line-height: 1.55 !important;
-        margin-bottom: 22px !important;
-        padding: 0 4px !important;
-      }
-      .stitch-hero-cta {
-        width: 100% !important;
-        max-width: 300px !important;
-        padding: 13px 20px !important;
-        font-size: 15px !important;
-        justify-content: center !important;
-      }
-      .hero-quick-chips {
-        gap: 6px !important;
-      }
-      .hero-role-chip {
-        font-size: 11.5px !important;
-        padding: 5px 11px !important;
-      }
-      .social-proof-companies {
-        gap: 8px 12px !important;
-        font-size: 12px !important;
-      }
-    }
-
-    /* ── Critical Inlined Pricing Section Styles (Zero Unstyled Flash) ── */
-    .pricing-landing-section { position: relative; z-index: 5; }
-    .pricing-cards-grid {
-      display: grid !important;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
-      gap: 18px !important;
-      max-width: 1320px !important;
-      margin: 0 auto 36px auto !important;
-      align-items: stretch !important;
-    }
-    @media (min-width: 1100px) {
-      .pricing-cards-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-      }
-    }
-    .pricing-card {
-      background: #FFFFFF !important;
-      border: 1.5px solid var(--border-subtle, #E2E8F0) !important;
-      border-radius: 18px !important;
-      padding: 26px 18px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: space-between !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
-      position: relative !important;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
-      box-sizing: border-box !important;
-    }
-    .pricing-card:hover {
-      transform: translateY(-4px) !important;
-      box-shadow: 0 16px 36px rgba(0, 104, 86, 0.12) !important;
-      border-color: rgba(0, 104, 86, 0.35) !important;
-    }
-    .pricing-card.featured {
-      background: linear-gradient(165deg, #FFFFFF, #F4FAF7) !important;
-      border: 2px solid #476550 !important;
-      box-shadow: 0 8px 30px rgba(0, 104, 86, 0.16) !important;
-    }
-    @media (min-width: 993px) {
-      .pricing-card.featured { transform: scale(1.03) !important; }
-      .pricing-card.featured:hover { transform: scale(1.03) translateY(-4px) !important; }
-    }
-    .pricing-popular-ribbon {
-      position: absolute !important;
-      top: -12px !important;
-      left: 50% !important;
-      transform: translateX(-50%) !important;
-      background: linear-gradient(135deg, #F59E0B, #D97706) !important;
-      color: #FFFFFF !important;
-      font-size: 11px !important;
-      font-weight: 800 !important;
-      padding: 4px 14px !important;
-      border-radius: 9999px !important;
-      letter-spacing: 0.5px !important;
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35) !important;
-      white-space: nowrap !important;
-    }
-    .pricing-plan-badge {
-      display: inline-block !important;
-      font-size: 10px !important;
-      font-weight: 800 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.6px !important;
-      padding: 3px 8px !important;
-      border-radius: 6px !important;
-      margin-bottom: 8px !important;
-    }
-    .badge-free { background: rgba(100, 116, 139, 0.1) !important; color: #64748B !important; }
-    .badge-pro { background: rgba(0, 104, 86, 0.12) !important; color: #476550 !important; }
-    .badge-campus { background: rgba(0, 229, 188, 0.15) !important; color: #00846D !important; }
-    .pricing-plan-title {
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 22px !important;
-      font-weight: 800 !important;
-      color: #0F172A !important;
-      margin: 0 0 6px 0 !important;
-    }
-    .pricing-plan-subtitle {
-      font-size: 13px !important;
-      color: #64748B !important;
-      line-height: 1.5 !important;
-      margin: 0 0 16px 0 !important;
-      min-height: 40px !important;
-    }
-    .pricing-price-wrap {
-      display: flex !important;
-      align-items: baseline !important;
-      gap: 4px !important;
-      margin-bottom: 20px !important;
-      padding-bottom: 16px !important;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-    }
-    .pricing-currency {
-      font-size: 20px !important;
-      font-weight: 700 !important;
-      color: #0F172A !important;
-    }
-    .pricing-amount {
-      font-family: 'Outfit', sans-serif !important;
-      font-size: 38px !important;
-      font-weight: 800 !important;
-      color: #0F172A !important;
-      line-height: 1 !important;
-    }
-    .pricing-period {
-      font-size: 12.5px !important;
-      color: #64748B !important;
-      font-weight: 500 !important;
-    }
-    .pricing-features-list {
-      list-style: none !important;
-      padding: 0 !important;
-      margin: 0 0 24px 0 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 10px !important;
-      flex: 1 !important;
-    }
-    .pricing-features-list li {
-      font-size: 13px !important;
-      color: #334155 !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      line-height: 1.4 !important;
-    }
-    .btn-pricing-cta {
-      width: 100% !important;
-      padding: 13px 18px !important;
-      border-radius: 12px !important;
-      font-size: 13.5px !important;
-      font-weight: 700 !important;
-      cursor: pointer !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 8px !important;
-      text-decoration: none !important;
-      transition: all 0.2s ease !important;
-      box-sizing: border-box !important;
-    }
-    .btn-pricing-free {
-      background: #F1F5F9 !important;
-      color: #334155 !important;
-      border: 1px solid #CBD5E1 !important;
-    }
-    .btn-pricing-free:hover {
-      background: #E2E8F0 !important;
-      color: #0F172A !important;
-    }
-    .btn-pricing-pro {
-      background: linear-gradient(135deg, #476550, #00846D) !important;
-      color: #FFFFFF !important;
-      border: none !important;
-      box-shadow: 0 4px 14px rgba(0, 104, 86, 0.25) !important;
-    }
-    .btn-pricing-pro:hover {
-      background: linear-gradient(135deg, #344c3c, #006856) !important;
-      box-shadow: 0 6px 20px rgba(0, 104, 86, 0.4) !important;
-    }
-    .btn-pricing-suite {
-      background: linear-gradient(135deg, #F59E0B, #D97706) !important;
-      color: #FFFFFF !important;
-      border: none !important;
-      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35) !important;
-    }
-    .btn-pricing-suite:hover {
-      background: linear-gradient(135deg, #D97706, #B45309) !important;
-      box-shadow: 0 6px 22px rgba(245, 158, 11, 0.5) !important;
-    }
-    .payment-trust-bar {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-wrap: wrap !important;
-      gap: 20px !important;
-      margin-top: 24px !important;
-      padding: 14px 20px !important;
-      background: rgba(0, 104, 86, 0.04) !important;
-      border: 1px solid rgba(0, 104, 86, 0.15) !important;
-      border-radius: 12px !important;
-    }
-    .trust-item {
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 8px !important;
-      font-size: 12.5px !important;
-      font-weight: 600 !important;
-      color: var(--text-sub, #475569) !important;
+    @media (max-width: 768px) {
+      .btn-nav-back { display: none !important; }
     }
   </style>
 
@@ -840,6 +419,65 @@
       }
     })();
   </script>
+  <script>
+    // Global Navigation Back Handler for Laptop/Desktop
+    window.handleNavigationBack = function() {
+      if (window.history.length > 1 && document.referrer && (document.referrer.includes(window.location.host) || document.referrer.includes('zenresume'))) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    };
+
+    // Global Dark/Light Theme Toggle
+    window.toggleTheme = function() {
+      const current = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      
+      const icons = document.querySelectorAll('.btn-theme-toggle i');
+      icons.forEach(function(icon) {
+        if (next === 'dark') {
+          icon.className = 'fas fa-sun';
+          icon.style.color = '#F59E0B';
+        } else {
+          icon.className = 'fas fa-moon';
+          icon.style.color = '';
+        }
+      });
+    };
+
+    // Sync theme icon on initial load
+    document.addEventListener('DOMContentLoaded', function() {
+      const theme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      const icons = document.querySelectorAll('.btn-theme-toggle i');
+      icons.forEach(function(icon) {
+        if (theme === 'dark') {
+          icon.className = 'fas fa-sun';
+          icon.style.color = '#F59E0B';
+        } else {
+          icon.className = 'fas fa-moon';
+          icon.style.color = '';
+        }
+      });
+    });
+
+    // Global Mobile Menu Toggle
+    window.toggleMobileMenu = function(forceClose) {
+      const drawer = document.getElementById('mobile-drawer-menu');
+      const btn = document.getElementById('btn-mobile-menu');
+      if (!drawer) return;
+      if (forceClose === true || drawer.classList.contains('open')) {
+        drawer.classList.remove('open');
+        if (btn) btn.innerHTML = '<i class="fas fa-bars"></i>';
+      } else {
+        drawer.classList.add('open');
+        if (btn) btn.innerHTML = '<i class="fas fa-times"></i>';
+      }
+    };
+  </script>
 </head>
 <body>
   <!-- Accessibility: Skip to Main Content Link (WCAG 2.1 AA / RPwD Act 2016) -->
@@ -847,24 +485,30 @@
   
   <!-- Global Top Header (Stitch Dark Surface) -->
     <!-- Global Top Header with Responsive Navigation -->
+  <!-- Top Global Navigation Ribbon -->
+  <!-- Top Global Navigation Ribbon -->
+  <!-- Top Global Navigation Ribbon -->
   <header class="no-print stitch-nav">
     <div class="stitch-nav-container">
-      <a href="/" id="logo-link" class="brand-identity-container">
-        <img src="https://www.zenresume.online/favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" style="width: 36px; height: 36px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 104, 95, 0.4); object-fit: cover;">
-        <div class="brand-text-column">
-          <span class="brand-main-title">ZenResume</span>
-          <span class="brand-subtext">by Aneevarp Solutions</span>
-        </div>
-      </a>
-      
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <a href="/" class="brand-identity-container">
+          <img src="favicon-96x96.png" alt="ZenResume Logo" class="brand-logo-img" />
+          <div class="brand-text-column">
+            <span class="brand-main-title">ZenResume</span>
+            <span class="brand-subtext">By Aneevarp Solutions</span>
+          </div>
+        </a>
+        
+      </div>
+
       <!-- Desktop Navigation Links -->
       <nav class="desktop-nav-links">
-        <a href="/role/" id="nav-roles-link">Templates (63 Roles)</a>
-        <a href="/campus.html" style="color: #2DD4BF; font-weight: 700;">Campus Suite</a>
-        <a href="#pricing" id="nav-pricing-link" style="color: #476550; font-weight: 700;"><i class="fas fa-bolt" style="color: #F59E0B; font-size: 11px; margin-right: 2px;"></i> Pricing</a>
-        <a href="/about.html">About</a>
+        <a href="/role/">Templates (71 Roles)</a>
+        <a href="/campus.html">Campus Suite</a>
+        <a href="/blog/">Career Guides</a>
+        <a href="/#pricing">Pricing</a>
 
-        <!-- Zen Suite Ecosystem Interactive Dropdown -->
+        <!-- Zen Suite Ecosystem Dropdown -->
         <div class="zen-suite-wrapper">
           <button class="zen-suite-btn" type="button" aria-label="Zen Suite Ecosystem">
             <i class="fas fa-layer-group" style="color: #F59E0B; font-size: 11px;"></i>
@@ -879,7 +523,7 @@
               </div>
               <div class="suite-product-info">
                 <span class="suite-product-name">ZenScout AI</span>
-                <span class="suite-product-desc">Auto Job Scout &amp; Voice Coach</span>
+                <span class="suite-product-desc">Auto Job Scout &amp; Coach</span>
               </div>
             </a>
             <a href="https://pdf-analizing-and-answering-bot.vercel.app/app.html" target="_blank" rel="noopener noreferrer" class="suite-product-link">
@@ -906,27 +550,12 @@
 
       <!-- Right Action Controls -->
       <div class="header-right-actions">
-        <!-- Landing Page Google Auth / Profile Widget -->
-        <div class="nav-auth-wrap" id="nav-auth-wrap">
-          <button type="button" class="btn-nav-login" id="btn-landing-login" onclick="window.triggerGoogleLogin && window.triggerGoogleLogin();" title="Sign In with Google to sync across devices">
-            <svg width="15" height="15" viewBox="0 0 24 24" style="margin-right: 5px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            <span>Sign In</span>
-          </button>
-          <div class="nav-user-profile" id="nav-user-profile" style="display: none;">
-            <img id="nav-user-avatar" class="nav-user-avatar" src="" alt="Avatar">
-            <span id="nav-user-name" class="nav-user-name">User</span>
-            <button type="button" class="btn-nav-logout" id="btn-landing-logout" onclick="window.triggerLogout && window.triggerLogout();" title="Sign Out">
-              <i class="fas fa-sign-out-alt"></i>
-            </button>
-          </div>
-        </div>
-
-        <button id="btn-theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme" title="Toggle Light/Dark Mode">
+        <button type="button" id="btn-theme-toggle" class="btn-theme-toggle" onclick="window.toggleTheme && window.toggleTheme();" aria-label="Toggle Dark/Light Mode" title="Toggle Dark/Light Mode">
           <i class="fas fa-moon"></i>
         </button>
-        <button type="button" class="stitch-nav-cta btn-tactile" id="btn-header-cta" onclick="window.handleHeaderCTAClick && window.handleHeaderCTAClick();" style="border: none; cursor: pointer;">
-          Create My Resume
-        </button>
+        <a href="/" class="btn-header-cta">
+          ⚡ Create My Resume
+        </a>
         <button type="button" class="mobile-menu-toggle" id="btn-mobile-menu" onclick="window.toggleMobileMenu && window.toggleMobileMenu();" aria-label="Toggle Navigation Menu">
           <i class="fas fa-bars"></i>
         </button>
@@ -935,27 +564,26 @@
 
     <!-- Mobile Slide-Down Drawer Menu -->
     <div class="mobile-drawer-menu" id="mobile-drawer-menu">
-      <div class="mobile-auth-row" style="padding: 10px 16px; border-bottom: 1px solid rgba(162, 188, 168, 0.3);">
-        <button type="button" class="btn-nav-login" id="btn-mobile-drawer-login" onclick="window.triggerGoogleLogin && window.triggerGoogleLogin();" style="width: 100%; justify-content: center; padding: 9px 16px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" style="margin-right: 6px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <div class="mobile-auth-row" style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+        <button type="button" class="btn-nav-login" id="btn-mobile-drawer-login" onclick="window.triggerGoogleLogin && window.triggerGoogleLogin();" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFFFFF; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13.5px; cursor: pointer;">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           <span>Sign In with Google</span>
         </button>
       </div>
-      <a href="#" class="mobile-nav-link" onclick="window.enterApp && window.enterApp(); window.toggleMobileMenu(true); return false;">
-        <i class="fas fa-file-invoice"></i> Builder App
-      </a>
       <a href="/role/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-layer-group"></i> Templates (63 Roles)
+        <i class="fas fa-layer-group" style="color: #2DD4BF;"></i> Templates (71 Roles)
       </a>
       <a href="/campus.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);" style="color: #00E5BC; font-weight: 700;">
         <i class="fas fa-graduation-cap" style="color: #00E5BC;"></i> Campus Placement Suite
       </a>
-      <a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link" style="color: #00E5BC; font-weight: 700;" onclick="window.toggleMobileMenu(true);">
-        <i class="fas fa-robot" style="color: #00E5BC;"></i> ZenScout AI (Auto-Job Hunter)
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left: auto; opacity: 0.7;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+      <a href="https://ai-job-search-agent-chi.vercel.app/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link" style="color: #2DD4BF;" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-robot" style="color: #2DD4BF;"></i> ZenScout AI (Auto-Job Hunter)
       </a>
-      <a href="#pricing" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);" style="color: #476550; font-weight: 700;">
+      <a href="/#pricing" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
         <i class="fas fa-bolt" style="color: #F59E0B;"></i> Pricing &amp; Pro Plans
+      </a>
+      <a href="/blog/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
+        <i class="fas fa-book-open"></i> Career Guides
       </a>
       <a href="/about.html" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
         <i class="fas fa-info-circle"></i> About Us

@@ -3537,21 +3537,28 @@ function bootstrap() {
   checkURLParamsOnLoad();
 }
 
-function initTheme() {
-  const btnThemeToggle = document.getElementById('btn-theme-toggle');
-  if (!btnThemeToggle) return;
+window.toggleTheme = function() {
+  const activeTheme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'light';
+  const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+  
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  
+  const toggleBtns = document.querySelectorAll('.btn-theme-toggle, #btn-theme-toggle');
+  toggleBtns.forEach(btn => updateThemeIcon(btn, newTheme));
+};
 
+function initTheme() {
   const currentTheme = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', currentTheme);
-  updateThemeIcon(btnThemeToggle, currentTheme);
-
-  btnThemeToggle.addEventListener('click', () => {
-    const activeTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeIcon(btnThemeToggle, newTheme);
+  
+  const toggleBtns = document.querySelectorAll('.btn-theme-toggle, #btn-theme-toggle');
+  toggleBtns.forEach(btn => {
+    updateThemeIcon(btn, currentTheme);
+    btn.onclick = function(e) {
+      if (e) e.preventDefault();
+      window.toggleTheme();
+    };
   });
 }
 
