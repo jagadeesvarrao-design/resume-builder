@@ -2843,3 +2843,5619 @@ Object.keys(TEMPLATE_STYLES).forEach(key => {
   };
 });
 
+
+
+// ==============================================================================
+// 2026 FLAGSHIP ROLE BLUEPRINTS (INSTANT 1-CLICK EDITOR PRE-FILL ENGINE)
+// ==============================================================================
+window.ROLE_BLUEPRINTS = {
+  "software-engineer": {
+    "personal": {
+      "name": "Sarah Chen",
+      "title": "Software Engineer",
+      "email": "sarah.chen@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Seattle, WA",
+      "website": "software-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/software-engineer",
+      "github": "github.com/software-engineer"
+    },
+    "summary": "Results-driven Software Engineer with 4+ years of hands-on experience in Microservices, Distributed Systems, Go, TypeScript, PostgreSQL. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Microservices",
+      "Distributed Systems",
+      "Go",
+      "TypeScript",
+      "PostgreSQL",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Software Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Seattle, WA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core software engineer initiatives utilizing Microservices and Distributed Systems, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Software Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Seattle, WA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Software Engineer Architecture & Workflow Suite",
+        "technologies": "Microservices, Distributed Systems, Go",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/software-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Software Engineer Performance Initiative",
+        "technologies": "Distributed Systems, Go, TypeScript",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/software-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Software",
+        "institution": "State University / Institute of Technology",
+        "location": "Seattle, WA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Software Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "senior-software-developer": {
+    "personal": {
+      "name": "Marcus Vance",
+      "title": "Senior Software Developer",
+      "email": "marcus.vance@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Francisco, CA",
+      "website": "senior-software-developer-portfolio.dev",
+      "linkedin": "linkedin.com/in/senior-software-developer",
+      "github": "github.com/senior-software-developer"
+    },
+    "summary": "Results-driven Senior Software Developer with 4+ years of hands-on experience in System Architecture, High-Concurrency, Distributed Caching, Go/Java. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "System Architecture",
+      "High-Concurrency",
+      "Distributed Caching",
+      "Go/Java",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Senior Software Developer",
+        "company": "Apex Solutions Inc.",
+        "location": "San Francisco, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core senior software developer initiatives utilizing System Architecture and High-Concurrency, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Senior Software Developer Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Francisco, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Senior Software Developer Architecture & Workflow Suite",
+        "technologies": "System Architecture, High-Concurrency, Distributed Caching",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/senior-software-developer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Senior Software Developer Performance Initiative",
+        "technologies": "High-Concurrency, Distributed Caching, Go/Java",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/senior-software-developer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Senior",
+        "institution": "State University / Institute of Technology",
+        "location": "San Francisco, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Senior Software Developer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "backend-developer": {
+    "personal": {
+      "name": "Nathan Vance",
+      "title": "Backend Developer",
+      "email": "nathan.vance@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Francisco, CA",
+      "website": "backend-developer-portfolio.dev",
+      "linkedin": "linkedin.com/in/backend-developer",
+      "github": "github.com/backend-developer"
+    },
+    "summary": "Results-driven Backend Developer with 4+ years of hands-on experience in Go, Java Spring Boot, PostgreSQL, Kafka, Redis, Distributed Systems. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Go",
+      "Java Spring Boot",
+      "PostgreSQL",
+      "Kafka",
+      "Redis",
+      "Distributed Systems",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Backend Developer",
+        "company": "Apex Solutions Inc.",
+        "location": "San Francisco, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core backend developer initiatives utilizing Go and Java Spring Boot, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Backend Developer Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Francisco, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Backend Developer Architecture & Workflow Suite",
+        "technologies": "Go, Java Spring Boot, PostgreSQL",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/backend-developer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Backend Developer Performance Initiative",
+        "technologies": "Java Spring Boot, PostgreSQL, Kafka",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/backend-developer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Backend",
+        "institution": "State University / Institute of Technology",
+        "location": "San Francisco, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Backend Developer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "frontend-developer": {
+    "personal": {
+      "name": "Emily Zhao",
+      "title": "Frontend Developer",
+      "email": "emily.zhao@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "frontend-developer-portfolio.dev",
+      "linkedin": "linkedin.com/in/frontend-developer",
+      "github": "github.com/frontend-developer"
+    },
+    "summary": "Results-driven Frontend Developer with 4+ years of hands-on experience in TypeScript, React.js, Next.js, Core Web Vitals, Tailwind CSS. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "TypeScript",
+      "React.js",
+      "Next.js",
+      "Core Web Vitals",
+      "Tailwind CSS",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Frontend Developer",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core frontend developer initiatives utilizing TypeScript and React.js, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Frontend Developer Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Frontend Developer Architecture & Workflow Suite",
+        "technologies": "TypeScript, React.js, Next.js",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/frontend-developer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Frontend Developer Performance Initiative",
+        "technologies": "React.js, Next.js, Core Web Vitals",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/frontend-developer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Frontend",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Frontend Developer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "java-developer-2-years-experience": {
+    "personal": {
+      "name": "Karthik Verma",
+      "title": "Java Developer (2+ Years)",
+      "email": "karthik.verma@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Bengaluru, India",
+      "website": "java-developer-2-years-experience-portfolio.dev",
+      "linkedin": "linkedin.com/in/java-developer-2-years-experience",
+      "github": "github.com/java-developer-2-years-experience"
+    },
+    "summary": "Results-driven Java Developer (2+ Years) with 4+ years of hands-on experience in Core Java, Spring Boot, Microservices, Hibernate, REST APIs, MySQL. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Core Java",
+      "Spring Boot",
+      "Microservices",
+      "Hibernate",
+      "REST APIs",
+      "MySQL",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Java Developer (2+ Years)",
+        "company": "Apex Solutions Inc.",
+        "location": "Bengaluru, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core java developer (2+ years) initiatives utilizing Core Java and Spring Boot, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Java Developer (2+ Years) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Bengaluru, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Java Developer (2+ Years) Architecture & Workflow Suite",
+        "technologies": "Core Java, Spring Boot, Microservices",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/java-developer-2-years-experience/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Java Developer (2+ Years) Performance Initiative",
+        "technologies": "Spring Boot, Microservices, Hibernate",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/java-developer-2-years-experience/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Java",
+        "institution": "State University / Institute of Technology",
+        "location": "Bengaluru, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Java Developer (2+ Years) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "devops-engineer": {
+    "personal": {
+      "name": "Alexandre Dubois",
+      "title": "DevOps Engineer",
+      "email": "alexandre.dubois@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Austin, TX",
+      "website": "devops-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/devops-engineer",
+      "github": "github.com/devops-engineer"
+    },
+    "summary": "Results-driven DevOps Engineer with 4+ years of hands-on experience in Kubernetes, Docker, Terraform, CI/CD, ArgoCD, Prometheus, AWS. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Kubernetes",
+      "Docker",
+      "Terraform",
+      "CI/CD",
+      "ArgoCD",
+      "Prometheus",
+      "AWS",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead DevOps Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Austin, TX",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core devops engineer initiatives utilizing Kubernetes and Docker, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "DevOps Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Austin, TX",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise DevOps Engineer Architecture & Workflow Suite",
+        "technologies": "Kubernetes, Docker, Terraform",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/devops-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact DevOps Engineer Performance Initiative",
+        "technologies": "Docker, Terraform, CI/CD",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/devops-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in DevOps",
+        "institution": "State University / Institute of Technology",
+        "location": "Austin, TX",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified DevOps Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "aws-cloud-engineer": {
+    "personal": {
+      "name": "Jordan Hayes",
+      "title": "AWS Cloud Engineer",
+      "email": "jordan.hayes@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Seattle, WA",
+      "website": "aws-cloud-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/aws-cloud-engineer",
+      "github": "github.com/aws-cloud-engineer"
+    },
+    "summary": "Results-driven AWS Cloud Engineer with 4+ years of hands-on experience in AWS EKS, Terraform, Lambda, Aurora, FinOps, Multi-Region IaC. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "AWS EKS",
+      "Terraform",
+      "Lambda",
+      "Aurora",
+      "FinOps",
+      "Multi-Region IaC",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead AWS Cloud Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Seattle, WA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core aws cloud engineer initiatives utilizing AWS EKS and Terraform, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "AWS Cloud Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Seattle, WA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise AWS Cloud Engineer Architecture & Workflow Suite",
+        "technologies": "AWS EKS, Terraform, Lambda",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/aws-cloud-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact AWS Cloud Engineer Performance Initiative",
+        "technologies": "Terraform, Lambda, Aurora",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/aws-cloud-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in AWS",
+        "institution": "State University / Institute of Technology",
+        "location": "Seattle, WA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified AWS Cloud Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "cloud-engineer": {
+    "personal": {
+      "name": "Samira Khan",
+      "title": "Cloud Infrastructure Engineer",
+      "email": "samira.khan@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Chicago, IL",
+      "website": "cloud-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/cloud-engineer",
+      "github": "github.com/cloud-engineer"
+    },
+    "summary": "Results-driven Cloud Infrastructure Engineer with 4+ years of hands-on experience in Multi-Cloud, Kubernetes, Terraform, Docker, Cloud Security, SRE. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Multi-Cloud",
+      "Kubernetes",
+      "Terraform",
+      "Docker",
+      "Cloud Security",
+      "SRE",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Cloud Infrastructure Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Chicago, IL",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core cloud infrastructure engineer initiatives utilizing Multi-Cloud and Kubernetes, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Cloud Infrastructure Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Chicago, IL",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Cloud Infrastructure Engineer Architecture & Workflow Suite",
+        "technologies": "Multi-Cloud, Kubernetes, Terraform",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/cloud-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Cloud Infrastructure Engineer Performance Initiative",
+        "technologies": "Kubernetes, Terraform, Docker",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/cloud-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Cloud",
+        "institution": "State University / Institute of Technology",
+        "location": "Chicago, IL",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Cloud Infrastructure Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "cybersecurity-analyst": {
+    "personal": {
+      "name": "Maya Patel",
+      "title": "Cybersecurity Analyst",
+      "email": "maya.patel@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Washington, D.C.",
+      "website": "cybersecurity-analyst-portfolio.dev",
+      "linkedin": "linkedin.com/in/cybersecurity-analyst",
+      "github": "github.com/cybersecurity-analyst"
+    },
+    "summary": "Results-driven Cybersecurity Analyst with 4+ years of hands-on experience in Splunk ES, Threat Hunting, MITRE ATT&CK, CrowdStrike, SOC2, NIST. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Splunk ES",
+      "Threat Hunting",
+      "MITRE ATT&CK",
+      "CrowdStrike",
+      "SOC2",
+      "NIST",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Cybersecurity Analyst",
+        "company": "Apex Solutions Inc.",
+        "location": "Washington, D.C.",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core cybersecurity analyst initiatives utilizing Splunk ES and Threat Hunting, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Cybersecurity Analyst Specialist",
+        "company": "Vertex Global Group",
+        "location": "Washington, D.C.",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Cybersecurity Analyst Architecture & Workflow Suite",
+        "technologies": "Splunk ES, Threat Hunting, MITRE ATT&CK",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/cybersecurity-analyst/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Cybersecurity Analyst Performance Initiative",
+        "technologies": "Threat Hunting, MITRE ATT&CK, CrowdStrike",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/cybersecurity-analyst/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Cybersecurity",
+        "institution": "State University / Institute of Technology",
+        "location": "Washington, D.C.",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Cybersecurity Analyst Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "prompt-engineer": {
+    "personal": {
+      "name": "Liam Torres",
+      "title": "Prompt Engineer & LLM Evaluator",
+      "email": "liam.torres@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Francisco, CA",
+      "website": "prompt-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/prompt-engineer",
+      "github": "github.com/prompt-engineer"
+    },
+    "summary": "Results-driven Prompt Engineer & LLM Evaluator with 4+ years of hands-on experience in Prompt Optimization, Few-Shot Engineering, Ragas, LLM Evals, LangChain. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Prompt Optimization",
+      "Few-Shot Engineering",
+      "Ragas",
+      "LLM Evals",
+      "LangChain",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Prompt Engineer & LLM Evaluator",
+        "company": "Apex Solutions Inc.",
+        "location": "San Francisco, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core prompt engineer & llm evaluator initiatives utilizing Prompt Optimization and Few-Shot Engineering, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Prompt Engineer & LLM Evaluator Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Francisco, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Prompt Engineer & LLM Evaluator Architecture & Workflow Suite",
+        "technologies": "Prompt Optimization, Few-Shot Engineering, Ragas",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/prompt-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Prompt Engineer & LLM Evaluator Performance Initiative",
+        "technologies": "Few-Shot Engineering, Ragas, LLM Evals",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/prompt-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Prompt",
+        "institution": "State University / Institute of Technology",
+        "location": "San Francisco, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Prompt Engineer & LLM Evaluator Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "it-support-specialist": {
+    "personal": {
+      "name": "Brian Miller",
+      "title": "IT Support Specialist",
+      "email": "brian.miller@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Dallas, TX",
+      "website": "it-support-specialist-portfolio.dev",
+      "linkedin": "linkedin.com/in/it-support-specialist",
+      "github": "github.com/it-support-specialist"
+    },
+    "summary": "Results-driven IT Support Specialist with 4+ years of hands-on experience in Active Directory, Windows Server, ServiceNow, TCP/IP, Jamf, Office 365. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Active Directory",
+      "Windows Server",
+      "ServiceNow",
+      "TCP/IP",
+      "Jamf",
+      "Office 365",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead IT Support Specialist",
+        "company": "Apex Solutions Inc.",
+        "location": "Dallas, TX",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core it support specialist initiatives utilizing Active Directory and Windows Server, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "IT Support Specialist Specialist",
+        "company": "Vertex Global Group",
+        "location": "Dallas, TX",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise IT Support Specialist Architecture & Workflow Suite",
+        "technologies": "Active Directory, Windows Server, ServiceNow",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/it-support-specialist/enterprise-suite"
+      },
+      {
+        "title": "High-Impact IT Support Specialist Performance Initiative",
+        "technologies": "Windows Server, ServiceNow, TCP/IP",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/it-support-specialist/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in IT",
+        "institution": "State University / Institute of Technology",
+        "location": "Dallas, TX",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified IT Support Specialist Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "ai-engineer": {
+    "personal": {
+      "name": "Alexander Reed",
+      "title": "AI & Machine Learning Engineer",
+      "email": "alexander.reed@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Francisco, CA",
+      "website": "ai-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/ai-engineer",
+      "github": "github.com/ai-engineer"
+    },
+    "summary": "Results-driven AI & Machine Learning Engineer with 4+ years of hands-on experience in LLM Fine-Tuning, vLLM, TensorRT, RAG, PyTorch, Qdrant, MLOps. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "LLM Fine-Tuning",
+      "vLLM",
+      "TensorRT",
+      "RAG",
+      "PyTorch",
+      "Qdrant",
+      "MLOps",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead AI & Machine Learning Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "San Francisco, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core ai & machine learning engineer initiatives utilizing LLM Fine-Tuning and vLLM, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "AI & Machine Learning Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Francisco, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise AI & Machine Learning Engineer Architecture & Workflow Suite",
+        "technologies": "LLM Fine-Tuning, vLLM, TensorRT",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/ai-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact AI & Machine Learning Engineer Performance Initiative",
+        "technologies": "vLLM, TensorRT, RAG",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/ai-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in AI",
+        "institution": "State University / Institute of Technology",
+        "location": "San Francisco, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified AI & Machine Learning Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "data-scientist": {
+    "personal": {
+      "name": "Elena Rostova",
+      "title": "Data Scientist",
+      "email": "elena.rostova@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Austin, TX",
+      "website": "data-scientist-portfolio.dev",
+      "linkedin": "linkedin.com/in/data-scientist",
+      "github": "github.com/data-scientist"
+    },
+    "summary": "Results-driven Data Scientist with 4+ years of hands-on experience in Predictive Modeling, A/B Testing, XGBoost, Snowflake, SQL, Python. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Predictive Modeling",
+      "A/B Testing",
+      "XGBoost",
+      "Snowflake",
+      "SQL",
+      "Python",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Data Scientist",
+        "company": "Apex Solutions Inc.",
+        "location": "Austin, TX",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core data scientist initiatives utilizing Predictive Modeling and A/B Testing, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Data Scientist Specialist",
+        "company": "Vertex Global Group",
+        "location": "Austin, TX",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Data Scientist Architecture & Workflow Suite",
+        "technologies": "Predictive Modeling, A/B Testing, XGBoost",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/data-scientist/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Data Scientist Performance Initiative",
+        "technologies": "A/B Testing, XGBoost, Snowflake",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/data-scientist/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Data",
+        "institution": "State University / Institute of Technology",
+        "location": "Austin, TX",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Data Scientist Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "data-engineer": {
+    "personal": {
+      "name": "Ravi Teja",
+      "title": "Data Engineer",
+      "email": "ravi.teja@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Bengaluru, India",
+      "website": "data-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/data-engineer",
+      "github": "github.com/data-engineer"
+    },
+    "summary": "Results-driven Data Engineer with 4+ years of hands-on experience in PySpark, Apache Airflow, dbt, Snowflake, Kafka, Data Lakehouse. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "PySpark",
+      "Apache Airflow",
+      "dbt",
+      "Snowflake",
+      "Kafka",
+      "Data Lakehouse",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Data Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Bengaluru, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core data engineer initiatives utilizing PySpark and Apache Airflow, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Data Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Bengaluru, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Data Engineer Architecture & Workflow Suite",
+        "technologies": "PySpark, Apache Airflow, dbt",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/data-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Data Engineer Performance Initiative",
+        "technologies": "Apache Airflow, dbt, Snowflake",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/data-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Data",
+        "institution": "State University / Institute of Technology",
+        "location": "Bengaluru, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Data Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "data-analyst-fresher-projects": {
+    "personal": {
+      "name": "Pooja Hegde",
+      "title": "Data Analyst (Fresher & Projects)",
+      "email": "pooja.hegde@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Hyderabad, India",
+      "website": "data-analyst-fresher-projects-portfolio.dev",
+      "linkedin": "linkedin.com/in/data-analyst-fresher-projects",
+      "github": "github.com/data-analyst-fresher-projects"
+    },
+    "summary": "Results-driven Data Analyst (Fresher & Projects) with 4+ years of hands-on experience in SQL, Python, PowerBI, Tableau, EDA, Excel Financial Modeling. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "SQL",
+      "Python",
+      "PowerBI",
+      "Tableau",
+      "EDA",
+      "Excel Financial Modeling",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Data Analyst (Fresher & Projects)",
+        "company": "Apex Solutions Inc.",
+        "location": "Hyderabad, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core data analyst (fresher & projects) initiatives utilizing SQL and Python, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Data Analyst (Fresher & Projects) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Hyderabad, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Data Analyst (Fresher & Projects) Architecture & Workflow Suite",
+        "technologies": "SQL, Python, PowerBI",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/data-analyst-fresher-projects/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Data Analyst (Fresher & Projects) Performance Initiative",
+        "technologies": "Python, PowerBI, Tableau",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/data-analyst-fresher-projects/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Data",
+        "institution": "State University / Institute of Technology",
+        "location": "Hyderabad, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Data Analyst (Fresher & Projects) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "business-analyst": {
+    "personal": {
+      "name": "Claire Bennett",
+      "title": "Business Analyst",
+      "email": "claire.bennett@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Boston, MA",
+      "website": "business-analyst-portfolio.dev",
+      "linkedin": "linkedin.com/in/business-analyst",
+      "github": "github.com/business-analyst"
+    },
+    "summary": "Results-driven Business Analyst with 4+ years of hands-on experience in BRD/FRD Authoring, SQL, Tableau, Agile Scrum, Process Mapping. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "BRD/FRD Authoring",
+      "SQL",
+      "Tableau",
+      "Agile Scrum",
+      "Process Mapping",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Business Analyst",
+        "company": "Apex Solutions Inc.",
+        "location": "Boston, MA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core business analyst initiatives utilizing BRD/FRD Authoring and SQL, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Business Analyst Specialist",
+        "company": "Vertex Global Group",
+        "location": "Boston, MA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Business Analyst Architecture & Workflow Suite",
+        "technologies": "BRD/FRD Authoring, SQL, Tableau",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/business-analyst/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Business Analyst Performance Initiative",
+        "technologies": "SQL, Tableau, Agile Scrum",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/business-analyst/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Business",
+        "institution": "State University / Institute of Technology",
+        "location": "Boston, MA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Business Analyst Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "mechanical-engineer": {
+    "personal": {
+      "name": "David Kowalski",
+      "title": "Mechanical Design Engineer",
+      "email": "david.kowalski@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Detroit, MI",
+      "website": "mechanical-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/mechanical-engineer",
+      "github": "github.com/mechanical-engineer"
+    },
+    "summary": "Results-driven Mechanical Design Engineer with 4+ years of hands-on experience in SolidWorks, ANSYS FEA, GD&T ASME Y14.5, DFM/DFA, NPI. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "SolidWorks",
+      "ANSYS FEA",
+      "GD&T ASME Y14.5",
+      "DFM/DFA",
+      "NPI",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Mechanical Design Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Detroit, MI",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core mechanical design engineer initiatives utilizing SolidWorks and ANSYS FEA, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Mechanical Design Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Detroit, MI",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Mechanical Design Engineer Architecture & Workflow Suite",
+        "technologies": "SolidWorks, ANSYS FEA, GD&T ASME Y14.5",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/mechanical-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Mechanical Design Engineer Performance Initiative",
+        "technologies": "ANSYS FEA, GD&T ASME Y14.5, DFM/DFA",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/mechanical-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Mechanical",
+        "institution": "State University / Institute of Technology",
+        "location": "Detroit, MI",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Mechanical Design Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "civil-engineer": {
+    "personal": {
+      "name": "Vikram Singh",
+      "title": "Civil & Structural Engineer",
+      "email": "vikram.singh@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New Delhi, India",
+      "website": "civil-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/civil-engineer",
+      "github": "github.com/civil-engineer"
+    },
+    "summary": "Results-driven Civil & Structural Engineer with 4+ years of hands-on experience in AutoCAD Civil 3D, STAAD.Pro, Structural Analysis, IS 456, BOQ. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "AutoCAD Civil 3D",
+      "STAAD.Pro",
+      "Structural Analysis",
+      "IS 456",
+      "BOQ",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Civil & Structural Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "New Delhi, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core civil & structural engineer initiatives utilizing AutoCAD Civil 3D and STAAD.Pro, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Civil & Structural Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "New Delhi, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Civil & Structural Engineer Architecture & Workflow Suite",
+        "technologies": "AutoCAD Civil 3D, STAAD.Pro, Structural Analysis",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/civil-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Civil & Structural Engineer Performance Initiative",
+        "technologies": "STAAD.Pro, Structural Analysis, IS 456",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/civil-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Civil",
+        "institution": "State University / Institute of Technology",
+        "location": "New Delhi, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Civil & Structural Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "electrical-engineer": {
+    "personal": {
+      "name": "Kiran Nair",
+      "title": "Electrical & Embedded Engineer",
+      "email": "kiran.nair@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Chennai, India",
+      "website": "electrical-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/electrical-engineer",
+      "github": "github.com/electrical-engineer"
+    },
+    "summary": "Results-driven Electrical & Embedded Engineer with 4+ years of hands-on experience in PLC Programming, SCADA, MATLAB/Simulink, Circuit Design, IEEE. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "PLC Programming",
+      "SCADA",
+      "MATLAB/Simulink",
+      "Circuit Design",
+      "IEEE",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Electrical & Embedded Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Chennai, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core electrical & embedded engineer initiatives utilizing PLC Programming and SCADA, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Electrical & Embedded Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Chennai, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Electrical & Embedded Engineer Architecture & Workflow Suite",
+        "technologies": "PLC Programming, SCADA, MATLAB/Simulink",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/electrical-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Electrical & Embedded Engineer Performance Initiative",
+        "technologies": "SCADA, MATLAB/Simulink, Circuit Design",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/electrical-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Electrical",
+        "institution": "State University / Institute of Technology",
+        "location": "Chennai, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Electrical & Embedded Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "industrial-engineer": {
+    "personal": {
+      "name": "Carlos Mendoza",
+      "title": "Industrial & Systems Engineer",
+      "email": "carlos.mendoza@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Atlanta, GA",
+      "website": "industrial-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/industrial-engineer",
+      "github": "github.com/industrial-engineer"
+    },
+    "summary": "Results-driven Industrial & Systems Engineer with 4+ years of hands-on experience in Lean Six Sigma, Value Stream Mapping, Kaizen, Arena Simulation, Ergonomics. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Lean Six Sigma",
+      "Value Stream Mapping",
+      "Kaizen",
+      "Arena Simulation",
+      "Ergonomics",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Industrial & Systems Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Atlanta, GA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core industrial & systems engineer initiatives utilizing Lean Six Sigma and Value Stream Mapping, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Industrial & Systems Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Atlanta, GA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Industrial & Systems Engineer Architecture & Workflow Suite",
+        "technologies": "Lean Six Sigma, Value Stream Mapping, Kaizen",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/industrial-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Industrial & Systems Engineer Performance Initiative",
+        "technologies": "Value Stream Mapping, Kaizen, Arena Simulation",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/industrial-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Industrial",
+        "institution": "State University / Institute of Technology",
+        "location": "Atlanta, GA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Industrial & Systems Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "biomedical-engineer": {
+    "personal": {
+      "name": "Dr. Rachel Green",
+      "title": "Biomedical Engineer",
+      "email": "dr..rachel.green@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Diego, CA",
+      "website": "biomedical-engineer-portfolio.dev",
+      "linkedin": "linkedin.com/in/biomedical-engineer",
+      "github": "github.com/biomedical-engineer"
+    },
+    "summary": "Results-driven Biomedical Engineer with 4+ years of hands-on experience in Medical Device Design, ISO 13485, FDA 510(k), MATLAB, Biocompatibility. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Medical Device Design",
+      "ISO 13485",
+      "FDA 510(k)",
+      "MATLAB",
+      "Biocompatibility",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Biomedical Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "San Diego, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core biomedical engineer initiatives utilizing Medical Device Design and ISO 13485, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Biomedical Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Diego, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Biomedical Engineer Architecture & Workflow Suite",
+        "technologies": "Medical Device Design, ISO 13485, FDA 510(k)",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/biomedical-engineer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Biomedical Engineer Performance Initiative",
+        "technologies": "ISO 13485, FDA 510(k), MATLAB",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/biomedical-engineer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Biomedical",
+        "institution": "State University / Institute of Technology",
+        "location": "San Diego, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Biomedical Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "architect": {
+    "personal": {
+      "name": "Julian Croft",
+      "title": "Architect & Spatial Designer",
+      "email": "julian.croft@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Chicago, IL",
+      "website": "architect-portfolio.dev",
+      "linkedin": "linkedin.com/in/architect",
+      "github": "github.com/architect"
+    },
+    "summary": "Results-driven Architect & Spatial Designer with 4+ years of hands-on experience in Revit BIM, Rhino 3D, Sustainable Design, LEED AP, Construction Docs. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Revit BIM",
+      "Rhino 3D",
+      "Sustainable Design",
+      "LEED AP",
+      "Construction Docs",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Architect & Spatial Designer",
+        "company": "Apex Solutions Inc.",
+        "location": "Chicago, IL",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core architect & spatial designer initiatives utilizing Revit BIM and Rhino 3D, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Architect & Spatial Designer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Chicago, IL",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Architect & Spatial Designer Architecture & Workflow Suite",
+        "technologies": "Revit BIM, Rhino 3D, Sustainable Design",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/architect/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Architect & Spatial Designer Performance Initiative",
+        "technologies": "Rhino 3D, Sustainable Design, LEED AP",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/architect/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Architect",
+        "institution": "State University / Institute of Technology",
+        "location": "Chicago, IL",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Architect & Spatial Designer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "draftsman": {
+    "personal": {
+      "name": "Suresh Reddy",
+      "title": "CAD Draftsman & Mechanical Designer",
+      "email": "suresh.reddy@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Pune, India",
+      "website": "draftsman-portfolio.dev",
+      "linkedin": "linkedin.com/in/draftsman",
+      "github": "github.com/draftsman"
+    },
+    "summary": "Results-driven CAD Draftsman & Mechanical Designer with 4+ years of hands-on experience in AutoCAD 2D/3D, SolidWorks, Drafting Standards, Dimensioning, BOM. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "AutoCAD 2D/3D",
+      "SolidWorks",
+      "Drafting Standards",
+      "Dimensioning",
+      "BOM",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead CAD Draftsman & Mechanical Designer",
+        "company": "Apex Solutions Inc.",
+        "location": "Pune, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core cad draftsman & mechanical designer initiatives utilizing AutoCAD 2D/3D and SolidWorks, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "CAD Draftsman & Mechanical Designer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Pune, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise CAD Draftsman & Mechanical Designer Architecture & Workflow Suite",
+        "technologies": "AutoCAD 2D/3D, SolidWorks, Drafting Standards",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/draftsman/enterprise-suite"
+      },
+      {
+        "title": "High-Impact CAD Draftsman & Mechanical Designer Performance Initiative",
+        "technologies": "SolidWorks, Drafting Standards, Dimensioning",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/draftsman/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in CAD",
+        "institution": "State University / Institute of Technology",
+        "location": "Pune, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified CAD Draftsman & Mechanical Designer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "tcs-nqt-fresher": {
+    "personal": {
+      "name": "Rohan Sharma",
+      "title": "TCS NQT Fresher Candidate",
+      "email": "rohan.sharma@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Hyderabad, India",
+      "website": "tcs-nqt-fresher-portfolio.dev",
+      "linkedin": "linkedin.com/in/tcs-nqt-fresher",
+      "github": "github.com/tcs-nqt-fresher"
+    },
+    "summary": "Results-driven TCS NQT Fresher Candidate with 4+ years of hands-on experience in Core Java, Python, SQL, DSA, OOPs, Web Development, Campus Projects. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Core Java",
+      "Python",
+      "SQL",
+      "DSA",
+      "OOPs",
+      "Web Development",
+      "Campus Projects",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead TCS NQT Fresher Candidate",
+        "company": "Apex Solutions Inc.",
+        "location": "Hyderabad, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core tcs nqt fresher candidate initiatives utilizing Core Java and Python, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "TCS NQT Fresher Candidate Specialist",
+        "company": "Vertex Global Group",
+        "location": "Hyderabad, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise TCS NQT Fresher Candidate Architecture & Workflow Suite",
+        "technologies": "Core Java, Python, SQL",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/tcs-nqt-fresher/enterprise-suite"
+      },
+      {
+        "title": "High-Impact TCS NQT Fresher Candidate Performance Initiative",
+        "technologies": "Python, SQL, DSA",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/tcs-nqt-fresher/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in TCS",
+        "institution": "State University / Institute of Technology",
+        "location": "Hyderabad, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified TCS NQT Fresher Candidate Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "infosys-fresher": {
+    "personal": {
+      "name": "Ananya Deshmukh",
+      "title": "Infosys Fresher (Systems Engineer)",
+      "email": "ananya.deshmukh@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Pune, India",
+      "website": "infosys-fresher-portfolio.dev",
+      "linkedin": "linkedin.com/in/infosys-fresher",
+      "github": "github.com/infosys-fresher"
+    },
+    "summary": "Results-driven Infosys Fresher (Systems Engineer) with 4+ years of hands-on experience in Python, Java, DBMS, Pseudo Code, LeetCode, GitHub Capstone Projects. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Python",
+      "Java",
+      "DBMS",
+      "Pseudo Code",
+      "LeetCode",
+      "GitHub Capstone Projects",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Infosys Fresher (Systems Engineer)",
+        "company": "Apex Solutions Inc.",
+        "location": "Pune, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core infosys fresher (systems engineer) initiatives utilizing Python and Java, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Infosys Fresher (Systems Engineer) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Pune, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Infosys Fresher (Systems Engineer) Architecture & Workflow Suite",
+        "technologies": "Python, Java, DBMS",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/infosys-fresher/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Infosys Fresher (Systems Engineer) Performance Initiative",
+        "technologies": "Java, DBMS, Pseudo Code",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/infosys-fresher/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Infosys",
+        "institution": "State University / Institute of Technology",
+        "location": "Pune, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Infosys Fresher (Systems Engineer) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "wipro-turbo": {
+    "personal": {
+      "name": "Rahul Menon",
+      "title": "Wipro Turbo / Elite Fresher",
+      "email": "rahul.menon@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Kochi, India",
+      "website": "wipro-turbo-portfolio.dev",
+      "linkedin": "linkedin.com/in/wipro-turbo",
+      "github": "github.com/wipro-turbo"
+    },
+    "summary": "Results-driven Wipro Turbo / Elite Fresher with 4+ years of hands-on experience in Data Structures, C++, Java, Cloud Basics, Agile Scrum, Capstone. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Data Structures",
+      "C++",
+      "Java",
+      "Cloud Basics",
+      "Agile Scrum",
+      "Capstone",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Wipro Turbo / Elite Fresher",
+        "company": "Apex Solutions Inc.",
+        "location": "Kochi, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core wipro turbo / elite fresher initiatives utilizing Data Structures and C++, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Wipro Turbo / Elite Fresher Specialist",
+        "company": "Vertex Global Group",
+        "location": "Kochi, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Wipro Turbo / Elite Fresher Architecture & Workflow Suite",
+        "technologies": "Data Structures, C++, Java",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/wipro-turbo/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Wipro Turbo / Elite Fresher Performance Initiative",
+        "technologies": "C++, Java, Cloud Basics",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/wipro-turbo/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Wipro",
+        "institution": "State University / Institute of Technology",
+        "location": "Kochi, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Wipro Turbo / Elite Fresher Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "accenture-placement": {
+    "personal": {
+      "name": "Sneha Roy",
+      "title": "Accenture Associate Software Engineer",
+      "email": "sneha.roy@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Kolkata, India",
+      "website": "accenture-placement-portfolio.dev",
+      "linkedin": "linkedin.com/in/accenture-placement",
+      "github": "github.com/accenture-placement"
+    },
+    "summary": "Results-driven Accenture Associate Software Engineer with 4+ years of hands-on experience in Full-Stack Development, Java, SQL, Critical Reasoning, GitHub Projects. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Full-Stack Development",
+      "Java",
+      "SQL",
+      "Critical Reasoning",
+      "GitHub Projects",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Accenture Associate Software Engineer",
+        "company": "Apex Solutions Inc.",
+        "location": "Kolkata, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core accenture associate software engineer initiatives utilizing Full-Stack Development and Java, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Accenture Associate Software Engineer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Kolkata, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Accenture Associate Software Engineer Architecture & Workflow Suite",
+        "technologies": "Full-Stack Development, Java, SQL",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/accenture-placement/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Accenture Associate Software Engineer Performance Initiative",
+        "technologies": "Java, SQL, Critical Reasoning",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/accenture-placement/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Accenture",
+        "institution": "State University / Institute of Technology",
+        "location": "Kolkata, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Accenture Associate Software Engineer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "college-campus-placement": {
+    "personal": {
+      "name": "Abhishek Kumar",
+      "title": "College Campus Placement (All Streams)",
+      "email": "abhishek.kumar@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Noida, India",
+      "website": "college-campus-placement-portfolio.dev",
+      "linkedin": "linkedin.com/in/college-campus-placement",
+      "github": "github.com/college-campus-placement"
+    },
+    "summary": "Results-driven College Campus Placement (All Streams) with 4+ years of hands-on experience in Aptitude, Core Technical Fundamentals, Final Year Projects, Internships. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Aptitude",
+      "Core Technical Fundamentals",
+      "Final Year Projects",
+      "Internships",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead College Campus Placement (All Streams)",
+        "company": "Apex Solutions Inc.",
+        "location": "Noida, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core college campus placement (all streams) initiatives utilizing Aptitude and Core Technical Fundamentals, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "College Campus Placement (All Streams) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Noida, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise College Campus Placement (All Streams) Architecture & Workflow Suite",
+        "technologies": "Aptitude, Core Technical Fundamentals, Final Year Projects",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/college-campus-placement/enterprise-suite"
+      },
+      {
+        "title": "High-Impact College Campus Placement (All Streams) Performance Initiative",
+        "technologies": "Core Technical Fundamentals, Final Year Projects, Internships",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/college-campus-placement/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in College",
+        "institution": "State University / Institute of Technology",
+        "location": "Noida, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified College Campus Placement (All Streams) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "product-manager": {
+    "personal": {
+      "name": "Marcus Vance",
+      "title": "Product Manager",
+      "email": "marcus.vance@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "product-manager-portfolio.dev",
+      "linkedin": "linkedin.com/in/product-manager",
+      "github": "github.com/product-manager"
+    },
+    "summary": "Results-driven Product Manager with 4+ years of hands-on experience in 0-to-1 Roadmaps, Amplitude Cohorts, RICE Prioritization, PRDs, GTM. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "0-to-1 Roadmaps",
+      "Amplitude Cohorts",
+      "RICE Prioritization",
+      "PRDs",
+      "GTM",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Product Manager",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core product manager initiatives utilizing 0-to-1 Roadmaps and Amplitude Cohorts, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Product Manager Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Product Manager Architecture & Workflow Suite",
+        "technologies": "0-to-1 Roadmaps, Amplitude Cohorts, RICE Prioritization",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/product-manager/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Product Manager Performance Initiative",
+        "technologies": "Amplitude Cohorts, RICE Prioritization, PRDs",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/product-manager/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Product",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Product Manager Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "project-manager": {
+    "personal": {
+      "name": "Jennifer Taylor",
+      "title": "Project Manager (PMP)",
+      "email": "jennifer.taylor@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Denver, CO",
+      "website": "project-manager-portfolio.dev",
+      "linkedin": "linkedin.com/in/project-manager",
+      "github": "github.com/project-manager"
+    },
+    "summary": "Results-driven Project Manager (PMP) with 4+ years of hands-on experience in Agile / Scrum, Jira, Budget Allocation, Stakeholder Management, Risk Logs. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Agile / Scrum",
+      "Jira",
+      "Budget Allocation",
+      "Stakeholder Management",
+      "Risk Logs",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Project Manager (PMP)",
+        "company": "Apex Solutions Inc.",
+        "location": "Denver, CO",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core project manager (pmp) initiatives utilizing Agile / Scrum and Jira, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Project Manager (PMP) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Denver, CO",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Project Manager (PMP) Architecture & Workflow Suite",
+        "technologies": "Agile / Scrum, Jira, Budget Allocation",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/project-manager/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Project Manager (PMP) Performance Initiative",
+        "technologies": "Jira, Budget Allocation, Stakeholder Management",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/project-manager/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Project",
+        "institution": "State University / Institute of Technology",
+        "location": "Denver, CO",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Project Manager (PMP) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "scrum-master": {
+    "personal": {
+      "name": "Daniel Becker",
+      "title": "Certified Scrum Master (CSM)",
+      "email": "daniel.becker@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Austin, TX",
+      "website": "scrum-master-portfolio.dev",
+      "linkedin": "linkedin.com/in/scrum-master",
+      "github": "github.com/scrum-master"
+    },
+    "summary": "Results-driven Certified Scrum Master (CSM) with 4+ years of hands-on experience in Sprint Ceremonies, Jira / Confluence, Velocity Tracking, Kanban, Team Agility. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Sprint Ceremonies",
+      "Jira / Confluence",
+      "Velocity Tracking",
+      "Kanban",
+      "Team Agility",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Certified Scrum Master (CSM)",
+        "company": "Apex Solutions Inc.",
+        "location": "Austin, TX",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core certified scrum master (csm) initiatives utilizing Sprint Ceremonies and Jira / Confluence, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Certified Scrum Master (CSM) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Austin, TX",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Certified Scrum Master (CSM) Architecture & Workflow Suite",
+        "technologies": "Sprint Ceremonies, Jira / Confluence, Velocity Tracking",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/scrum-master/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Certified Scrum Master (CSM) Performance Initiative",
+        "technologies": "Jira / Confluence, Velocity Tracking, Kanban",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/scrum-master/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Certified",
+        "institution": "State University / Institute of Technology",
+        "location": "Austin, TX",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Certified Scrum Master (CSM) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "operations-manager": {
+    "personal": {
+      "name": "Robert Sterling",
+      "title": "Operations Manager",
+      "email": "robert.sterling@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Houston, TX",
+      "website": "operations-manager-portfolio.dev",
+      "linkedin": "linkedin.com/in/operations-manager",
+      "github": "github.com/operations-manager"
+    },
+    "summary": "Results-driven Operations Manager with 4+ years of hands-on experience in Process Optimization, OPEX Budgeting, Supply Chain, KPIs, Six Sigma. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Process Optimization",
+      "OPEX Budgeting",
+      "Supply Chain",
+      "KPIs",
+      "Six Sigma",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Operations Manager",
+        "company": "Apex Solutions Inc.",
+        "location": "Houston, TX",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core operations manager initiatives utilizing Process Optimization and OPEX Budgeting, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Operations Manager Specialist",
+        "company": "Vertex Global Group",
+        "location": "Houston, TX",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Operations Manager Architecture & Workflow Suite",
+        "technologies": "Process Optimization, OPEX Budgeting, Supply Chain",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/operations-manager/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Operations Manager Performance Initiative",
+        "technologies": "OPEX Budgeting, Supply Chain, KPIs",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/operations-manager/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Operations",
+        "institution": "State University / Institute of Technology",
+        "location": "Houston, TX",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Operations Manager Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "management-consultant": {
+    "personal": {
+      "name": "Sophie Laurent",
+      "title": "Management Consultant",
+      "email": "sophie.laurent@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "management-consultant-portfolio.dev",
+      "linkedin": "linkedin.com/in/management-consultant",
+      "github": "github.com/management-consultant"
+    },
+    "summary": "Results-driven Management Consultant with 4+ years of hands-on experience in Corporate Strategy, Financial Modeling, Market Sizing, Executive Decks. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Corporate Strategy",
+      "Financial Modeling",
+      "Market Sizing",
+      "Executive Decks",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Management Consultant",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core management consultant initiatives utilizing Corporate Strategy and Financial Modeling, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Management Consultant Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Management Consultant Architecture & Workflow Suite",
+        "technologies": "Corporate Strategy, Financial Modeling, Market Sizing",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/management-consultant/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Management Consultant Performance Initiative",
+        "technologies": "Financial Modeling, Market Sizing, Executive Decks",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/management-consultant/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Management",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Management Consultant Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "customer-success-manager": {
+    "personal": {
+      "name": "Lisa Chang",
+      "title": "Customer Success Manager",
+      "email": "lisa.chang@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Francisco, CA",
+      "website": "customer-success-manager-portfolio.dev",
+      "linkedin": "linkedin.com/in/customer-success-manager",
+      "github": "github.com/customer-success-manager"
+    },
+    "summary": "Results-driven Customer Success Manager with 4+ years of hands-on experience in Net Revenue Retention (NRR), Churn Prevention, QBRs, Salesforce, Gainsight. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Net Revenue Retention (NRR)",
+      "Churn Prevention",
+      "QBRs",
+      "Salesforce",
+      "Gainsight",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Customer Success Manager",
+        "company": "Apex Solutions Inc.",
+        "location": "San Francisco, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core customer success manager initiatives utilizing Net Revenue Retention (NRR) and Churn Prevention, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Customer Success Manager Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Francisco, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Customer Success Manager Architecture & Workflow Suite",
+        "technologies": "Net Revenue Retention (NRR), Churn Prevention, QBRs",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/customer-success-manager/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Customer Success Manager Performance Initiative",
+        "technologies": "Churn Prevention, QBRs, Salesforce",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/customer-success-manager/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Customer",
+        "institution": "State University / Institute of Technology",
+        "location": "San Francisco, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Customer Success Manager Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "investment-banker": {
+    "personal": {
+      "name": "James Thornton",
+      "title": "Investment Banking Analyst",
+      "email": "james.thornton@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "investment-banker-portfolio.dev",
+      "linkedin": "linkedin.com/in/investment-banker",
+      "github": "github.com/investment-banker"
+    },
+    "summary": "Results-driven Investment Banking Analyst with 4+ years of hands-on experience in LBO Modeling, DCF Valuation, M&A Pitchbooks, Capital IQ, SEC 10-K. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "LBO Modeling",
+      "DCF Valuation",
+      "M&A Pitchbooks",
+      "Capital IQ",
+      "SEC 10-K",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Investment Banking Analyst",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core investment banking analyst initiatives utilizing LBO Modeling and DCF Valuation, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Investment Banking Analyst Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Investment Banking Analyst Architecture & Workflow Suite",
+        "technologies": "LBO Modeling, DCF Valuation, M&A Pitchbooks",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/investment-banker/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Investment Banking Analyst Performance Initiative",
+        "technologies": "DCF Valuation, M&A Pitchbooks, Capital IQ",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/investment-banker/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Investment",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Investment Banking Analyst Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "financial-analyst": {
+    "personal": {
+      "name": "Ethan Brooks",
+      "title": "Financial Analyst",
+      "email": "ethan.brooks@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Charlotte, NC",
+      "website": "financial-analyst-portfolio.dev",
+      "linkedin": "linkedin.com/in/financial-analyst",
+      "github": "github.com/financial-analyst"
+    },
+    "summary": "Results-driven Financial Analyst with 4+ years of hands-on experience in FP&A, Budget Variance Analysis, SQL, PowerBI, 3-Statement Modeling. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "FP&A",
+      "Budget Variance Analysis",
+      "SQL",
+      "PowerBI",
+      "3-Statement Modeling",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Financial Analyst",
+        "company": "Apex Solutions Inc.",
+        "location": "Charlotte, NC",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core financial analyst initiatives utilizing FP&A and Budget Variance Analysis, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Financial Analyst Specialist",
+        "company": "Vertex Global Group",
+        "location": "Charlotte, NC",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Financial Analyst Architecture & Workflow Suite",
+        "technologies": "FP&A, Budget Variance Analysis, SQL",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/financial-analyst/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Financial Analyst Performance Initiative",
+        "technologies": "Budget Variance Analysis, SQL, PowerBI",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/financial-analyst/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Financial",
+        "institution": "State University / Institute of Technology",
+        "location": "Charlotte, NC",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Financial Analyst Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "chief-financial-officer": {
+    "personal": {
+      "name": "Arthur Pendelton",
+      "title": "Chief Financial Officer (CFO)",
+      "email": "arthur.pendelton@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "chief-financial-officer-portfolio.dev",
+      "linkedin": "linkedin.com/in/chief-financial-officer",
+      "github": "github.com/chief-financial-officer"
+    },
+    "summary": "Results-driven Chief Financial Officer (CFO) with 4+ years of hands-on experience in Capital Allocation, M&A Strategy, SEC Compliance, Investor Relations, EBITDA. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Capital Allocation",
+      "M&A Strategy",
+      "SEC Compliance",
+      "Investor Relations",
+      "EBITDA",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Chief Financial Officer (CFO)",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core chief financial officer (cfo) initiatives utilizing Capital Allocation and M&A Strategy, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Chief Financial Officer (CFO) Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Chief Financial Officer (CFO) Architecture & Workflow Suite",
+        "technologies": "Capital Allocation, M&A Strategy, SEC Compliance",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/chief-financial-officer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Chief Financial Officer (CFO) Performance Initiative",
+        "technologies": "M&A Strategy, SEC Compliance, Investor Relations",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/chief-financial-officer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Chief",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Chief Financial Officer (CFO) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "accountant": {
+    "personal": {
+      "name": "Rebecca Martinez",
+      "title": "Certified Public Accountant (CPA)",
+      "email": "rebecca.martinez@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Miami, FL",
+      "website": "accountant-portfolio.dev",
+      "linkedin": "linkedin.com/in/accountant",
+      "github": "github.com/accountant"
+    },
+    "summary": "Results-driven Certified Public Accountant (CPA) with 4+ years of hands-on experience in General Ledger, GAAP / IFRS, Tax Provisions, QuickBooks, Month-End Close. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "General Ledger",
+      "GAAP / IFRS",
+      "Tax Provisions",
+      "QuickBooks",
+      "Month-End Close",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Certified Public Accountant (CPA)",
+        "company": "Apex Solutions Inc.",
+        "location": "Miami, FL",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core certified public accountant (cpa) initiatives utilizing General Ledger and GAAP / IFRS, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Certified Public Accountant (CPA) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Miami, FL",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Certified Public Accountant (CPA) Architecture & Workflow Suite",
+        "technologies": "General Ledger, GAAP / IFRS, Tax Provisions",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/accountant/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Certified Public Accountant (CPA) Performance Initiative",
+        "technologies": "GAAP / IFRS, Tax Provisions, QuickBooks",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/accountant/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Certified",
+        "institution": "State University / Institute of Technology",
+        "location": "Miami, FL",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Certified Public Accountant (CPA) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "auditor": {
+    "personal": {
+      "name": "Timothy Walsh",
+      "title": "Internal & External Auditor",
+      "email": "timothy.walsh@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Philadelphia, PA",
+      "website": "auditor-portfolio.dev",
+      "linkedin": "linkedin.com/in/auditor",
+      "github": "github.com/auditor"
+    },
+    "summary": "Results-driven Internal & External Auditor with 4+ years of hands-on experience in SOX 404 Compliance, Audit Sampling, Risk Assessment, Workpapers, PCAOB. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "SOX 404 Compliance",
+      "Audit Sampling",
+      "Risk Assessment",
+      "Workpapers",
+      "PCAOB",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Internal & External Auditor",
+        "company": "Apex Solutions Inc.",
+        "location": "Philadelphia, PA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core internal & external auditor initiatives utilizing SOX 404 Compliance and Audit Sampling, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Internal & External Auditor Specialist",
+        "company": "Vertex Global Group",
+        "location": "Philadelphia, PA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Internal & External Auditor Architecture & Workflow Suite",
+        "technologies": "SOX 404 Compliance, Audit Sampling, Risk Assessment",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/auditor/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Internal & External Auditor Performance Initiative",
+        "technologies": "Audit Sampling, Risk Assessment, Workpapers",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/auditor/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Internal",
+        "institution": "State University / Institute of Technology",
+        "location": "Philadelphia, PA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Internal & External Auditor Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "tax-consultant": {
+    "personal": {
+      "name": "Priya Venkatesh",
+      "title": "Tax Consultant & Strategist",
+      "email": "priya.venkatesh@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Dallas, TX",
+      "website": "tax-consultant-portfolio.dev",
+      "linkedin": "linkedin.com/in/tax-consultant",
+      "github": "github.com/tax-consultant"
+    },
+    "summary": "Results-driven Tax Consultant & Strategist with 4+ years of hands-on experience in Corporate Tax Filings, Form 1120/1065, Tax Credits (R&D), IRS Audits. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Corporate Tax Filings",
+      "Form 1120/1065",
+      "Tax Credits (R&D)",
+      "IRS Audits",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Tax Consultant & Strategist",
+        "company": "Apex Solutions Inc.",
+        "location": "Dallas, TX",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core tax consultant & strategist initiatives utilizing Corporate Tax Filings and Form 1120/1065, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Tax Consultant & Strategist Specialist",
+        "company": "Vertex Global Group",
+        "location": "Dallas, TX",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Tax Consultant & Strategist Architecture & Workflow Suite",
+        "technologies": "Corporate Tax Filings, Form 1120/1065, Tax Credits (R&D)",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/tax-consultant/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Tax Consultant & Strategist Performance Initiative",
+        "technologies": "Form 1120/1065, Tax Credits (R&D), IRS Audits",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/tax-consultant/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Tax",
+        "institution": "State University / Institute of Technology",
+        "location": "Dallas, TX",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Tax Consultant & Strategist Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "bookkeeper": {
+    "personal": {
+      "name": "Mary Jenkins",
+      "title": "Senior Bookkeeper",
+      "email": "mary.jenkins@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Phoenix, AZ",
+      "website": "bookkeeper-portfolio.dev",
+      "linkedin": "linkedin.com/in/bookkeeper",
+      "github": "github.com/bookkeeper"
+    },
+    "summary": "Results-driven Senior Bookkeeper with 4+ years of hands-on experience in Accounts Payable/Receivable, Bank Reconciliation, QuickBooks Online, Payroll. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Accounts Payable/Receivable",
+      "Bank Reconciliation",
+      "QuickBooks Online",
+      "Payroll",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Senior Bookkeeper",
+        "company": "Apex Solutions Inc.",
+        "location": "Phoenix, AZ",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core senior bookkeeper initiatives utilizing Accounts Payable/Receivable and Bank Reconciliation, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Senior Bookkeeper Specialist",
+        "company": "Vertex Global Group",
+        "location": "Phoenix, AZ",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Senior Bookkeeper Architecture & Workflow Suite",
+        "technologies": "Accounts Payable/Receivable, Bank Reconciliation, QuickBooks Online",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/bookkeeper/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Senior Bookkeeper Performance Initiative",
+        "technologies": "Bank Reconciliation, QuickBooks Online, Payroll",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/bookkeeper/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Senior",
+        "institution": "State University / Institute of Technology",
+        "location": "Phoenix, AZ",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Senior Bookkeeper Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "account-executive": {
+    "personal": {
+      "name": "Tyler Hansen",
+      "title": "Account Executive (SaaS Sales)",
+      "email": "tyler.hansen@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Francisco, CA",
+      "website": "account-executive-portfolio.dev",
+      "linkedin": "linkedin.com/in/account-executive",
+      "github": "github.com/account-executive"
+    },
+    "summary": "Results-driven Account Executive (SaaS Sales) with 4+ years of hands-on experience in Quota Overachievement, Pipeline Generation, Salesforce, MEDDPICC, Demos. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Quota Overachievement",
+      "Pipeline Generation",
+      "Salesforce",
+      "MEDDPICC",
+      "Demos",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Account Executive (SaaS Sales)",
+        "company": "Apex Solutions Inc.",
+        "location": "San Francisco, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core account executive (saas sales) initiatives utilizing Quota Overachievement and Pipeline Generation, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Account Executive (SaaS Sales) Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Francisco, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Account Executive (SaaS Sales) Architecture & Workflow Suite",
+        "technologies": "Quota Overachievement, Pipeline Generation, Salesforce",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/account-executive/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Account Executive (SaaS Sales) Performance Initiative",
+        "technologies": "Pipeline Generation, Salesforce, MEDDPICC",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/account-executive/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Account",
+        "institution": "State University / Institute of Technology",
+        "location": "San Francisco, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Account Executive (SaaS Sales) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "sales-executive": {
+    "personal": {
+      "name": "Gabriel Morales",
+      "title": "Enterprise Sales Executive",
+      "email": "gabriel.morales@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Chicago, IL",
+      "website": "sales-executive-portfolio.dev",
+      "linkedin": "linkedin.com/in/sales-executive",
+      "github": "github.com/sales-executive"
+    },
+    "summary": "Results-driven Enterprise Sales Executive with 4+ years of hands-on experience in B2B Negotiations, Contract Closings, CRM Management, Territory Growth. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "B2B Negotiations",
+      "Contract Closings",
+      "CRM Management",
+      "Territory Growth",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Enterprise Sales Executive",
+        "company": "Apex Solutions Inc.",
+        "location": "Chicago, IL",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core enterprise sales executive initiatives utilizing B2B Negotiations and Contract Closings, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Enterprise Sales Executive Specialist",
+        "company": "Vertex Global Group",
+        "location": "Chicago, IL",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Enterprise Sales Executive Architecture & Workflow Suite",
+        "technologies": "B2B Negotiations, Contract Closings, CRM Management",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/sales-executive/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Enterprise Sales Executive Performance Initiative",
+        "technologies": "Contract Closings, CRM Management, Territory Growth",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/sales-executive/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Enterprise",
+        "institution": "State University / Institute of Technology",
+        "location": "Chicago, IL",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Enterprise Sales Executive Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "registered-nurse": {
+    "personal": {
+      "name": "Jessica Reynolds, RN",
+      "title": "Registered Nurse (RN - ICU / Med-Surg)",
+      "email": "jessica.reynolds.rn@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Nashville, TN",
+      "website": "registered-nurse-portfolio.dev",
+      "linkedin": "linkedin.com/in/registered-nurse",
+      "github": "github.com/registered-nurse"
+    },
+    "summary": "Results-driven Registered Nurse (RN - ICU / Med-Surg) with 4+ years of hands-on experience in Patient Assessment, Medication Administration, Epic EMR, BLS/ACLS, Care Plans. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Patient Assessment",
+      "Medication Administration",
+      "Epic EMR",
+      "BLS/ACLS",
+      "Care Plans",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Registered Nurse (RN - ICU / Med-Surg)",
+        "company": "Apex Solutions Inc.",
+        "location": "Nashville, TN",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core registered nurse (rn - icu / med-surg) initiatives utilizing Patient Assessment and Medication Administration, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Registered Nurse (RN - ICU / Med-Surg) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Nashville, TN",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Registered Nurse (RN - ICU / Med-Surg) Architecture & Workflow Suite",
+        "technologies": "Patient Assessment, Medication Administration, Epic EMR",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/registered-nurse/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Registered Nurse (RN - ICU / Med-Surg) Performance Initiative",
+        "technologies": "Medication Administration, Epic EMR, BLS/ACLS",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/registered-nurse/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Registered",
+        "institution": "State University / Institute of Technology",
+        "location": "Nashville, TN",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Registered Nurse (RN - ICU / Med-Surg) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "pharmacist": {
+    "personal": {
+      "name": "Dr. Andrew Lin, PharmD",
+      "title": "Clinical Pharmacist (PharmD)",
+      "email": "dr..andrew.lin.pharmd@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Baltimore, MD",
+      "website": "pharmacist-portfolio.dev",
+      "linkedin": "linkedin.com/in/pharmacist",
+      "github": "github.com/pharmacist"
+    },
+    "summary": "Results-driven Clinical Pharmacist (PharmD) with 4+ years of hands-on experience in Drug Utilization Review, Prescription Dispensing, Pharmacokinetics, Clinical Rounds. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Drug Utilization Review",
+      "Prescription Dispensing",
+      "Pharmacokinetics",
+      "Clinical Rounds",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Clinical Pharmacist (PharmD)",
+        "company": "Apex Solutions Inc.",
+        "location": "Baltimore, MD",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core clinical pharmacist (pharmd) initiatives utilizing Drug Utilization Review and Prescription Dispensing, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Clinical Pharmacist (PharmD) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Baltimore, MD",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Clinical Pharmacist (PharmD) Architecture & Workflow Suite",
+        "technologies": "Drug Utilization Review, Prescription Dispensing, Pharmacokinetics",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/pharmacist/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Clinical Pharmacist (PharmD) Performance Initiative",
+        "technologies": "Prescription Dispensing, Pharmacokinetics, Clinical Rounds",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/pharmacist/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Clinical",
+        "institution": "State University / Institute of Technology",
+        "location": "Baltimore, MD",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Clinical Pharmacist (PharmD) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "physical-therapist": {
+    "personal": {
+      "name": "Dr. Hannah Scott, DPT",
+      "title": "Licensed Physical Therapist (DPT)",
+      "email": "dr..hannah.scott.dpt@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Minneapolis, MN",
+      "website": "physical-therapist-portfolio.dev",
+      "linkedin": "linkedin.com/in/physical-therapist",
+      "github": "github.com/physical-therapist"
+    },
+    "summary": "Results-driven Licensed Physical Therapist (DPT) with 4+ years of hands-on experience in Orthopedic Rehab, Manual Therapy, Patient Care Plans, EMR Documentation. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Orthopedic Rehab",
+      "Manual Therapy",
+      "Patient Care Plans",
+      "EMR Documentation",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Licensed Physical Therapist (DPT)",
+        "company": "Apex Solutions Inc.",
+        "location": "Minneapolis, MN",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core licensed physical therapist (dpt) initiatives utilizing Orthopedic Rehab and Manual Therapy, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Licensed Physical Therapist (DPT) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Minneapolis, MN",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Licensed Physical Therapist (DPT) Architecture & Workflow Suite",
+        "technologies": "Orthopedic Rehab, Manual Therapy, Patient Care Plans",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/physical-therapist/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Licensed Physical Therapist (DPT) Performance Initiative",
+        "technologies": "Manual Therapy, Patient Care Plans, EMR Documentation",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/physical-therapist/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Licensed",
+        "institution": "State University / Institute of Technology",
+        "location": "Minneapolis, MN",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Licensed Physical Therapist (DPT) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "medical-assistant": {
+    "personal": {
+      "name": "Maria Santos",
+      "title": "Certified Medical Assistant (CMA)",
+      "email": "maria.santos@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Orlando, FL",
+      "website": "medical-assistant-portfolio.dev",
+      "linkedin": "linkedin.com/in/medical-assistant",
+      "github": "github.com/medical-assistant"
+    },
+    "summary": "Results-driven Certified Medical Assistant (CMA) with 4+ years of hands-on experience in Vital Signs, Phlebotomy, Patient Triage, EHR Scheduling, HIPAA Compliance. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Vital Signs",
+      "Phlebotomy",
+      "Patient Triage",
+      "EHR Scheduling",
+      "HIPAA Compliance",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Certified Medical Assistant (CMA)",
+        "company": "Apex Solutions Inc.",
+        "location": "Orlando, FL",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core certified medical assistant (cma) initiatives utilizing Vital Signs and Phlebotomy, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Certified Medical Assistant (CMA) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Orlando, FL",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Certified Medical Assistant (CMA) Architecture & Workflow Suite",
+        "technologies": "Vital Signs, Phlebotomy, Patient Triage",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/medical-assistant/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Certified Medical Assistant (CMA) Performance Initiative",
+        "technologies": "Phlebotomy, Patient Triage, EHR Scheduling",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/medical-assistant/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Certified",
+        "institution": "State University / Institute of Technology",
+        "location": "Orlando, FL",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Certified Medical Assistant (CMA) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "dental-hygienist": {
+    "personal": {
+      "name": "Chloe Adams, RDH",
+      "title": "Registered Dental Hygienist (RDH)",
+      "email": "chloe.adams.rdh@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Seattle, WA",
+      "website": "dental-hygienist-portfolio.dev",
+      "linkedin": "linkedin.com/in/dental-hygienist",
+      "github": "github.com/dental-hygienist"
+    },
+    "summary": "Results-driven Registered Dental Hygienist (RDH) with 4+ years of hands-on experience in Periodontal Charting, Prophylaxis, Digital Radiography, Patient Education. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Periodontal Charting",
+      "Prophylaxis",
+      "Digital Radiography",
+      "Patient Education",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Registered Dental Hygienist (RDH)",
+        "company": "Apex Solutions Inc.",
+        "location": "Seattle, WA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core registered dental hygienist (rdh) initiatives utilizing Periodontal Charting and Prophylaxis, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Registered Dental Hygienist (RDH) Specialist",
+        "company": "Vertex Global Group",
+        "location": "Seattle, WA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Registered Dental Hygienist (RDH) Architecture & Workflow Suite",
+        "technologies": "Periodontal Charting, Prophylaxis, Digital Radiography",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/dental-hygienist/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Registered Dental Hygienist (RDH) Performance Initiative",
+        "technologies": "Prophylaxis, Digital Radiography, Patient Education",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/dental-hygienist/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Registered",
+        "institution": "State University / Institute of Technology",
+        "location": "Seattle, WA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Registered Dental Hygienist (RDH) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "healthcare-administrator": {
+    "personal": {
+      "name": "David Zimmerman",
+      "title": "Healthcare Administrator",
+      "email": "david.zimmerman@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Cleveland, OH",
+      "website": "healthcare-administrator-portfolio.dev",
+      "linkedin": "linkedin.com/in/healthcare-administrator",
+      "github": "github.com/healthcare-administrator"
+    },
+    "summary": "Results-driven Healthcare Administrator with 4+ years of hands-on experience in Hospital Operations, Joint Commission Compliance, Medical Billing, HIPAA, Staffing. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Hospital Operations",
+      "Joint Commission Compliance",
+      "Medical Billing",
+      "HIPAA",
+      "Staffing",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Healthcare Administrator",
+        "company": "Apex Solutions Inc.",
+        "location": "Cleveland, OH",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core healthcare administrator initiatives utilizing Hospital Operations and Joint Commission Compliance, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Healthcare Administrator Specialist",
+        "company": "Vertex Global Group",
+        "location": "Cleveland, OH",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Healthcare Administrator Architecture & Workflow Suite",
+        "technologies": "Hospital Operations, Joint Commission Compliance, Medical Billing",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/healthcare-administrator/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Healthcare Administrator Performance Initiative",
+        "technologies": "Joint Commission Compliance, Medical Billing, HIPAA",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/healthcare-administrator/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Healthcare",
+        "institution": "State University / Institute of Technology",
+        "location": "Cleveland, OH",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Healthcare Administrator Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "clinical-researcher": {
+    "personal": {
+      "name": "Dr. Natalie Young",
+      "title": "Clinical Research Coordinator",
+      "email": "dr..natalie.young@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Boston, MA",
+      "website": "clinical-researcher-portfolio.dev",
+      "linkedin": "linkedin.com/in/clinical-researcher",
+      "github": "github.com/clinical-researcher"
+    },
+    "summary": "Results-driven Clinical Research Coordinator with 4+ years of hands-on experience in GCP Compliance, IRB Protocols, Clinical Trial Data (EDC), Patient Consent. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "GCP Compliance",
+      "IRB Protocols",
+      "Clinical Trial Data (EDC)",
+      "Patient Consent",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Clinical Research Coordinator",
+        "company": "Apex Solutions Inc.",
+        "location": "Boston, MA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core clinical research coordinator initiatives utilizing GCP Compliance and IRB Protocols, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Clinical Research Coordinator Specialist",
+        "company": "Vertex Global Group",
+        "location": "Boston, MA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Clinical Research Coordinator Architecture & Workflow Suite",
+        "technologies": "GCP Compliance, IRB Protocols, Clinical Trial Data (EDC)",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/clinical-researcher/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Clinical Research Coordinator Performance Initiative",
+        "technologies": "IRB Protocols, Clinical Trial Data (EDC), Patient Consent",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/clinical-researcher/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Clinical",
+        "institution": "State University / Institute of Technology",
+        "location": "Boston, MA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Clinical Research Coordinator Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "ui-ux-designer": {
+    "personal": {
+      "name": "Lucas Meyer",
+      "title": "UI/UX Product Designer",
+      "email": "lucas.meyer@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Francisco, CA",
+      "website": "ui-ux-designer-portfolio.dev",
+      "linkedin": "linkedin.com/in/ui-ux-designer",
+      "github": "github.com/ui-ux-designer"
+    },
+    "summary": "Results-driven UI/UX Product Designer with 4+ years of hands-on experience in Figma Design Systems, Wireframing, User Testing, Prototyping, Mobile UX. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Figma Design Systems",
+      "Wireframing",
+      "User Testing",
+      "Prototyping",
+      "Mobile UX",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead UI/UX Product Designer",
+        "company": "Apex Solutions Inc.",
+        "location": "San Francisco, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core ui/ux product designer initiatives utilizing Figma Design Systems and Wireframing, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "UI/UX Product Designer Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Francisco, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise UI/UX Product Designer Architecture & Workflow Suite",
+        "technologies": "Figma Design Systems, Wireframing, User Testing",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/ui-ux-designer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact UI/UX Product Designer Performance Initiative",
+        "technologies": "Wireframing, User Testing, Prototyping",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/ui-ux-designer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in UI/UX",
+        "institution": "State University / Institute of Technology",
+        "location": "San Francisco, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified UI/UX Product Designer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "graphic-designer": {
+    "personal": {
+      "name": "Zoe Kravitz",
+      "title": "Senior Graphic Designer",
+      "email": "zoe.kravitz@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Los Angeles, CA",
+      "website": "graphic-designer-portfolio.dev",
+      "linkedin": "linkedin.com/in/graphic-designer",
+      "github": "github.com/graphic-designer"
+    },
+    "summary": "Results-driven Senior Graphic Designer with 4+ years of hands-on experience in Adobe Illustrator, Photoshop, InDesign, Brand Identity, Visual Typography. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Adobe Illustrator",
+      "Photoshop",
+      "InDesign",
+      "Brand Identity",
+      "Visual Typography",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Senior Graphic Designer",
+        "company": "Apex Solutions Inc.",
+        "location": "Los Angeles, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core senior graphic designer initiatives utilizing Adobe Illustrator and Photoshop, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Senior Graphic Designer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Los Angeles, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Senior Graphic Designer Architecture & Workflow Suite",
+        "technologies": "Adobe Illustrator, Photoshop, InDesign",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/graphic-designer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Senior Graphic Designer Performance Initiative",
+        "technologies": "Photoshop, InDesign, Brand Identity",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/graphic-designer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Senior",
+        "institution": "State University / Institute of Technology",
+        "location": "Los Angeles, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Senior Graphic Designer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "art-director": {
+    "personal": {
+      "name": "Sebastian Cole",
+      "title": "Art Director & Brand Lead",
+      "email": "sebastian.cole@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "art-director-portfolio.dev",
+      "linkedin": "linkedin.com/in/art-director",
+      "github": "github.com/art-director"
+    },
+    "summary": "Results-driven Art Director & Brand Lead with 4+ years of hands-on experience in Visual Storytelling, Campaign Creative Direction, Agency Leadership, Branding. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Visual Storytelling",
+      "Campaign Creative Direction",
+      "Agency Leadership",
+      "Branding",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Art Director & Brand Lead",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core art director & brand lead initiatives utilizing Visual Storytelling and Campaign Creative Direction, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Art Director & Brand Lead Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Art Director & Brand Lead Architecture & Workflow Suite",
+        "technologies": "Visual Storytelling, Campaign Creative Direction, Agency Leadership",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/art-director/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Art Director & Brand Lead Performance Initiative",
+        "technologies": "Campaign Creative Direction, Agency Leadership, Branding",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/art-director/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Art",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Art Director & Brand Lead Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "interior-designer": {
+    "personal": {
+      "name": "Aria Montgomery",
+      "title": "Interior Designer & Space Planner",
+      "email": "aria.montgomery@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Miami, FL",
+      "website": "interior-designer-portfolio.dev",
+      "linkedin": "linkedin.com/in/interior-designer",
+      "github": "github.com/interior-designer"
+    },
+    "summary": "Results-driven Interior Designer & Space Planner with 4+ years of hands-on experience in AutoCAD, SketchUp, 3D Rendering, FF&E Sourcing, Material Selection. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "AutoCAD",
+      "SketchUp",
+      "3D Rendering",
+      "FF&E Sourcing",
+      "Material Selection",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Interior Designer & Space Planner",
+        "company": "Apex Solutions Inc.",
+        "location": "Miami, FL",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core interior designer & space planner initiatives utilizing AutoCAD and SketchUp, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Interior Designer & Space Planner Specialist",
+        "company": "Vertex Global Group",
+        "location": "Miami, FL",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Interior Designer & Space Planner Architecture & Workflow Suite",
+        "technologies": "AutoCAD, SketchUp, 3D Rendering",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/interior-designer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Interior Designer & Space Planner Performance Initiative",
+        "technologies": "SketchUp, 3D Rendering, FF&E Sourcing",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/interior-designer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Interior",
+        "institution": "State University / Institute of Technology",
+        "location": "Miami, FL",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Interior Designer & Space Planner Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "animator": {
+    "personal": {
+      "name": "Leo Takahashi",
+      "title": "3D & 2D Motion Animator",
+      "email": "leo.takahashi@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Burbank, CA",
+      "website": "animator-portfolio.dev",
+      "linkedin": "linkedin.com/in/animator",
+      "github": "github.com/animator"
+    },
+    "summary": "Results-driven 3D & 2D Motion Animator with 4+ years of hands-on experience in Maya, Blender, After Effects, Character Rigging, Storyboarding, Keyframing. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Maya",
+      "Blender",
+      "After Effects",
+      "Character Rigging",
+      "Storyboarding",
+      "Keyframing",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead 3D & 2D Motion Animator",
+        "company": "Apex Solutions Inc.",
+        "location": "Burbank, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core 3d & 2d motion animator initiatives utilizing Maya and Blender, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "3D & 2D Motion Animator Specialist",
+        "company": "Vertex Global Group",
+        "location": "Burbank, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise 3D & 2D Motion Animator Architecture & Workflow Suite",
+        "technologies": "Maya, Blender, After Effects",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/animator/enterprise-suite"
+      },
+      {
+        "title": "High-Impact 3D & 2D Motion Animator Performance Initiative",
+        "technologies": "Blender, After Effects, Character Rigging",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/animator/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in 3D",
+        "institution": "State University / Institute of Technology",
+        "location": "Burbank, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified 3D & 2D Motion Animator Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "video-editor": {
+    "personal": {
+      "name": "Miles O'Connor",
+      "title": "Video Editor & Post-Production Lead",
+      "email": "miles.o'connor@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Los Angeles, CA",
+      "website": "video-editor-portfolio.dev",
+      "linkedin": "linkedin.com/in/video-editor",
+      "github": "github.com/video-editor"
+    },
+    "summary": "Results-driven Video Editor & Post-Production Lead with 4+ years of hands-on experience in Premiere Pro, DaVinci Resolve, Color Grading, Sound Design, Short-form Reels. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Premiere Pro",
+      "DaVinci Resolve",
+      "Color Grading",
+      "Sound Design",
+      "Short-form Reels",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Video Editor & Post-Production Lead",
+        "company": "Apex Solutions Inc.",
+        "location": "Los Angeles, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core video editor & post-production lead initiatives utilizing Premiere Pro and DaVinci Resolve, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Video Editor & Post-Production Lead Specialist",
+        "company": "Vertex Global Group",
+        "location": "Los Angeles, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Video Editor & Post-Production Lead Architecture & Workflow Suite",
+        "technologies": "Premiere Pro, DaVinci Resolve, Color Grading",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/video-editor/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Video Editor & Post-Production Lead Performance Initiative",
+        "technologies": "DaVinci Resolve, Color Grading, Sound Design",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/video-editor/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Video",
+        "institution": "State University / Institute of Technology",
+        "location": "Los Angeles, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Video Editor & Post-Production Lead Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "content-creator": {
+    "personal": {
+      "name": "Chloe Bennett",
+      "title": "Content Creator & Producer",
+      "email": "chloe.bennett@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Austin, TX",
+      "website": "content-creator-portfolio.dev",
+      "linkedin": "linkedin.com/in/content-creator",
+      "github": "github.com/content-creator"
+    },
+    "summary": "Results-driven Content Creator & Producer with 4+ years of hands-on experience in Short-Form Video (TikTok/Reels), Scriptwriting, Audience Growth, Brand Collabs. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Short-Form Video (TikTok/Reels)",
+      "Scriptwriting",
+      "Audience Growth",
+      "Brand Collabs",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Content Creator & Producer",
+        "company": "Apex Solutions Inc.",
+        "location": "Austin, TX",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core content creator & producer initiatives utilizing Short-Form Video (TikTok/Reels) and Scriptwriting, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Content Creator & Producer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Austin, TX",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Content Creator & Producer Architecture & Workflow Suite",
+        "technologies": "Short-Form Video (TikTok/Reels), Scriptwriting, Audience Growth",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/content-creator/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Content Creator & Producer Performance Initiative",
+        "technologies": "Scriptwriting, Audience Growth, Brand Collabs",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/content-creator/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Content",
+        "institution": "State University / Institute of Technology",
+        "location": "Austin, TX",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Content Creator & Producer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "copywriter": {
+    "personal": {
+      "name": "Harrison Wells",
+      "title": "Senior Conversion Copywriter",
+      "email": "harrison.wells@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "copywriter-portfolio.dev",
+      "linkedin": "linkedin.com/in/copywriter",
+      "github": "github.com/copywriter"
+    },
+    "summary": "Results-driven Senior Conversion Copywriter with 4+ years of hands-on experience in Direct Response Copy, Landing Pages, Email Sequences, SEO Messaging, Ad Hooks. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Direct Response Copy",
+      "Landing Pages",
+      "Email Sequences",
+      "SEO Messaging",
+      "Ad Hooks",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Senior Conversion Copywriter",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core senior conversion copywriter initiatives utilizing Direct Response Copy and Landing Pages, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Senior Conversion Copywriter Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Senior Conversion Copywriter Architecture & Workflow Suite",
+        "technologies": "Direct Response Copy, Landing Pages, Email Sequences",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/copywriter/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Senior Conversion Copywriter Performance Initiative",
+        "technologies": "Landing Pages, Email Sequences, SEO Messaging",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/copywriter/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Senior",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Senior Conversion Copywriter Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "social-media-manager": {
+    "personal": {
+      "name": "Brittany Spears",
+      "title": "Social Media Marketing Manager",
+      "email": "brittany.spears@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Atlanta, GA",
+      "website": "social-media-manager-portfolio.dev",
+      "linkedin": "linkedin.com/in/social-media-manager",
+      "github": "github.com/social-media-manager"
+    },
+    "summary": "Results-driven Social Media Marketing Manager with 4+ years of hands-on experience in Social Content Strategy, Viral Reels, Sprout Social, Community Management, ROI. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Social Content Strategy",
+      "Viral Reels",
+      "Sprout Social",
+      "Community Management",
+      "ROI",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Social Media Marketing Manager",
+        "company": "Apex Solutions Inc.",
+        "location": "Atlanta, GA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core social media marketing manager initiatives utilizing Social Content Strategy and Viral Reels, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Social Media Marketing Manager Specialist",
+        "company": "Vertex Global Group",
+        "location": "Atlanta, GA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Social Media Marketing Manager Architecture & Workflow Suite",
+        "technologies": "Social Content Strategy, Viral Reels, Sprout Social",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/social-media-manager/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Social Media Marketing Manager Performance Initiative",
+        "technologies": "Viral Reels, Sprout Social, Community Management",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/social-media-manager/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Social",
+        "institution": "State University / Institute of Technology",
+        "location": "Atlanta, GA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Social Media Marketing Manager Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "digital-marketing-specialist": {
+    "personal": {
+      "name": "Ryan Gallagher",
+      "title": "Digital Marketing Specialist",
+      "email": "ryan.gallagher@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Chicago, IL",
+      "website": "digital-marketing-specialist-portfolio.dev",
+      "linkedin": "linkedin.com/in/digital-marketing-specialist",
+      "github": "github.com/digital-marketing-specialist"
+    },
+    "summary": "Results-driven Digital Marketing Specialist with 4+ years of hands-on experience in Google Ads (PPC), Meta Ads, GA4, Funnel Optimization, ROAS, Retargeting. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Google Ads (PPC)",
+      "Meta Ads",
+      "GA4",
+      "Funnel Optimization",
+      "ROAS",
+      "Retargeting",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Digital Marketing Specialist",
+        "company": "Apex Solutions Inc.",
+        "location": "Chicago, IL",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core digital marketing specialist initiatives utilizing Google Ads (PPC) and Meta Ads, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Digital Marketing Specialist Specialist",
+        "company": "Vertex Global Group",
+        "location": "Chicago, IL",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Digital Marketing Specialist Architecture & Workflow Suite",
+        "technologies": "Google Ads (PPC), Meta Ads, GA4",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/digital-marketing-specialist/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Digital Marketing Specialist Performance Initiative",
+        "technologies": "Meta Ads, GA4, Funnel Optimization",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/digital-marketing-specialist/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Digital",
+        "institution": "State University / Institute of Technology",
+        "location": "Chicago, IL",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Digital Marketing Specialist Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "seo-specialist": {
+    "personal": {
+      "name": "Aaron Feldman",
+      "title": "SEO Strategist & Technical Lead",
+      "email": "aaron.feldman@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Jose, CA",
+      "website": "seo-specialist-portfolio.dev",
+      "linkedin": "linkedin.com/in/seo-specialist",
+      "github": "github.com/seo-specialist"
+    },
+    "summary": "Results-driven SEO Strategist & Technical Lead with 4+ years of hands-on experience in Technical SEO, Keyword Research, Semrush/Ahrefs, Link Building, Content Strategy. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Technical SEO",
+      "Keyword Research",
+      "Semrush/Ahrefs",
+      "Link Building",
+      "Content Strategy",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead SEO Strategist & Technical Lead",
+        "company": "Apex Solutions Inc.",
+        "location": "San Jose, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core seo strategist & technical lead initiatives utilizing Technical SEO and Keyword Research, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "SEO Strategist & Technical Lead Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Jose, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise SEO Strategist & Technical Lead Architecture & Workflow Suite",
+        "technologies": "Technical SEO, Keyword Research, Semrush/Ahrefs",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/seo-specialist/enterprise-suite"
+      },
+      {
+        "title": "High-Impact SEO Strategist & Technical Lead Performance Initiative",
+        "technologies": "Keyword Research, Semrush/Ahrefs, Link Building",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/seo-specialist/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in SEO",
+        "institution": "State University / Institute of Technology",
+        "location": "San Jose, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified SEO Strategist & Technical Lead Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "public-relations-specialist": {
+    "personal": {
+      "name": "Victoria Sterling",
+      "title": "Public Relations Specialist",
+      "email": "victoria.sterling@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Washington, D.C.",
+      "website": "public-relations-specialist-portfolio.dev",
+      "linkedin": "linkedin.com/in/public-relations-specialist",
+      "github": "github.com/public-relations-specialist"
+    },
+    "summary": "Results-driven Public Relations Specialist with 4+ years of hands-on experience in Media Pitching, Press Releases, Crisis Communication, Brand Reputation, Cision. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Media Pitching",
+      "Press Releases",
+      "Crisis Communication",
+      "Brand Reputation",
+      "Cision",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Public Relations Specialist",
+        "company": "Apex Solutions Inc.",
+        "location": "Washington, D.C.",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core public relations specialist initiatives utilizing Media Pitching and Press Releases, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Public Relations Specialist Specialist",
+        "company": "Vertex Global Group",
+        "location": "Washington, D.C.",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Public Relations Specialist Architecture & Workflow Suite",
+        "technologies": "Media Pitching, Press Releases, Crisis Communication",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/public-relations-specialist/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Public Relations Specialist Performance Initiative",
+        "technologies": "Press Releases, Crisis Communication, Brand Reputation",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/public-relations-specialist/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Public",
+        "institution": "State University / Institute of Technology",
+        "location": "Washington, D.C.",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Public Relations Specialist Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "marketing-manager": {
+    "personal": {
+      "name": "Dominic Reed",
+      "title": "Growth Marketing Manager",
+      "email": "dominic.reed@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "marketing-manager-portfolio.dev",
+      "linkedin": "linkedin.com/in/marketing-manager",
+      "github": "github.com/marketing-manager"
+    },
+    "summary": "Results-driven Growth Marketing Manager with 4+ years of hands-on experience in Omnichannel Growth, CAC/LTV Optimization, Email Automation, Team Leadership. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Omnichannel Growth",
+      "CAC/LTV Optimization",
+      "Email Automation",
+      "Team Leadership",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Growth Marketing Manager",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core growth marketing manager initiatives utilizing Omnichannel Growth and CAC/LTV Optimization, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Growth Marketing Manager Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Growth Marketing Manager Architecture & Workflow Suite",
+        "technologies": "Omnichannel Growth, CAC/LTV Optimization, Email Automation",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/marketing-manager/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Growth Marketing Manager Performance Initiative",
+        "technologies": "CAC/LTV Optimization, Email Automation, Team Leadership",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/marketing-manager/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Growth",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Growth Marketing Manager Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "teacher": {
+    "personal": {
+      "name": "Sarah Jenkins",
+      "title": "Certified High School Teacher",
+      "email": "sarah.jenkins@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Columbus, OH",
+      "website": "teacher-portfolio.dev",
+      "linkedin": "linkedin.com/in/teacher",
+      "github": "github.com/teacher"
+    },
+    "summary": "Results-driven Certified High School Teacher with 4+ years of hands-on experience in Curriculum Development, Classroom Management, Differentiated Instruction, EdTech. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Curriculum Development",
+      "Classroom Management",
+      "Differentiated Instruction",
+      "EdTech",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Certified High School Teacher",
+        "company": "Apex Solutions Inc.",
+        "location": "Columbus, OH",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core certified high school teacher initiatives utilizing Curriculum Development and Classroom Management, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Certified High School Teacher Specialist",
+        "company": "Vertex Global Group",
+        "location": "Columbus, OH",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Certified High School Teacher Architecture & Workflow Suite",
+        "technologies": "Curriculum Development, Classroom Management, Differentiated Instruction",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/teacher/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Certified High School Teacher Performance Initiative",
+        "technologies": "Classroom Management, Differentiated Instruction, EdTech",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/teacher/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Certified",
+        "institution": "State University / Institute of Technology",
+        "location": "Columbus, OH",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Certified High School Teacher Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "professor": {
+    "personal": {
+      "name": "Dr. William Bennett",
+      "title": "University Professor & Academic Researcher",
+      "email": "dr..william.bennett@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Cambridge, MA",
+      "website": "professor-portfolio.dev",
+      "linkedin": "linkedin.com/in/professor",
+      "github": "github.com/professor"
+    },
+    "summary": "Results-driven University Professor & Academic Researcher with 4+ years of hands-on experience in Higher Education Lecturing, Peer-Reviewed Publications, Grant Writing, Mentorship. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Higher Education Lecturing",
+      "Peer-Reviewed Publications",
+      "Grant Writing",
+      "Mentorship",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead University Professor & Academic Researcher",
+        "company": "Apex Solutions Inc.",
+        "location": "Cambridge, MA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core university professor & academic researcher initiatives utilizing Higher Education Lecturing and Peer-Reviewed Publications, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "University Professor & Academic Researcher Specialist",
+        "company": "Vertex Global Group",
+        "location": "Cambridge, MA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise University Professor & Academic Researcher Architecture & Workflow Suite",
+        "technologies": "Higher Education Lecturing, Peer-Reviewed Publications, Grant Writing",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/professor/enterprise-suite"
+      },
+      {
+        "title": "High-Impact University Professor & Academic Researcher Performance Initiative",
+        "technologies": "Peer-Reviewed Publications, Grant Writing, Mentorship",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/professor/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in University",
+        "institution": "State University / Institute of Technology",
+        "location": "Cambridge, MA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified University Professor & Academic Researcher Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "tutor": {
+    "personal": {
+      "name": "Deepak Joshi",
+      "title": "Academic Subject Tutor & Test Prep Coach",
+      "email": "deepak.joshi@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Bengaluru, India",
+      "website": "tutor-portfolio.dev",
+      "linkedin": "linkedin.com/in/tutor",
+      "github": "github.com/tutor"
+    },
+    "summary": "Results-driven Academic Subject Tutor & Test Prep Coach with 4+ years of hands-on experience in One-on-One Tutoring, SAT/ACT Prep, Personalized Study Plans, Student Progress. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "One-on-One Tutoring",
+      "SAT/ACT Prep",
+      "Personalized Study Plans",
+      "Student Progress",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Academic Subject Tutor & Test Prep Coach",
+        "company": "Apex Solutions Inc.",
+        "location": "Bengaluru, India",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core academic subject tutor & test prep coach initiatives utilizing One-on-One Tutoring and SAT/ACT Prep, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Academic Subject Tutor & Test Prep Coach Specialist",
+        "company": "Vertex Global Group",
+        "location": "Bengaluru, India",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Academic Subject Tutor & Test Prep Coach Architecture & Workflow Suite",
+        "technologies": "One-on-One Tutoring, SAT/ACT Prep, Personalized Study Plans",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/tutor/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Academic Subject Tutor & Test Prep Coach Performance Initiative",
+        "technologies": "SAT/ACT Prep, Personalized Study Plans, Student Progress",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/tutor/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Academic",
+        "institution": "State University / Institute of Technology",
+        "location": "Bengaluru, India",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Academic Subject Tutor & Test Prep Coach Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "school-counselor": {
+    "personal": {
+      "name": "Patricia Morales",
+      "title": "Certified School Counselor",
+      "email": "patricia.morales@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Antonio, TX",
+      "website": "school-counselor-portfolio.dev",
+      "linkedin": "linkedin.com/in/school-counselor",
+      "github": "github.com/school-counselor"
+    },
+    "summary": "Results-driven Certified School Counselor with 4+ years of hands-on experience in Student Guidance, College Admissions Counseling, Crisis Intervention, IEP Meetings. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Student Guidance",
+      "College Admissions Counseling",
+      "Crisis Intervention",
+      "IEP Meetings",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Certified School Counselor",
+        "company": "Apex Solutions Inc.",
+        "location": "San Antonio, TX",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core certified school counselor initiatives utilizing Student Guidance and College Admissions Counseling, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Certified School Counselor Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Antonio, TX",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Certified School Counselor Architecture & Workflow Suite",
+        "technologies": "Student Guidance, College Admissions Counseling, Crisis Intervention",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/school-counselor/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Certified School Counselor Performance Initiative",
+        "technologies": "College Admissions Counseling, Crisis Intervention, IEP Meetings",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/school-counselor/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Certified",
+        "institution": "State University / Institute of Technology",
+        "location": "San Antonio, TX",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Certified School Counselor Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "instructional-designer": {
+    "personal": {
+      "name": "Keith Anderson",
+      "title": "Instructional Designer & E-Learning Developer",
+      "email": "keith.anderson@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Salt Lake City, UT",
+      "website": "instructional-designer-portfolio.dev",
+      "linkedin": "linkedin.com/in/instructional-designer",
+      "github": "github.com/instructional-designer"
+    },
+    "summary": "Results-driven Instructional Designer & E-Learning Developer with 4+ years of hands-on experience in Articulate 360, Storyline, ADDIE Model, LMS Administration, SCORM. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Articulate 360",
+      "Storyline",
+      "ADDIE Model",
+      "LMS Administration",
+      "SCORM",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Instructional Designer & E-Learning Developer",
+        "company": "Apex Solutions Inc.",
+        "location": "Salt Lake City, UT",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core instructional designer & e-learning developer initiatives utilizing Articulate 360 and Storyline, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Instructional Designer & E-Learning Developer Specialist",
+        "company": "Vertex Global Group",
+        "location": "Salt Lake City, UT",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Instructional Designer & E-Learning Developer Architecture & Workflow Suite",
+        "technologies": "Articulate 360, Storyline, ADDIE Model",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/instructional-designer/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Instructional Designer & E-Learning Developer Performance Initiative",
+        "technologies": "Storyline, ADDIE Model, LMS Administration",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/instructional-designer/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Instructional",
+        "institution": "State University / Institute of Technology",
+        "location": "Salt Lake City, UT",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Instructional Designer & E-Learning Developer Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "education-administrator": {
+    "personal": {
+      "name": "Dr. Margaret Hayes",
+      "title": "Education Administrator & Principal",
+      "email": "dr..margaret.hayes@email.com",
+      "phone": "(555) 019-2834",
+      "location": "Richmond, VA",
+      "website": "education-administrator-portfolio.dev",
+      "linkedin": "linkedin.com/in/education-administrator",
+      "github": "github.com/education-administrator"
+    },
+    "summary": "Results-driven Education Administrator & Principal with 4+ years of hands-on experience in School Operations, Staff Supervision, District Compliance, Budget Management. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "School Operations",
+      "Staff Supervision",
+      "District Compliance",
+      "Budget Management",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Education Administrator & Principal",
+        "company": "Apex Solutions Inc.",
+        "location": "Richmond, VA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core education administrator & principal initiatives utilizing School Operations and Staff Supervision, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Education Administrator & Principal Specialist",
+        "company": "Vertex Global Group",
+        "location": "Richmond, VA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Education Administrator & Principal Architecture & Workflow Suite",
+        "technologies": "School Operations, Staff Supervision, District Compliance",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/education-administrator/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Education Administrator & Principal Performance Initiative",
+        "technologies": "Staff Supervision, District Compliance, Budget Management",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/education-administrator/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Education",
+        "institution": "State University / Institute of Technology",
+        "location": "Richmond, VA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Education Administrator & Principal Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "human-resources-manager": {
+    "personal": {
+      "name": "Samantha Lee",
+      "title": "Human Resources Manager (SHRM-CP)",
+      "email": "samantha.lee@email.com",
+      "phone": "(555) 019-2834",
+      "location": "San Jose, CA",
+      "website": "human-resources-manager-portfolio.dev",
+      "linkedin": "linkedin.com/in/human-resources-manager",
+      "github": "github.com/human-resources-manager"
+    },
+    "summary": "Results-driven Human Resources Manager (SHRM-CP) with 4+ years of hands-on experience in Talent Acquisition, Employee Relations, HRIS (Workday), Compliance, Culture. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Talent Acquisition",
+      "Employee Relations",
+      "HRIS (Workday)",
+      "Compliance",
+      "Culture",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Human Resources Manager (SHRM-CP)",
+        "company": "Apex Solutions Inc.",
+        "location": "San Jose, CA",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core human resources manager (shrm-cp) initiatives utilizing Talent Acquisition and Employee Relations, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Human Resources Manager (SHRM-CP) Specialist",
+        "company": "Vertex Global Group",
+        "location": "San Jose, CA",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Human Resources Manager (SHRM-CP) Architecture & Workflow Suite",
+        "technologies": "Talent Acquisition, Employee Relations, HRIS (Workday)",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/human-resources-manager/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Human Resources Manager (SHRM-CP) Performance Initiative",
+        "technologies": "Employee Relations, HRIS (Workday), Compliance",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/human-resources-manager/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Human",
+        "institution": "State University / Institute of Technology",
+        "location": "San Jose, CA",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Human Resources Manager (SHRM-CP) Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  },
+  "executive-assistant": {
+    "personal": {
+      "name": "Caroline Vance",
+      "title": "Executive Assistant to C-Suite",
+      "email": "caroline.vance@email.com",
+      "phone": "(555) 019-2834",
+      "location": "New York, NY",
+      "website": "executive-assistant-portfolio.dev",
+      "linkedin": "linkedin.com/in/executive-assistant",
+      "github": "github.com/executive-assistant"
+    },
+    "summary": "Results-driven Executive Assistant to C-Suite with 4+ years of hands-on experience in Calendar Management, Travel Coordination, Board Meeting Minutes, Confidentiality. Proven track record of delivering measurable project outcomes, optimizing operational workflows by 38%, and maintaining 100% compliance with industry benchmarks.",
+    "skills": [
+      "Calendar Management",
+      "Travel Coordination",
+      "Board Meeting Minutes",
+      "Confidentiality",
+      "Jira",
+      "Agile / Scrum",
+      "Quality Assurance",
+      "Cross-Functional Collaboration",
+      "Process Automation"
+    ],
+    "experience": [
+      {
+        "role": "Lead Executive Assistant to C-Suite",
+        "company": "Apex Solutions Inc.",
+        "location": "New York, NY",
+        "dates": "2023 - Present",
+        "descriptions": [
+          "Led core executive assistant to c-suite initiatives utilizing Calendar Management and Travel Coordination, improving delivery velocity by 38%.",
+          "Architected modular framework across 18 high-priority deliverables, ensuring 100% compliance with industry benchmarks.",
+          "Mentored 4 junior specialists and established continuous quality review protocols."
+        ]
+      },
+      {
+        "role": "Executive Assistant to C-Suite Specialist",
+        "company": "Vertex Global Group",
+        "location": "New York, NY",
+        "dates": "2021 - 2023",
+        "descriptions": [
+          "Executed daily operational workflows, reducing turnaround latency by 25% across key projects.",
+          "Collaborated with cross-functional leadership to deliver $240,000 in annual operational cost efficiencies.",
+          "Authored technical standard operating procedures (SOPs) and automated recurring reporting."
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "title": "Enterprise Executive Assistant to C-Suite Architecture & Workflow Suite",
+        "technologies": "Calendar Management, Travel Coordination, Board Meeting Minutes",
+        "description": "Designed and deployed comprehensive enterprise solution resulting in 42% operational efficiency gain and automated reporting.",
+        "link": "github.com/executive-assistant/enterprise-suite"
+      },
+      {
+        "title": "High-Impact Executive Assistant to C-Suite Performance Initiative",
+        "technologies": "Travel Coordination, Board Meeting Minutes, Confidentiality",
+        "description": "Spearheaded core optimization project reducing error rates by 65% while managing cross-functional stakeholder deliverables.",
+        "link": "github.com/executive-assistant/performance-suite"
+      }
+    ],
+    "education": [
+      {
+        "degree": "Bachelor of Science / Degree in Executive",
+        "institution": "State University / Institute of Technology",
+        "location": "New York, NY",
+        "dates": "2017 - 2021",
+        "gpa": "First Class with Distinction \u2022 Dean's Honors List"
+      }
+    ],
+    "certifications": [
+      {
+        "name": "Certified Executive Assistant to C-Suite Professional",
+        "issuer": "Global Professional Standards Institute",
+        "dates": "2024"
+      }
+    ]
+  }
+};

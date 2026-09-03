@@ -241,6 +241,24 @@ function selectTemplateStyle(templateId) {
   document.body.classList.add('in-editor');
   const globalNav = document.querySelector('.stitch-nav');
   if (globalNav) globalNav.style.display = 'none';
+
+  const ROLE_TEMPLATE_FALLBACKS = {
+    'ai-engineer': 'data_science_experienced_mlops',
+    'software-engineer': 'software_experienced_enterprise',
+    'mechanical-engineer': 'mechanical_experienced_automotive',
+    'data-scientist': 'data_science_experienced_lead',
+    'product-manager': 'software_experienced_enterprise',
+    'tcs-nqt-fresher': 'software_fresher_minimalist',
+    'grid': 'software_experienced_enterprise',
+    'modern': 'software_experienced_sleek',
+    'executive': 'software_experienced_enterprise',
+    'classic': 'software_fresher_minimalist'
+  };
+
+  if (!TEMPLATE_STYLES[templateId]) {
+    templateId = ROLE_TEMPLATE_FALLBACKS[templateId] || 'software_experienced_enterprise';
+  }
+
   state.selectedTemplateId = templateId;
   
   // Track GA4 Funnel Event: template_selected
@@ -3401,42 +3419,98 @@ function checkURLParamsOnLoad() {
     const urlParams = new URLSearchParams(window.location.search);
     const roleSlug = urlParams.get('role');
     const templateId = urlParams.get('template');
+    const autoFillParam = urlParams.get('autofill');
     
     if (roleSlug || templateId) {
-      const cleanSlug = (roleSlug || '').replace('-resume', '');
+      const cleanSlug = (roleSlug || '').replace('-resume', '').toLowerCase();
       const formattedTitle = cleanSlug ? cleanSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : '';
       
-      // Determine template ID
+      // Determine exact valid template ID from TEMPLATE_STYLES
       let targetTemplate = templateId;
-      if (!targetTemplate) {
-        if (cleanSlug.includes('engineer') || cleanSlug.includes('developer') || cleanSlug.includes('data')) {
-          targetTemplate = 'grid';
-        } else if (cleanSlug.includes('manager') || cleanSlug.includes('analyst') || cleanSlug.includes('finance')) {
-          targetTemplate = 'executive';
-        } else if (cleanSlug.includes('design') || cleanSlug.includes('marketing')) {
-          targetTemplate = 'modern';
+      if (!targetTemplate || !TEMPLATE_STYLES[targetTemplate]) {
+        if (cleanSlug.includes('ai')) {
+          targetTemplate = 'data_science_experienced_mlops';
+        } else if (cleanSlug.includes('data')) {
+          targetTemplate = 'data_science_experienced_lead';
+        } else if (cleanSlug.includes('mechanical')) {
+          targetTemplate = 'mechanical_experienced_automotive';
+        } else if (cleanSlug.includes('fresher') || cleanSlug.includes('tcs')) {
+          targetTemplate = 'software_fresher_minimalist';
         } else {
-          targetTemplate = 'classic';
+          targetTemplate = 'software_experienced_enterprise';
         }
       }
       
-      selectTemplateStyle(targetTemplate);
+      // Select template style (ensures state.selectedTemplateId is valid)
+      if (typeof selectTemplateStyle === 'function') {
+        selectTemplateStyle(targetTemplate);
+      }
       
-      if (formattedTitle) {
+      // Direct Transition to Editor Workspace (Bypass Template Gallery)
+      document.body.classList.add('in-editor');
+      const globalNav = document.querySelector('.stitch-nav');
+      if (globalNav) globalNav.style.display = 'none';
+      const landingScreen = document.getElementById('landing-screen');
+      if (landingScreen) landingScreen.style.display = 'none';
+      const appContainer = document.getElementById('app-container');
+      if (appContainer) appContainer.style.display = 'flex';
+      const selectionScreen = document.getElementById('selection-screen');
+      if (selectionScreen) selectionScreen.style.display = 'none';
+      const welcomeHeader = document.getElementById('app-header-welcome');
+      if (welcomeHeader) welcomeHeader.style.display = 'none';
+      const builderWorkspace = document.getElementById('builder-workspace');
+      if (builderWorkspace) builderWorkspace.style.display = 'grid';
+      const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+      if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = '';
+      if (typeof setMobileTab === 'function') setMobileTab('edit');
+
+      // Check if blueprint exists in window.ROLE_BLUEPRINTS
+      const blueprints = window.ROLE_BLUEPRINTS || {};
+      const blueprintData = blueprints[cleanSlug] || blueprints[roleSlug];
+
+      if (blueprintData && autoFillParam !== 'false') {
+        state.hasLoadedProfile = true;
+        if (typeof loadProfileIntoForm === 'function') {
+          loadProfileIntoForm(blueprintData);
+        }
+        if (typeof syncFormToPreview === 'function') {
+          syncFormToPreview();
+        }
+        setTimeout(() => {
+          if (typeof window.showToast === 'function') {
+            window.showToast(`✨ Loaded ${formattedTitle} Blueprint into Editor!`, 'success', 3500);
+          }
+        }, 300);
+      } else if (formattedTitle) {
         setTimeout(() => {
           const titleInput = document.getElementById('input-title');
           if (titleInput) {
             titleInput.value = formattedTitle;
             titleInput.dispatchEvent(new Event('input', { bubbles: true }));
           }
+          if (typeof syncFormToPreview === 'function') syncFormToPreview();
         }, 150);
       }
 
-      // Hide landing page and jump straight to builder
-      const landingScreen = document.getElementById('landing-screen');
-      if (landingScreen) landingScreen.style.display = 'none';
-      const workspace = document.querySelector('.workspace-container');
-      if (workspace) workspace.style.display = 'flex';
+      // Dismiss tour popover on role fast-track
+      try {
+        localStorage.setItem('zenresume_tour_seen_v4', 'true');
+        const activeTour = document.querySelector('.zen-tour-tooltip');
+        if (activeTour) activeTour.remove();
+        const activeSpot = document.querySelector('.zen-tour-spotlight');
+        if (activeSpot) activeSpot.remove();
+      } catch(e) {}
+
+      // Smooth scroll to top of workspace
+      window.scrollTo(0, 0);
+
+      if (typeof adjustPreviewScale === 'function') adjustPreviewScale();
+      if (typeof checkVaultOnboardingBanner === 'function') checkVaultOnboardingBanner();
+
+      setTimeout(() => {
+        if (typeof syncFormToPreview === 'function') syncFormToPreview();
+        if (typeof adjustPreviewScale === 'function') adjustPreviewScale();
+      }, 100);
     }
   } catch(e) {
     console.warn('[URL Param Error]:', e);
