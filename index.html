@@ -2326,10 +2326,10 @@
       
       <!-- Instant UPI & Card Actions -->
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
-        <button type="button" id="btn-pay-primary" class="btn-modal btn-confirm" onclick="alert('Payment Gateway: Processing ' + window.currentPaymentAmount + ' (' + (window.currentCurrency || 'INR') + ')... Redirecting to secure gateway...');" style="background: linear-gradient(135deg, #476550, #00846D); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <button type="button" id="btn-pay-primary" class="btn-modal btn-confirm" onclick="if(typeof window.showToast==='function'){window.showToast('Redirecting to secure UPI / GPay checkout...', 'info', 4000);}" style="background: linear-gradient(135deg, #476550, #00846D); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
           <i id="btn-pay-primary-icon" class="fas fa-qrcode"></i> <span id="btn-pay-primary-text">Pay ₹199 via UPI / GPay / PhonePe</span>
         </button>
-        <button type="button" id="btn-pay-secondary" class="btn-modal btn-confirm" onclick="alert('Payment Gateway: Card / NetBanking checkout opening for ' + window.currentPaymentAmount + '...');" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; color: #334155; padding: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <button type="button" id="btn-pay-secondary" class="btn-modal btn-confirm" onclick="if(typeof window.showToast==='function'){window.showToast('Opening secure Card checkout...', 'info', 4000);}" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; color: #334155; padding: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
           <i id="btn-pay-secondary-icon" class="fas fa-credit-card"></i> <span id="btn-pay-secondary-text">Pay via Credit / Debit Card</span>
         </button>
       </div>

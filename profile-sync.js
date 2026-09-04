@@ -170,8 +170,10 @@
       return true;
 
     } catch (err) {
+      console.warn('[GitHub Sync Diagnostic]:', err);
       if (typeof window.showToast === 'function') {
-        window.showToast('GitHub Sync Error: ' + err.message, 'error');
+        const cleanMsg = window.getCleanErrorMessage ? window.getCleanErrorMessage(err, 'Could not sync GitHub profile. Please check the username or enter details manually.') : (err.message || 'Could not sync GitHub profile.');
+        window.showToast(cleanMsg, 'warning');
       }
       return false;
     } finally {

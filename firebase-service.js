@@ -148,47 +148,99 @@ window.showToast = function(message, type = 'success', duration = 3500) {
   }, duration);
 };
 
-// Global Safety Interceptor: Route ANY native browser alert to our elegant in-app toast
-window.alert = function(message) {
-  const isErr = /error|fail|invalid|warning|unauthorized|blocked/i.test(String(message));
-  window.showToast(message, isErr ? 'warning' : 'info', 4000);
+// Universal Error Message Sanitizer: Guarantees zero technical/backend error leaks to users
+window.getCleanErrorMessage = function(error, fallback = 'Operation completed.') {
+  if (!error) return fallback;
+  
+  // Extract string or code
+  const code = error.code || '';
+  const rawMsg = typeof error === 'string' ? error : (error.message || '');
+
+  // Auth Specific Human Mappings
+  switch (code) {
+    case 'auth/invalid-email':
+      return 'Please enter a valid email address.';
+    case 'auth/user-disabled':
+      return 'This account is currently disabled. Please contact support.';
+    case 'auth/user-not-found':
+    case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+      return 'Incorrect email or password. Please try again.';
+    case 'auth/email-already-in-use':
+      return 'An account with this email already exists. Please log in.';
+    case 'auth/weak-password':
+      return 'Password should be at least 6 characters.';
+    case 'auth/too-many-requests':
+      return 'Too many login attempts. Please wait 1 minute before trying again.';
+    case 'auth/network-request-failed':
+      return 'Network connection issue. Please check your internet connection.';
+    case 'auth/popup-blocked':
+      return 'Sign-in pop-up was blocked by your browser. Please allow pop-ups.';
+    case 'auth/popup-closed-by-user':
+    case 'auth/cancelled-popup-request':
+      return 'Sign-in was cancelled.';
+    case 'auth/unauthorized-domain':
+    case 'auth/operation-not-allowed':
+    case 'auth/configuration-not-found':
+    case 'auth/internal-error':
+      return 'Sign-In is temporarily offline for maintenance. You can continue creating your resume freely as a Guest!';
+  }
+
+  // Strip technical traces from raw messages if any
+  let clean = rawMsg
+    .replace(/^Firebase:\s*/i, '')
+    .replace(/Error\s*\([^)]+\)\.?/gi, '')
+    .replace(/auth\/[a-z-]+/gi, '')
+    .replace(/\bat\s+[\w\d_$.<>]+\s+\([^)]+\)/gi, '')
+    .trim();
+
+  // If message contains internal stack or syntax words, fallback gracefully
+  if (!clean || /token|credential|internal server|stack|undefined|null|eval|syntaxerror/i.test(clean)) {
+    return fallback;
+  }
+
+  return clean;
 };
 
-function formatAuthErrorMessage(error) {
-  if (!error) return;
+// Global Safety Interceptor: Route ANY native browser alert to our elegant in-app toast
+window.alert = function(message) {
+  if (!message) return;
+  const cleanMsg = window.getCleanErrorMessage(message, 'Notice');
+  const isErr = /error|fail|invalid|warning|issue/i.test(String(cleanMsg));
+  window.showToast(cleanMsg, isErr ? 'warning' : 'info', 4000);
+};
 
-  if (error.code === 'auth/unauthorized-domain') {
-    console.warn(`[Firebase Developer Notice] Domain "${window.location.hostname}" is not yet added under Firebase Console > Authentication > Settings > Authorized Domains.`);
-    
-    // Display reassuring, non-alarming user modal
-    window.showFriendlyNoticeModal({
-      title: 'Cloud Sync in Maintenance',
-      badgeText: '100% Free Offline Access',
-      badgeIcon: 'fas fa-shield-halved',
-      type: 'info',
-      message: 'Google Sign-In is temporarily offline for maintenance. ZenResume is <strong>100% Local-First</strong> — you can continue building, editing, and downloading all 71 ATS resume templates offline for free without logging in!',
-      primaryBtnText: '⚡ Continue Building Free',
-      secondaryBtnText: 'Dismiss'
-    });
+// Central Auth Error Handler
+function handleAuthError(error) {
+  if (!error) return;
+  const code = error.code || '';
+
+  // Log detailed diagnostic to console for developers only
+  console.warn('[ZenResume Auth Diagnostic]:', code || error);
+
+  if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+    window.showToast('Sign-In window closed.', 'info', 2500);
     return;
   }
 
-  if (error.code === 'auth/popup-blocked') {
+  if (code === 'auth/popup-blocked') {
     window.showToast('Your browser blocked the sign-in pop-up. Tap Sign In again to retry.', 'warning', 4500);
     return;
   }
 
-  if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
-    window.showToast('Sign-In window closed. You can sign in anytime or continue building free.', 'info', 3000);
+  if (code === 'auth/network-request-failed') {
+    window.showToast('Network connection unstable. Your data is safely stored in browser storage.', 'warning', 4000);
     return;
   }
 
-  if (error.code === 'auth/network-request-failed') {
-    window.showToast('Network connection unstable. Your data is safely stored offline.', 'warning', 4000);
+  if (code === 'auth/unauthorized-domain' || code === 'auth/operation-not-allowed' || code === 'auth/configuration-not-found' || code === 'auth/internal-error') {
+    // Friendly, reassuring notice that never shows raw backend configuration or settings paths
+    window.showToast('Sign-In is temporarily offline for maintenance. You can build & export resumes completely free as a Guest!', 'info', 5000);
     return;
   }
 
-  window.showToast('Sign-In service is temporarily offline. All free builder tools remain active!', 'info', 4000);
+  const cleanMessage = window.getCleanErrorMessage(error, 'Sign-In service is temporarily offline. All free builder tools remain active!');
+  window.showToast(cleanMessage, 'info', 4000);
 }
 
 const firebaseConfig = {
@@ -230,7 +282,7 @@ function initFirebaseService() {
     }).catch(err => {
       console.warn("[Firebase] Redirect sign-in check:", err);
       if (err && err.code) {
-        window.showToast(formatAuthErrorMessage(err), "warning", 6000);
+        handleAuthError(err);
       }
     });
 
@@ -238,14 +290,13 @@ function initFirebaseService() {
     auth.onAuthStateChanged(handleAuthStateChange);
 
   } catch (err) {
-    console.error("[Firebase] Initialization error:", err);
+    console.warn("[Firebase] Service initialization note:", err);
   }
 }
 
 // Global Google Sign-In Trigger (Callable from any button, mobile drawer, or script)
 window.triggerGoogleLogin = function() {
   if (!auth || typeof firebase === 'undefined') {
-    console.warn("[Firebase] Auth not ready yet. Initializing...");
     initFirebaseService();
     if (!auth) {
       window.showToast("Sign-In service is initializing. Please tap again in a moment.", "info");
@@ -267,18 +318,18 @@ window.triggerGoogleLogin = function() {
       }
     })
     .catch((error) => {
-      console.warn("[Firebase] Popup sign-in error, attempting redirect fallback:", error);
+      console.warn("[Firebase] Popup sign-in note, attempting redirect fallback:", error);
       if (error.code === 'auth/popup-blocked' || 
           error.code === 'auth/cancelled-popup-request' || 
           error.code === 'auth/popup-closed-by-user' ||
           error.code === 'auth/internal-error') {
         // Smooth redirect fallback for mobile browsers blocking popups
         auth.signInWithRedirect(provider).catch(redirectErr => {
-          console.error("[Firebase] Redirect sign-in error:", redirectErr);
-          window.showToast(formatAuthErrorMessage(redirectErr || error), "warning", 6000);
+          console.warn("[Firebase] Redirect sign-in note:", redirectErr);
+          handleAuthError(redirectErr || error);
         });
       } else {
-        window.showToast(formatAuthErrorMessage(error), "warning", 6000);
+        handleAuthError(error);
       }
     });
 };
@@ -530,9 +581,9 @@ function initEmailAuth() {
         window.showToast("Login Successful! Welcome, " + email);
         
       } catch (error) {
-        console.error("Email Auth Error:", error);
+        console.warn("[Firebase Email Auth Diagnostic]:", error);
         if (emailError) {
-          emailError.textContent = error.message;
+          emailError.textContent = window.getCleanErrorMessage(error, 'Incorrect email or password. Please try again.');
           emailError.style.display = 'block';
         }
       } finally {
