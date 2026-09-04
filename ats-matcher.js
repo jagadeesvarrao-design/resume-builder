@@ -265,16 +265,19 @@ function runATSScan() {
       }
     }
   } else {
-    // PAID TIERS (1-Day, 7-Day, ZenSuite)
-    const maxQuota = userTier === 'day' ? 2 : 4;
+    // PAID TIERS: 1-Day = 3 resumes, 7-Day / ZenSuite = 4 resumes per day
+    const maxQuota = userTier === 'day' ? 3 : 4;
     const currentUsage = subManager ? subManager.getDailyUsage('kw_review') : 0;
 
     if (currentUsage >= maxQuota) {
       if (freeMissingBox) {
+        const quotaNotice = userTier === 'day'
+          ? `You have completed your 3 resume keyword reviews on your 1-Day Sprint pass.`
+          : `You have completed your daily quota of 4 resume keyword reviews for today. Your daily allocation resets at midnight!`;
         freeMissingBox.innerHTML = `
           <div class="ats-free-fix-card" style="border-left: 4px solid #F59E0B; background: rgba(245, 158, 11, 0.08);">
-            <p style="margin: 0 0 6px 0; font-weight: 700; color: #B45309;">⚠️ Daily Keyword Review Quota Reached (${maxQuota}/${maxQuota} JDs today)</p>
-            <p style="margin: 0; font-size: 12.5px; color: #78350F;">You have completed your ${maxQuota} JD keyword reviews for today on your ${userTier === 'day' ? '1-Day Plan' : '7-Day / ZenSuite Plan'}. Daily quota resets at midnight!</p>
+            <p style="margin: 0 0 6px 0; font-weight: 700; color: #B45309;">⚠️ Keyword Review Quota Reached (${maxQuota}/${maxQuota} Resumes)</p>
+            <p style="margin: 0; font-size: 12.5px; color: #78350F;">${quotaNotice}</p>
           </div>
         `;
       }
@@ -282,6 +285,7 @@ function runATSScan() {
     } else {
       if (subManager) subManager.incrementDailyUsage('kw_review');
       const newUsage = currentUsage + 1;
+      const usageLabel = userTier === 'day' ? `${newUsage}/3 Resumes` : `${newUsage}/4 Today`;
 
       // Show ALL missing keywords with auto-add buttons
       if (freeMissingBox) {
@@ -290,7 +294,7 @@ function runATSScan() {
             <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <span style="font-weight: 800; font-size: 13px; color: #DC2626;"><i class="fas fa-circle-exclamation"></i> All ${missing.length} Missing Keywords (Tap to Auto-Add):</span>
-                <span style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.1); padding: 3px 8px; border-radius: 9999px;">${newUsage}/${maxQuota} JDs Today</span>
+                <span style="font-size: 11px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.1); padding: 3px 8px; border-radius: 9999px;">${usageLabel}</span>
               </div>
               <div style="display: flex; flex-wrap: wrap; gap: 6px;">
                 ${missing.map(k => `

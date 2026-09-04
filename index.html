@@ -1120,7 +1120,7 @@
               <div class="pricing-card-top">
                 <div class="pricing-plan-badge badge-pro">24-HOUR PASS</div>
                 <h3 class="pricing-plan-title">1-Day Sprint</h3>
-                <p class="pricing-plan-subtitle">Perfect for tailoring a single urgent job application today.</p>
+                <p class="pricing-plan-subtitle">Perfect for tailoring urgent job applications today.</p>
                 <div class="pricing-price-wrap">
                   <span class="pricing-currency" id="price-cur-day">₹</span>
                   <span class="pricing-amount" id="price-val-day">49</span>
@@ -1130,10 +1130,10 @@
               
               <ul class="pricing-features-list">
                 <li><i class="fas fa-bolt" style="color: #F59E0B;"></i> <strong>Everything in Free Forever</strong></li>
-                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>24-Hour AI Job Description Matcher</strong></li>
-                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Gemini 2.5 AI Bullet Rewriting</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>3 AI Resume Tailoring Runs</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Full ATS Missing Keywords (3 Resumes)</strong></li>
                 <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Unlimited PDF Downloads (24 hrs)</strong></li>
-                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Instant Activation &amp; Direct PDF</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>100% Ad-Free Experience</strong></li>
               </ul>
               
               <button type="button" class="btn-pricing-cta btn-pricing-pro" onclick="window.openProPaymentModal && window.openProPaymentModal('day');">
@@ -1158,10 +1158,10 @@
               
               <ul class="pricing-features-list">
                 <li><i class="fas fa-bolt" style="color: #F59E0B;"></i> <strong>Everything in 1-Day Pass</strong></li>
-                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>7 Days Unlimited AI JD Matcher</strong></li>
-                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Multi-Job Resume Profile Cloner</strong></li>
-                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>AI Action Verb &amp; Metrics Improver</strong></li>
-                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Priority ATS Layout Verification</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>4 AI Resume Tailoring Runs / Day</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Full ATS Missing Keywords (4 Resumes / Day)</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>Unlimited PDF Downloads (7 Days)</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #476550;"></i> <strong>100% Ad-Free Experience</strong></li>
               </ul>
               
               <button type="button" class="btn-pricing-cta btn-pricing-pro" onclick="window.openProPaymentModal && window.openProPaymentModal('sprint');">
@@ -1171,8 +1171,8 @@
               </button>
             </div>
 
-            <!-- Plan 4: Entire ZenSuite (1 Month Access) -->
-            <div class="pricing-card suite-tier-card featured">
+            <!-- Plan 4: Entire ZenSuite (Hidden while ZenDoc & ZenScout are in building stage) -->
+            <div class="pricing-card suite-tier-card featured" style="display: none;">
               <div class="pricing-popular-ribbon">🔥 BEST VALUE • ALL SUITE PRODUCTS</div>
               <div class="pricing-card-top">
                 <div class="pricing-plan-badge badge-campus">ALL-IN-ONE ECOSYSTEM</div>
@@ -1186,7 +1186,7 @@
               </div>
               
               <ul class="pricing-features-list">
-                <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>ZenResume Pro (Unlimited AI Matcher)</strong></li>
+                <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>ZenResume Pro (4 AI Tailoring Runs/Day)</strong></li>
                 <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>ZenScout AI (24/7 Job Search Agent)</strong></li>
                 <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>ZenDoc AI (Doc Intelligence Bot)</strong></li>
                 <li><i class="fas fa-check-circle" style="color: #2DD4BF;"></i> <strong>Campus Placement Suite (Blueprints)</strong></li>
@@ -2558,21 +2558,22 @@
         Choose your plan to unlock Gemini 2.5 AI Resume Matcher and the full ZenSuite.
       </p>
 
-      <!-- Plan Selector Tabs (3 Plans) -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
-        <button type="button" id="pay-plan-btn-day" onclick="window.selectPaymentPlan('day');" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
-          <div style="font-size: 10px; font-weight: 800; color: #64748B; text-transform: uppercase;">1-Day</div>
-          <div style="font-size: 17px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="modal-tab-amount-day">₹49</div>
-          <div style="font-size: 9.5px; color: #64748B;">24 Hours</div>
+      <!-- Plan Selector Tabs (1-Day & 7-Day visible) -->
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px;">
+        <button type="button" id="pay-plan-btn-day" onclick="window.selectPaymentPlan('day');" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+          <div style="font-size: 10.5px; font-weight: 800; color: #64748B; text-transform: uppercase;">1-Day Sprint</div>
+          <div style="font-size: 19px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="modal-tab-amount-day">₹49</div>
+          <div style="font-size: 10px; color: #64748B;">3 Resumes (24 Hours)</div>
         </button>
 
-        <button type="button" id="pay-plan-btn-sprint" onclick="window.selectPaymentPlan('sprint');" style="background: rgba(0, 104, 86, 0.08); border: 2px solid #476550; border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
-          <div style="font-size: 10px; font-weight: 800; color: #476550; text-transform: uppercase;">7-Day</div>
-          <div style="font-size: 17px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="modal-tab-amount-sprint">₹199</div>
-          <div style="font-size: 9.5px; color: #64748B;">Full Week</div>
+        <button type="button" id="pay-plan-btn-sprint" onclick="window.selectPaymentPlan('sprint');" style="background: rgba(0, 104, 86, 0.08); border: 2px solid #476550; border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative;">
+          <span style="position: absolute; top: -7px; right: 8px; background: #476550; color: white; font-size: 8px; font-weight: 800; padding: 1px 6px; border-radius: 9999px;">POPULAR</span>
+          <div style="font-size: 10.5px; font-weight: 800; color: #476550; text-transform: uppercase;">7-Day Fast Track</div>
+          <div style="font-size: 19px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="modal-tab-amount-sprint">₹199</div>
+          <div style="font-size: 10px; color: #64748B;">4 Resumes/Day (1 Week)</div>
         </button>
         
-        <button type="button" id="pay-plan-btn-suite" onclick="window.selectPaymentPlan('suite');" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(0, 229, 188, 0.08)); border: 2px solid #F59E0B; border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative;">
+        <button type="button" id="pay-plan-btn-suite" onclick="window.selectPaymentPlan('suite');" style="display: none; background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(0, 229, 188, 0.08)); border: 2px solid #F59E0B; border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative;">
           <span style="position: absolute; top: -7px; right: 4px; background: #F59E0B; color: white; font-size: 8px; font-weight: 800; padding: 1px 5px; border-radius: 9999px;">BEST</span>
           <div style="font-size: 10px; font-weight: 800; color: #D97706; text-transform: uppercase;">ZenSuite</div>
           <div style="font-size: 17px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="modal-tab-amount-suite">₹599</div>
@@ -3263,13 +3264,13 @@
           <div class="ats-price-tabs">
             <button class="ats-price-tab active" data-tier="day">1-Day Pass</button>
             <button class="ats-price-tab" data-tier="week">7-Day Sprint</button>
-            <button class="ats-price-tab" data-tier="month">ZenSuite Pro</button>
+            <button class="ats-price-tab" data-tier="month" style="display: none;">ZenSuite Pro</button>
           </div>
           <div class="ats-price-display">
-            <span class="ats-price-amount" id="ats-price-amount">₹99</span>
+            <span class="ats-price-amount" id="ats-price-amount">₹49</span>
             <span class="ats-price-period" id="ats-price-period">/ 24 hours</span>
           </div>
-          <p class="ats-price-includes">Includes: Full keyword report + AI bullet rewrites + ZenScout auto-apply + ZenDoc interview prep</p>
+          <p class="ats-price-includes">Includes: Full keyword gap report + AI bullet rewrites + Unlimited PDF exports</p>
           <button class="ats-btn-unlock" id="btn-ats-unlock" onclick="initiatePayment()">
             🔓 Unlock Full Report &amp; AI Fixes
           </button>

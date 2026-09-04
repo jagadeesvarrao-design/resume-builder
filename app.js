@@ -3624,16 +3624,31 @@ function attachEvents() {
       const userTier = subManager ? subManager.getUserTier() : 'free';
 
       if (userTier === 'free') {
-        if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Upgrade to AI Job Tailoring", badgeText: "Pro Feature", badgeIcon: "fas fa-bolt", type: "warning", message: "AI Resume Tailoring is a Pro feature! Free tier includes <strong>100% vector single-column ATS PDF creation</strong> and keyword checks. Upgrade to Sprint for instant full AI tailoring.", primaryBtnText: "⚡ View Pro Pricing", onPrimary: () => { const el = document.getElementById("pricing"); if (el) el.scrollIntoView({behavior: "smooth"}); } }); } else { window.showToast("AI Tailoring is a Pro feature.", "info"); }
+        if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Upgrade to AI Job Tailoring", badgeText: "Pro Feature", badgeIcon: "fas fa-bolt", type: "warning", message: "AI Resume Tailoring is a Pro feature! Free tier includes <strong>100% vector single-column ATS PDF creation</strong> and keyword checks. Upgrade to 1-Day Sprint (₹49) for 3 AI tailored resumes, or 7-Day Fast Track (₹199) for 4 AI tailored resumes every day.", primaryBtnText: "⚡ View Pro Pricing", onPrimary: () => { const el = document.getElementById("pricing"); if (el) el.scrollIntoView({behavior: "smooth"}); } }); } else { window.showToast("AI Tailoring is a Pro feature.", "info"); }
         closePrintModal();
         if (window.openProPaymentModal) window.openProPaymentModal('day');
         return;
       }
 
-      const maxQuota = userTier === 'day' ? 2 : 4;
+      // Quota: 1-Day Sprint = 3 resumes, 7-Day / ZenSuite = 4 resumes per day
+      const maxQuota = userTier === 'day' ? 3 : 4;
       const usedToday = subManager ? subManager.getDailyUsage('tailor') : 0;
       if (usedToday >= maxQuota) {
-        if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Daily AI Limit Reached", badgeText: "Quota Limit", badgeIcon: "fas fa-clock", type: "info", message: `You have completed your daily AI tailoring allocations. Your quota resets at midnight! You can continue editing and downloading all 71 ATS resume templates for free.`, primaryBtnText: "Continue Editing Free" }); } else { window.showToast("Daily AI limit reached.", "info"); }
+        const quotaMsg = userTier === 'day'
+          ? `You have used all 3 AI tailored resumes included in your 1-Day Sprint pass.`
+          : `You have reached your daily limit of 4 AI tailored resumes for today. Your daily allocation resets at midnight!`;
+        if (window.showFriendlyNoticeModal) { 
+          window.showFriendlyNoticeModal({ 
+            title: "AI Tailoring Quota Reached", 
+            badgeText: "Quota Limit", 
+            badgeIcon: "fas fa-clock", 
+            type: "info", 
+            message: `${quotaMsg} You can continue editing, formatting, and downloading unlimited resumes with vector ATS PDF export.`, 
+            primaryBtnText: "Continue Editing" 
+          }); 
+        } else { 
+          window.showToast(quotaMsg, "info"); 
+        }
         return;
       }
 
@@ -4922,7 +4937,7 @@ window.selectPaymentPlan = function(planKey) {
       btnDay.style.background = 'rgba(0, 104, 86, 0.08)';
     }
     if (summaryText) {
-      summaryText.innerHTML = '<strong>1-Day Sprint:</strong> 24 hours unlimited AI Job Matcher, Gemini 2.5 AI Rewriter &amp; PDF Exports.';
+      summaryText.innerHTML = '<strong>1-Day Sprint:</strong> 3 AI Tailored Resumes + 3 Full ATS Keyword Scans + 24 Hours Unlimited PDF Downloads.';
     }
   } else if (planKey === 'suite') {
     if (btnSuite) {
@@ -4930,7 +4945,7 @@ window.selectPaymentPlan = function(planKey) {
       btnSuite.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(0, 229, 188, 0.12))';
     }
     if (summaryText) {
-      summaryText.innerHTML = '<strong>Entire ZenSuite (1 Month):</strong> Unlimited access to ZenResume Pro, ZenScout AI Auto-Hunter, ZenDoc AI &amp; Campus Suite.';
+      summaryText.innerHTML = '<strong>Entire ZenSuite (1 Month):</strong> 4 AI Tailored Resumes/day + 4 Full ATS Keyword Scans/day + ZenScout &amp; ZenDoc access.';
     }
   } else {
     if (btnSprint) {
@@ -4938,7 +4953,7 @@ window.selectPaymentPlan = function(planKey) {
       btnSprint.style.background = 'rgba(0, 104, 86, 0.08)';
     }
     if (summaryText) {
-      summaryText.innerHTML = '<strong>7-Day Sprint:</strong> Unlimited AI Job Matcher, Gemini 2.5 AI Rewriter &amp; PDF Exports for 7 full days.';
+      summaryText.innerHTML = '<strong>7-Day Fast Track:</strong> 4 AI Tailored Resumes / day + 4 Full ATS Keyword Scans / day + 7 Days Unlimited PDF Downloads.';
     }
   }
 

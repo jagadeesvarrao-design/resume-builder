@@ -999,9 +999,10 @@ body {
   align-items: stretch;
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1024px) {
   .pricing-cards-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1080px;
   }
 }
 
