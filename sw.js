@@ -9,6 +9,7 @@ const STATIC_SHELL = [
   '/',
   '/index.html',
   '/styles.css?v=8.6',
+  '/adaptive-engine.js?v=8.6',
   '/app.js?v=8.6',
   '/templates-data.js?v=8.6',
   '/firebase-service.js?v=8.6',
