@@ -419,32 +419,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ═══════════════════════════════════════════════════════════════
-// PAYMENT INITIATION (Razorpay for INR / Stripe for USD)
+// PAYMENT INITIATION (Razorpay / UPI for INR / Stripe for USD)
 // ═══════════════════════════════════════════════════════════════
 
 function initiatePayment() {
-  // Check if user is logged in
-  if (!firebase.auth().currentUser) {
-    window.showToast && window.showToast('Please sign in first to unlock premium features.');
-    return;
+  const planKey = selectedTier === 'week' ? 'sprint' : (selectedTier === 'month' ? 'suite' : 'day');
+  
+  if (typeof gtag === 'function') {
+    const tier = PRICING_TIERS[detectedCurrency][selectedTier] || {};
+    gtag('event', 'payment_initiated', {
+      event_category: 'monetization',
+      event_label: `${selectedTier}_${detectedCurrency}`,
+      value: tier.value || 49
+    });
   }
-  
-  const tier = PRICING_TIERS[detectedCurrency][selectedTier];
-  
-  if (detectedCurrency === 'INR') {
-    // Razorpay Integration (placeholder - needs API key configuration)
-    window.showToast && window.showToast('Payment gateway integration in progress. Contact support.zenresume@gmail.com for early access.');
-    
-    if (typeof gtag === 'function') {
-      gtag('event', 'payment_initiated', {
-        event_category: 'monetization',
-        event_label: `${selectedTier}_${detectedCurrency}`,
-        value: tier.value
-      });
-    }
+
+  // Open unified Pro Payment modal with selected tier pre-selected
+  if (typeof window.openProPaymentModal === 'function') {
+    window.openProPaymentModal(planKey);
+  } else if (typeof window.openUPIPaymentModal === 'function') {
+    window.openUPIPaymentModal(planKey);
   } else {
-    // Stripe Integration (placeholder)
-    window.showToast && window.showToast('International payment gateway coming soon. Contact support.zenresume@gmail.com for early access.');
+    window.showToast && window.showToast('Select a plan to upgrade.', 'info');
   }
 }
 

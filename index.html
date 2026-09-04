@@ -2587,16 +2587,79 @@
       
       <!-- Instant UPI & Card Actions -->
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
-        <button type="button" id="btn-pay-primary" class="btn-modal btn-confirm" onclick="if(typeof window.showToast==='function'){window.showToast('Redirecting to secure UPI / GPay checkout...', 'info', 4000);}" style="background: linear-gradient(135deg, #476550, #00846D); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <button type="button" id="btn-pay-primary" class="btn-modal btn-confirm" onclick="window.handlePaymentPrimaryClick && window.handlePaymentPrimaryClick();" style="background: linear-gradient(135deg, #476550, #00846D); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
           <i id="btn-pay-primary-icon" class="fas fa-qrcode"></i> <span id="btn-pay-primary-text">Pay ₹199 via UPI / GPay / PhonePe</span>
         </button>
-        <button type="button" id="btn-pay-secondary" class="btn-modal btn-confirm" onclick="if(typeof window.showToast==='function'){window.showToast('Opening secure Card checkout...', 'info', 4000);}" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; color: #334155; padding: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <button type="button" id="btn-pay-secondary" class="btn-modal btn-confirm" onclick="window.handlePaymentSecondaryClick && window.handlePaymentSecondaryClick();" style="background: #FFFFFF; border: 1.5px solid #CBD5E1; border-radius: 12px; color: #334155; padding: 12px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
           <i id="btn-pay-secondary-icon" class="fas fa-credit-card"></i> <span id="btn-pay-secondary-text">Pay via Credit / Debit Card</span>
         </button>
       </div>
       
       <div style="font-size: 11px; color: #94A3B8; display: flex; align-items: center; justify-content: center; gap: 6px;">
         <i class="fas fa-lock" style="font-size: 10px;"></i> Secured by 256-Bit SSL • Instant Account Unlock
+      </div>
+    </div>
+  </div>
+
+  <!-- UPI Dynamic QR Code & Instant Verification Modal -->
+  <div id="upi-payment-modal" class="modal-overlay no-print" style="display: none; align-items: center; justify-content: center; z-index: 5600; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px);">
+    <div class="modal-card" style="background: #FFFFFF; border-radius: 22px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35); border: 1.5px solid rgba(0, 104, 86, 0.3); padding: 26px 22px; max-width: 440px; width: 92%; text-align: center; position: relative;">
+      <button type="button" class="btn-close" onclick="window.closeUPIPaymentModal && window.closeUPIPaymentModal();" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 22px; cursor: pointer; color: #94A3B8;">&times;</button>
+      
+      <!-- Modal Header -->
+      <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 104, 86, 0.08); border: 1px solid rgba(0, 104, 86, 0.2); padding: 4px 12px; border-radius: 9999px; margin-bottom: 8px;">
+        <i class="fas fa-qrcode" style="color: #476550; font-size: 12px;"></i>
+        <span style="font-size: 11px; font-weight: 700; color: #476550; text-transform: uppercase;">Instant UPI Payment</span>
+      </div>
+      
+      <h3 id="upi-modal-title" style="margin: 0 0 4px 0; color: #0F172A; font-size: 20px; font-weight: 800; font-family: 'Outfit', sans-serif;">Scan &amp; Pay <span id="upi-modal-amount" style="color: #006856;">₹199</span></h3>
+      <p id="upi-modal-plan-desc" style="color: #64748B; font-size: 12px; margin: 0 0 14px 0;">
+        7-Day Fast Track — Unlimited ATS Keyword Scan &amp; AI Resume Tailoring
+      </p>
+
+      <!-- Dynamic QR Code Container -->
+      <div style="background: #F8FAFC; border: 2px dashed rgba(0, 104, 86, 0.25); border-radius: 16px; padding: 14px; margin-bottom: 14px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; box-sizing: border-box;">
+        <div style="background: #FFFFFF; padding: 8px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); margin-bottom: 8px;">
+          <img id="upi-qr-image" src="" alt="UPI QR Code" style="width: 170px; height: 170px; display: block; border-radius: 8px;" />
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #475569; font-weight: 600;">
+          <i class="fas fa-mobile-alt" style="color: #006856;"></i> Scan with GPay, PhonePe, Paytm or any UPI App
+        </div>
+      </div>
+
+      <!-- 1-Click Pay on Mobile (UPI App Intent) -->
+      <div id="upi-mobile-pay-wrapper" style="margin-bottom: 12px;">
+        <a id="btn-upi-mobile-app" href="#" class="btn-modal" style="background: linear-gradient(135deg, #476550, #00846D); color: #FFFFFF; text-decoration: none; border-radius: 12px; padding: 12px; font-size: 13.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0, 104, 86, 0.25);">
+          <i class="fas fa-bolt" style="color: #FCD34D;"></i> Open UPI App (GPay / PhonePe / Paytm)
+        </a>
+      </div>
+
+      <!-- VPA Copy Box -->
+      <div style="background: rgba(0, 104, 86, 0.05); border: 1px solid rgba(0, 104, 86, 0.15); border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="text-align: left;">
+          <div style="font-size: 10px; color: #64748B; font-weight: 700; text-transform: uppercase;">UPI ID / VPA</div>
+          <div id="upi-vpa-text" style="font-size: 13px; font-weight: 700; color: #0F172A; font-family: monospace;">aneevarp.solutions@okaxis</div>
+        </div>
+        <button type="button" onclick="window.copyUPIId && window.copyUPIId();" style="background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 8px; padding: 6px 12px; font-size: 11.5px; font-weight: 700; color: #006856; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+          <i class="fas fa-copy"></i> Copy
+        </button>
+      </div>
+
+      <!-- Verification / Ref ID Input -->
+      <div style="text-align: left; margin-bottom: 12px;">
+        <label for="upi-ref-input" style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">
+          Enter 12-Digit UPI Ref / UTR No. (or your Name):
+        </label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="upi-ref-input" placeholder="e.g. 423819283712 or GPay Name" style="flex: 1; border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 9px 12px; font-size: 12.5px; outline: none; font-family: inherit;" />
+          <button type="button" id="btn-verify-upi-submit" onclick="window.submitUPIPaymentVerification && window.submitUPIPaymentVerification();" style="background: #0F172A; color: #FFFFFF; border: none; border-radius: 10px; padding: 9px 14px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;">
+            ⚡ Unlock Pro
+          </button>
+        </div>
+      </div>
+
+      <div style="font-size: 10.5px; color: #94A3B8; display: flex; align-items: center; justify-content: center; gap: 4px;">
+        <i class="fas fa-shield-alt" style="color: #27AE60;"></i> Instant Account Unlock • 100% Satisfaction Guarantee
       </div>
     </div>
   </div>
