@@ -104,12 +104,12 @@ const resumeForm = document.getElementById('resume-form');
 let templateSearchQuery = '';
 
 function initFilters() {
-  // Experience Filter Click Handlers
+  // 1. Experience Segmented Switcher Handlers
   if (expFilters) {
     expFilters.addEventListener('click', (e) => {
       const btn = e.target.closest('.btn-filter');
-      if (btn) {
-        expFilters.querySelector('.active')?.classList.remove('active');
+      if (btn && btn.dataset.exp) {
+        expFilters.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         state.selectedExp = btn.dataset.exp;
         state.hasLoadedProfile = false; // Reset to reload corresponding mock profile
@@ -118,21 +118,66 @@ function initFilters() {
     });
   }
 
-  // Industry Filter Click Handlers
+  // 2. Industry Chip Filter Click Handlers
   if (industryFilters) {
     industryFilters.addEventListener('click', (e) => {
       const btn = e.target.closest('.btn-filter');
-      if (btn) {
-        industryFilters.querySelector('.active')?.classList.remove('active');
+      if (btn && btn.dataset.ind) {
+        industryFilters.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         state.selectedInd = btn.dataset.ind;
         state.hasLoadedProfile = false; // Reset to reload corresponding mock profile
+        
+        // Sync with mobile dropdown
+        const mobileSelect = document.getElementById('mobile-industry-select');
+        if (mobileSelect) mobileSelect.value = state.selectedInd;
+        
         renderTemplatesCatalog();
       }
     });
   }
 
-  // Live Template Search Input Handler
+  // 3. Mobile Industry Dropdown Change Handler
+  const mobileIndustrySelect = document.getElementById('mobile-industry-select');
+  if (mobileIndustrySelect) {
+    mobileIndustrySelect.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val) {
+        state.selectedInd = val;
+        state.hasLoadedProfile = false;
+        
+        // Sync active state in industry chips
+        if (industryFilters) {
+          industryFilters.querySelectorAll('.btn-filter').forEach(b => {
+            if (b.dataset.ind === val) {
+              b.classList.add('active');
+              // Auto scroll chip into view
+              b.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+            } else {
+              b.classList.remove('active');
+            }
+          });
+        }
+        renderTemplatesCatalog();
+      }
+    });
+  }
+
+  // 4. Industry Chips Scroll Arrows
+  const btnScrollLeft = document.getElementById('btn-chip-scroll-left');
+  const btnScrollRight = document.getElementById('btn-chip-scroll-right');
+  if (btnScrollLeft && industryFilters) {
+    btnScrollLeft.addEventListener('click', () => {
+      industryFilters.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+  }
+  if (btnScrollRight && industryFilters) {
+    btnScrollRight.addEventListener('click', () => {
+      industryFilters.scrollBy({ left: 200, behavior: 'smooth' });
+    });
+  }
+
+  // 5. Live Template Search Input Handler
   const inputSearch = document.getElementById('input-template-search');
   const btnClearSearch = document.getElementById('btn-clear-template-search');
 
@@ -140,7 +185,7 @@ function initFilters() {
     inputSearch.addEventListener('input', (e) => {
       templateSearchQuery = e.target.value.trim().toLowerCase();
       if (btnClearSearch) {
-        btnClearSearch.style.display = templateSearchQuery ? 'block' : 'none';
+        btnClearSearch.style.display = templateSearchQuery ? 'flex' : 'none';
       }
       renderTemplatesCatalog();
     });
@@ -155,16 +200,15 @@ function initFilters() {
     });
   }
 
-  // Quick Role Chips Handler
+  // 6. Quick Role Chips Handler (if any in hero)
   document.querySelectorAll('.btn-role-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const q = chip.dataset.query;
       if (inputSearch) {
         inputSearch.value = chip.textContent.replace(/[^\w\s&]/gi, '').trim();
         templateSearchQuery = q.toLowerCase();
-        if (btnClearSearch) btnClearSearch.style.display = 'block';
+        if (btnClearSearch) btnClearSearch.style.display = 'flex';
       }
-      // If matching specific industry/experience
       if (q === 'software') {
         state.selectedInd = 'software';
       } else if (q === 'data') {
@@ -180,6 +224,22 @@ function initFilters() {
 function renderTemplatesCatalog() {
   if (!templatesGrid) return;
   templatesGrid.innerHTML = '';
+
+  // Synchronize controls with current state
+  if (expFilters) {
+    expFilters.querySelectorAll('.btn-filter').forEach(b => {
+      b.classList.toggle('active', b.dataset.exp === state.selectedExp);
+    });
+  }
+  if (industryFilters) {
+    industryFilters.querySelectorAll('.btn-filter').forEach(b => {
+      b.classList.toggle('active', b.dataset.ind === state.selectedInd);
+    });
+  }
+  const mobileSelect = document.getElementById('mobile-industry-select');
+  if (mobileSelect && mobileSelect.value !== state.selectedInd) {
+    mobileSelect.value = state.selectedInd;
+  }
   
   let matchesCount = 0;
 
@@ -226,11 +286,25 @@ function renderTemplatesCatalog() {
     templatesGrid.appendChild(card);
   });
 
+  // Update live count badge
+  const countPill = document.getElementById('template-match-count');
+  if (countPill) {
+    if (templateSearchQuery) {
+      countPill.textContent = `Showing ${matchesCount} Search Result${matchesCount === 1 ? '' : 's'}`;
+    } else {
+      const indName = (state.selectedInd || '').replace('_', ' ').toUpperCase();
+      const expName = (state.selectedExp || '').toUpperCase();
+      countPill.textContent = `Showing ${matchesCount} ${indName} (${expName}) Template${matchesCount === 1 ? '' : 's'}`;
+    }
+  }
+
   if (matchesCount === 0) {
     templatesGrid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 30px; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px dashed rgba(0,104,95,0.2);">
-        <p style="color: var(--text-sub, #475569); font-weight: 600; margin-bottom: 8px;">No templates directly matched "${templateSearchQuery}".</p>
-        <button type="button" class="btn-primary" onclick="document.getElementById('input-template-search').value=''; templateSearchQuery=''; renderTemplatesCatalog();" style="font-size: 12px; padding: 6px 14px;">Show All Templates</button>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 34px 20px; background: rgba(0,0,0,0.02); border-radius: 16px; border: 1.5px dashed rgba(0,104,95,0.25);">
+        <i class="fas fa-filter" style="font-size: 28px; color: #64748B; margin-bottom: 10px; display: block;"></i>
+        <p style="color: var(--text-main, #0F172A); font-weight: 700; font-size: 15px; margin-bottom: 6px;">No templates matched "${templateSearchQuery || state.selectedInd}".</p>
+        <p style="color: var(--text-sub, #64748B); font-size: 13px; margin-bottom: 16px;">Try clearing your search or switching industry filters.</p>
+        <button type="button" class="btn-primary" onclick="if(document.getElementById('input-template-search')) document.getElementById('input-template-search').value=''; templateSearchQuery=''; renderTemplatesCatalog();" style="font-size: 12.5px; padding: 8px 18px; border-radius: 8px;">Show All Templates</button>
       </div>
     `;
   }

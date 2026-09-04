@@ -1,20 +1,20 @@
 /**
- * ZenResume Offline Service Worker (PWA Engine) - v8.5
+ * ZenResume Offline Service Worker (PWA Engine) - v8.6
  * Network-First for HTML navigations & Code assets (JS/CSS) to guarantee instant deployment updates.
  * Stale-While-Revalidate for media, fonts & icons.
  */
 
-const CACHE_NAME = 'zenresume-cache-v8.5';
+const CACHE_NAME = 'zenresume-cache-v8.6';
 const STATIC_SHELL = [
   '/',
   '/index.html',
-  '/styles.css?v=8.5',
-  '/app.js?v=8.5',
-  '/templates-data.js?v=8.5',
-  '/firebase-service.js?v=8.5',
-  '/role-hub.js?v=8.5',
-  '/live-pulse.js?v=8.5',
-  '/ats-matcher.js?v=8.5',
+  '/styles.css?v=8.6',
+  '/app.js?v=8.6',
+  '/templates-data.js?v=8.6',
+  '/firebase-service.js?v=8.6',
+  '/role-hub.js?v=8.6',
+  '/live-pulse.js?v=8.6',
+  '/ats-matcher.js?v=8.6',
   '/manifest.json',
   '/favicon-96x96.png',
   '/apple-touch-icon.png',
