@@ -8077,13 +8077,18 @@ body.in-editor .app-container {
 }
 
 .nav-user-profile {
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 8px;
-  background: #E8F0EB;
-  border: 1.5px solid rgba(162, 188, 168, 0.5);
-  padding: 3px 8px 3px 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  padding: 4px 10px 4px 5px;
   border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.nav-user-profile.zen-auth-visible {
+  display: inline-flex !important;
 }
 
 [data-theme="dark"] .nav-user-profile {
@@ -8091,23 +8096,46 @@ body.in-editor .app-container {
   border-color: rgba(45, 212, 191, 0.35);
 }
 
-.nav-user-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid #476550;
-  object-fit: cover;
+.nav-avatar-wrapper {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-[data-theme="dark"] .nav-user-avatar {
-  border-color: #2DD4BF;
+.nav-user-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid #2DD4BF;
+  object-fit: cover;
+  display: none;
+}
+
+.nav-user-avatar-initial {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00846D, #2DD4BF);
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #2DD4BF;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 .nav-user-name {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  color: #1A1F1F;
-  max-width: 80px;
+  color: #FFFFFF;
+  max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -8117,18 +8145,24 @@ body.in-editor .app-container {
   color: #F8FAFC;
 }
 
-.btn-nav-logout {
+.btn-nav-logout,
+.btn-user-logout {
   background: none;
   border: none;
-  color: #7D8787;
+  color: #94A3B8;
   font-size: 13px;
   cursor: pointer;
-  padding: 0 4px;
-  transition: color 0.15s ease;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
 }
 
-.btn-nav-logout:hover {
-  color: #DC2626;
+.btn-nav-logout:hover,
+.btn-user-logout:hover {
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 

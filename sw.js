@@ -4,16 +4,16 @@
  * Stale-While-Revalidate for static versioned assets (CSS/JS/Fonts/Images).
  */
 
-const CACHE_NAME = 'zenresume-cache-v8.1';
+const CACHE_NAME = 'zenresume-cache-v8.2';
 const STATIC_SHELL = [
   '/',
   '/index.html',
-  '/styles.css?v=8.1',
-  '/app.js?v=8.1',
-  '/firebase-service.js?v=8.1',
-  '/role-hub.js?v=8.1',
-  '/live-pulse.js?v=8.1',
-  '/ats-matcher.js?v=8.1',
+  '/styles.css?v=8.2',
+  '/app.js?v=8.2',
+  '/firebase-service.js?v=8.2',
+  '/role-hub.js?v=8.2',
+  '/live-pulse.js?v=8.2',
+  '/ats-matcher.js?v=8.2',
   '/manifest.json',
   '/favicon-96x96.png',
   '/apple-touch-icon.png',

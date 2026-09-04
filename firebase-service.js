@@ -428,6 +428,55 @@ function updateGreetingBanner(user) {
 // Call initially
 updateGreetingBanner(null);
 
+function updateUserAvatar(user) {
+  const avatarImg = document.getElementById('nav-user-avatar');
+  const initialDiv = document.getElementById('nav-user-avatar-initial');
+  const mobileImg = document.getElementById('mobile-user-avatar');
+  const mobileInitialDiv = document.getElementById('mobile-user-avatar-initial');
+
+  const name = user ? (user.displayName || user.email || 'User') : 'User';
+  const initial = (name.trim().charAt(0) || 'U').toUpperCase();
+
+  if (initialDiv) {
+    initialDiv.textContent = initial;
+    initialDiv.style.display = 'flex';
+  }
+  if (mobileInitialDiv) {
+    mobileInitialDiv.textContent = initial;
+    mobileInitialDiv.style.display = 'flex';
+  }
+
+  if (user && user.photoURL) {
+    if (avatarImg) {
+      avatarImg.referrerPolicy = 'no-referrer';
+      avatarImg.onload = function() {
+        avatarImg.style.display = 'block';
+        if (initialDiv) initialDiv.style.display = 'none';
+      };
+      avatarImg.onerror = function() {
+        avatarImg.style.display = 'none';
+        if (initialDiv) initialDiv.style.display = 'flex';
+      };
+      avatarImg.src = user.photoURL;
+    }
+    if (mobileImg) {
+      mobileImg.referrerPolicy = 'no-referrer';
+      mobileImg.onload = function() {
+        mobileImg.style.display = 'block';
+        if (mobileInitialDiv) mobileInitialDiv.style.display = 'none';
+      };
+      mobileImg.onerror = function() {
+        mobileImg.style.display = 'none';
+        if (mobileInitialDiv) mobileInitialDiv.style.display = 'flex';
+      };
+      mobileImg.src = user.photoURL;
+    }
+  } else {
+    if (avatarImg) avatarImg.style.display = 'none';
+    if (mobileImg) mobileImg.style.display = 'none';
+  }
+}
+
 function handleAuthStateChange(user) {
   currentUser = user;
   
@@ -435,8 +484,9 @@ function handleAuthStateChange(user) {
   const landingLoginBtn = document.getElementById('btn-landing-login');
   const landingProfileDiv = document.getElementById('nav-user-profile');
   const landingUserName = document.getElementById('nav-user-name');
-  const landingUserAvatar = document.getElementById('nav-user-avatar');
-  const mobileDrawerLogin = document.getElementById('btn-mobile-drawer-login');
+  const mobileLoggedOutRow = document.getElementById('mobile-drawer-auth-loggedout');
+  const mobileLoggedInRow = document.getElementById('mobile-drawer-auth-loggedin');
+  const mobileUserName = document.getElementById('mobile-user-name');
 
   updateGreetingBanner(user);
   
@@ -447,14 +497,33 @@ function handleAuthStateChange(user) {
       displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
     }
 
-    // Update Landing Header Auth UI
-    if (landingLoginBtn) landingLoginBtn.style.display = 'none';
-    if (mobileDrawerLogin) mobileDrawerLogin.style.display = 'none';
-    if (landingProfileDiv) {
-      landingProfileDiv.style.display = 'inline-flex';
-      if (landingUserName) landingUserName.textContent = (displayName || 'User').split(' ')[0];
-      if (landingUserAvatar) landingUserAvatar.src = user.photoURL || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232DD4BF'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
+    const shortName = (displayName || 'User').split(' ')[0];
+
+    // Update Desktop/Laptop Header Auth UI
+    if (landingLoginBtn) {
+      landingLoginBtn.classList.add('zen-auth-hidden');
+      landingLoginBtn.style.setProperty('display', 'none', 'important');
     }
+    if (landingProfileDiv) {
+      landingProfileDiv.classList.add('zen-auth-visible');
+      landingProfileDiv.style.setProperty('display', 'inline-flex', 'important');
+      if (landingUserName) {
+        landingUserName.textContent = shortName;
+        landingProfileDiv.title = `Logged in as ${displayName} (${user.email || ''})`;
+      }
+    }
+
+    // Update Mobile Drawer Auth UI
+    if (mobileLoggedOutRow) {
+      mobileLoggedOutRow.style.setProperty('display', 'none', 'important');
+    }
+    if (mobileLoggedInRow) {
+      mobileLoggedInRow.style.setProperty('display', 'flex', 'important');
+      if (mobileUserName) mobileUserName.textContent = displayName || 'User';
+    }
+
+    // Update Avatars with zero broken image fallback
+    updateUserAvatar(user);
 
     // Cancel old subscription observer before setting new one
     if (unsubscribeSubscription) {
@@ -513,10 +582,25 @@ function handleAuthStateChange(user) {
     updatePremiumUI(false);
 
     // Reset Landing Header Auth UI
-    if (landingLoginBtn) landingLoginBtn.style.display = 'inline-flex';
-    if (mobileDrawerLogin) mobileDrawerLogin.style.display = 'inline-flex';
-    if (landingProfileDiv) landingProfileDiv.style.display = 'none';
+    if (landingLoginBtn) {
+      landingLoginBtn.classList.remove('zen-auth-hidden');
+      landingLoginBtn.style.setProperty('display', 'inline-flex', 'important');
+    }
+    if (landingProfileDiv) {
+      landingProfileDiv.classList.remove('zen-auth-visible');
+      landingProfileDiv.style.setProperty('display', 'none', 'important');
+    }
     if (landingUserName) landingUserName.textContent = '';
+
+    // Reset Mobile Drawer Auth UI
+    if (mobileLoggedOutRow) {
+      mobileLoggedOutRow.style.setProperty('display', 'flex', 'important');
+    }
+    if (mobileLoggedInRow) {
+      mobileLoggedInRow.style.setProperty('display', 'none', 'important');
+    }
+
+    updateUserAvatar(null);
 
     if (window.state) {
       window.state.hasLoadedProfile = false;

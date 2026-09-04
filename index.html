@@ -88,7 +88,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=8.1">
+  <link rel="stylesheet" href="styles.css?v=8.2">
   
   <style id="zenresume-critical-header-style">
     .stitch-nav {
@@ -271,41 +271,66 @@
       gap: 10px !important;
       flex-shrink: 0 !important;
     }
+    /* Header Login Button */
     .btn-header-login {
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 7px !important;
-      background: rgba(255, 255, 255, 0.08) !important;
-      border: 1px solid rgba(255, 255, 255, 0.18) !important;
-      color: #FFFFFF !important;
-      font-size: 12.5px !important;
-      font-weight: 700 !important;
-      padding: 7px 15px !important;
-      border-radius: 9999px !important;
-      cursor: pointer !important;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      text-decoration: none !important;
-      white-space: nowrap !important;
-      outline: none !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 7px 15px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      white-space: nowrap;
+      outline: none;
     }
     .btn-header-login:hover {
-      background: rgba(255, 255, 255, 0.16) !important;
-      border-color: rgba(45, 212, 191, 0.4) !important;
-      color: #FFFFFF !important;
-      transform: translateY(-1px) !important;
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(45, 212, 191, 0.4);
+      color: #FFFFFF;
+      transform: translateY(-1px);
     }
     .btn-header-login svg {
       flex-shrink: 0;
     }
+    .btn-header-login.zen-auth-hidden {
+      display: none !important;
+    }
+
+    /* Logged In User Badge */
     .nav-user-profile {
       display: none;
       align-items: center;
       gap: 8px;
       background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(45, 212, 191, 0.3);
-      padding: 4px 10px 4px 6px;
+      border: 1px solid rgba(45, 212, 191, 0.35);
+      padding: 4px 10px 4px 5px;
       border-radius: 9999px;
       position: relative;
+      transition: all 0.2s ease;
+      cursor: default;
+    }
+    .nav-user-profile.zen-auth-visible {
+      display: inline-flex !important;
+    }
+    .nav-user-profile:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(45, 212, 191, 0.6);
+      box-shadow: 0 4px 16px rgba(45, 212, 191, 0.15);
+    }
+    .nav-avatar-wrapper {
+      position: relative;
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .nav-user-avatar {
       width: 26px;
@@ -313,6 +338,23 @@
       border-radius: 50%;
       object-fit: cover;
       border: 1.5px solid #2DD4BF;
+      display: none;
+    }
+    .nav-user-avatar-initial {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00846D, #2DD4BF);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #2DD4BF;
+      text-transform: uppercase;
+      line-height: 1;
+      box-shadow: 0 2px 6px rgba(0, 104, 95, 0.3);
     }
     .nav-user-name {
       font-size: 12.5px;
@@ -337,6 +379,7 @@
     }
     .btn-user-logout:hover {
       color: #EF4444;
+      background: rgba(239, 68, 68, 0.12);
     }
     .btn-theme-toggle {
       background: rgba(255, 255, 255, 0.08) !important;
@@ -495,6 +538,46 @@
       .desktop-nav-links { display: none !important; }
       .mobile-menu-toggle { display: flex !important; }
       .btn-header-cta { display: none !important; }
+    }
+
+    @media (max-width: 640px) {
+      .stitch-nav-container {
+        padding: 8px 12px !important;
+        gap: 6px !important;
+      }
+      .brand-logo-img {
+        width: 30px !important;
+        height: 30px !important;
+      }
+      .brand-main-title {
+        font-size: 15px !important;
+      }
+      .brand-subtext {
+        font-size: 7.5px !important;
+      }
+      .header-right-actions {
+        gap: 6px !important;
+      }
+      .btn-theme-toggle {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 12px !important;
+      }
+      .mobile-menu-toggle {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 14px !important;
+      }
+      .nav-user-profile {
+        padding: 2px 4px !important;
+        gap: 4px !important;
+      }
+      .nav-user-name {
+        display: none !important;
+      }
+      .btn-user-logout {
+        display: none !important;
+      }
     }
   </style>
 
@@ -664,7 +747,10 @@
 
         <!-- Logged In User Profile -->
         <div id="nav-user-profile" class="nav-user-profile" style="display: none;">
-          <img id="nav-user-avatar" class="nav-user-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232DD4BF'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Avatar">
+          <div class="nav-avatar-wrapper">
+            <img id="nav-user-avatar" class="nav-user-avatar" referrerpolicy="no-referrer" src="" alt="Avatar" style="display: none;">
+            <div id="nav-user-avatar-initial" class="nav-user-avatar-initial">U</div>
+          </div>
           <span id="nav-user-name" class="nav-user-name">User</span>
           <button type="button" id="btn-landing-logout" class="btn-user-logout" onclick="window.triggerLogout && window.triggerLogout();" title="Sign Out">
             <i class="fas fa-sign-out-alt"></i>
@@ -682,7 +768,8 @@
 
     <!-- Mobile Slide-Down Drawer Menu -->
     <div class="mobile-drawer-menu" id="mobile-drawer-menu">
-      <div class="mobile-auth-row" style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 8px;">
+      <!-- Mobile Logged Out Auth Controls -->
+      <div class="mobile-auth-row" id="mobile-drawer-auth-loggedout" style="padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 8px;">
         <button type="button" class="btn-nav-login" id="btn-mobile-drawer-login" onclick="window.triggerGoogleLogin && window.triggerGoogleLogin();" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFFFFF; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13.5px; cursor: pointer;">
           <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           <span>Sign In with Google</span>
@@ -690,6 +777,23 @@
         <button type="button" id="btn-show-email-login" onclick="window.openEmailAuthModal && window.openEmailAuthModal(); window.toggleMobileMenu(true);" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.12); color: #94A3B8; padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 12.5px; cursor: pointer;">
           <i class="fas fa-envelope"></i>
           <span>Sign In with Email</span>
+        </button>
+      </div>
+
+      <!-- Mobile Logged In User Profile -->
+      <div id="mobile-drawer-auth-loggedin" style="display: none; padding: 12px; background: rgba(45, 212, 191, 0.08); border: 1px solid rgba(45, 212, 191, 0.25); border-radius: 12px; margin-bottom: 6px; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="nav-avatar-wrapper" style="width: 32px; height: 32px;">
+            <img id="mobile-user-avatar" class="nav-user-avatar" referrerpolicy="no-referrer" src="" alt="Avatar" style="width: 32px; height: 32px; display: none;">
+            <div id="mobile-user-avatar-initial" class="nav-user-avatar-initial" style="width: 32px; height: 32px; font-size: 13px;">U</div>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <span id="mobile-user-name" style="color: #FFFFFF; font-weight: 700; font-size: 13px; line-height: 1.2;">User</span>
+            <span style="color: #2DD4BF; font-size: 10px; font-weight: 600;">☁️ Cloud Sync Active</span>
+          </div>
+        </div>
+        <button type="button" onclick="window.triggerLogout && window.triggerLogout();" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #EF4444; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
+          Sign Out
         </button>
       </div>
       <a href="/role/" class="mobile-nav-link" onclick="window.toggleMobileMenu(true);">
@@ -2896,17 +3000,17 @@
   </div>
 
   <!-- Scripts -->
-  <script src="templates-data.js?v=8.1" defer></script>
-  <script src="indexeddb-storage.js?v=8.1" defer></script>
-  <script src="firebase-service.js?v=8.1" defer></script>
-  <script src="app.js?v=8.1" defer></script>
-  <script src="profile-sync.js?v=8.1" defer></script>
-  <script src="exit-intent.js?v=8.1" defer></script>
-  <script src="hero-playground.js?v=8.1" defer></script>
-  <script src="navigator-tour.js?v=8.1" defer></script>
-  <script src="role-hub.js?v=8.1" defer></script>
-  <script src="live-pulse.js?v=8.1" defer></script>
-  <script src="ats-matcher.js?v=8.1" defer></script>
+  <script src="templates-data.js?v=8.2" defer></script>
+  <script src="indexeddb-storage.js?v=8.2" defer></script>
+  <script src="firebase-service.js?v=8.2" defer></script>
+  <script src="app.js?v=8.2" defer></script>
+  <script src="profile-sync.js?v=8.2" defer></script>
+  <script src="exit-intent.js?v=8.2" defer></script>
+  <script src="hero-playground.js?v=8.2" defer></script>
+  <script src="navigator-tour.js?v=8.2" defer></script>
+  <script src="role-hub.js?v=8.2" defer></script>
+  <script src="live-pulse.js?v=8.2" defer></script>
+  <script src="ats-matcher.js?v=8.2" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
