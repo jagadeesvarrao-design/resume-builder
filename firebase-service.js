@@ -249,7 +249,15 @@ function handleAuthError(error) {
     return;
   }
 
-  if (code === 'auth/operation-not-allowed' || code === 'auth/configuration-not-found' || code === 'auth/internal-error') {
+  if (code === 'auth/operation-not-allowed' || code === 'auth/invalid-action') {
+    window.showToast('Google Sign-In is completing setup. You can sign in using Email or continue as Guest!', 'info', 5000);
+    if (typeof window.openEmailAuthModal === 'function') {
+      setTimeout(window.openEmailAuthModal, 600);
+    }
+    return;
+  }
+
+  if (code === 'auth/configuration-not-found' || code === 'auth/internal-error') {
     window.showToast('Sign-In is temporarily offline for maintenance. You can build & export resumes completely free as a Guest!', 'info', 5000);
     return;
   }
