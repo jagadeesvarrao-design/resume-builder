@@ -88,7 +88,32 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=8.4">
+  <link rel="stylesheet" href="styles.css?v=8.5">
+  
+  <!-- Instant Client-Side Cache Busting & PWA Version Synchronizer -->
+  <script>
+    (function() {
+      try {
+        var APP_DEPLOY_VERSION = 'v8.5';
+        var storedVersion = localStorage.getItem('zen_deploy_version');
+        if (storedVersion !== APP_DEPLOY_VERSION) {
+          localStorage.setItem('zen_deploy_version', APP_DEPLOY_VERSION);
+          if ('caches' in window) {
+            caches.keys().then(function(cacheNames) {
+              return Promise.all(
+                cacheNames.map(function(name) {
+                  if (name !== ('zenresume-cache-' + APP_DEPLOY_VERSION)) {
+                    console.log('Purging stale cache:', name);
+                    return caches.delete(name);
+                  }
+                })
+              );
+            });
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
   
   <style id="zenresume-critical-header-style">
     .stitch-nav {
@@ -2991,17 +3016,17 @@
   </div>
 
   <!-- Scripts -->
-  <script src="templates-data.js?v=8.4" defer></script>
-  <script src="indexeddb-storage.js?v=8.4" defer></script>
-  <script src="firebase-service.js?v=8.4" defer></script>
-  <script src="app.js?v=8.4" defer></script>
-  <script src="profile-sync.js?v=8.4" defer></script>
-  <script src="exit-intent.js?v=8.4" defer></script>
-  <script src="hero-playground.js?v=8.4" defer></script>
-  <script src="navigator-tour.js?v=8.4" defer></script>
-  <script src="role-hub.js?v=8.4" defer></script>
-  <script src="live-pulse.js?v=8.4" defer></script>
-  <script src="ats-matcher.js?v=8.4" defer></script>
+  <script src="templates-data.js?v=8.5" defer></script>
+  <script src="indexeddb-storage.js?v=8.5" defer></script>
+  <script src="firebase-service.js?v=8.5" defer></script>
+  <script src="app.js?v=8.5" defer></script>
+  <script src="profile-sync.js?v=8.5" defer></script>
+  <script src="exit-intent.js?v=8.5" defer></script>
+  <script src="hero-playground.js?v=8.5" defer></script>
+  <script src="navigator-tour.js?v=8.5" defer></script>
+  <script src="role-hub.js?v=8.5" defer></script>
+  <script src="live-pulse.js?v=8.5" defer></script>
+  <script src="ats-matcher.js?v=8.5" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -3159,17 +3184,38 @@
     </div>
   </div>
 
-  <!-- Service Worker Registration for PWA Installation -->
+  <!-- Service Worker Registration with Instant Auto-Update & PWA Sync -->
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => {
-            console.log('Service Worker registered successfully!', reg.scope);
-            // Check for updates immediately
+      var refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js?v=8.5')
+          .then(function(reg) {
             reg.update();
+            if (reg.waiting) {
+              reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+            reg.addEventListener('updatefound', function() {
+              var newWorker = reg.installing;
+              if (newWorker) {
+                newWorker.addEventListener('statechange', function() {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  }
+                });
+              }
+            });
           })
-          .catch(err => console.log('Service Worker registration failed:', err));
+          .catch(function(err) {
+            console.log('SW registration note:', err);
+          });
       });
     }
   </script>

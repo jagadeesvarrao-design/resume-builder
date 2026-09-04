@@ -1,19 +1,20 @@
 /**
- * ZenResume Offline Service Worker (PWA Engine) - v8.4
- * Network-First for HTML navigations to guarantee instant updates on deployment.
- * Stale-While-Revalidate for static versioned assets (CSS/JS/Fonts/Images).
+ * ZenResume Offline Service Worker (PWA Engine) - v8.5
+ * Network-First for HTML navigations & Code assets (JS/CSS) to guarantee instant deployment updates.
+ * Stale-While-Revalidate for media, fonts & icons.
  */
 
-const CACHE_NAME = 'zenresume-cache-v8.4';
+const CACHE_NAME = 'zenresume-cache-v8.5';
 const STATIC_SHELL = [
   '/',
   '/index.html',
-  '/styles.css?v=8.4',
-  '/app.js?v=8.4',
-  '/firebase-service.js?v=8.4',
-  '/role-hub.js?v=8.4',
-  '/live-pulse.js?v=8.4',
-  '/ats-matcher.js?v=8.4',
+  '/styles.css?v=8.5',
+  '/app.js?v=8.5',
+  '/templates-data.js?v=8.5',
+  '/firebase-service.js?v=8.5',
+  '/role-hub.js?v=8.5',
+  '/live-pulse.js?v=8.5',
+  '/ats-matcher.js?v=8.5',
   '/manifest.json',
   '/favicon-96x96.png',
   '/apple-touch-icon.png',
@@ -21,6 +22,13 @@ const STATIC_SHELL = [
   '/about.html',
   '/contact.html'
 ];
+
+// Message Handler for Immediate Activation
+self.addEventListener('message', (event) => {
+  if (event.data && (event.data.type === 'SKIP_WAITING' || event.data === 'SKIP_WAITING')) {
+    self.skipWaiting();
+  }
+});
 
 // Install Event - Pre-cache shell and immediately activate
 self.addEventListener('install', (event) => {
@@ -34,7 +42,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate Event - Instantly purge all older cache versions
+// Activate Event - Instantly purge ALL older cache versions and claim clients
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -61,7 +69,6 @@ self.addEventListener('fetch', (event) => {
   }
 
   // 1. FOR HTML PAGES & NAVIGATION: Network-First with Cache Fallback
-  // Ensures returning users in standard Chrome ALWAYS receive the newest deployment immediately!
   const isHtmlRequest = req.mode === 'navigate' || (req.headers.get('accept') && req.headers.get('accept').includes('text/html'));
   
   if (isHtmlRequest) {
@@ -75,14 +82,30 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => {
-          // Offline fallback
           return caches.match(req).then((cached) => cached || caches.match('/index.html'));
         })
     );
     return;
   }
 
-  // 2. FOR STATIC ASSETS (CSS, JS, Images, Fonts): Cache-First with Network Revalidation
+  // 2. FOR CODE ASSETS (JS/CSS): Network-First to guarantee immediate code & style updates
+  const isCodeAsset = url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.search.includes('v=');
+  if (isCodeAsset) {
+    event.respondWith(
+      fetch(req)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // 3. FOR STATIC MEDIA (Images, Fonts, Icons): Cache-First with Background Revalidation
   event.respondWith(
     caches.match(req).then((cachedResponse) => {
       const fetchPromise = fetch(req)
