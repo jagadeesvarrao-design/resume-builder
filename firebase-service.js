@@ -218,13 +218,21 @@ function handleAuthError(error) {
   // Log detailed diagnostic to console for developers only
   console.warn('[ZenResume Auth Diagnostic]:', code || error);
 
-  if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
-    window.showToast('Sign-In window closed.', 'info', 2500);
+  if (code === 'auth/popup-closed-by-user') {
+    window.showToast('Sign-In window closed.', 'info', 2000);
+    return;
+  }
+
+  if (code === 'auth/cancelled-popup-request') {
+    // Redundant popup request, ignore gracefully
     return;
   }
 
   if (code === 'auth/popup-blocked') {
-    window.showToast('Your browser blocked the sign-in pop-up. Tap Sign In again to retry.', 'warning', 4500);
+    window.showToast('Browser blocked the sign-in pop-up. Redirecting to Google...', 'info', 3000);
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    auth.signInWithRedirect(provider).catch(err => console.warn('[Firebase] Redirect retry note:', err));
     return;
   }
 
@@ -233,8 +241,15 @@ function handleAuthError(error) {
     return;
   }
 
-  if (code === 'auth/unauthorized-domain' || code === 'auth/operation-not-allowed' || code === 'auth/configuration-not-found' || code === 'auth/internal-error') {
-    // Friendly, reassuring notice that never shows raw backend configuration or settings paths
+  if (code === 'auth/unauthorized-domain') {
+    window.showToast('Google Sign-In is completing domain configuration. You can sign in using Email or continue as Guest!', 'info', 5000);
+    if (typeof window.openEmailAuthModal === 'function') {
+      setTimeout(window.openEmailAuthModal, 600);
+    }
+    return;
+  }
+
+  if (code === 'auth/operation-not-allowed' || code === 'auth/configuration-not-found' || code === 'auth/internal-error') {
     window.showToast('Sign-In is temporarily offline for maintenance. You can build & export resumes completely free as a Guest!', 'info', 5000);
     return;
   }
@@ -258,6 +273,7 @@ let auth = null;
 let db = null;
 let currentUser = null;
 let unsubscribeSubscription = null;
+let isGoogleAuthInProgress = false;
 
 function initFirebaseService() {
   if (typeof firebase === 'undefined' || !firebase.initializeApp) {
@@ -294,11 +310,19 @@ function initFirebaseService() {
   }
 }
 
-// Global Google Sign-In Trigger (Callable from any button, mobile drawer, or script)
+// Global Google Sign-In Trigger (Callable from any button, mobile drawer, or modal)
 window.triggerGoogleLogin = function() {
+  if (isGoogleAuthInProgress) {
+    console.log("[Firebase] Auth trigger debounced.");
+    return;
+  }
+  isGoogleAuthInProgress = true;
+  setTimeout(() => { isGoogleAuthInProgress = false; }, 3500);
+
   if (!auth || typeof firebase === 'undefined') {
     initFirebaseService();
     if (!auth) {
+      isGoogleAuthInProgress = false;
       window.showToast("Sign-In service is initializing. Please tap again in a moment.", "info");
       return;
     }
@@ -307,31 +331,55 @@ window.triggerGoogleLogin = function() {
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
 
-  // Try popup first across both mobile & desktop for smooth, zero-page-reload login
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      console.log("[Firebase] Logged in successfully via popup:", result.user.email);
-      window.showToast("Cloud Sync Active! Welcome, " + (result.user.displayName || result.user.email), "success");
-      // Auto-close mobile drawer if open
-      if (typeof window.toggleMobileMenu === 'function') {
-        window.toggleMobileMenu(true);
-      }
-    })
-    .catch((error) => {
-      console.warn("[Firebase] Popup sign-in note, attempting redirect fallback:", error);
-      if (error.code === 'auth/popup-blocked' || 
-          error.code === 'auth/cancelled-popup-request' || 
-          error.code === 'auth/popup-closed-by-user' ||
-          error.code === 'auth/internal-error') {
-        // Smooth redirect fallback for mobile browsers blocking popups
-        auth.signInWithRedirect(provider).catch(redirectErr => {
-          console.warn("[Firebase] Redirect sign-in note:", redirectErr);
-          handleAuthError(redirectErr || error);
-        });
-      } else {
-        handleAuthError(error);
-      }
-    });
+  window.showToast("Connecting to Google Sign-In...", "info", 2000);
+
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+  if (isMobile) {
+    // Attempt popup first, immediately fall back to redirect if popup is blocked
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        isGoogleAuthInProgress = false;
+        if (result && result.user) {
+          window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email), "success");
+          if (typeof window.closeEmailAuthModal === 'function') window.closeEmailAuthModal();
+          if (typeof window.toggleMobileMenu === 'function') window.toggleMobileMenu(true);
+        }
+      })
+      .catch((error) => {
+        isGoogleAuthInProgress = false;
+        console.warn("[Firebase Mobile Auth]:", error);
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+          // Smooth redirect fallback for mobile
+          auth.signInWithRedirect(provider).catch(redirectErr => {
+            handleAuthError(redirectErr || error);
+          });
+        } else {
+          handleAuthError(error);
+        }
+      });
+  } else {
+    // Desktop / Laptop flow
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        isGoogleAuthInProgress = false;
+        if (result && result.user) {
+          window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email), "success");
+          if (typeof window.closeEmailAuthModal === 'function') window.closeEmailAuthModal();
+        }
+      })
+      .catch((error) => {
+        isGoogleAuthInProgress = false;
+        console.warn("[Firebase Desktop Auth]:", error);
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+          auth.signInWithRedirect(provider).catch(redirectErr => {
+            handleAuthError(redirectErr || error);
+          });
+        } else {
+          handleAuthError(error);
+        }
+      });
+  }
 };
 
 // Global Logout Trigger
@@ -397,7 +445,7 @@ function handleAuthStateChange(user) {
     if (landingProfileDiv) {
       landingProfileDiv.style.display = 'inline-flex';
       if (landingUserName) landingUserName.textContent = (displayName || 'User').split(' ')[0];
-      if (landingUserAvatar) landingUserAvatar.src = user.photoURL || 'https://via.placeholder.com/150';
+      if (landingUserAvatar) landingUserAvatar.src = user.photoURL || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232DD4BF'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
     }
 
     // Cancel old subscription observer before setting new one
@@ -488,6 +536,23 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Global Email Modal Controls
+window.openEmailAuthModal = function() {
+  const emailModal = document.getElementById('email-login-modal');
+  const emailError = document.getElementById('email-auth-error');
+  const emailInput = document.getElementById('email-input');
+  const passwordInput = document.getElementById('password-input');
+  if (emailModal) emailModal.style.display = 'flex';
+  if (emailError) emailError.style.display = 'none';
+  if (emailInput) emailInput.value = '';
+  if (passwordInput) passwordInput.value = '';
+};
+
+window.closeEmailAuthModal = function() {
+  const emailModal = document.getElementById('email-login-modal');
+  if (emailModal) emailModal.style.display = 'none';
+};
+
 // Email/Password Auth Logic
 function initEmailAuth() {
   const btnShowEmailLogin = document.getElementById('btn-show-email-login');
@@ -495,6 +560,7 @@ function initEmailAuth() {
   const btnCloseEmailModal = document.getElementById('btn-close-email-modal');
   const btnToggleEmailMode = document.getElementById('btn-toggle-email-mode');
   const btnSubmitEmail = document.getElementById('btn-submit-email');
+  const btnModalGoogle = document.getElementById('btn-modal-google-login');
   const emailInput = document.getElementById('email-input');
   const passwordInput = document.getElementById('password-input');
   const emailError = document.getElementById('email-auth-error');
@@ -503,18 +569,24 @@ function initEmailAuth() {
   
   let isCreateMode = false;
 
-  if (btnShowEmailLogin && emailModal) {
-    btnShowEmailLogin.addEventListener('click', () => {
-      emailModal.style.display = 'flex';
-      if (emailError) emailError.style.display = 'none';
-      if (emailInput) emailInput.value = '';
-      if (passwordInput) passwordInput.value = '';
+  if (btnShowEmailLogin) {
+    btnShowEmailLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.openEmailAuthModal();
     });
   }
 
-  if (btnCloseEmailModal && emailModal) {
-    btnCloseEmailModal.addEventListener('click', () => {
-      emailModal.style.display = 'none';
+  if (btnCloseEmailModal) {
+    btnCloseEmailModal.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.closeEmailAuthModal();
+    });
+  }
+
+  if (btnModalGoogle) {
+    btnModalGoogle.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.triggerGoogleLogin();
     });
   }
 
@@ -577,7 +649,7 @@ function initEmailAuth() {
           await auth.signInWithEmailAndPassword(email, password);
         }
         
-        if (emailModal) emailModal.style.display = 'none';
+        window.closeEmailAuthModal();
         window.showToast("Login Successful! Welcome, " + email);
         
       } catch (error) {
