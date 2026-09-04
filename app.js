@@ -4724,20 +4724,21 @@ window.SubscriptionManager = {
   getCurrency: function() {
     return window.currentCurrency || localStorage.getItem('zen_user_currency') || 'INR';
   },
+  getFreeDownloadsToday: function() {
+    return this.getDailyUsage('pdf_downloads');
+  },
   getFreeDownloadsCount: function() {
-    return parseInt(localStorage.getItem('zen_free_downloads_count') || '0', 10);
+    return this.getDailyUsage('pdf_downloads');
   },
   canDownloadResume: function() {
     const tier = this.getUserTier();
     if (tier !== 'free') return true;
-    return this.getFreeDownloadsCount() < 2;
+    return this.getFreeDownloadsToday() < 2;
   },
   recordDownload: function() {
     const tier = this.getUserTier();
     if (tier === 'free') {
-      const count = this.getFreeDownloadsCount() + 1;
-      localStorage.setItem('zen_free_downloads_count', count.toString());
-      return count;
+      return this.incrementDailyUsage('pdf_downloads');
     }
     return 0;
   },
