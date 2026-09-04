@@ -267,13 +267,13 @@ function handleAuthError(error) {
 }
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAb1ZRnxECLu7ANU3of1zUEKLqgzsvGNq0",
-  authDomain: "resume-builder-5e101.firebaseapp.com",
-  projectId: "resume-builder-5e101",
-  storageBucket: "resume-builder-5e101.firebasestorage.app",
-  messagingSenderId: "1054584407727",
-  appId: "1:1054584407727:web:34ff0619478222eb5f365a",
-  measurementId: "G-GV6BGEFRRW"
+  apiKey: "AIzaSyCIntlqH8b7lahyeRpXXkC5b9TWLoFuxyQ",
+  authDomain: "myjobagant.firebaseapp.com",
+  projectId: "myjobagant",
+  storageBucket: "myjobagant.firebasestorage.app",
+  messagingSenderId: "893799021913",
+  appId: "1:893799021913:web:8a8b7a7d2dc5432b1e6048",
+  measurementId: "G-Z90HSSD2P2"
 };
 
 // Safe Firebase Initialization
