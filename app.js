@@ -107,10 +107,11 @@ function initFilters() {
   // Experience Filter Click Handlers
   if (expFilters) {
     expFilters.addEventListener('click', (e) => {
-      if (e.target.classList.contains('btn-filter')) {
+      const btn = e.target.closest('.btn-filter');
+      if (btn) {
         expFilters.querySelector('.active')?.classList.remove('active');
-        e.target.classList.add('active');
-        state.selectedExp = e.target.dataset.exp;
+        btn.classList.add('active');
+        state.selectedExp = btn.dataset.exp;
         state.hasLoadedProfile = false; // Reset to reload corresponding mock profile
         renderTemplatesCatalog();
       }
@@ -120,10 +121,11 @@ function initFilters() {
   // Industry Filter Click Handlers
   if (industryFilters) {
     industryFilters.addEventListener('click', (e) => {
-      if (e.target.classList.contains('btn-filter')) {
+      const btn = e.target.closest('.btn-filter');
+      if (btn) {
         industryFilters.querySelector('.active')?.classList.remove('active');
-        e.target.classList.add('active');
-        state.selectedInd = e.target.dataset.ind;
+        btn.classList.add('active');
+        state.selectedInd = btn.dataset.ind;
         state.hasLoadedProfile = false; // Reset to reload corresponding mock profile
         renderTemplatesCatalog();
       }
@@ -301,10 +303,14 @@ window.selectTemplateStyle = function selectTemplateStyle(templateId) {
   updateInlineLayoutSwitcher();
   
   // Transition Screens
-  selectionScreen.style.display = 'none';
+  const appContainer = document.getElementById('app-container');
+  if (appContainer) appContainer.style.display = 'flex';
+  const landingScreen = document.getElementById('landing-screen');
+  if (landingScreen) landingScreen.style.display = 'none';
+  if (selectionScreen) selectionScreen.style.display = 'none';
   const welcomeHeader = document.getElementById('app-header-welcome');
   if (welcomeHeader) welcomeHeader.style.display = 'none';
-  builderWorkspace.style.display = 'grid';
+  if (builderWorkspace) builderWorkspace.style.display = 'grid';
   triggerAdPush('promo-banner-sidebar');
   
   // Show mobile tabs on small screens and default to 'edit' tab on entry
@@ -1311,6 +1317,7 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     
     // Transition Screen UI directly to workspace if not prevented (e.g. startup)
     if (!preventDisplayTransition) {
+      document.body.classList.add('in-editor');
       selectionScreen.style.display = 'none';
       builderWorkspace.style.display = 'grid';
       triggerAdPush('promo-banner-sidebar');
@@ -1322,6 +1329,7 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
       }
       if (typeof setMobileTab === 'function') setMobileTab('edit');
     } else {
+      document.body.classList.remove('in-editor');
       // Ensure landing screen is shown, and other screens are hidden
       const landingScreen = document.getElementById('landing-screen');
       if (landingScreen) landingScreen.style.display = 'block';
@@ -3420,6 +3428,8 @@ function attachEvents() {
 
   // Go back to the Greeting & Catalog screen
   btnBackToTemplates.addEventListener('click', () => {
+    if (typeof window.closeZenGuideTour === 'function') window.closeZenGuideTour();
+    document.body.classList.remove('in-editor');
     builderWorkspace.style.display = 'none';
     selectionScreen.style.display = 'flex';
     
@@ -3432,6 +3442,8 @@ function attachEvents() {
     if (mobileWorkspaceTabs) {
       mobileWorkspaceTabs.style.display = 'none';
     }
+    updateHeaderNavCTA();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   // Attach Static Form Listeners (Top level details)
@@ -4293,7 +4305,6 @@ function showLandingPage() {
 }
 
 function enterApp() {
-  document.body.classList.add('in-editor');
   const globalNav = document.querySelector('.stitch-nav');
   if (globalNav) globalNav.style.display = 'none';
   const landingScreen = document.getElementById('landing-screen');
@@ -4309,6 +4320,7 @@ function enterApp() {
   // Check if they have an active resume session (saved data)
   const savedStateJson = localStorage.getItem('zenresume_state');
   if (savedStateJson) {
+    document.body.classList.add('in-editor');
     // Transition straight to builder workspace
     if (selectionScreen) selectionScreen.style.display = 'none';
     if (welcomeHeader) welcomeHeader.style.display = 'none';
@@ -4324,6 +4336,7 @@ function enterApp() {
       window.checkAutoLaunchTour();
     }
   } else {
+    document.body.classList.remove('in-editor');
     // Show template selection screen
     if (builderWorkspace) builderWorkspace.style.display = 'none';
     if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
@@ -4506,6 +4519,8 @@ function setupLandingPageNavigation() {
 
 // Global Nav Handlers for Flawless Interaction
 window.goToTemplates = function() {
+  if (typeof window.closeZenGuideTour === 'function') window.closeZenGuideTour();
+  document.body.classList.remove('in-editor');
   const appContainer = document.getElementById('app-container');
   const builderWorkspace = document.getElementById('builder-workspace');
   const selectionScreen = document.getElementById('selection-screen');

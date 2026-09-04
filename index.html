@@ -88,7 +88,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=8.2">
+  <link rel="stylesheet" href="styles.css?v=8.3">
   
   <style id="zenresume-critical-header-style">
     .stitch-nav {
@@ -1477,13 +1477,22 @@
   <!-- SCREEN 1 & 2: APP WORKSPACE CONTAINER (MAX-WIDTH 1440PX FOR TEMPLATES & EDITOR) -->
   <div class="app-container" id="app-container" style="display: none; padding-top: 0;">
     <!-- Peaceful & Dynamic Welcome Header -->
-    <header class="app-header no-print" id="app-header-welcome" style="display: none;">
+    <header class="app-header no-print" id="app-header-welcome" style="display: none; padding: 14px 16px 6px 16px;">
       <!-- Hidden H1 for SEO -->
       <h1 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">ZenResume - Free AI ATS Resume Builder</h1>
-      <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+      <div class="welcome-header-inner" style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+          <button type="button" class="btn-page-back" onclick="window.location.href='/'" title="Back to Home">
+            <i class="fas fa-arrow-left"></i>
+            <span>Home</span>
+          </button>
+          <span class="welcome-ats-seal" style="font-size: 11.5px; font-weight: 700; color: #476550; background: rgba(0, 104, 86, 0.08); border: 1px solid rgba(0, 104, 86, 0.18); padding: 4px 10px; border-radius: 9999px;">
+            <i class="fas fa-shield-check" style="color: #2DD4BF;"></i> 100% Free &amp; ATS-Safe
+          </span>
+        </div>
         <div>
-          <h2 class="greeting-text" id="greeting-banner" style="margin: 0 0 4px 0; font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif;">Welcome, Professional</h2>
-          <p class="sub-greeting" style="margin: 0; font-size: 13.5px; color: var(--text-sub);">Select a recruiter-approved ATS template tailored for your industry and experience, fill in your details, and download a beautiful vector-text PDF.</p>
+          <h2 class="greeting-text" id="greeting-banner" style="margin: 2px 0 2px 0; font-size: 20px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-main); line-height: 1.25;">Welcome, Professional</h2>
+          <p class="sub-greeting" style="margin: 0; font-size: 12.5px; color: var(--text-sub); line-height: 1.4;">Select a recruiter-approved ATS blueprint tailored for your role and experience.</p>
         </div>
       </div>
     </header>
@@ -1491,37 +1500,29 @@
     <main>
 
       <!-- SCREEN 1: GREETING & SELECTING TEMPLATES (NO-PRINT) -->
-      <section class="selection-screen no-print" id="selection-screen" style="display: none; padding: 20px 0;">
+      <section class="selection-screen no-print" id="selection-screen" style="display: none; padding: 14px 0;">
         
-        <!-- Unified Smart Search & Category Filter Bar -->
-        <div class="template-unified-controls" style="max-width: 1100px; margin: 0 auto 24px auto; display: flex; flex-direction: column; gap: 12px;">
+        <!-- Unified Smart Search & Category Filter Command Bar -->
+        <div class="template-unified-controls" style="max-width: 1100px; margin: 0 auto 16px auto; display: flex; flex-direction: column; gap: 10px; padding: 0 16px;">
           
-          <!-- Search & Quick Match Bar -->
-          <div class="template-search-card" style="padding: 14px 18px; background: rgba(0, 104, 95, 0.05); border: 1px solid rgba(45, 212, 191, 0.25); border-radius: 16px; backdrop-filter: blur(8px);">
-            <div style="display: flex; align-items: center; gap: 10px; background: var(--bg-surface, #FFFFFF); border: 1px solid var(--border-subtle, #E2E8F0); border-radius: 12px; padding: 10px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-              <i class="fas fa-magnifying-glass" style="color: #476550; font-size: 15px;"></i>
-              <input type="text" id="input-template-search" placeholder="Quick search by role or layout (e.g. Software, Data Science, Fresher, Executive, Minimalist)..." style="border: none; outline: none; background: transparent; width: 100%; font-size: 13.5px; font-weight: 500; color: var(--text-main, #09090B);">
-              <button type="button" id="btn-clear-template-search" style="display: none; background: none; border: none; color: #94A3B8; cursor: pointer; font-size: 13px;">✕</button>
-            </div>
-
-            <!-- Predictive Role Chips -->
-            <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
-              <span style="font-size: 11px; font-weight: 700; color: var(--text-light, #64748B); text-transform: uppercase; letter-spacing: 0.5px;">Quick Match:</span>
-              <button type="button" class="btn-role-chip" data-query="software" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">💻 Software</button>
-              <button type="button" class="btn-role-chip" data-query="data" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">📊 Data &amp; AI</button>
-              <button type="button" class="btn-role-chip" data-query="fresher" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">🎓 Fresher</button>
-              <button type="button" class="btn-role-chip" data-query="cloud" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">☁️ Cloud</button>
-              <button type="button" class="btn-role-chip" data-query="executive" style="font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(0,104,95,0.2); background: rgba(0,104,95,0.08); color: #476550; cursor: pointer; transition: all 0.2s ease;">📈 Executive</button>
-            </div>
+          <!-- Command Row 1: Fast Search Input -->
+          <div class="template-search-box">
+            <i class="fas fa-magnifying-glass search-icon"></i>
+            <input type="text" id="input-template-search" placeholder="Search 71+ templates by role (e.g. Software, Fresher, Data Science, Core Engineering)..." autocomplete="off">
+            <button type="button" id="btn-clear-template-search" style="display: none;" title="Clear search">✕</button>
           </div>
 
-          <!-- Unified Experience & Industry Control Strip -->
-          <div class="template-category-filter-strip">
+          <!-- Command Row 2: Seamless Filter Strip (Experience Segment + Scrollable Industry Chips) -->
+          <div class="template-filter-bar">
+            <!-- Segmented Experience Switcher -->
             <div class="exp-toggle-segmented" id="exp-filters">
               <button type="button" class="btn-filter active" data-exp="fresher"><i class="fas fa-graduation-cap"></i> Fresher</button>
               <button type="button" class="btn-filter" data-exp="experienced"><i class="fas fa-briefcase"></i> Experienced</button>
             </div>
 
+            <div class="filter-bar-divider"></div>
+
+            <!-- Scrollable Industry Chips -->
             <div class="industry-scroll-chips" id="industry-filters">
               <button type="button" class="btn-filter active" data-ind="software">💻 Software</button>
               <button type="button" class="btn-filter" data-ind="data_science">📊 Data Science &amp; AI</button>
@@ -1536,13 +1537,13 @@
         </div>
 
         <!-- Template Layout Catalog -->
-        <div style="max-width: 1100px; margin: 0 auto;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h3 style="font-size: 16px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-main); margin: 0;">
+        <div style="max-width: 1100px; margin: 0 auto; padding: 0 16px;">
+          <div class="template-catalog-header">
+            <h3 class="template-catalog-title">
               ✨ Choose Your Resume Layout
             </h3>
-            <span style="font-size: 12px; color: var(--primary-calm); font-weight: 700; background: rgba(0, 104, 86, 0.08); padding: 3px 10px; border-radius: 9999px;">
-              <i class="fas fa-check-circle"></i> 100% Machine-Parsable ATS Templates
+            <span class="template-catalog-badge">
+              <i class="fas fa-check-circle"></i> 100% ATS-Optimized
             </span>
           </div>
           <div class="templates-grid" id="templates-grid">
@@ -3000,17 +3001,17 @@
   </div>
 
   <!-- Scripts -->
-  <script src="templates-data.js?v=8.2" defer></script>
-  <script src="indexeddb-storage.js?v=8.2" defer></script>
-  <script src="firebase-service.js?v=8.2" defer></script>
-  <script src="app.js?v=8.2" defer></script>
-  <script src="profile-sync.js?v=8.2" defer></script>
-  <script src="exit-intent.js?v=8.2" defer></script>
-  <script src="hero-playground.js?v=8.2" defer></script>
-  <script src="navigator-tour.js?v=8.2" defer></script>
-  <script src="role-hub.js?v=8.2" defer></script>
-  <script src="live-pulse.js?v=8.2" defer></script>
-  <script src="ats-matcher.js?v=8.2" defer></script>
+  <script src="templates-data.js?v=8.3" defer></script>
+  <script src="indexeddb-storage.js?v=8.3" defer></script>
+  <script src="firebase-service.js?v=8.3" defer></script>
+  <script src="app.js?v=8.3" defer></script>
+  <script src="profile-sync.js?v=8.3" defer></script>
+  <script src="exit-intent.js?v=8.3" defer></script>
+  <script src="hero-playground.js?v=8.3" defer></script>
+  <script src="navigator-tour.js?v=8.3" defer></script>
+  <script src="role-hub.js?v=8.3" defer></script>
+  <script src="live-pulse.js?v=8.3" defer></script>
+  <script src="ats-matcher.js?v=8.3" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };

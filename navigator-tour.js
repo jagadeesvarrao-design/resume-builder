@@ -346,7 +346,7 @@
 
     setTimeout(function() {
       const builderWorkspace = document.getElementById('builder-workspace');
-      if (builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '') {
+      if (document.body.classList.contains('in-editor') && builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '') {
         window.startZenGuideTour(false);
       }
     }, 600);
