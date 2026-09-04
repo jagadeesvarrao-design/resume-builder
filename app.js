@@ -4261,23 +4261,34 @@ window.addEventListener('DOMContentLoaded', initContactForm);
    11. SPA ROUTING & LANDING PAGE TRANSITIONS
    ========================================================================== */
 function updateHeaderNavCTA() {
-  const navCta = document.querySelector('.stitch-nav-cta');
-  if (!navCta) return;
+  const navCtas = document.querySelectorAll('.stitch-nav-cta, .btn-header-cta, #btn-nav-create-resume');
+  if (!navCtas || navCtas.length === 0) return;
   const builderWorkspace = document.getElementById('builder-workspace');
   const isEditor = builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '';
-  if (isEditor) {
-    navCta.innerHTML = '<i class="fas fa-download" style="margin-right: 6px;"></i> Finish & Download';
-    navCta.onclick = () => {
-      const btn = document.getElementById('btn-trigger-download');
-      if (btn) btn.click();
-    };
-  } else {
-    navCta.innerHTML = 'Create My Resume';
-    navCta.onclick = () => {
-      const btn = document.getElementById('btn-start-building');
-      if (btn) btn.click();
-    };
-  }
+  
+  navCtas.forEach(navCta => {
+    if (isEditor) {
+      navCta.innerHTML = '<i class="fas fa-download" style="margin-right: 6px;"></i> Finish & Download';
+      navCta.onclick = (e) => {
+        if (e) e.preventDefault();
+        const btn = document.getElementById('btn-trigger-download');
+        if (btn) btn.click();
+      };
+    } else {
+      navCta.innerHTML = '⚡ Create My Resume';
+      navCta.onclick = (e) => {
+        if (e) e.preventDefault();
+        if (typeof window.handleHeaderCTAClick === 'function') {
+          window.handleHeaderCTAClick();
+        } else if (typeof window.enterApp === 'function') {
+          window.enterApp();
+        } else {
+          const btn = document.getElementById('btn-start-building');
+          if (btn) btn.click();
+        }
+      };
+    }
+  });
 }
 
 function showLandingPage() {
@@ -4546,9 +4557,14 @@ window.handleHeaderCTAClick = function() {
   const builderWorkspace = document.getElementById('builder-workspace');
   const isEditor = builderWorkspace && builderWorkspace.style.display !== 'none' && builderWorkspace.style.display !== '';
   if (isEditor) {
-    openPrintModal();
+    if (typeof openPrintModal === 'function') openPrintModal();
   } else {
-    openOnboardingModal();
+    if (typeof enterApp === 'function') {
+      enterApp();
+    } else {
+      const btn = document.getElementById('btn-start-building');
+      if (btn) btn.click();
+    }
   }
 };
 
@@ -4701,17 +4717,11 @@ window.currentPaymentPlan = 'sprint';
 window.currentPaymentAmount = '₹199';
 
 window.detectUserCurrency = function() {
-  // 1. Check saved user preference in localStorage
-  const saved = localStorage.getItem('zen_user_currency');
-  if (saved === 'INR' || saved === 'USD') {
-    return saved;
-  }
-
-  // 2. High-precision synchronous heuristic: Check IST timezone offset (-330 mins = UTC+5:30)
+  // Strict Geo/Timezone/Locale Detection
   try {
     const offset = new Date().getTimezoneOffset();
     if (offset === -330) {
-      return 'INR'; // Exact match for Indian Standard Time (IST)
+      return 'INR'; // Exact Indian Standard Time (IST) offset
     }
 
     const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
@@ -4728,21 +4738,18 @@ window.detectUserCurrency = function() {
     console.warn('Currency timezone check:', e);
   }
 
-  // 3. Non-Indian users default to USD ($)
+  // Non-Indian users strictly get USD ($)
   return 'USD';
 };
 
 window.initBackgroundGeoDetection = function() {
-  // Only auto-resolve via IP if user hasn't explicitly set a preference
-  if (localStorage.getItem('zen_user_currency')) return;
-
-  // Fast asynchronous IP country lookup
+  // Fast asynchronous IP country lookup for 100% accurate location routing
   fetch('https://ipapi.co/json/', { mode: 'cors' })
     .then(res => res.json())
     .then(data => {
       if (data && data.country_code) {
         const countryCurr = data.country_code === 'IN' ? 'INR' : 'USD';
-        if (window.currentCurrency !== countryCurr && !localStorage.getItem('zen_user_currency')) {
+        if (window.currentCurrency !== countryCurr) {
           window.switchCurrency(countryCurr, false);
         }
       }
@@ -4753,7 +4760,7 @@ window.initBackgroundGeoDetection = function() {
         .then(d => {
           if (d && d.country) {
             const countryCurr = d.country === 'IN' ? 'INR' : 'USD';
-            if (window.currentCurrency !== countryCurr && !localStorage.getItem('zen_user_currency')) {
+            if (window.currentCurrency !== countryCurr) {
               window.switchCurrency(countryCurr, false);
             }
           }
@@ -4762,7 +4769,7 @@ window.initBackgroundGeoDetection = function() {
     });
 };
 
-window.switchCurrency = function(targetCurrency, persist = true) {
+window.switchCurrency = function(targetCurrency, persist = false) {
   if (targetCurrency !== 'INR' && targetCurrency !== 'USD') targetCurrency = 'USD';
   window.currentCurrency = targetCurrency;
   if (persist) {
@@ -4772,28 +4779,11 @@ window.switchCurrency = function(targetCurrency, persist = true) {
   const catalog = window.PRICING_CATALOG[targetCurrency];
   if (!catalog) return;
 
-  // 1. Update Currency Switcher buttons
-  const btnInr = document.getElementById('btn-currency-inr');
-  const btnUsd = document.getElementById('btn-currency-usd');
-  if (btnInr && btnUsd) {
-    if (targetCurrency === 'INR') {
-      btnInr.style.background = '#476550';
-      btnInr.style.color = '#FFFFFF';
-      btnUsd.style.background = 'transparent';
-      btnUsd.style.color = '#64748B';
-    } else {
-      btnUsd.style.background = '#476550';
-      btnUsd.style.color = '#FFFFFF';
-      btnInr.style.background = 'transparent';
-      btnInr.style.color = '#64748B';
-    }
-  }
-
-  // 2. Update Subtitle
+  // 1. Update Subtitle
   const subEl = document.getElementById('pricing-header-subtitle');
   if (subEl) subEl.innerHTML = catalog.subtitle;
 
-  // 3. Update Pricing Cards in Landing Page
+  // 2. Update Pricing Cards in Landing Page
   const curSymbol = catalog.currencySymbol;
   ['free', 'day', 'sprint', 'suite'].forEach(planKey => {
     const pData = catalog.plans[planKey];
@@ -4808,7 +4798,7 @@ window.switchCurrency = function(targetCurrency, persist = true) {
     if (btnTextEl) btnTextEl.textContent = pData.btnText;
   });
 
-  // 4. Update Modal Tab Amounts
+  // 3. Update Modal Tab Amounts
   const modalTabDay = document.getElementById('modal-tab-amount-day');
   const modalTabSprint = document.getElementById('modal-tab-amount-sprint');
   const modalTabSuite = document.getElementById('modal-tab-amount-suite');
@@ -4816,7 +4806,7 @@ window.switchCurrency = function(targetCurrency, persist = true) {
   if (modalTabSprint) modalTabSprint.textContent = catalog.plans.sprint.modalTab;
   if (modalTabSuite) modalTabSuite.textContent = catalog.plans.suite.modalTab;
 
-  // 5. Re-render modal selection state
+  // 4. Re-render modal selection state
   window.selectPaymentPlan(window.currentPaymentPlan || 'sprint');
 };
 
