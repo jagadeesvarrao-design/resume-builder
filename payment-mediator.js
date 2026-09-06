@@ -14,7 +14,7 @@
 
   const PaymentMediator = {
     version: '1.0.0',
-    merchantVpa: 'aneevarp.solutions@okaxis',
+    merchantVpa: '8790906267-2@ybl',
     merchantName: 'ZenResume',
     
     // Configuration Catalog

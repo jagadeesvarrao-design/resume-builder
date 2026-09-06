@@ -5045,7 +5045,7 @@ window.openUPIPaymentModal = function(planKey) {
   if (refInput) refInput.value = '';
 
   // Generate UPI Intent & Dynamic QR Code URL
-  const vpa = 'aneevarp.solutions@okaxis';
+  const vpa = '8790906267-2@ybl';
   const payeeName = 'ZenResume';
   const upiUrl = `upi://pay?pa=${vpa}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=ZenResume_${planKey.toUpperCase()}_Upgrade`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
@@ -5064,7 +5064,7 @@ window.closeUPIPaymentModal = function() {
 };
 
 window.copyUPIId = function() {
-  const vpa = 'aneevarp.solutions@okaxis';
+  const vpa = '8790906267-2@ybl';
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(vpa).then(() => {
       if (typeof window.showToast === 'function') {
