@@ -318,14 +318,14 @@ function initFirebaseService() {
   }
 }
 
-// Global Google Sign-In Trigger (Callable from any button, mobile drawer, or modal)
-window.triggerGoogleLogin = function(preferRedirect = false) {
+// Global Google Sign-In Trigger (Uses full-page redirect for 100% reliable auth across Desktop & Mobile)
+window.triggerGoogleLogin = function() {
   if (isGoogleAuthInProgress) {
     console.log("[Firebase] Auth trigger debounced.");
     return;
   }
   isGoogleAuthInProgress = true;
-  setTimeout(() => { isGoogleAuthInProgress = false; }, 3500);
+  setTimeout(() => { isGoogleAuthInProgress = false; }, 4000);
 
   if (!auth || typeof firebase === 'undefined') {
     initFirebaseService();
@@ -340,47 +340,14 @@ window.triggerGoogleLogin = function(preferRedirect = false) {
   provider.addScope('email');
   provider.addScope('profile');
 
-  window.showToast("Connecting to Google Sign-In...", "info", 1500);
+  window.showToast("Redirecting to secure Google Sign-In...", "info", 2000);
 
-  // If redirect is explicitly preferred or on mobile/desktop popup error, use standard full-page redirect
-  if (preferRedirect) {
-    auth.signInWithRedirect(provider).catch(err => {
-      isGoogleAuthInProgress = false;
-      handleAuthError(err);
-    });
-    return;
-  }
-
-  // Attempt standard popup with automatic fallback to seamless redirect
-  auth.signInWithPopup(provider)
-    .then((result) => {
-      isGoogleAuthInProgress = false;
-      if (result && result.user) {
-        window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email), "success");
-        if (typeof window.closeEmailAuthModal === 'function') window.closeEmailAuthModal();
-        if (typeof window.toggleMobileMenu === 'function') window.toggleMobileMenu(true);
-      }
-    })
-    .catch((error) => {
-      isGoogleAuthInProgress = false;
-      console.warn("[Firebase Auth Popup Note]:", error);
-      
-      // On popup blocking, iframe cookie errors, or desktop popup failures, execute smooth full-page redirect
-      if (
-        error.code === 'auth/popup-blocked' || 
-        error.code === 'auth/popup-closed-by-user' ||
-        error.code === 'auth/cancelled-popup-request' ||
-        error.code === 'auth/internal-error' ||
-        error.code === 'auth/network-request-failed'
-      ) {
-        console.log("[Firebase] Falling back to seamless full-page redirect auth...");
-        auth.signInWithRedirect(provider).catch(redirectErr => {
-          handleAuthError(redirectErr || error);
-        });
-      } else {
-        handleAuthError(error);
-      }
-    });
+  // Use full-page redirect for 100% cross-browser reliability (no popup 500 errors)
+  auth.signInWithRedirect(provider).catch(err => {
+    isGoogleAuthInProgress = false;
+    console.warn("[Firebase Redirect Auth Note]:", err);
+    handleAuthError(err);
+  });
 };
 
 // Global Logout Trigger
