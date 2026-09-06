@@ -16,6 +16,7 @@ const STATIC_SHELL = [
   '/role-hub.js?v=8.6',
   '/live-pulse.js?v=8.6',
   '/ats-matcher.js?v=8.6',
+  '/payment-mediator.js?v=8.6',
   '/manifest.json',
   '/favicon-96x96.png',
   '/apple-touch-icon.png',

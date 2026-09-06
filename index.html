@@ -2665,6 +2665,44 @@
     </div>
   </div>
 
+  <!-- International (USD) Multi-Gateway Checkout Modal -->
+  <div id="international-checkout-modal" class="modal-overlay no-print" style="display: none; align-items: center; justify-content: center; z-index: 5600; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px);">
+    <div class="modal-card" style="background: #FFFFFF; border-radius: 22px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35); border: 1.5px solid rgba(124, 58, 237, 0.3); padding: 28px 24px; max-width: 450px; width: 92%; text-align: center; position: relative;">
+      <button type="button" class="btn-close" onclick="document.getElementById('international-checkout-modal').style.display='none';" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 22px; cursor: pointer; color: #94A3B8;">&times;</button>
+      
+      <!-- Modal Header -->
+      <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(124, 58, 237, 0.08); border: 1px solid rgba(124, 58, 237, 0.2); padding: 4px 12px; border-radius: 9999px; margin-bottom: 8px;">
+        <i class="fas fa-globe" style="color: #7C3AED; font-size: 12px;"></i>
+        <span style="font-size: 11px; font-weight: 700; color: #7C3AED; text-transform: uppercase;">Global Secure Checkout</span>
+      </div>
+      
+      <h3 style="margin: 0 0 4px 0; color: #0F172A; font-size: 20px; font-weight: 800; font-family: 'Outfit', sans-serif;">Pay <span id="intl-modal-amount" style="color: #7C3AED;">$11.99</span></h3>
+      <p id="intl-modal-plan-desc" style="color: #64748B; font-size: 12px; margin: 0 0 18px 0;">
+        7-Day Fast Track — Unlimited ATS Keyword Scan &amp; AI Resume Tailoring
+      </p>
+
+      <!-- International Gateway Providers -->
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
+        <!-- Stripe Card Checkout -->
+        <button type="button" onclick="if(window.PaymentMediator) window.PaymentMediator.processInternationalProvider(window.currentPaymentPlan, 'stripe');" style="background: linear-gradient(135deg, #6366F1, #4F46E5); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <i class="fab fa-stripe" style="font-size: 22px;"></i>
+          <span>Pay with Credit / Debit Card (Stripe)</span>
+        </button>
+
+        <!-- PayPal Smart Button -->
+        <button type="button" onclick="if(window.PaymentMediator) window.PaymentMediator.processInternationalProvider(window.currentPaymentPlan, 'paypal');" style="background: #FFC439; border: 1.5px solid #F2BA36; border-radius: 12px; color: #003087; padding: 12px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fab fa-paypal" style="font-size: 18px; color: #0079C1;"></i>
+          <span>Pay with PayPal Express</span>
+        </button>
+      </div>
+
+      <!-- Trust Badges -->
+      <div style="font-size: 11px; color: #94A3B8; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fas fa-lock" style="font-size: 10px; color: #10B981;"></i> 256-Bit SSL Encrypted • Instant Global Access
+      </div>
+    </div>
+  </div>
+
   <!-- Developer Modal -->
   <div id="developer-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);" onclick="if(event.target === this) this.style.display='none'">
     <div class="modal-content" style="padding: 40px 30px; width: 90%; max-width: 450px; text-align: center; border-top: 4px solid #e74c3c; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);">
@@ -3132,6 +3170,7 @@
   <script src="role-hub.js?v=8.6" defer></script>
   <script src="live-pulse.js?v=8.6" defer></script>
   <script src="ats-matcher.js?v=8.6" defer></script>
+  <script src="payment-mediator.js?v=8.6" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
