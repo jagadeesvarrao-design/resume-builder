@@ -282,6 +282,7 @@ let db = null;
 let currentUser = null;
 let unsubscribeSubscription = null;
 let isGoogleAuthInProgress = false;
+let lastAuthenticatedUid = null;
 
 function initFirebaseService() {
   if (typeof firebase === 'undefined' || !firebase.initializeApp) {
@@ -297,15 +298,21 @@ function initFirebaseService() {
     auth = firebase.auth();
     db = firebase.firestore();
 
-    // Check for incoming redirect authentication results (Essential for Mobile!)
+    // Ensure Local Persistence for frictionless session retention
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err => {
+      console.warn("[Firebase] Persistence note:", err);
+    });
+
+    // Check for incoming redirect authentication results (Mobile fallback)
     auth.getRedirectResult().then(result => {
       if (result && result.user) {
         console.log("[Firebase] Logged in via redirect:", result.user.email);
+        handleAuthStateChange(result.user);
         window.showToast("Cloud Sync Active! Welcome, " + (result.user.displayName || result.user.email), "success");
       }
     }).catch(err => {
       console.warn("[Firebase] Redirect sign-in check:", err);
-      if (err && err.code) {
+      if (err && err.code && err.code !== 'auth/null-user') {
         handleAuthError(err);
       }
     });
@@ -313,19 +320,31 @@ function initFirebaseService() {
     // Attach Auth State Observer
     auth.onAuthStateChanged(handleAuthStateChange);
 
+    // Auto-open login if query param ?login=1 or ?auth=google is present
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('login') === '1' || urlParams.get('auth') === 'google') {
+        setTimeout(() => {
+          if (!currentUser && typeof window.triggerGoogleLogin === 'function') {
+            window.triggerGoogleLogin();
+          }
+        }, 300);
+      }
+    } catch (e) {}
+
   } catch (err) {
     console.warn("[Firebase] Service initialization note:", err);
   }
 }
 
-// Global Google Sign-In Trigger (Uses full-page redirect for 100% reliable auth across Desktop & Mobile)
-window.triggerGoogleLogin = function() {
+// Global Google Sign-In Trigger (Uses direct Popup with Local Persistence and Redirect Fallback)
+window.triggerGoogleLogin = async function() {
   if (isGoogleAuthInProgress) {
     console.log("[Firebase] Auth trigger debounced.");
     return;
   }
   isGoogleAuthInProgress = true;
-  setTimeout(() => { isGoogleAuthInProgress = false; }, 4000);
+  setTimeout(() => { isGoogleAuthInProgress = false; }, 8000);
 
   if (!auth || typeof firebase === 'undefined') {
     initFirebaseService();
@@ -340,19 +359,50 @@ window.triggerGoogleLogin = function() {
   provider.addScope('email');
   provider.addScope('profile');
 
-  window.showToast("Redirecting to secure Google Sign-In...", "info", 2000);
+  try {
+    // 1. Ensure Persistence is LOCAL
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-  // Use full-page redirect for 100% cross-browser reliability (no popup 500 errors)
-  auth.signInWithRedirect(provider).catch(err => {
+    // 2. Open Popup for instantaneous, cross-domain safe authentication
+    const result = await auth.signInWithPopup(provider);
     isGoogleAuthInProgress = false;
-    console.warn("[Firebase Redirect Auth Note]:", err);
+
+    if (result && result.user) {
+      console.log("[Firebase] Sign-in successful:", result.user.email);
+      handleAuthStateChange(result.user);
+      const name = result.user.displayName || result.user.email || 'Professional';
+      window.showToast(`Login Successful! Welcome, ${name}`, 'success');
+      if (typeof window.closeEmailAuthModal === 'function') {
+        window.closeEmailAuthModal();
+      }
+    }
+  } catch (err) {
+    isGoogleAuthInProgress = false;
+    console.warn("[Firebase Google Auth Result]:", err);
+
+    if (err && (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request')) {
+      // User closed popup or cancelled, no intrusive alert needed
+      return;
+    }
+
+    if (err && err.code === 'auth/popup-blocked') {
+      window.showToast("Browser blocked pop-up. Redirecting to Google Sign-In...", "info", 2500);
+      try {
+        await auth.signInWithRedirect(provider);
+      } catch (redirErr) {
+        handleAuthError(redirErr);
+      }
+      return;
+    }
+
     handleAuthError(err);
-  });
+  }
 };
 
 // Global Logout Trigger
 window.triggerLogout = function() {
   if (auth) {
+    lastAuthenticatedUid = null;
     sessionStorage.removeItem('loginGreetingShown');
     auth.signOut().then(() => {
       window.showToast("Signed out successfully.", "info");
@@ -438,6 +488,7 @@ function updateUserAvatar(user) {
 }
 
 function handleAuthStateChange(user) {
+  const previousUser = currentUser;
   currentUser = user;
   
   // Landing Header Auth Elements
@@ -515,10 +566,13 @@ function handleAuthStateChange(user) {
       });
     }
 
-    // Show greeting toast if hasn't been shown this session
-    if (!sessionStorage.getItem('loginGreetingShown')) {
-      window.showToast(`Login Successful! Welcome, ${user.displayName || user.email || 'Professional'}`);
-      sessionStorage.setItem('loginGreetingShown', 'true');
+    // Show greeting toast when user state newly transitions to logged in
+    if (lastAuthenticatedUid !== user.uid) {
+      lastAuthenticatedUid = user.uid;
+      if (!sessionStorage.getItem('loginGreetingShown')) {
+        window.showToast(`Login Successful! Welcome, ${user.displayName || user.email || 'Professional'}`, 'success');
+        sessionStorage.setItem('loginGreetingShown', 'true');
+      }
     }
     
     // Attempt to load their resume from Firestore
@@ -532,6 +586,7 @@ function handleAuthStateChange(user) {
       window.state.hasLoadedProfile = true;
     }
   } else {
+    lastAuthenticatedUid = null;
     // Cancel subscription observer on logout
     if (unsubscribeSubscription) {
       unsubscribeSubscription();
@@ -571,12 +626,14 @@ function handleAuthStateChange(user) {
 // Initialize immediately or on load
 initFirebaseService();
 
-// Delegated click binding that ensures clicks ALWAYS register
+// Delegated click binding that ensures clicks ALWAYS register without duplicate firing
 document.addEventListener('click', (e) => {
   const loginTarget = e.target.closest('#btn-landing-login, #btn-mobile-drawer-login, #btn-google-login, [data-action="google-login"]');
   if (loginTarget) {
-    e.preventDefault();
-    window.triggerGoogleLogin();
+    if (!loginTarget.getAttribute('onclick')) {
+      e.preventDefault();
+      window.triggerGoogleLogin();
+    }
     return;
   }
 
