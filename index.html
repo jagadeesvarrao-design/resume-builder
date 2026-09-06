@@ -94,7 +94,7 @@
   <script>
     (function() {
       try {
-        var APP_DEPLOY_VERSION = 'v8.8';
+        var APP_DEPLOY_VERSION = 'v8.9';
         var storedVersion = localStorage.getItem('zen_deploy_version');
         if (storedVersion !== APP_DEPLOY_VERSION) {
           localStorage.setItem('zen_deploy_version', APP_DEPLOY_VERSION);
@@ -102,12 +102,16 @@
             caches.keys().then(function(cacheNames) {
               return Promise.all(
                 cacheNames.map(function(name) {
-                  if (name !== ('zenresume-cache-' + APP_DEPLOY_VERSION)) {
-                    console.log('Purging stale cache:', name);
-                    return caches.delete(name);
-                  }
+                  return caches.delete(name);
                 })
               );
+            });
+          }
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              for (var reg of regs) {
+                reg.update();
+              }
             });
           }
         }
@@ -116,7 +120,7 @@
   </script>
   
   <!-- ZenResume Real-Time Dynamic Adaptive UI/UX & CSS Engine -->
-  <script src="adaptive-engine.js?v=8.8"></script>
+  <script src="adaptive-engine.js?v=8.9"></script>
   
   <style id="zenresume-critical-header-style">
     .stitch-nav {
@@ -3169,19 +3173,19 @@
   </div>
 
   <!-- Scripts -->
-  <script src="templates-data.js?v=8.8" defer></script>
-  <script src="indexeddb-storage.js?v=8.8" defer></script>
-  <script src="firebase-service.js?v=8.8" defer></script>
-  <script src="app.js?v=8.8" defer></script>
-  <script src="profile-sync.js?v=8.8" defer></script>
-  <script src="exit-intent.js?v=8.8" defer></script>
-  <script src="hero-playground.js?v=8.8" defer></script>
-  <script src="navigator-tour.js?v=8.8" defer></script>
-  <script src="role-hub.js?v=8.8" defer></script>
-  <script src="live-pulse.js?v=8.8" defer></script>
-  <script src="ats-matcher.js?v=8.8" defer></script>
+  <script src="templates-data.js?v=8.9" defer></script>
+  <script src="indexeddb-storage.js?v=8.9" defer></script>
+  <script src="firebase-service.js?v=8.9" defer></script>
+  <script src="app.js?v=8.9" defer></script>
+  <script src="profile-sync.js?v=8.9" defer></script>
+  <script src="exit-intent.js?v=8.9" defer></script>
+  <script src="hero-playground.js?v=8.9" defer></script>
+  <script src="navigator-tour.js?v=8.9" defer></script>
+  <script src="role-hub.js?v=8.9" defer></script>
+  <script src="live-pulse.js?v=8.9" defer></script>
+  <script src="ats-matcher.js?v=8.9" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
-  <script src="payment-mediator.js?v=8.8" defer></script>
+  <script src="payment-mediator.js?v=8.9" defer></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
@@ -3352,7 +3356,7 @@
       });
 
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js?v=8.8')
+        navigator.serviceWorker.register('/sw.js?v=8.9')
           .then(function(reg) {
             reg.update();
             if (reg.waiting) {
