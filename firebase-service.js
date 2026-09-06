@@ -319,7 +319,7 @@ function initFirebaseService() {
 }
 
 // Global Google Sign-In Trigger (Callable from any button, mobile drawer, or modal)
-window.triggerGoogleLogin = function() {
+window.triggerGoogleLogin = function(preferRedirect = false) {
   if (isGoogleAuthInProgress) {
     console.log("[Firebase] Auth trigger debounced.");
     return;
@@ -337,57 +337,50 @@ window.triggerGoogleLogin = function() {
   }
 
   const provider = new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
+  provider.addScope('email');
+  provider.addScope('profile');
 
-  window.showToast("Connecting to Google Sign-In...", "info", 2000);
+  window.showToast("Connecting to Google Sign-In...", "info", 1500);
 
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 768;
-
-  if (isMobile) {
-    // Attempt popup first, immediately fall back to redirect if popup is blocked
-    auth.signInWithPopup(provider)
-      .then((result) => {
-        isGoogleAuthInProgress = false;
-        if (result && result.user) {
-          window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email), "success");
-          if (typeof window.closeEmailAuthModal === 'function') window.closeEmailAuthModal();
-          if (typeof window.toggleMobileMenu === 'function') window.toggleMobileMenu(true);
-        }
-      })
-      .catch((error) => {
-        isGoogleAuthInProgress = false;
-        console.warn("[Firebase Mobile Auth]:", error);
-        if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-          // Smooth redirect fallback for mobile
-          auth.signInWithRedirect(provider).catch(redirectErr => {
-            handleAuthError(redirectErr || error);
-          });
-        } else {
-          handleAuthError(error);
-        }
-      });
-  } else {
-    // Desktop / Laptop flow
-    auth.signInWithPopup(provider)
-      .then((result) => {
-        isGoogleAuthInProgress = false;
-        if (result && result.user) {
-          window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email), "success");
-          if (typeof window.closeEmailAuthModal === 'function') window.closeEmailAuthModal();
-        }
-      })
-      .catch((error) => {
-        isGoogleAuthInProgress = false;
-        console.warn("[Firebase Desktop Auth]:", error);
-        if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-          auth.signInWithRedirect(provider).catch(redirectErr => {
-            handleAuthError(redirectErr || error);
-          });
-        } else {
-          handleAuthError(error);
-        }
-      });
+  // If redirect is explicitly preferred or on mobile/desktop popup error, use standard full-page redirect
+  if (preferRedirect) {
+    auth.signInWithRedirect(provider).catch(err => {
+      isGoogleAuthInProgress = false;
+      handleAuthError(err);
+    });
+    return;
   }
+
+  // Attempt standard popup with automatic fallback to seamless redirect
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      isGoogleAuthInProgress = false;
+      if (result && result.user) {
+        window.showToast("Login Successful! Welcome, " + (result.user.displayName || result.user.email), "success");
+        if (typeof window.closeEmailAuthModal === 'function') window.closeEmailAuthModal();
+        if (typeof window.toggleMobileMenu === 'function') window.toggleMobileMenu(true);
+      }
+    })
+    .catch((error) => {
+      isGoogleAuthInProgress = false;
+      console.warn("[Firebase Auth Popup Note]:", error);
+      
+      // On popup blocking, iframe cookie errors, or desktop popup failures, execute smooth full-page redirect
+      if (
+        error.code === 'auth/popup-blocked' || 
+        error.code === 'auth/popup-closed-by-user' ||
+        error.code === 'auth/cancelled-popup-request' ||
+        error.code === 'auth/internal-error' ||
+        error.code === 'auth/network-request-failed'
+      ) {
+        console.log("[Firebase] Falling back to seamless full-page redirect auth...");
+        auth.signInWithRedirect(provider).catch(redirectErr => {
+          handleAuthError(redirectErr || error);
+        });
+      } else {
+        handleAuthError(error);
+      }
+    });
 };
 
 // Global Logout Trigger
