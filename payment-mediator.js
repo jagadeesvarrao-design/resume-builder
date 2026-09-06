@@ -80,9 +80,46 @@
     },
 
     /**
+     * Robust Client-Side QR Generator with Zero-Failure Failover
+     */
+    renderQRCode: function(text, size = 170) {
+      const container = document.getElementById('upi-qr-container');
+      const primaryUrl = `https://quickchart.io/qr?text=${encodeURIComponent(text)}&size=${size}&margin=1&ecLevel=M`;
+      const fallbackUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&margin=4`;
+
+      if (container) {
+        if (window.QRCode) {
+          container.innerHTML = '';
+          try {
+            new window.QRCode(container, {
+              text: text,
+              width: size,
+              height: size,
+              colorDark: '#0F172A',
+              colorLight: '#FFFFFF',
+              correctLevel: window.QRCode.CorrectLevel.M
+            });
+            return;
+          } catch (e) {
+            console.warn('[PaymentMediator] QRCode lib error, using failover:', e);
+          }
+        }
+
+        container.innerHTML = `<img id="upi-qr-image" src="${primaryUrl}" alt="UPI QR Code" onerror="if(this.src!=='${fallbackUrl}'){this.src='${fallbackUrl}';}" style="width: ${size}px; height: ${size}px; display: block; border-radius: 8px; image-rendering: pixelated;" />`;
+      } else {
+        const qrImg = document.getElementById('upi-qr-image');
+        if (qrImg) {
+          qrImg.src = primaryUrl;
+          qrImg.onerror = function() { if (this.src !== fallbackUrl) this.src = fallbackUrl; };
+        }
+      }
+    },
+
+    /**
      * Opens Indian Payment Hub (UPI Dynamic QR, Mobile Intent & Card Gateway)
      */
     openIndianCheckout: function(planKey) {
+      planKey = planKey || window.currentPaymentPlan || 'sprint';
       const plan = this.catalog.INR.plans[planKey] || this.catalog.INR.plans.sprint;
       const orderId = this.generateOrderId(planKey);
       window._currentPaymentSession = { orderId, planKey, currency: 'INR', amount: plan.amount };
@@ -99,7 +136,6 @@
       const titleEl = document.getElementById('upi-modal-title');
       const amountEl = document.getElementById('upi-modal-amount');
       const descEl = document.getElementById('upi-modal-plan-desc');
-      const qrImg = document.getElementById('upi-qr-image');
       const mobileBtn = document.getElementById('btn-upi-mobile-app');
       const refInput = document.getElementById('upi-ref-input');
 
@@ -109,9 +145,10 @@
 
       // Generate Standardized UPI Intent URL
       const upiUrl = `upi://pay?pa=${this.merchantVpa}&pn=${encodeURIComponent(this.merchantName)}&am=${plan.amount}&cu=INR&tn=${encodeURIComponent('ZenResume ' + plan.name)}&tr=${orderId}`;
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
 
-      if (qrImg) qrImg.src = qrUrl;
+      // Render 100% Reliable QR Code
+      this.renderQRCode(upiUrl, 170);
+
       if (mobileBtn) mobileBtn.href = upiUrl;
 
       // Close parent modal and show UPI Modal

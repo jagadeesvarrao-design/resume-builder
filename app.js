@@ -5048,9 +5048,19 @@ window.openUPIPaymentModal = function(planKey) {
   const vpa = '8790906267-2@ybl';
   const payeeName = 'ZenResume';
   const upiUrl = `upi://pay?pa=${vpa}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=ZenResume_${planKey.toUpperCase()}_Upgrade`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
 
-  if (qrImg) qrImg.src = qrUrl;
+  if (window.PaymentMediator && typeof window.PaymentMediator.renderQRCode === 'function') {
+    window.PaymentMediator.renderQRCode(upiUrl, 170);
+  } else {
+    const primaryUrl = `https://quickchart.io/qr?text=${encodeURIComponent(upiUrl)}&size=170&margin=1&ecLevel=M`;
+    const fallbackUrl = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(upiUrl)}&margin=4`;
+    const container = document.getElementById('upi-qr-container');
+    if (container) {
+      container.innerHTML = `<img id="upi-qr-image" src="${primaryUrl}" alt="UPI QR Code" onerror="if(this.src!=='${fallbackUrl}'){this.src='${fallbackUrl}';}" style="width: 170px; height: 170px; display: block; border-radius: 8px;" />`;
+    } else if (qrImg) {
+      qrImg.src = primaryUrl;
+    }
+  }
   if (mobileBtn) mobileBtn.href = upiUrl;
 
   // Close main Pro modal and open UPI modal
