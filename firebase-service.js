@@ -356,6 +356,7 @@ window.triggerGoogleLogin = async function() {
   }
 
   const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
 
   try {
     // 1. Ensure Persistence is LOCAL
