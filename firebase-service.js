@@ -231,7 +231,6 @@ function handleAuthError(error) {
   if (code === 'auth/popup-blocked') {
     window.showToast('Browser blocked the sign-in pop-up. Redirecting to Google...', 'info', 3000);
     const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
     auth.signInWithRedirect(provider).catch(err => console.warn('[Firebase] Redirect retry note:', err));
     return;
   }
