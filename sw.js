@@ -1,10 +1,10 @@
 /**
- * ZenResume Offline Service Worker (PWA Engine) - v8.6
+ * ZenResume Offline Service Worker (PWA Engine) - v8.7
  * Network-First for HTML navigations & Code assets (JS/CSS) to guarantee instant deployment updates.
  * Stale-While-Revalidate for media, fonts & icons.
  */
 
-const CACHE_NAME = 'zenresume-cache-v8.6';
+const CACHE_NAME = 'zenresume-cache-v8.7';
 const STATIC_SHELL = [
   '/',
   '/index.html',
