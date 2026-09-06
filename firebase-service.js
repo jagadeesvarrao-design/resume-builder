@@ -356,6 +356,9 @@ window.triggerGoogleLogin = async function() {
   }
 
   const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('https://www.googleapis.com/auth/userinfo.email');
+  provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+  provider.addScope('openid');
   provider.setCustomParameters({ prompt: 'select_account' });
 
   try {
