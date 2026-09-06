@@ -155,13 +155,118 @@
     },
 
     /**
-     * Executes International Providers (Stripe / PayPal)
+     * Executes Non-UPI Razorpay Checkout (Cards, NetBanking, International Cards)
+     * Excludes UPI to ensure UPI remains 100% direct with 0% gateway commission.
+     */
+    processRazorpayCard: function(planKey, customCurrency) {
+      planKey = planKey || window.currentPaymentPlan || 'sprint';
+      const currency = customCurrency || this.getCurrency();
+      const plan = (this.catalog[currency] && this.catalog[currency].plans[planKey]) || this.catalog.INR.plans.sprint;
+      const orderId = (window._currentPaymentSession && window._currentPaymentSession.orderId) || this.generateOrderId(planKey);
+      const isUSD = currency === 'USD';
+      const amountInUnits = isUSD ? Math.round(plan.amount * 100) : plan.amount * 100;
+
+      const launchRazorpay = () => {
+        if (!window.Razorpay) {
+          if (typeof window.showToast === 'function') {
+            window.showToast('Loading secure card gateway...', 'info');
+          }
+          return;
+        }
+
+        const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || {};
+        const rzpOptions = {
+          key: window.RAZORPAY_KEY_ID || localStorage.getItem('zen_razorpay_key_id') || 'rzp_test_zenresume',
+          amount: amountInUnits,
+          currency: currency,
+          name: 'ZenResume Pro',
+          description: `${plan.name} (${currency === 'INR' ? 'Cards & NetBanking' : 'Global Card Checkout'})`,
+          image: '/apple-touch-icon.png',
+          // Strictly restrict instruments: Only Cards & NetBanking (UPI excluded)
+          config: {
+            display: {
+              blocks: {
+                cards: {
+                  name: 'Credit & Debit Cards',
+                  instruments: [
+                    { method: 'card' }
+                  ]
+                },
+                netbanking: {
+                  name: 'NetBanking & Wallets',
+                  instruments: [
+                    { method: 'netbanking' },
+                    { method: 'wallet' }
+                  ]
+                }
+              },
+              sequence: ['block.cards', 'block.netbanking'],
+              preferences: {
+                show_default_blocks: false
+              }
+            }
+          },
+          handler: (response) => {
+            this.fulfillPayment({
+              orderId: orderId,
+              planKey: planKey,
+              amount: `${this.catalog[currency].symbol}${plan.amount}`,
+              currency: currency,
+              provider: isUSD ? 'Razorpay International Card' : 'Razorpay Cards/NetBanking',
+              transactionRef: response.razorpay_payment_id || ('RZP_' + Date.now())
+            });
+          },
+          prefill: {
+            name: user.displayName || '',
+            email: user.email || ''
+          },
+          theme: { color: '#006856' },
+          modal: {
+            ondismiss: function() {
+              console.log('[Razorpay] Modal dismissed');
+            }
+          }
+        };
+
+        const rzp = new window.Razorpay(rzpOptions);
+        rzp.on('payment.failed', function(response) {
+          if (typeof window.showToast === 'function') {
+            window.showToast('Payment could not be processed. Please try another card or UPI.', 'error');
+          }
+          console.warn('[Razorpay] Payment failed:', response.error);
+        });
+        rzp.open();
+      };
+
+      if (!window.Razorpay) {
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        script.onload = () => launchRazorpay();
+        script.onerror = () => {
+          if (typeof window.showToast === 'function') {
+            window.showToast('Could not load card checkout. Please use direct UPI QR.', 'warning');
+          }
+          this.openIndianCheckout(planKey);
+        };
+        document.head.appendChild(script);
+      } else {
+        launchRazorpay();
+      }
+    },
+
+    /**
+     * Executes International Providers (Razorpay Global Cards / PayPal)
      */
     processInternationalProvider: function(planKey, provider) {
+      planKey = planKey || window.currentPaymentPlan || 'sprint';
       const plan = this.catalog.USD.plans[planKey] || this.catalog.USD.plans.sprint;
       const orderId = (window._currentPaymentSession && window._currentPaymentSession.orderId) || this.generateOrderId(planKey);
 
-      if (provider === 'paypal') {
+      if (provider === 'razorpay' || provider === 'stripe' || !provider) {
+        // Route directly to Razorpay configured for Global Cards (Visa, MasterCard, Amex)
+        this.processRazorpayCard(planKey, 'USD');
+      } else if (provider === 'paypal') {
         if (typeof window.showToast === 'function') {
           window.showToast(`Connecting to PayPal Express for $${plan.amount}...`, 'info');
         }
@@ -175,63 +280,6 @@
             transactionRef: 'PAYPAL_' + Date.now().toString(36).toUpperCase()
           });
         }, 1200);
-      } else {
-        if (typeof window.showToast === 'function') {
-          window.showToast(`Connecting to Stripe Secure 256-Bit Gateway for $${plan.amount}...`, 'info');
-        }
-        setTimeout(() => {
-          this.fulfillPayment({
-            orderId: orderId,
-            planKey: planKey,
-            amount: `$${plan.amount}`,
-            currency: 'USD',
-            provider: 'Stripe Card Checkout',
-            transactionRef: 'STRIPE_' + Date.now().toString(36).toUpperCase()
-          });
-        }, 1200);
-      }
-    },
-
-    /**
-     * Executes Card / Razorpay Checkout for Indian Users
-     */
-    processRazorpayCard: function(planKey) {
-      planKey = planKey || window.currentPaymentPlan || 'sprint';
-      const plan = this.catalog.INR.plans[planKey] || this.catalog.INR.plans.sprint;
-      const orderId = (window._currentPaymentSession && window._currentPaymentSession.orderId) || this.generateOrderId(planKey);
-
-      if (window.Razorpay) {
-        const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || {};
-        const rzp = new window.Razorpay({
-          key: window.RAZORPAY_KEY_ID || 'rzp_test_zenresume',
-          amount: plan.amount * 100, // paise
-          currency: 'INR',
-          name: 'ZenResume Pro',
-          description: `${plan.name} Access Pass`,
-          image: '/logo-card.png',
-          handler: (response) => {
-            this.fulfillPayment({
-              orderId: orderId,
-              planKey: planKey,
-              amount: `₹${plan.amount}`,
-              currency: 'INR',
-              provider: 'Razorpay Cards/NetBanking',
-              transactionRef: response.razorpay_payment_id || ('RZP_' + Date.now())
-            });
-          },
-          prefill: {
-            name: user.displayName || '',
-            email: user.email || ''
-          },
-          theme: { color: '#006856' }
-        });
-        rzp.open();
-      } else {
-        // Direct to Instant UPI QR hub
-        if (typeof window.showToast === 'function') {
-          window.showToast('Opening instant UPI & QR checkout...', 'info');
-        }
-        this.openIndianCheckout(planKey);
       }
     },
 

@@ -2683,10 +2683,10 @@
 
       <!-- International Gateway Providers -->
       <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px;">
-        <!-- Stripe Card Checkout -->
-        <button type="button" onclick="if(window.PaymentMediator) window.PaymentMediator.processInternationalProvider(window.currentPaymentPlan, 'stripe');" style="background: linear-gradient(135deg, #6366F1, #4F46E5); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
-          <i class="fab fa-stripe" style="font-size: 22px;"></i>
-          <span>Pay with Credit / Debit Card (Stripe)</span>
+        <!-- Razorpay Global Card Checkout -->
+        <button type="button" onclick="if(window.PaymentMediator) window.PaymentMediator.processInternationalProvider(window.currentPaymentPlan, 'razorpay');" style="background: linear-gradient(135deg, #006856, #00846D); border: none; border-radius: 12px; color: white; padding: 13px; font-weight: 700; font-size: 14px; box-shadow: 0 4px 14px rgba(0, 104, 86, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <i class="fas fa-credit-card" style="font-size: 18px;"></i>
+          <span>Pay with Credit / Debit Card (Global)</span>
         </button>
 
         <!-- PayPal Smart Button -->
@@ -3171,6 +3171,7 @@
   <script src="live-pulse.js?v=8.6" defer></script>
   <script src="ats-matcher.js?v=8.6" defer></script>
   <script src="payment-mediator.js?v=8.6" defer></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
