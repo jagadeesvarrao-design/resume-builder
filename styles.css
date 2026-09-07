@@ -8786,6 +8786,32 @@ body.in-editor .app-container {
   color: #94A3B8 !important;
 }
 
+[data-theme="dark"] #user-profile-modal .profile-tabs-header {
+  background: #1E293B !important;
+}
+
+[data-theme="dark"] #user-profile-modal #tab-btn-logout {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #F87171 !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+
+[data-theme="dark"] #user-profile-modal #tab-btn-logout:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] #user-profile-modal button[onclick*="closeUserProfileModal"] {
+  background: #1E293B !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] #user-profile-modal button[onclick*="closeUserProfileModal"]:hover {
+  background: #334155 !important;
+  color: #FFFFFF !important;
+}
+
 .nav-avatar-wrapper {
   position: relative;
   width: 26px;

@@ -782,9 +782,7 @@
           </div>
           <span id="nav-user-name" class="nav-user-name">User</span>
           <span id="nav-user-premium-badge" class="nav-user-premium-badge" style="display: none; background: linear-gradient(135deg, #00846D, #2DD4BF); color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;">PRO</span>
-          <button type="button" id="btn-landing-logout" class="btn-user-logout" onclick="event.stopPropagation(); window.triggerLogout && window.triggerLogout();" title="Sign Out">
-            <i class="fas fa-sign-out-alt"></i>
-          </button>
+          <i class="fas fa-chevron-down" style="font-size: 9px; color: rgba(255, 255, 255, 0.7); margin-left: 2px; margin-right: 2px;"></i>
         </div>
 
         <button type="button" class="btn-header-cta stitch-nav-cta" id="btn-nav-create-resume" onclick="window.handleHeaderCTAClick ? window.handleHeaderCTAClick() : (window.enterApp ? window.enterApp() : (document.getElementById('btn-start-building') && document.getElementById('btn-start-building').click()));" title="Create My Resume">
@@ -2571,13 +2569,19 @@
         </div>
       </div>
 
-      <!-- Section Segmented Navigation Tabs -->
-      <div style="display: flex; gap: 8px; margin-bottom: 16px; background: #F1F5F9; padding: 4px; border-radius: 12px;">
-        <button type="button" id="tab-btn-subscription" onclick="window.switchProfileModalTab && window.switchProfileModalTab('subscription');" style="flex: 1; background: linear-gradient(135deg, #476550, #00846D); color: #FFFFFF; border: none; font-size: 12.5px; font-weight: 700; padding: 9px 10px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-          <i class="fas fa-crown" style="font-size: 11px;"></i> Subscription Details
+      <!-- 3 Primary Action & Navigation Buttons -->
+      <div class="profile-tabs-header" style="display: flex; gap: 6px; margin-bottom: 16px; background: #F1F5F9; padding: 5px; border-radius: 12px; flex-wrap: wrap;">
+        <button type="button" id="tab-btn-subscription" onclick="window.switchProfileModalTab && window.switchProfileModalTab('subscription');" style="flex: 1 1 auto; min-width: 130px; background: linear-gradient(135deg, #476550, #00846D); color: #FFFFFF; border: none; font-size: 12px; font-weight: 700; padding: 9px 8px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+          <i class="fas fa-crown" style="font-size: 11px;"></i>
+          <span>Subscription Details</span>
         </button>
-        <button type="button" id="tab-btn-saved-resumes" onclick="window.switchProfileModalTab && window.switchProfileModalTab('resumes');" style="flex: 1; background: transparent; color: #64748B; border: 1px solid transparent; font-size: 12.5px; font-weight: 700; padding: 9px 10px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
-          <i class="fas fa-folder-open" style="font-size: 11px;"></i> Saved Resumes (<span id="profile-resumes-count-badge">1</span>)
+        <button type="button" id="tab-btn-saved-resumes" onclick="window.switchProfileModalTab && window.switchProfileModalTab('resumes');" style="flex: 1 1 auto; min-width: 120px; background: transparent; color: #64748B; border: 1px solid transparent; font-size: 12px; font-weight: 700; padding: 9px 8px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+          <i class="fas fa-folder-open" style="font-size: 11px;"></i>
+          <span>Saved Resumes (<span id="profile-resumes-count-badge">1</span>)</span>
+        </button>
+        <button type="button" id="tab-btn-logout" data-action="logout" onclick="window.triggerLogout && window.triggerLogout(); window.closeUserProfileModal && window.closeUserProfileModal();" style="flex: 0 0 auto; background: rgba(239, 68, 68, 0.08); color: #DC2626; border: 1px solid rgba(239, 68, 68, 0.25); font-size: 12px; font-weight: 700; padding: 9px 12px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Log Out</span>
         </button>
       </div>
 
@@ -2659,11 +2663,8 @@
       </div>
 
       <!-- Modal Footer -->
-      <div style="display: flex; gap: 8px; padding-top: 10px; border-top: 1px solid #F1F5F9;">
-        <button type="button" onclick="window.triggerLogout && window.triggerLogout(); window.closeUserProfileModal && window.closeUserProfileModal();" style="flex: 1; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); color: #DC2626; font-size: 12.5px; font-weight: 700; padding: 9px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
-          <i class="fas fa-sign-out-alt"></i> Sign Out
-        </button>
-        <button type="button" onclick="window.closeUserProfileModal && window.closeUserProfileModal();" style="flex: 1; background: #F1F5F9; border: 1px solid #E2E8F0; color: #475569; font-size: 12.5px; font-weight: 700; padding: 9px; border-radius: 10px; cursor: pointer;">
+      <div style="display: flex; justify-content: flex-end; padding-top: 10px; border-top: 1px solid #F1F5F9;">
+        <button type="button" onclick="window.closeUserProfileModal && window.closeUserProfileModal();" style="width: 100%; background: #F1F5F9; border: 1px solid #E2E8F0; color: #475569; font-size: 12.5px; font-weight: 700; padding: 10px; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
           Close
         </button>
       </div>
