@@ -5172,6 +5172,22 @@ window.confirmPaymentSuccess = function(planKey, txnId) {
   const durationMap = { day: 1, sprint: 7, suite: 30 };
   const durationDays = durationMap[planKey] || 7;
 
+  // Calculate remaining time from previous active subscription before stacking
+  const prevExpiryMs = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+  const remainingMs = (prevExpiryMs && prevExpiryMs > Date.now()) ? (prevExpiryMs - Date.now()) : 0;
+  let remainingText = '';
+  if (remainingMs > 0) {
+    const totalMins = Math.floor(remainingMs / (1000 * 60));
+    const d = Math.floor(totalMins / (60 * 24));
+    const h = Math.floor((totalMins % (60 * 24)) / 60);
+    const m = totalMins % 60;
+    const parts = [];
+    if (d > 0) parts.push(`${d} day${d > 1 ? 's' : ''}`);
+    if (h > 0) parts.push(`${h} hr${h > 1 ? 's' : ''}`);
+    if (parts.length === 0 && m > 0) parts.push(`${m} min${m > 1 ? 's' : ''}`);
+    remainingText = parts.join(', ') || '< 1 hour';
+  }
+
   // 1. Activate Local Subscription
   if (window.SubscriptionManager) {
     window.SubscriptionManager.setUserTier(planKey, durationDays);
@@ -5225,10 +5241,23 @@ window.confirmPaymentSuccess = function(planKey, txnId) {
     }
   }
 
-  // 6. Show celebratory notification
+  // 6. Show celebratory notification & Stacking Notice
   const planNames = { day: '1-Day Sprint', sprint: '7-Day Fast Track', suite: 'ZenSuite' };
   const pName = planNames[planKey] || 'Pro';
-  if (typeof window.showToast === 'function') {
+
+  if (remainingMs > 60 * 1000 && typeof window.showFriendlyNoticeModal === 'function') {
+    window.showFriendlyNoticeModal({
+      title: '🎉 Plan Upgraded & Extended!',
+      message: `<p style="margin-bottom:12px; font-size:15px; color:#334155; line-height:1.5;">Your <strong>${pName}</strong> pass is now ACTIVE with unlimited downloads and AI tailoring.</p>
+      <div style="background:rgba(0,104,86,0.08); border:1px solid rgba(0,104,86,0.25); border-radius:10px; padding:12px 14px; font-size:14px; color:#005041; line-height:1.5;">
+        ⏳ <strong>Zero Lost Time Guarantee:</strong> You had <strong>${remainingText}</strong> remaining from your previous plan. That extra time has been automatically added to your new subscription!
+      </div>`,
+      badgeText: 'Smart Time-Stacking Active',
+      badgeIcon: 'fas fa-clock-rotate-left',
+      type: 'success',
+      primaryBtnText: 'Start Building 🚀'
+    });
+  } else if (typeof window.showToast === 'function') {
     window.showToast(`🎉 Payment Confirmed! Your ${pName} pass is now ACTIVE! Unlimited downloads & AI unlocked.`, 'success', 6000);
   }
 };
