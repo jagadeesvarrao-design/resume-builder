@@ -2550,40 +2550,40 @@
 
   <!-- User Account & Subscription Profile Modal -->
   <div id="user-profile-modal" class="modal-overlay no-print" style="display: none; align-items: center; justify-content: center; z-index: 5500; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.82); backdrop-filter: blur(12px);">
-    <div class="modal-card" style="background: #FFFFFF; border-radius: 24px; box-shadow: 0 30px 80px -15px rgba(0,0,0,0.4), 0 0 0 1px rgba(0, 104, 86, 0.15); padding: 26px 24px 20px 24px; max-width: 500px; width: 92%; text-align: left; position: relative; color: #0F172A; max-height: 90vh; overflow-y: auto; overflow-x: hidden;">
+    <div class="modal-card zen-profile-modal-card">
       
       <!-- Top Luxury Gradient Accent Bar -->
-      <div style="height: 4px; width: 100%; background: linear-gradient(90deg, #00846D 0%, #2DD4BF 50%, #F59E0B 100%); position: absolute; top: 0; left: 0; border-radius: 24px 24px 0 0;"></div>
+      <div class="profile-top-accent"></div>
 
-      <button type="button" class="btn-close" onclick="window.closeUserProfileModal && window.closeUserProfileModal();" style="position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.06); font-size: 18px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748B; transition: all 0.2s;">&times;</button>
+      <button type="button" class="btn-close" onclick="window.closeUserProfileModal && window.closeUserProfileModal();" style="position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.06); font-size: 18px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748B; transition: all 0.2s;" title="Close">&times;</button>
       
       <!-- Profile Hero Header -->
-      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-top: 4px; padding-bottom: 16px; border-bottom: 1px solid #F1F5F9;">
-        <div style="position: relative; width: 54px; height: 54px; border-radius: 50%; padding: 2px; background: linear-gradient(135deg, #00846D, #2DD4BF); flex-shrink: 0; box-shadow: 0 4px 14px rgba(0, 132, 109, 0.25);">
+      <div class="profile-hero-header">
+        <div class="profile-hero-avatar-wrap">
           <img id="profile-modal-avatar-img" referrerpolicy="no-referrer" src="" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: none;">
-          <div id="profile-modal-avatar-initial" style="width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #1E293B, #0F172A); color: #FFFFFF; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center;">U</div>
-          <span id="profile-modal-status-dot" style="position: absolute; bottom: 1px; right: 1px; width: 13px; height: 13px; background: #10B981; border: 2.5px solid #FFFFFF; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" title="Online & Synced"></span>
+          <div id="profile-modal-avatar-initial" style="width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #1E293B, #0F172A); color: #FFFFFF; font-weight: 800; font-size: clamp(17px, 4vw, 20px); display: flex; align-items: center; justify-content: center;">U</div>
+          <span id="profile-modal-status-dot" style="position: absolute; bottom: 1px; right: 1px; width: 12px; height: 12px; background: #10B981; border: 2px solid #FFFFFF; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.15);" title="Online & Synced"></span>
         </div>
         <div style="flex: 1; min-width: 0;">
-          <h3 id="profile-modal-user-name" style="margin: 0 0 2px 0; font-size: 18px; font-weight: 800; font-family: 'Outfit', sans-serif; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px;">User</h3>
-          <p id="profile-modal-user-email" style="margin: 0 0 5px 0; font-size: 12.5px; color: #64748B; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">user@example.com</p>
-          <div style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: #00846D; background: rgba(0, 132, 109, 0.08); padding: 2.5px 8px; border-radius: 9999px; border: 1px solid rgba(0, 132, 109, 0.15);">
-            <i class="fas fa-cloud-check" style="color: #10B981; font-size: 11px;"></i> Cloud Auto-Sync Active
+          <h3 id="profile-modal-user-name" style="margin: 0 0 2px 0; font-size: clamp(16px, 3.5vw, 18px); font-weight: 800; font-family: 'Outfit', sans-serif; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px;">User</h3>
+          <p id="profile-modal-user-email" style="margin: 0 0 4px 0; font-size: clamp(11.5px, 2.5vw, 12.5px); color: #64748B; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">user@example.com</p>
+          <div style="display: inline-flex; align-items: center; gap: 4px; font-size: clamp(10px, 2vw, 11px); font-weight: 600; color: #00846D; background: rgba(0, 132, 109, 0.08); padding: 2px 8px; border-radius: 9999px; border: 1px solid rgba(0, 132, 109, 0.15);">
+            <i class="fas fa-cloud-check" style="color: #10B981; font-size: 10.5px;"></i> Cloud Auto-Sync Active
           </div>
         </div>
       </div>
 
       <!-- 3 Primary Action & Navigation Buttons -->
-      <div class="profile-tabs-header" style="display: flex; gap: 6px; margin-bottom: 18px; background: #F1F5F9; padding: 5px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.04);">
-        <button type="button" id="tab-btn-subscription" onclick="window.switchProfileModalTab && window.switchProfileModalTab('subscription');" style="flex: 1 1 auto; min-width: 130px; background: linear-gradient(135deg, #00846D, #005F4E); color: #FFFFFF; border: none; font-size: 12px; font-weight: 700; padding: 10px 10px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0, 104, 86, 0.25);">
-          <i class="fas fa-crown" style="font-size: 11.5px; color: #FCD34D;"></i>
-          <span>Subscription Details</span>
+      <div class="profile-nav-tabs">
+        <button type="button" id="tab-btn-subscription" class="profile-nav-tab active" onclick="window.switchProfileModalTab && window.switchProfileModalTab('subscription');">
+          <i class="fas fa-crown" style="font-size: 11px; color: #FCD34D;"></i>
+          <span>Subscription</span>
         </button>
-        <button type="button" id="tab-btn-saved-resumes" onclick="window.switchProfileModalTab && window.switchProfileModalTab('resumes');" style="flex: 1 1 auto; min-width: 120px; background: transparent; color: #64748B; border: 1px solid transparent; font-size: 12px; font-weight: 700; padding: 10px 10px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
-          <i class="fas fa-folder-open" style="font-size: 11.5px;"></i>
-          <span>Saved Resumes (<span id="profile-resumes-count-badge">1</span>)</span>
+        <button type="button" id="tab-btn-saved-resumes" class="profile-nav-tab inactive" onclick="window.switchProfileModalTab && window.switchProfileModalTab('resumes');">
+          <i class="fas fa-folder-open" style="font-size: 11px;"></i>
+          <span>Resumes (<span id="profile-resumes-count-badge">1</span>)</span>
         </button>
-        <button type="button" id="tab-btn-logout" data-action="logout" onclick="window.triggerLogout && window.triggerLogout(); window.closeUserProfileModal && window.closeUserProfileModal();" style="flex: 0 0 auto; background: transparent; color: #DC2626; border: 1px solid rgba(239, 68, 68, 0.2); font-size: 12px; font-weight: 700; padding: 10px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s;">
+        <button type="button" id="tab-btn-logout" class="profile-nav-tab logout-tab" data-action="logout" onclick="window.triggerLogout && window.triggerLogout(); window.closeUserProfileModal && window.closeUserProfileModal();">
           <i class="fas fa-sign-out-alt" style="font-size: 11px;"></i>
           <span>Log Out</span>
         </button>
@@ -2592,94 +2592,94 @@
       <!-- PANEL 1: Subscription Details Tab -->
       <div id="profile-panel-subscription" style="display: block;">
         <!-- Subscription Plan Status Box -->
-        <div id="profile-modal-sub-card" style="background: linear-gradient(145deg, #F8FAFC 0%, #F0FDF4 60%, #E6F7F2 100%); border: 1.5px solid rgba(0, 132, 109, 0.25); border-radius: 20px; padding: 18px 18px 16px 18px; margin-bottom: 18px; box-shadow: 0 4px 20px rgba(0, 132, 109, 0.08); position: relative; overflow: hidden;">
+        <div id="profile-modal-sub-card" class="profile-sub-hero-card">
           <!-- Ambient Glow Circle -->
           <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(45, 212, 191, 0.2) 0%, transparent 70%); pointer-events: none;"></div>
 
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-            <span style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #64748B;">Current Membership</span>
-            <span id="profile-modal-plan-badge" style="background: linear-gradient(135deg, #00846D, #2DD4BF); color: white; font-size: 10.5px; font-weight: 800; padding: 4px 10px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 10px rgba(0, 132, 109, 0.3);">
-              <i class="fas fa-crown" style="font-size: 9px; color: #FEF08A;"></i> <span id="profile-modal-badge-text">PRO ACTIVE</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #64748B;">Current Membership</span>
+            <span id="profile-modal-plan-badge" style="background: linear-gradient(135deg, #00846D, #2DD4BF); color: white; font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(0, 132, 109, 0.28);">
+              <i class="fas fa-crown" style="font-size: 8.5px; color: #FEF08A;"></i> <span id="profile-modal-badge-text">PRO ACTIVE</span>
             </span>
           </div>
 
-          <div style="margin-bottom: 14px;">
-            <div id="profile-modal-plan-name" style="font-size: 21px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif; letter-spacing: -0.3px; line-height: 1.2;">7-Day Fast Track</div>
-            <div id="profile-modal-plan-subtitle" style="font-size: 12.5px; color: #475569; margin-top: 3px; font-weight: 500;">Full Career Ecosystem & ATS Pass</div>
+          <div style="margin-bottom: 12px;">
+            <div id="profile-modal-plan-name" style="font-size: clamp(18px, 4vw, 21px); font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif; letter-spacing: -0.3px; line-height: 1.2;">7-Day Fast Track</div>
+            <div id="profile-modal-plan-subtitle" style="font-size: 12px; color: #475569; margin-top: 2px; font-weight: 500;">Full Career Ecosystem &amp; ATS Pass</div>
           </div>
 
           <!-- Time Remaining Highlight Card -->
-          <div style="background: #FFFFFF; border: 1px solid rgba(0, 132, 109, 0.18); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, rgba(0, 132, 109, 0.12), rgba(45, 212, 191, 0.18)); color: #00846D; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+          <div class="profile-time-widget">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+              <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, rgba(0, 132, 109, 0.12), rgba(45, 212, 191, 0.18)); color: #00846D; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">
                 <i class="fas fa-hourglass-half"></i>
               </div>
-              <div>
-                <div style="font-size: 10px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.6px;">Time Remaining</div>
-                <div id="profile-modal-time-left" style="font-size: 15px; font-weight: 800; color: #006856; font-family: 'Outfit', sans-serif;">13 Days, 22 Hours Left</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 9.5px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">Time Remaining</div>
+                <div id="profile-modal-time-left" style="font-size: clamp(13.5px, 3.2vw, 15px); font-weight: 800; color: #006856; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">13 Days, 22 Hours Left</div>
               </div>
             </div>
-            <span id="profile-modal-active-pulse" style="display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.12); padding: 4px 9px; border-radius: 9999px; border: 1px solid rgba(16, 185, 129, 0.2);">
-              <span style="width: 7px; height: 7px; background: #10B981; border-radius: 50%; display: inline-block; box-shadow: 0 0 6px #10B981;"></span> Active
+            <span id="profile-modal-active-pulse" style="display: flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.12); padding: 3px 8px; border-radius: 9999px; border: 1px solid rgba(16, 185, 129, 0.2); flex-shrink: 0;">
+              <span style="width: 6px; height: 6px; background: #10B981; border-radius: 50%; display: inline-block; box-shadow: 0 0 5px #10B981;"></span> Active
             </span>
           </div>
 
           <!-- Expiration Date Row -->
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; background: rgba(255, 255, 255, 0.6); border-radius: 10px; padding: 7px 11px; border: 1px solid rgba(0,0,0,0.04);">
-            <span style="display: flex; align-items: center; gap: 6px; color: #64748B; font-weight: 600;"><i class="far fa-calendar-alt" style="color: #00846D;"></i> Last Date of Subscription:</span>
+          <div class="profile-date-widget">
+            <span style="display: flex; align-items: center; gap: 5px; color: #64748B; font-weight: 600;"><i class="far fa-calendar-alt" style="color: #00846D;"></i> Last Date of Subscription:</span>
             <strong id="profile-modal-expiry-date" style="color: #0F172A; font-weight: 800;">Mon, Sep 21, 2026 at 07:30 PM</strong>
           </div>
         </div>
 
         <!-- Feature Checklist -->
-        <div style="margin-bottom: 18px;">
-          <div style="font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: #64748B; margin-bottom: 8px;">Your Plan Benefits</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1E293B; background: #F8FAFC; padding: 7px 10px; border-radius: 10px; border: 1px solid #E2E8F0;">
-              <i class="fas fa-check-circle" style="color: #10B981; font-size: 13px;"></i> Unlimited PDF Export
+        <div style="margin-bottom: 14px;">
+          <div style="font-weight: 800; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.7px; color: #64748B; margin-bottom: 7px;">Your Plan Benefits</div>
+          <div class="profile-benefits-grid">
+            <div class="profile-benefit-pill">
+              <i class="fas fa-check-circle" style="color: #10B981; font-size: 12px;"></i> Unlimited PDF Export
             </div>
-            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1E293B; background: #F8FAFC; padding: 7px 10px; border-radius: 10px; border: 1px solid #E2E8F0;">
-              <i class="fas fa-check-circle" style="color: #10B981; font-size: 13px;"></i> Gemini AI Tailoring
+            <div class="profile-benefit-pill">
+              <i class="fas fa-check-circle" style="color: #10B981; font-size: 12px;"></i> Gemini AI Tailoring
             </div>
-            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1E293B; background: #F8FAFC; padding: 7px 10px; border-radius: 10px; border: 1px solid #E2E8F0;">
-              <i class="fas fa-check-circle" style="color: #10B981; font-size: 13px;"></i> Full ATS Scanner
+            <div class="profile-benefit-pill">
+              <i class="fas fa-check-circle" style="color: #10B981; font-size: 12px;"></i> Full ATS Scanner
             </div>
-            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1E293B; background: #F8FAFC; padding: 7px 10px; border-radius: 10px; border: 1px solid #E2E8F0;">
-              <i class="fas fa-check-circle" style="color: #10B981; font-size: 13px;"></i> 100% Ad-Free
+            <div class="profile-benefit-pill">
+              <i class="fas fa-check-circle" style="color: #10B981; font-size: 12px;"></i> 100% Ad-Free
             </div>
           </div>
         </div>
 
-        <button type="button" id="btn-profile-modal-upgrade" onclick="window.closeUserProfileModal && window.closeUserProfileModal(); window.openProPaymentModal && window.openProPaymentModal();" style="width: 100%; background: linear-gradient(135deg, #00846D 0%, #005F4E 100%); color: #FFFFFF; border: none; font-size: 13.5px; font-weight: 800; padding: 12px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 16px rgba(0, 104, 86, 0.3); margin-bottom: 12px; transition: all 0.2s;">
+        <button type="button" id="btn-profile-modal-upgrade" class="btn-profile-upgrade-cta" onclick="window.closeUserProfileModal && window.closeUserProfileModal(); window.openProPaymentModal && window.openProPaymentModal();">
           <i class="fas fa-bolt" style="color: #FCD34D;"></i> <span id="profile-modal-upgrade-btn-text">⚡ Extend / Upgrade Plan (Zero Lost Time Rollover)</span>
         </button>
       </div>
 
       <!-- PANEL 2: Saved Resumes in Master Resume Vault Tab -->
       <div id="profile-panel-resumes" style="display: none;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 8px;">
           <div>
-            <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;">Master &amp; Tailored Resumes</h4>
-            <p style="margin: 2px 0 0 0; font-size: 11.5px; color: #64748B;">All resume versions saved in your Master Vault.</p>
+            <h4 style="margin: 0; font-size: clamp(13px, 3vw, 14px); font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;">Master &amp; Tailored Resumes</h4>
+            <p style="margin: 1px 0 0 0; font-size: 11px; color: #64748B;">All resume versions in your Master Vault.</p>
           </div>
-          <button type="button" onclick="if(window.promptCreateNewProfileVersion) window.promptCreateNewProfileVersion(); if(window.renderProfileModalSavedResumes) window.renderProfileModalSavedResumes();" style="background: rgba(0, 132, 109, 0.1); border: 1px solid rgba(0, 132, 109, 0.3); color: #00846D; font-size: 11.5px; font-weight: 700; padding: 6px 11px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s;">
+          <button type="button" onclick="if(window.promptCreateNewProfileVersion) window.promptCreateNewProfileVersion(); if(window.renderProfileModalSavedResumes) window.renderProfileModalSavedResumes();" style="background: rgba(0, 132, 109, 0.1); border: 1px solid rgba(0, 132, 109, 0.3); color: #00846D; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; transition: all 0.2s;">
             <i class="fas fa-plus"></i> New Tailored
           </button>
         </div>
 
         <!-- Saved Resumes List Container -->
-        <div id="profile-saved-resumes-container" style="max-height: 250px; overflow-y: auto; padding-right: 2px; margin-bottom: 14px;">
+        <div id="profile-saved-resumes-container" style="max-height: 250px; overflow-y: auto; padding-right: 2px; margin-bottom: 12px;">
           <!-- Dynamically Rendered by renderProfileModalSavedResumes() -->
         </div>
 
-        <button type="button" onclick="window.closeUserProfileModal(); if(window.enterApp) window.enterApp(); else { const el = document.getElementById('builder-editor-app'); if(el) el.scrollIntoView({behavior:'smooth'}); }" style="width: 100%; background: linear-gradient(135deg, #0F172A, #1E293B); color: #FFFFFF; border: none; font-size: 13px; font-weight: 700; padding: 11px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);">
+        <button type="button" onclick="window.closeUserProfileModal(); if(window.enterApp) window.enterApp(); else { const el = document.getElementById('builder-editor-app'); if(el) el.scrollIntoView({behavior:'smooth'}); }" style="width: 100%; background: linear-gradient(135deg, #0F172A, #1E293B); color: #FFFFFF; border: none; font-size: 12.5px; font-weight: 700; padding: 10px; border-radius: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; margin-bottom: 10px; min-height: 42px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);">
           <i class="fas fa-pen-to-square"></i> Open Resume Editor
         </button>
       </div>
 
       <!-- Modal Footer -->
-      <div style="display: flex; justify-content: flex-end; padding-top: 10px; border-top: 1px solid #F1F5F9;">
-        <button type="button" onclick="window.closeUserProfileModal && window.closeUserProfileModal();" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; color: #475569; font-size: 12.5px; font-weight: 700; padding: 10px; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+      <div style="display: flex; justify-content: flex-end; padding-top: 8px; border-top: 1px solid #F1F5F9;">
+        <button type="button" class="btn-profile-close-footer" onclick="window.closeUserProfileModal && window.closeUserProfileModal();">
           Close
         </button>
       </div>
