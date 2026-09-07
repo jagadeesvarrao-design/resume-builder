@@ -16,6 +16,7 @@
     version: '1.0.0',
     merchantVpa: '8790906267-2@ybl',
     merchantName: 'ZenResume',
+    razorpayKeyId: window.RAZORPAY_KEY_ID || 'rzp_test_TZ9yrhl52qFqfA',
     
     // Configuration Catalog
     catalog: {
@@ -192,86 +193,143 @@
     },
 
     /**
-     * Executes Non-UPI Razorpay Checkout (Cards, NetBanking, International Cards)
-     * Excludes UPI to ensure UPI remains 100% direct with 0% gateway commission.
+     * Executes Razorpay Standard Web Checkout (Cards, NetBanking, Wallets & Global Cards)
+     * Follows 3-Step Standard Architecture:
+     * 1. Calls /api/create-order on backend to create an authentic Razorpay order
+     * 2. Opens Razorpay Standard Checkout modal with order_id
+     * 3. Sends razorpay_signature to /api/verify-payment for cryptographic verification
      */
-    processRazorpayCard: function(planKey, customCurrency) {
+    processRazorpayCard: async function(planKey, customCurrency) {
       planKey = planKey || window.currentPaymentPlan || 'sprint';
       const currency = customCurrency || this.getCurrency();
       const plan = (this.catalog[currency] && this.catalog[currency].plans[planKey]) || this.catalog.INR.plans.sprint;
-      const orderId = (window._currentPaymentSession && window._currentPaymentSession.orderId) || this.generateOrderId(planKey);
+      const clientOrderId = (window._currentPaymentSession && window._currentPaymentSession.orderId) || this.generateOrderId(planKey);
       const isUSD = currency === 'USD';
       const amountInUnits = isUSD ? Math.round(plan.amount * 100) : plan.amount * 100;
 
+      if (typeof window.showToast === 'function') {
+        window.showToast('Initializing secure Razorpay checkout...', 'info', 2000);
+      }
+
+      // Step 1: Create Order on Backend
+      let orderData;
+      try {
+        const orderResponse = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: amountInUnits,
+            currency: currency,
+            receipt: clientOrderId,
+            notes: {
+              planKey: planKey,
+              planName: plan.name,
+              platform: 'ZenResume Web'
+            }
+          })
+        });
+
+        if (!orderResponse.ok) {
+          const errData = await orderResponse.json().catch(() => ({}));
+          throw new Error(errData.error || `Server returned status ${orderResponse.status}`);
+        }
+
+        orderData = await orderResponse.json();
+      } catch (orderErr) {
+        console.error('[Razorpay Backend] Failed to create order:', orderErr);
+        if (typeof window.showToast === 'function') {
+          window.showToast('Could not initialize gateway order. Falling back to direct UPI...', 'warning', 4000);
+        }
+        this.openIndianCheckout(planKey);
+        return;
+      }
+
+      // Step 2: Launch Standard Checkout Modal with order_id
       const launchRazorpay = () => {
         if (!window.Razorpay) {
           if (typeof window.showToast === 'function') {
-            window.showToast('Loading secure card gateway...', 'info');
+            window.showToast('Loading Razorpay gateway components...', 'info');
           }
           return;
         }
 
         const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || {};
+        const rzpKeyId = orderData.key_id || window.RAZORPAY_KEY_ID || 'rzp_test_TZ9yrhl52qFqfA';
+
         const rzpOptions = {
-          key: window.RAZORPAY_KEY_ID || localStorage.getItem('zen_razorpay_key_id') || 'rzp_test_zenresume',
-          amount: amountInUnits,
-          currency: currency,
+          key: rzpKeyId,
+          order_id: orderData.order_id,
+          amount: orderData.amount,
+          currency: orderData.currency,
           name: 'ZenResume Pro',
-          description: `${plan.name} (${currency === 'INR' ? 'Cards & NetBanking' : 'Global Card Checkout'})`,
+          description: `${plan.name} Access Pass`,
           image: '/apple-touch-icon.png',
-          // Strictly restrict instruments: Only Cards & NetBanking (UPI excluded)
-          config: {
-            display: {
-              blocks: {
-                cards: {
-                  name: 'Credit & Debit Cards',
-                  instruments: [
-                    { method: 'card' }
-                  ]
-                },
-                netbanking: {
-                  name: 'NetBanking & Wallets',
-                  instruments: [
-                    { method: 'netbanking' },
-                    { method: 'wallet' }
-                  ]
-                }
-              },
-              sequence: ['block.cards', 'block.netbanking'],
-              preferences: {
-                show_default_blocks: false
-              }
-            }
-          },
-          handler: (response) => {
-            this.fulfillPayment({
-              orderId: orderId,
-              planKey: planKey,
-              amount: `${this.catalog[currency].symbol}${plan.amount}`,
-              currency: currency,
-              provider: isUSD ? 'Razorpay International Card' : 'Razorpay Cards/NetBanking',
-              transactionRef: response.razorpay_payment_id || ('RZP_' + Date.now())
-            });
-          },
           prefill: {
             name: user.displayName || '',
             email: user.email || ''
           },
           theme: { color: '#006856' },
+          handler: async (response) => {
+            // Step 3: Backend Signature Verification
+            try {
+              if (typeof window.showToast === 'function') {
+                window.showToast('Verifying payment signature with secure server...', 'info');
+              }
+
+              const verifyResponse = await fetch('/api/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature
+                })
+              });
+
+              const verifyData = await verifyResponse.json().catch(() => ({}));
+
+              if (verifyResponse.ok && verifyData.verified) {
+                if (typeof window.showToast === 'function') {
+                  window.showToast('Payment Verified! Welcome to ZenSuite Pro.', 'success');
+                }
+                this.fulfillPayment({
+                  orderId: response.razorpay_order_id || clientOrderId,
+                  planKey: planKey,
+                  amount: `${this.catalog[currency].symbol}${plan.amount}`,
+                  currency: currency,
+                  provider: 'Razorpay Standard Checkout',
+                  transactionRef: response.razorpay_payment_id
+                });
+              } else {
+                throw new Error(verifyData.error || 'Payment signature mismatch. Verification failed.');
+              }
+            } catch (verifyErr) {
+              console.error('[Razorpay] Verification Error:', verifyErr);
+              if (typeof window.showToast === 'function') {
+                window.showToast('Payment Verification Failed: ' + verifyErr.message, 'error', 5000);
+              }
+            }
+          },
           modal: {
-            ondismiss: function() {
-              console.log('[Razorpay] Modal dismissed');
+            ondismiss: () => {
+              console.log('[Razorpay] Modal closed by user');
+              if (typeof window.showToast === 'function') {
+                window.showToast('Payment process was cancelled.', 'info');
+              }
             }
           }
         };
 
         const rzp = new window.Razorpay(rzpOptions);
-        rzp.on('payment.failed', function(response) {
-          if (typeof window.showToast === 'function') {
-            window.showToast('Payment could not be processed. Please try another card or UPI.', 'error');
-          }
+
+        rzp.on('payment.failed', (response) => {
           console.warn('[Razorpay] Payment failed:', response.error);
+          const failReason = response.error && response.error.description ? response.error.description : 'Payment could not be completed.';
+          if (typeof window.showToast === 'function') {
+            window.showToast(`Payment failed: ${failReason}`, 'error', 5000);
+          }
         });
+
         rzp.open();
       };
 
@@ -282,7 +340,7 @@
         script.onload = () => launchRazorpay();
         script.onerror = () => {
           if (typeof window.showToast === 'function') {
-            window.showToast('Could not load card checkout. Please use direct UPI QR.', 'warning');
+            window.showToast('Could not load Razorpay SDK. Please use direct UPI QR.', 'warning');
           }
           this.openIndianCheckout(planKey);
         };

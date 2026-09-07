@@ -5109,34 +5109,9 @@ window.submitUPIPaymentVerification = function() {
 };
 
 window.initiateCardPayment = function(planKey) {
-  // If Razorpay SDK is available, trigger checkout
-  const amounts = { day: 4900, sprint: 19900, suite: 59900 }; // in paise
-  const amount = amounts[planKey] || 19900;
-
-  if (window.Razorpay) {
-    const user = typeof firebase !== 'undefined' && firebase.auth ? firebase.auth().currentUser : null;
-    const rzp = new window.Razorpay({
-      key: window.RAZORPAY_KEY_ID || 'rzp_test_zenresume',
-      amount: amount,
-      currency: 'INR',
-      name: 'ZenResume Pro',
-      description: `${planKey.toUpperCase()} Access Pass`,
-      image: '/logo-card.png',
-      handler: function(response) {
-        window.confirmPaymentSuccess(planKey, response.razorpay_payment_id || 'RZP_' + Date.now());
-      },
-      prefill: {
-        name: user ? user.displayName || '' : '',
-        email: user ? user.email || '' : ''
-      },
-      theme: { color: '#006856' }
-    });
-    rzp.open();
+  if (window.PaymentMediator && typeof window.PaymentMediator.processRazorpayCard === 'function') {
+    window.PaymentMediator.processRazorpayCard(planKey);
   } else {
-    // Fallback: prompt or direct to UPI modal for zero-friction processing
-    if (typeof window.showToast === 'function') {
-      window.showToast('Launching instant checkout...', 'info');
-    }
     window.openUPIPaymentModal(planKey);
   }
 };
