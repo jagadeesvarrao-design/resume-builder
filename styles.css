@@ -8788,12 +8788,25 @@ body.in-editor .app-container {
 
 [data-theme="dark"] #user-profile-modal .profile-tabs-header {
   background: #1E293B !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] #user-profile-modal #profile-panel-subscription div[style*="background: #F8FAFC"],
+[data-theme="dark"] #user-profile-modal div[style*="background: #F8FAFC"] {
+  background: rgba(30, 41, 59, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] #user-profile-modal div[style*="background: rgba(255, 255, 255, 0.6)"] {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 [data-theme="dark"] #user-profile-modal #tab-btn-logout {
-  background: rgba(239, 68, 68, 0.15) !important;
+  background: rgba(239, 68, 68, 0.12) !important;
   color: #F87171 !important;
-  border-color: rgba(239, 68, 68, 0.35) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
 }
 
 [data-theme="dark"] #user-profile-modal #tab-btn-logout:hover {
@@ -8810,6 +8823,18 @@ body.in-editor .app-container {
 [data-theme="dark"] #user-profile-modal button[onclick*="closeUserProfileModal"]:hover {
   background: #334155 !important;
   color: #FFFFFF !important;
+}
+
+#btn-profile-modal-upgrade:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 132, 109, 0.4) !important;
+  filter: brightness(1.05);
+}
+
+#tab-btn-subscription:hover,
+#tab-btn-saved-resumes:hover,
+#tab-btn-logout:hover {
+  transform: translateY(-0.5px);
 }
 
 .nav-avatar-wrapper {

@@ -1100,10 +1100,10 @@ window.switchProfileModalTab = function(tabName) {
 
   if (tabName === 'subscription') {
     if (btnSub) {
-      btnSub.style.background = 'linear-gradient(135deg, #476550, #00846D)';
+      btnSub.style.background = 'linear-gradient(135deg, #00846D, #005F4E)';
       btnSub.style.color = '#FFFFFF';
       btnSub.style.borderColor = 'transparent';
-      btnSub.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+      btnSub.style.boxShadow = '0 4px 12px rgba(0, 104, 86, 0.25)';
     }
     if (btnRes) {
       btnRes.style.background = 'transparent';
@@ -1121,10 +1121,10 @@ window.switchProfileModalTab = function(tabName) {
       btnSub.style.boxShadow = 'none';
     }
     if (btnRes) {
-      btnRes.style.background = 'linear-gradient(135deg, #476550, #00846D)';
+      btnRes.style.background = 'linear-gradient(135deg, #00846D, #005F4E)';
       btnRes.style.color = '#FFFFFF';
       btnRes.style.borderColor = 'transparent';
-      btnRes.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+      btnRes.style.boxShadow = '0 4px 12px rgba(0, 104, 86, 0.25)';
     }
     if (panelSub) panelSub.style.display = 'none';
     if (panelRes) panelRes.style.display = 'block';
@@ -1149,10 +1149,10 @@ window.renderProfileModalSavedResumes = function() {
 
   if (profiles.length === 0) {
     container.innerHTML = `
-      <div style="text-align: center; padding: 24px 12px; color: #64748B; font-size: 13px;">
-        <i class="fas fa-folder-open" style="font-size: 28px; color: #94A3B8; margin-bottom: 8px; display: block;"></i>
-        No saved resumes found in your Master Vault.<br>
-        <span style="font-size: 11.5px; color: #94A3B8;">Start editing in the builder to automatically save your Master Resume.</span>
+      <div style="text-align: center; padding: 28px 14px; color: #64748B; font-size: 13px; background: #F8FAFC; border-radius: 16px; border: 1px dashed #CBD5E1;">
+        <i class="fas fa-folder-open" style="font-size: 32px; color: #94A3B8; margin-bottom: 10px; display: block;"></i>
+        <strong style="color: #1E293B; font-size: 14px;">No tailored resumes yet</strong><br>
+        <span style="font-size: 12px; color: #64748B; margin-top: 4px; display: inline-block;">Start editing in the builder to automatically save your Master Resume.</span>
       </div>
     `;
     return;
@@ -1184,28 +1184,28 @@ window.renderProfileModalSavedResumes = function() {
     const displayDate = p.updatedAt ? new Date(p.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently saved';
 
     html += `
-      <div class="profile-resume-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #F8FAFC; border: 1.5px solid ${isActive ? '#00846D' : '#E2E8F0'}; border-radius: 12px; margin-bottom: 8px; transition: all 0.2s;">
-        <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
-          <div style="width: 32px; height: 32px; border-radius: 8px; background: ${isMaster ? 'rgba(245, 158, 11, 0.15)' : 'rgba(0, 132, 109, 0.12)'}; color: ${isMaster ? '#D97706' : '#00846D'}; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">
+      <div class="profile-resume-item" style="display: flex; align-items: center; justify-content: space-between; padding: 11px 13px; background: #F8FAFC; border: 1.5px solid ${isActive ? '#00846D' : '#E2E8F0'}; border-radius: 14px; margin-bottom: 9px; transition: all 0.2s; box-shadow: ${isActive ? '0 3px 10px rgba(0, 132, 109, 0.12)' : '0 1px 3px rgba(0,0,0,0.02)'};">
+        <div style="display: flex; align-items: center; gap: 11px; min-width: 0; flex: 1;">
+          <div style="width: 36px; height: 36px; border-radius: 10px; background: ${isMaster ? 'rgba(245, 158, 11, 0.15)' : 'rgba(0, 132, 109, 0.12)'}; color: ${isMaster ? '#D97706' : '#00846D'}; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">
             <i class="${isMaster ? 'fas fa-star' : 'fas fa-file-alt'}"></i>
           </div>
           <div style="min-width: 0; flex: 1;">
             <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-              <span class="profile-resume-title" style="font-size: 13px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px;">${escapeHtml(p.name)}</span>
-              ${isActive ? '<span style="font-size: 9.5px; font-weight: 800; color: #00846D; background: rgba(0, 132, 109, 0.12); padding: 1px 5px; border-radius: 4px;">ACTIVE</span>' : ''}
-              ${isMaster ? '<span style="font-size: 9.5px; font-weight: 800; color: #D97706; background: rgba(245, 158, 11, 0.12); padding: 1px 5px; border-radius: 4px;">MASTER</span>' : ''}
+              <span class="profile-resume-title" style="font-size: 13.5px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 175px;">${escapeHtml(p.name)}</span>
+              ${isActive ? '<span style="font-size: 9.5px; font-weight: 800; color: #00846D; background: rgba(0, 132, 109, 0.12); padding: 2px 6px; border-radius: 6px; letter-spacing: 0.3px;">ACTIVE</span>' : ''}
+              ${isMaster ? '<span style="font-size: 9.5px; font-weight: 800; color: #D97706; background: rgba(245, 158, 11, 0.15); padding: 2px 6px; border-radius: 6px; letter-spacing: 0.3px;">MASTER</span>' : ''}
             </div>
-            <div class="profile-resume-sub" style="font-size: 11px; color: #64748B; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            <div class="profile-resume-sub" style="font-size: 11.5px; color: #64748B; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500;">
               ${escapeHtml(candidateName)} • ${escapeHtml(jobTitle)} • <span style="color: #94A3B8;">${displayDate}</span>
             </div>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 5px; margin-left: 8px; flex-shrink: 0;">
-          <button type="button" onclick="window.loadProfileFromModal && window.loadProfileFromModal('${p.id}');" title="Open in Editor" style="background: ${isActive ? 'linear-gradient(135deg, #476550, #00846D)' : '#FFFFFF'}; color: ${isActive ? '#FFFFFF' : '#0F172A'}; border: 1px solid ${isActive ? 'transparent' : '#CBD5E1'}; font-size: 11px; font-weight: 700; padding: 5px 9px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-            <i class="fas fa-arrow-right"></i> <span>${isActive ? 'Editing' : 'Open'}</span>
+        <div style="display: flex; align-items: center; gap: 6px; margin-left: 8px; flex-shrink: 0;">
+          <button type="button" onclick="window.loadProfileFromModal && window.loadProfileFromModal('${p.id}');" title="Open in Editor" style="background: ${isActive ? 'linear-gradient(135deg, #00846D, #005F4E)' : '#FFFFFF'}; color: ${isActive ? '#FFFFFF' : '#0F172A'}; border: 1px solid ${isActive ? 'transparent' : '#CBD5E1'}; font-size: 11.5px; font-weight: 700; padding: 6px 11px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: ${isActive ? '0 2px 6px rgba(0, 104, 86, 0.25)' : 'none'}; transition: all 0.15s;">
+            <i class="fas fa-arrow-right" style="font-size: 10px;"></i> <span>${isActive ? 'Editing' : 'Open'}</span>
           </button>
           ${!isMaster ? `
-            <button type="button" onclick="window.deleteProfileFromModal && window.deleteProfileFromModal('${p.id}', '${escapeHtml(p.name).replace(/'/g, "\\'")}');" title="Delete tailored version" style="background: transparent; color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2); font-size: 11px; padding: 5px 7px; border-radius: 6px; cursor: pointer;">
+            <button type="button" onclick="window.deleteProfileFromModal && window.deleteProfileFromModal('${p.id}', '${escapeHtml(p.name).replace(/'/g, "\\'")}');" title="Delete tailored version" style="background: transparent; color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.25); font-size: 11.5px; padding: 6px 8px; border-radius: 8px; cursor: pointer; transition: all 0.15s;">
               <i class="fas fa-trash-alt"></i>
             </button>
           ` : ''}
