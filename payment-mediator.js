@@ -13,7 +13,7 @@
   'use strict';
 
   const PaymentMediator = {
-    version: '1.0.0',
+    version: '2.0.0',
     merchantVpa: '8790906267-2@ybl',
     merchantName: 'ZenResume',
     razorpayKeyId: window.RAZORPAY_KEY_ID || 'rzp_test_TZ9yrhl52qFqfA',

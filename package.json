@@ -1,4 +1,6 @@
 {
+  "name": "zenresume",
+  "version": "2.0.0",
   "type": "module",
   "dependencies": {
     "@vercel/speed-insights": "^2.0.0",
