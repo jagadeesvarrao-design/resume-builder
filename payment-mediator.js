@@ -121,6 +121,12 @@
      */
     openIndianCheckout: function(planKey) {
       planKey = planKey || window.currentPaymentPlan || 'sprint';
+
+      // Enforce User Authentication Gate
+      if (typeof window.requireUserAuth === 'function' && !window.requireUserAuth(null, { type: 'payment', method: 'upi', planKey })) {
+        return;
+      }
+
       const plan = this.catalog.INR.plans[planKey] || this.catalog.INR.plans.sprint;
       const orderId = this.generateOrderId(planKey);
       window._currentPaymentSession = { orderId, planKey, currency: 'INR', amount: plan.amount };
@@ -168,6 +174,13 @@
      * Opens International Payment Hub (Stripe, PayPal, Global Cards)
      */
     openInternationalCheckout: function(planKey) {
+      planKey = planKey || window.currentPaymentPlan || 'sprint';
+
+      // Enforce User Authentication Gate
+      if (typeof window.requireUserAuth === 'function' && !window.requireUserAuth(null, { type: 'payment', method: 'card', planKey, currency: 'USD' })) {
+        return;
+      }
+
       const plan = this.catalog.USD.plans[planKey] || this.catalog.USD.plans.sprint;
       const orderId = this.generateOrderId(planKey);
       window._currentPaymentSession = { orderId, planKey, currency: 'USD', amount: plan.amount };
@@ -202,6 +215,12 @@
     processRazorpayCard: async function(planKey, customCurrency) {
       planKey = planKey || window.currentPaymentPlan || 'sprint';
       const currency = customCurrency || this.getCurrency();
+
+      // Enforce User Authentication Gate
+      if (typeof window.requireUserAuth === 'function' && !window.requireUserAuth(null, { type: 'payment', method: 'card', planKey, currency })) {
+        return;
+      }
+
       const plan = (this.catalog[currency] && this.catalog[currency].plans[planKey]) || this.catalog.INR.plans.sprint;
       const clientOrderId = (window._currentPaymentSession && window._currentPaymentSession.orderId) || this.generateOrderId(planKey);
       const isUSD = currency === 'USD';
@@ -255,6 +274,8 @@
 
         const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || {};
         const rzpKeyId = orderData.key_id || window.RAZORPAY_KEY_ID || 'rzp_test_TZ9yrhl52qFqfA';
+        const userEmail = user.email || 'customer@zenresume.online';
+        const userName = user.displayName || (user.email ? user.email.split('@')[0] : 'Professional');
 
         const rzpOptions = {
           key: rzpKeyId,
@@ -265,8 +286,9 @@
           description: `${plan.name} Access Pass`,
           image: '/apple-touch-icon.png',
           prefill: {
-            name: user.displayName || '',
-            email: user.email || ''
+            name: userName,
+            email: userEmail,
+            contact: user.phoneNumber || ''
           },
           theme: { color: '#006856' },
           handler: async (response) => {

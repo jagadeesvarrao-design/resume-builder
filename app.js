@@ -4994,12 +4994,25 @@ window.handlePaymentPrimaryClick = function() {
   const currency = window.currentCurrency || 'INR';
   const planKey = window.currentPaymentPlan || 'sprint';
 
+  // Enforce User Authentication Gate
+  if (typeof window.requireUserAuth === 'function' && !window.requireUserAuth(null, { type: 'payment', method: 'primary', planKey, currency })) {
+    return;
+  }
+
   if (currency === 'INR') {
     // Open Dynamic UPI Payment & QR Code Modal
-    window.openUPIPaymentModal(planKey);
+    if (window.PaymentMediator && typeof window.PaymentMediator.openIndianCheckout === 'function') {
+      window.PaymentMediator.openIndianCheckout(planKey);
+    } else {
+      window.openUPIPaymentModal(planKey);
+    }
   } else {
     // International USD Payment flow
-    window.initiateInternationalPayment(planKey, 'stripe');
+    if (window.PaymentMediator && typeof window.PaymentMediator.openInternationalCheckout === 'function') {
+      window.PaymentMediator.openInternationalCheckout(planKey);
+    } else {
+      window.initiateInternationalPayment(planKey, 'stripe');
+    }
   }
 };
 
@@ -5007,9 +5020,18 @@ window.handlePaymentSecondaryClick = function() {
   const currency = window.currentCurrency || 'INR';
   const planKey = window.currentPaymentPlan || 'sprint';
 
+  // Enforce User Authentication Gate
+  if (typeof window.requireUserAuth === 'function' && !window.requireUserAuth(null, { type: 'payment', method: 'secondary', planKey, currency })) {
+    return;
+  }
+
   if (currency === 'INR') {
     // Card / NetBanking / Razorpay flow
-    window.initiateCardPayment(planKey);
+    if (window.PaymentMediator && typeof window.PaymentMediator.processRazorpayCard === 'function') {
+      window.PaymentMediator.processRazorpayCard(planKey);
+    } else {
+      window.initiateCardPayment(planKey);
+    }
   } else {
     // PayPal / Apple Pay flow for USD
     window.initiateInternationalPayment(planKey, 'paypal');
@@ -5019,6 +5041,11 @@ window.handlePaymentSecondaryClick = function() {
 window.openUPIPaymentModal = function(planKey) {
   planKey = planKey || window.currentPaymentPlan || 'sprint';
   window.currentPaymentPlan = planKey;
+
+  // Enforce User Authentication Gate
+  if (typeof window.requireUserAuth === 'function' && !window.requireUserAuth(null, { type: 'payment', method: 'upi', planKey })) {
+    return;
+  }
 
   const modal = document.getElementById('upi-payment-modal');
   if (!modal) return;

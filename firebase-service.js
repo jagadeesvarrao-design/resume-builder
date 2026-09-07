@@ -582,6 +582,35 @@ function handleAuthStateChange(user) {
       loadSavedResume();
       window.state.hasLoadedProfile = true;
     }
+
+    // Auto-resume pending payment if user initiated checkout prior to authentication
+    try {
+      const pendingActionStr = sessionStorage.getItem('zen_pending_auth_action');
+      if (pendingActionStr) {
+        sessionStorage.removeItem('zen_pending_auth_action');
+        const actionData = JSON.parse(pendingActionStr);
+        if (actionData && actionData.type === 'payment') {
+          setTimeout(() => {
+            if (typeof window.openProPaymentModal === 'function') {
+              window.openProPaymentModal(actionData.planKey || 'sprint');
+            }
+            if (actionData.method === 'card' || actionData.method === 'secondary') {
+              if (window.PaymentMediator && typeof window.PaymentMediator.processRazorpayCard === 'function') {
+                window.PaymentMediator.processRazorpayCard(actionData.planKey, actionData.currency);
+              }
+            } else if (actionData.method === 'upi' || actionData.method === 'primary') {
+              if (window.PaymentMediator && typeof window.PaymentMediator.openIndianCheckout === 'function') {
+                window.PaymentMediator.openIndianCheckout(actionData.planKey);
+              } else if (typeof window.openUPIPaymentModal === 'function') {
+                window.openUPIPaymentModal(actionData.planKey);
+              }
+            }
+          }, 600);
+        }
+      }
+    } catch (e) {
+      console.warn('Pending auth action restoration error:', e);
+    }
   } else {
     lastAuthenticatedUid = null;
     // Cancel subscription observer on logout
@@ -641,6 +670,46 @@ document.addEventListener('click', (e) => {
     return;
   }
 });
+
+// Global Authentication State & Gatekeeper Helpers
+window.isUserAuthenticated = function() {
+  try {
+    return typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser !== null;
+  } catch (e) {
+    return false;
+  }
+};
+
+window.requireUserAuth = function(onAuthenticated, actionData) {
+  if (window.isUserAuthenticated()) {
+    if (typeof onAuthenticated === 'function') {
+      onAuthenticated(firebase.auth().currentUser);
+    }
+    return true;
+  }
+
+  // Save pending action to sessionStorage for auto-continuation after login
+  if (actionData) {
+    try {
+      sessionStorage.setItem('zen_pending_auth_action', JSON.stringify(actionData));
+    } catch (e) {}
+  }
+
+  // Close payment modals so login modal is prominent
+  if (typeof window.closeProPaymentModal === 'function') window.closeProPaymentModal();
+  if (typeof window.closeUPIPaymentModal === 'function') window.closeUPIPaymentModal();
+  const intlModal = document.getElementById('international-checkout-modal');
+  if (intlModal) intlModal.style.display = 'none';
+
+  if (typeof window.showToast === 'function') {
+    window.showToast('Please sign in or create an account to activate your subscription.', 'info', 5000);
+  }
+
+  if (typeof window.openEmailAuthModal === 'function') {
+    window.openEmailAuthModal();
+  }
+  return false;
+};
 
 // Global Email Modal Controls
 window.openEmailAuthModal = function() {
