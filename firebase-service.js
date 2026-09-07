@@ -663,10 +663,20 @@ document.addEventListener('click', (e) => {
     return;
   }
 
-  const logoutTarget = e.target.closest('#btn-landing-logout, #btn-logout, [data-action="logout"]');
+  const logoutTarget = e.target.closest('#btn-landing-logout, #btn-logout, [data-action="logout"], #tab-btn-logout');
   if (logoutTarget) {
     e.preventDefault();
+    if (typeof window.closeUserProfileModal === 'function') window.closeUserProfileModal();
     window.triggerLogout();
+    return;
+  }
+
+  const profileTarget = e.target.closest('#nav-user-profile');
+  if (profileTarget) {
+    e.preventDefault();
+    if (typeof window.openUserProfileModal === 'function') {
+      window.openUserProfileModal();
+    }
     return;
   }
 });
@@ -905,57 +915,8 @@ function updatePremiumUI(isPremium) {
   }
 }
 
-// User Account & Subscription Profile Modal Engine
-window.openUserProfileModal = async function() {
-  const modal = document.getElementById('user-profile-modal');
-  if (!modal) return;
-
-  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
-  if (!user) {
-    if (typeof window.openEmailAuthModal === 'function') window.openEmailAuthModal();
-    return;
-  }
-
-  // Populate basic user info
-  const nameEl = document.getElementById('profile-modal-user-name');
-  const emailEl = document.getElementById('profile-modal-user-email');
-  const avatarImg = document.getElementById('profile-modal-avatar-img');
-  const avatarInitial = document.getElementById('profile-modal-avatar-initial');
-
-  const displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'Professional');
-  if (nameEl) nameEl.textContent = displayName;
-  if (emailEl) emailEl.textContent = user.email || (user.phoneNumber || 'Authenticated User');
-
-  if (avatarImg && avatarInitial) {
-    if (user.photoURL) {
-      avatarImg.src = user.photoURL;
-      avatarImg.style.display = 'block';
-      avatarInitial.style.display = 'none';
-      avatarImg.onerror = () => {
-        avatarImg.style.display = 'none';
-        avatarInitial.style.display = 'flex';
-      };
-    } else {
-      avatarImg.style.display = 'none';
-      avatarInitial.style.display = 'flex';
-      avatarInitial.textContent = (displayName.charAt(0) || 'U').toUpperCase();
-    }
-  }
-
-  // Retrieve Subscription Details from Firestore (or Local Fallback)
-  let subData = null;
-  try {
-    if (typeof db !== 'undefined' && db && user.uid) {
-      const doc = await db.collection('users').doc(user.uid).get();
-      if (doc.exists && doc.data()?.subscription) {
-        subData = doc.data().subscription;
-      }
-    }
-  } catch (e) {
-    console.warn('[ProfileModal] Firestore read fallback:', e);
-  }
-
-  // Local storage fallback if offline or Firestore query is pending
+// Helper to render subscription details synchronously or on update
+function renderSubscriptionDetails(subData) {
   const localTier = localStorage.getItem('zen_user_tier') || 'free';
   const localExpiryMs = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
 
@@ -1043,8 +1004,49 @@ window.openUserProfileModal = async function() {
       pulseEl.innerHTML = '<span style="width: 7px; height: 7px; background: #94A3B8; border-radius: 50%; display: inline-block;"></span> Free';
     }
   }
+}
 
-  // Update resume count badge
+// User Account & Subscription Profile Modal Engine (Instant Synchronous Render)
+window.openUserProfileModal = function() {
+  const modal = document.getElementById('user-profile-modal');
+  if (!modal) return;
+
+  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+  if (!user) {
+    if (typeof window.openEmailAuthModal === 'function') window.openEmailAuthModal();
+    return;
+  }
+
+  // 1. Instantly populate basic user info
+  const nameEl = document.getElementById('profile-modal-user-name');
+  const emailEl = document.getElementById('profile-modal-user-email');
+  const avatarImg = document.getElementById('profile-modal-avatar-img');
+  const avatarInitial = document.getElementById('profile-modal-avatar-initial');
+
+  const displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'Professional');
+  if (nameEl) nameEl.textContent = displayName;
+  if (emailEl) emailEl.textContent = user.email || (user.phoneNumber || 'Authenticated User');
+
+  if (avatarImg && avatarInitial) {
+    if (user.photoURL) {
+      avatarImg.src = user.photoURL;
+      avatarImg.style.display = 'block';
+      avatarInitial.style.display = 'none';
+      avatarImg.onerror = () => {
+        avatarImg.style.display = 'none';
+        avatarInitial.style.display = 'flex';
+      };
+    } else {
+      avatarImg.style.display = 'none';
+      avatarInitial.style.display = 'flex';
+      avatarInitial.textContent = (displayName.charAt(0) || 'U').toUpperCase();
+    }
+  }
+
+  // 2. Instantly render subscription details from local cached state (0ms delay)
+  renderSubscriptionDetails(null);
+
+  // 3. Instantly update resume count badge & render saved resumes
   try {
     const registry = (typeof window.getStoredProfilesRegistry === 'function')
       ? window.getStoredProfilesRegistry()
@@ -1053,7 +1055,7 @@ window.openUserProfileModal = async function() {
     if (countBadge) countBadge.textContent = registry.profiles?.length || 1;
   } catch (e) {}
 
-  // Default to subscription tab & prepare resume list
+  // 4. Default to subscription tab & prepare resume list
   if (typeof window.switchProfileModalTab === 'function') {
     window.switchProfileModalTab('subscription');
   }
@@ -1061,7 +1063,19 @@ window.openUserProfileModal = async function() {
     window.renderProfileModalSavedResumes();
   }
 
+  // 5. Instantly display modal
   modal.style.display = 'flex';
+
+  // 6. Asynchronously sync Firestore in the background without blocking UI
+  if (typeof db !== 'undefined' && db && user.uid) {
+    db.collection('users').doc(user.uid).get().then((doc) => {
+      if (doc.exists && doc.data()?.subscription) {
+        renderSubscriptionDetails(doc.data().subscription);
+      }
+    }).catch((e) => {
+      console.warn('[ProfileModal] Background Firestore read fallback:', e);
+    });
+  }
 };
 
 window.closeUserProfileModal = function() {
