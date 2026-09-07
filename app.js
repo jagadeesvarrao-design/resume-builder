@@ -4714,7 +4714,9 @@ window.SubscriptionManager = {
     if (!['free', 'day', 'sprint', 'suite'].includes(tier)) tier = 'free';
     localStorage.setItem('zen_user_tier', tier);
     if (durationDays > 0) {
-      const expiry = Date.now() + (durationDays * 24 * 60 * 60 * 1000);
+      const currentExpiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+      const baseTime = (currentExpiry && currentExpiry > Date.now()) ? currentExpiry : Date.now();
+      const expiry = baseTime + (durationDays * 24 * 60 * 60 * 1000);
       localStorage.setItem('zen_tier_expiry', expiry.toString());
     } else {
       localStorage.removeItem('zen_tier_expiry');
@@ -5176,12 +5178,16 @@ window.confirmPaymentSuccess = function(planKey, txnId) {
     window.SubscriptionManager.applyAdVisibility();
   }
 
+  // Calculate Exact Stacked Expiry Date (preserves existing hours/days)
+  const currentExpiryMs = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+  const expiresAtDate = (currentExpiryMs && currentExpiryMs > Date.now()) ? new Date(currentExpiryMs) : new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000);
+
   // 2. Persist Receipt
   const receipt = {
     plan: planKey,
     transactionId: txnId || ('TXN_' + Date.now()),
     timestamp: new Date().toISOString(),
-    expiresAt: new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString()
+    expiresAt: expiresAtDate.toISOString()
   };
   try {
     localStorage.setItem('zen_last_payment_receipt', JSON.stringify(receipt));
@@ -5197,7 +5203,7 @@ window.confirmPaymentSuccess = function(planKey, txnId) {
           plan: planKey,
           transactionId: txnId || ('TXN_' + Date.now()),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          expiresAt: new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000)
+          expiresAt: expiresAtDate
         }
       }, { merge: true }).catch(err => console.warn('Firestore subscription sync error:', err));
     }

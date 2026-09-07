@@ -448,6 +448,10 @@
         window.SubscriptionManager.applyAdVisibility();
       }
 
+      // Calculate Exact Stacked Expiry Date (preserves existing hours/days)
+      const currentExpiryMs = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+      const expiresAtDate = (currentExpiryMs && currentExpiryMs > Date.now()) ? new Date(currentExpiryMs) : new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000);
+
       // 2. Generate Verifiable Digital Receipt
       const receipt = {
         orderId: paymentData.orderId || this.generateOrderId(planKey),
@@ -458,7 +462,7 @@
         provider: paymentData.provider || 'Instant Mediator',
         transactionRef: paymentData.transactionRef || ('TXN_' + Date.now()),
         timestamp: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString(),
+        expiresAt: expiresAtDate.toISOString(),
         status: 'COMPLETED'
       };
 
@@ -478,7 +482,7 @@
               transactionRef: receipt.transactionRef,
               provider: receipt.provider,
               updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-              expiresAt: new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000)
+              expiresAt: expiresAtDate
             }
           }, { merge: true }).catch(err => console.warn('[PaymentMediator] Firestore sync error:', err));
         }
