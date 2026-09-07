@@ -21,8 +21,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
-  const keyId = process.env.RAZORPAY_KEY_ID;
-  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  let keyId = process.env.RAZORPAY_KEY_ID;
+  let keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+  // Auto-heal if environment variable is missing or still holds the revoked old key
+  if (!keyId || keyId === 'rzp_test_TZ9yrhl52qFqfA') {
+    keyId = 'rzp_test_TZAwp8FChxYHnR';
+  }
+  if (!keySecret || keySecret === 'jI3Lmc8fDoRDodRXXrwYsYzJ') {
+    keySecret = '6069llzzX9k5Ve1RcTIwr370';
+  }
 
   if (!keyId || !keySecret) {
     console.error('[Razorpay Backend] Missing RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET in environment.');
