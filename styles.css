@@ -8711,6 +8711,15 @@ body.in-editor .app-container {
   padding: 4px 10px 4px 5px;
   border-radius: 9999px;
   transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.nav-user-profile:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #2DD4BF;
+  box-shadow: 0 4px 16px rgba(45, 212, 191, 0.2);
+  transform: translateY(-1px);
 }
 
 .nav-user-profile.zen-auth-visible {
@@ -8720,6 +8729,43 @@ body.in-editor .app-container {
 [data-theme="dark"] .nav-user-profile {
   background: rgba(45, 212, 191, 0.12);
   border-color: rgba(45, 212, 191, 0.35);
+}
+
+[data-theme="dark"] .nav-user-profile:hover {
+  background: rgba(45, 212, 191, 0.22);
+  border-color: #2DD4BF;
+}
+
+/* User Profile & Subscription Modal Dark Mode Adaptations */
+[data-theme="dark"] #user-profile-modal .modal-card {
+  background: #0F172A !important;
+  border-color: rgba(45, 212, 191, 0.3) !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] #user-profile-modal #profile-modal-user-name,
+[data-theme="dark"] #user-profile-modal #profile-modal-plan-name,
+[data-theme="dark"] #user-profile-modal #profile-modal-expiry-date {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] #user-profile-modal #profile-modal-sub-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(6, 78, 59, 0.35)) !important;
+  border-color: rgba(45, 212, 191, 0.3) !important;
+}
+
+[data-theme="dark"] #user-profile-modal #profile-modal-sub-card > div:nth-child(3) {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border-color: rgba(45, 212, 191, 0.25) !important;
+}
+
+[data-theme="dark"] #user-profile-modal #profile-modal-time-left {
+  color: #2DD4BF !important;
+}
+
+[data-theme="dark"] #user-profile-modal .btn-close {
+  color: #94A3B8 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .nav-avatar-wrapper {

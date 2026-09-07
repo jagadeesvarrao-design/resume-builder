@@ -894,9 +894,168 @@ function updatePremiumUI(isPremium) {
     document.body.classList.add('zensuite-premium-active');
     const badge = document.getElementById('nav-user-premium-badge');
     if (badge) badge.style.display = 'inline-flex';
+    const mobileBadge = document.getElementById('mobile-user-premium-badge');
+    if (mobileBadge) mobileBadge.style.display = 'inline-flex';
   } else {
     document.body.classList.remove('zensuite-premium-active');
     const badge = document.getElementById('nav-user-premium-badge');
     if (badge) badge.style.display = 'none';
+    const mobileBadge = document.getElementById('mobile-user-premium-badge');
+    if (mobileBadge) mobileBadge.style.display = 'none';
   }
 }
+
+// User Account & Subscription Profile Modal Engine
+window.openUserProfileModal = async function() {
+  const modal = document.getElementById('user-profile-modal');
+  if (!modal) return;
+
+  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+  if (!user) {
+    if (typeof window.openEmailAuthModal === 'function') window.openEmailAuthModal();
+    return;
+  }
+
+  // Populate basic user info
+  const nameEl = document.getElementById('profile-modal-user-name');
+  const emailEl = document.getElementById('profile-modal-user-email');
+  const avatarImg = document.getElementById('profile-modal-avatar-img');
+  const avatarInitial = document.getElementById('profile-modal-avatar-initial');
+
+  const displayName = user.displayName || (user.email ? user.email.split('@')[0] : 'Professional');
+  if (nameEl) nameEl.textContent = displayName;
+  if (emailEl) emailEl.textContent = user.email || (user.phoneNumber || 'Authenticated User');
+
+  if (avatarImg && avatarInitial) {
+    if (user.photoURL) {
+      avatarImg.src = user.photoURL;
+      avatarImg.style.display = 'block';
+      avatarInitial.style.display = 'none';
+      avatarImg.onerror = () => {
+        avatarImg.style.display = 'none';
+        avatarInitial.style.display = 'flex';
+      };
+    } else {
+      avatarImg.style.display = 'none';
+      avatarInitial.style.display = 'flex';
+      avatarInitial.textContent = (displayName.charAt(0) || 'U').toUpperCase();
+    }
+  }
+
+  // Retrieve Subscription Details from Firestore (or Local Fallback)
+  let subData = null;
+  try {
+    if (typeof db !== 'undefined' && db && user.uid) {
+      const doc = await db.collection('users').doc(user.uid).get();
+      if (doc.exists && doc.data()?.subscription) {
+        subData = doc.data().subscription;
+      }
+    }
+  } catch (e) {
+    console.warn('[ProfileModal] Firestore read fallback:', e);
+  }
+
+  // Local storage fallback if offline or Firestore query is pending
+  const localTier = localStorage.getItem('zen_user_tier') || 'free';
+  const localExpiryMs = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+
+  let planKey = subData?.plan || (localTier !== 'free' ? localTier : 'free');
+  let expDate = null;
+
+  if (subData?.expiresAt) {
+    expDate = subData.expiresAt.toDate ? subData.expiresAt.toDate() : new Date(subData.expiresAt);
+  } else if (localExpiryMs > 0) {
+    expDate = new Date(localExpiryMs);
+  }
+
+  const now = new Date();
+  const isActive = expDate && expDate > now && (subData?.status === 'active' || localTier !== 'free');
+
+  // DOM Elements for subscription details
+  const planNameEl = document.getElementById('profile-modal-plan-name');
+  const planSubEl = document.getElementById('profile-modal-plan-subtitle');
+  const badgeTextEl = document.getElementById('profile-modal-badge-text');
+  const timeLeftEl = document.getElementById('profile-modal-time-left');
+  const expiryDateEl = document.getElementById('profile-modal-expiry-date');
+  const upgradeBtnText = document.getElementById('profile-modal-upgrade-btn-text');
+  const pulseEl = document.getElementById('profile-modal-active-pulse');
+
+  const planTitles = {
+    day: { name: '⚡ 1-Day Sprint', subtitle: '24-Hour Full ATS & AI Access Pass' },
+    sprint: { name: '⚡ 7-Day Fast Track', subtitle: '1-Week Full Career Stack & ATS Pass' },
+    suite: { name: '⭐ Entire ZenSuite', subtitle: '1-Month Full Career Ecosystem Access' },
+    free: { name: '🌱 Free Starter Plan', subtitle: 'Standard Single-Column ATS Editor' }
+  };
+
+  if (isActive && expDate) {
+    const planInfo = planTitles[planKey] || planTitles.sprint;
+    if (planNameEl) planNameEl.textContent = planInfo.name;
+    if (planSubEl) planSubEl.textContent = planInfo.subtitle;
+    if (badgeTextEl) badgeTextEl.textContent = 'PRO ACTIVE';
+
+    // Calculate remaining duration
+    const remainingMs = expDate.getTime() - now.getTime();
+    const totalMinutes = Math.floor(remainingMs / (1000 * 60));
+    const days = Math.floor(totalMinutes / (60 * 24));
+    const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+    const minutes = totalMinutes % 60;
+
+    const parts = [];
+    if (days > 0) parts.push(`${days} Day${days > 1 ? 's' : ''}`);
+    if (hours > 0) parts.push(`${hours} Hour${hours > 1 ? 's' : ''}`);
+    if (parts.length === 0 && minutes > 0) parts.push(`${minutes} Minute${minutes > 1 ? 's' : ''}`);
+    const timeFormatted = parts.join(', ') + ' Left';
+
+    if (timeLeftEl) timeLeftEl.textContent = timeFormatted || '< 1 Minute Left';
+
+    // Format Expiration Date
+    const dateFormatted = expDate.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    }) + ' at ' + expDate.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    if (expiryDateEl) expiryDateEl.textContent = dateFormatted;
+    if (upgradeBtnText) upgradeBtnText.textContent = '⚡ Extend / Upgrade Plan (Zero Lost Time)';
+    if (pulseEl) {
+      pulseEl.style.display = 'inline-flex';
+      pulseEl.style.background = 'rgba(16, 185, 129, 0.1)';
+      pulseEl.style.color = '#10B981';
+      pulseEl.innerHTML = '<span style="width: 7px; height: 7px; background: #10B981; border-radius: 50%; display: inline-block;"></span> Active';
+    }
+  } else {
+    // Free / Expired
+    const planInfo = planTitles.free;
+    if (planNameEl) planNameEl.textContent = planInfo.name;
+    if (planSubEl) planSubEl.textContent = planInfo.subtitle;
+    if (badgeTextEl) badgeTextEl.textContent = 'FREE TIER';
+    if (timeLeftEl) timeLeftEl.textContent = expDate ? 'Plan Expired' : 'No active paid pass';
+    if (expiryDateEl) expiryDateEl.textContent = expDate ? expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Lifetime Free Access';
+    if (upgradeBtnText) upgradeBtnText.textContent = '🚀 Upgrade to Pro (Unlock AI & Unlimited Downloads)';
+    if (pulseEl) {
+      pulseEl.style.display = 'inline-flex';
+      pulseEl.style.background = 'rgba(100, 116, 139, 0.1)';
+      pulseEl.style.color = '#64748B';
+      pulseEl.innerHTML = '<span style="width: 7px; height: 7px; background: #94A3B8; border-radius: 50%; display: inline-block;"></span> Free';
+    }
+  }
+
+  modal.style.display = 'flex';
+};
+
+window.closeUserProfileModal = function() {
+  const modal = document.getElementById('user-profile-modal');
+  if (modal) modal.style.display = 'none';
+};
+
+// Global click outside listener for user profile modal
+document.addEventListener('click', function(e) {
+  const profileModal = document.getElementById('user-profile-modal');
+  if (profileModal && e.target === profileModal) {
+    window.closeUserProfileModal();
+  }
+});
