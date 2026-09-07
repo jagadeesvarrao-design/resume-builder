@@ -1044,6 +1044,23 @@ window.openUserProfileModal = async function() {
     }
   }
 
+  // Update resume count badge
+  try {
+    const registry = (typeof window.getStoredProfilesRegistry === 'function')
+      ? window.getStoredProfilesRegistry()
+      : { profiles: [{ id: 'default', name: 'Master Resume' }] };
+    const countBadge = document.getElementById('profile-resumes-count-badge');
+    if (countBadge) countBadge.textContent = registry.profiles?.length || 1;
+  } catch (e) {}
+
+  // Default to subscription tab & prepare resume list
+  if (typeof window.switchProfileModalTab === 'function') {
+    window.switchProfileModalTab('subscription');
+  }
+  if (typeof window.renderProfileModalSavedResumes === 'function') {
+    window.renderProfileModalSavedResumes();
+  }
+
   modal.style.display = 'flex';
 };
 
@@ -1059,3 +1076,176 @@ document.addEventListener('click', function(e) {
     window.closeUserProfileModal();
   }
 });
+
+// Tab Switching in Profile Modal
+window.switchProfileModalTab = function(tabName) {
+  const btnSub = document.getElementById('tab-btn-subscription');
+  const btnRes = document.getElementById('tab-btn-saved-resumes');
+  const panelSub = document.getElementById('profile-panel-subscription');
+  const panelRes = document.getElementById('profile-panel-resumes');
+
+  if (tabName === 'subscription') {
+    if (btnSub) {
+      btnSub.style.background = 'linear-gradient(135deg, #476550, #00846D)';
+      btnSub.style.color = '#FFFFFF';
+      btnSub.style.borderColor = 'transparent';
+      btnSub.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+    }
+    if (btnRes) {
+      btnRes.style.background = 'transparent';
+      btnRes.style.color = '#64748B';
+      btnRes.style.borderColor = 'transparent';
+      btnRes.style.boxShadow = 'none';
+    }
+    if (panelSub) panelSub.style.display = 'block';
+    if (panelRes) panelRes.style.display = 'none';
+  } else if (tabName === 'resumes') {
+    if (btnSub) {
+      btnSub.style.background = 'transparent';
+      btnSub.style.color = '#64748B';
+      btnSub.style.borderColor = 'transparent';
+      btnSub.style.boxShadow = 'none';
+    }
+    if (btnRes) {
+      btnRes.style.background = 'linear-gradient(135deg, #476550, #00846D)';
+      btnRes.style.color = '#FFFFFF';
+      btnRes.style.borderColor = 'transparent';
+      btnRes.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+    }
+    if (panelSub) panelSub.style.display = 'none';
+    if (panelRes) panelRes.style.display = 'block';
+    if (typeof window.renderProfileModalSavedResumes === 'function') {
+      window.renderProfileModalSavedResumes();
+    }
+  }
+};
+
+// Render Saved Resumes list inside Profile Modal
+window.renderProfileModalSavedResumes = function() {
+  const container = document.getElementById('profile-saved-resumes-container');
+  const badgeCount = document.getElementById('profile-resumes-count-badge');
+  if (!container) return;
+
+  const registry = (typeof window.getStoredProfilesRegistry === 'function')
+    ? window.getStoredProfilesRegistry()
+    : { activeId: 'default', profiles: [{ id: 'default', name: 'Master Resume', updatedAt: new Date().toISOString() }] };
+
+  const profiles = registry.profiles || [];
+  if (badgeCount) badgeCount.textContent = profiles.length;
+
+  if (profiles.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 24px 12px; color: #64748B; font-size: 13px;">
+        <i class="fas fa-folder-open" style="font-size: 28px; color: #94A3B8; margin-bottom: 8px; display: block;"></i>
+        No saved resumes found in your Master Vault.<br>
+        <span style="font-size: 11.5px; color: #94A3B8;">Start editing in the builder to automatically save your Master Resume.</span>
+      </div>
+    `;
+    return;
+  }
+
+  let html = '';
+  profiles.forEach(p => {
+    const isActive = (p.id === registry.activeId);
+    let candidateName = 'Your Profile';
+    let jobTitle = 'Master Resume';
+
+    try {
+      let stateRaw = null;
+      if (p.id === 'default') {
+        stateRaw = localStorage.getItem('zenresume_state');
+      } else {
+        stateRaw = localStorage.getItem('zenresume_profile_' + p.id);
+      }
+      if (stateRaw) {
+        const parsed = JSON.parse(stateRaw);
+        if (parsed.formData) {
+          if (parsed.formData.name && parsed.formData.name.trim()) candidateName = parsed.formData.name.trim();
+          if (parsed.formData.title && parsed.formData.title.trim()) jobTitle = parsed.formData.title.trim();
+        }
+      }
+    } catch (e) {}
+
+    const isMaster = (p.id === 'default');
+    const displayDate = p.updatedAt ? new Date(p.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently saved';
+
+    html += `
+      <div class="profile-resume-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #F8FAFC; border: 1.5px solid ${isActive ? '#00846D' : '#E2E8F0'}; border-radius: 12px; margin-bottom: 8px; transition: all 0.2s;">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: ${isMaster ? 'rgba(245, 158, 11, 0.15)' : 'rgba(0, 132, 109, 0.12)'}; color: ${isMaster ? '#D97706' : '#00846D'}; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">
+            <i class="${isMaster ? 'fas fa-star' : 'fas fa-file-alt'}"></i>
+          </div>
+          <div style="min-width: 0; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span class="profile-resume-title" style="font-size: 13px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px;">${escapeHtml(p.name)}</span>
+              ${isActive ? '<span style="font-size: 9.5px; font-weight: 800; color: #00846D; background: rgba(0, 132, 109, 0.12); padding: 1px 5px; border-radius: 4px;">ACTIVE</span>' : ''}
+              ${isMaster ? '<span style="font-size: 9.5px; font-weight: 800; color: #D97706; background: rgba(245, 158, 11, 0.12); padding: 1px 5px; border-radius: 4px;">MASTER</span>' : ''}
+            </div>
+            <div class="profile-resume-sub" style="font-size: 11px; color: #64748B; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              ${escapeHtml(candidateName)} • ${escapeHtml(jobTitle)} • <span style="color: #94A3B8;">${displayDate}</span>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; margin-left: 8px; flex-shrink: 0;">
+          <button type="button" onclick="window.loadProfileFromModal && window.loadProfileFromModal('${p.id}');" title="Open in Editor" style="background: ${isActive ? 'linear-gradient(135deg, #476550, #00846D)' : '#FFFFFF'}; color: ${isActive ? '#FFFFFF' : '#0F172A'}; border: 1px solid ${isActive ? 'transparent' : '#CBD5E1'}; font-size: 11px; font-weight: 700; padding: 5px 9px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <i class="fas fa-arrow-right"></i> <span>${isActive ? 'Editing' : 'Open'}</span>
+          </button>
+          ${!isMaster ? `
+            <button type="button" onclick="window.deleteProfileFromModal && window.deleteProfileFromModal('${p.id}', '${escapeHtml(p.name).replace(/'/g, "\\'")}');" title="Delete tailored version" style="background: transparent; color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2); font-size: 11px; padding: 5px 7px; border-radius: 6px; cursor: pointer;">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+};
+
+// Helper to escape HTML in profile modal strings
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+window.loadProfileFromModal = function(profileId) {
+  if (typeof window.switchProfileVersion === 'function') {
+    window.switchProfileVersion(profileId);
+  }
+  window.closeUserProfileModal();
+  
+  if (typeof window.enterApp === 'function') {
+    window.enterApp();
+  } else {
+    const editorEl = document.getElementById('builder-editor-app');
+    if (editorEl) editorEl.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  if (typeof window.showToast === 'function') {
+    const registry = (typeof window.getStoredProfilesRegistry === 'function') ? window.getStoredProfilesRegistry() : null;
+    const target = registry?.profiles?.find(p => p.id === profileId);
+    window.showToast(`Loaded "${target ? target.name : 'Resume'}" into editor`, 'success', 3000);
+  }
+};
+
+window.deleteProfileFromModal = function(profileId, profileName) {
+  if (profileId === 'default') {
+    if (typeof window.showToast === 'function') window.showToast('Master Resume cannot be deleted.', 'warning');
+    return;
+  }
+  if (!confirm(`Are you sure you want to delete the tailored resume version "${profileName || profileId}"?`)) {
+    return;
+  }
+  if (typeof window.deleteProfileVersion === 'function') {
+    window.deleteProfileVersion(profileId);
+  }
+  if (typeof window.renderProfileModalSavedResumes === 'function') {
+    window.renderProfileModalSavedResumes();
+  }
+};

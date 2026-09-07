@@ -1204,6 +1204,35 @@ function switchProfileVersion(targetId) {
   }
 }
 
+function deleteProfileVersion(targetId) {
+  if (!targetId || targetId === 'default') return;
+  const registry = getStoredProfilesRegistry();
+  registry.profiles = registry.profiles.filter(p => p.id !== targetId);
+  try {
+    localStorage.removeItem(`zenresume_profile_${targetId}`);
+  } catch (e) {}
+
+  if (registry.activeId === targetId) {
+    registry.activeId = 'default';
+    saveProfilesRegistry(registry);
+    switchProfileVersion('default');
+  } else {
+    saveProfilesRegistry(registry);
+  }
+
+  renderProfileDropdown(registry);
+  if (typeof window.showToast === 'function') {
+    window.showToast('Resume version deleted.', 'info');
+  }
+}
+
+// Expose profile registry helpers globally
+window.getStoredProfilesRegistry = getStoredProfilesRegistry;
+window.saveProfilesRegistry = saveProfilesRegistry;
+window.switchProfileVersion = switchProfileVersion;
+window.promptCreateNewProfileVersion = promptCreateNewProfileVersion;
+window.deleteProfileVersion = deleteProfileVersion;
+
 /* ==========================================================================
    5D. "MASTER RESUME VAULT" RETURNING USER WELCOME ENGINE
    ========================================================================== */

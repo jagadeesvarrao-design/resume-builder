@@ -8768,6 +8768,24 @@ body.in-editor .app-container {
   background: rgba(255, 255, 255, 0.08) !important;
 }
 
+[data-theme="dark"] #user-profile-modal .profile-resume-item {
+  background: rgba(30, 41, 59, 0.7) !important;
+  border-color: rgba(45, 212, 191, 0.2) !important;
+}
+
+[data-theme="dark"] #user-profile-modal .profile-resume-item:hover {
+  background: rgba(30, 41, 59, 1) !important;
+  border-color: #2DD4BF !important;
+}
+
+[data-theme="dark"] #user-profile-modal .profile-resume-title {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] #user-profile-modal .profile-resume-sub {
+  color: #94A3B8 !important;
+}
+
 .nav-avatar-wrapper {
   position: relative;
   width: 26px;
