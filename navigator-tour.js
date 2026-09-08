@@ -2,110 +2,46 @@
  * ZenResume - Universal Cross-Device Editor Navigator ("ZenGuide 🧭")
  * Engineered to work seamlessly across all smartphones, tablets, laptops, and desktops.
  * Intelligently switches mobile tabs, anchors next to active buttons, and spotlights controls.
- * Strictly auto-launches only for first-time visitors who have not seen the tour.
+ * Replaces lengthy tours with a high-impact, 4-step core onboarding journey.
  */
 
 (function() {
   'use strict';
 
-  const TOUR_SEEN_KEY = 'zenresume_tour_seen_v4';
+  const TOUR_SEEN_KEY = 'zenresume_tour_seen_v5';
 
   const TOUR_STEPS = [
     {
-      targetId: 'btn-back-to-templates',
-      panel: 'edit',
-      title: '← Templates Gallery',
-      desc: 'Click here anytime to return to the template gallery and switch between 63+ ATS blueprint styles categorized by role and industry.',
-      tip: 'Your typed data is always auto-saved in your browser before switching.',
-      badge: 'Step 1 of 12'
-    },
-    {
-      targetId: 'select-profile-version',
-      panel: 'edit',
-      title: '📁 Multi-Profile Vault',
-      desc: 'Manage multiple tailored resume versions (e.g. Full-Stack Dev, TCS Fresher, Data Analyst). Click <strong>+</strong> to save a new tailored version.',
-      tip: 'Tailoring your resume to each job description increases interview callbacks by 3x.',
-      badge: 'Step 2 of 12'
-    },
-    {
       targetId: 'select-layout-inline',
       panel: 'edit',
-      title: '🎨 Instant Style Switcher',
-      desc: 'Switch between Single-Column ATS, Serene Modern, Bold Executive, and Tech Grid layouts in 1 click without losing any of your typed data.',
-      tip: 'All styles maintain strict single-column vector hierarchy for ATS parsing.',
-      badge: 'Step 3 of 12'
+      title: '🎨 1. Choose Your ATS Style',
+      desc: 'Switch between <strong>Minimalist Classic</strong>, <strong>Serene Modern</strong>, <strong>Bold Executive</strong>, and <strong>Tech Grid</strong> in 1 click. Your data automatically re-formats without losing any typed content.',
+      tip: 'All layouts maintain strict single-column vector hierarchy for 100% ATS parser readability.',
+      badge: 'Step 1 of 4 • Layouts'
     },
     {
       targetId: 'btn-magic-import',
       panel: 'edit',
-      title: '✨ Gemini AI Magic Import',
-      desc: 'Upload an existing messy PDF or paste raw text. Built-in AI automatically extracts contact details, experience, projects, and skills into the form in 10 seconds.',
-      tip: 'Saves 15+ minutes of manual copy-pasting.',
-      badge: 'Step 4 of 12'
+      title: '✨ 2. Fill Details or AI Import',
+      desc: 'Type step-by-step in the section tabs below, or click <strong>AI Import</strong> to upload an existing PDF resume or GitHub username to auto-populate the form in 10 seconds!',
+      tip: 'Look for the ⚡ AI Bullet Suggester inside Experience & Projects to generate quantified Google XYZ bullets.',
+      badge: 'Step 2 of 4 • Smart Input'
     },
     {
-      targetId: 'btn-open-ats-matcher',
+      targetId: 'editor-realtime-ats',
       panel: 'edit',
-      title: '🎯 Target Job ATS Matcher',
-      desc: 'Paste the job description of your target role. The matcher highlights keyword overlap, missing skills, and calculates your recruiter match score.',
-      tip: 'Aim for an ATS match score of 75%+ before submitting your application.',
-      badge: 'Step 5 of 12'
-    },
-    {
-      targetId: 'btn-reorder-layout',
-      panel: 'edit',
-      title: '☰ Reorder Sections',
-      desc: 'Drag & drop or use arrows to change section hierarchy (e.g. putting Projects above Experience for freshers, or Certifications near the top).',
-      tip: 'Freshers should place Education & Projects first; experienced pros should place Work Experience first.',
-      badge: 'Step 6 of 12'
-    },
-    {
-      targetId: 'btn-export-json',
-      panel: 'edit',
-      title: '💾 Backup JSON File',
-      desc: 'ZenResume is 100% private and local-first with zero server database tracking. Click <strong>Backup</strong> to download an offline JSON backup of your resume.',
-      tip: 'Keep this backup file safe on your computer or Google Drive.',
-      badge: 'Step 7 of 12'
-    },
-    {
-      targetId: 'btn-import-json',
-      panel: 'edit',
-      title: '📥 Restore Resume Backup',
-      desc: 'Upload a previously downloaded JSON backup file to instantly reload your complete resume details on any computer, tablet, or phone.',
-      tip: 'Seamlessly transfer your resume across different devices.',
-      badge: 'Step 8 of 12'
-    },
-    {
-      targetId: 'btn-reset-defaults',
-      panel: 'edit',
-      title: '↺ Clear / Reset Form',
-      desc: 'Clear the form fields with one click to start completely fresh with a clean blank canvas.',
-      tip: 'You can always restore your data from a backup JSON file.',
-      badge: 'Step 9 of 12'
-    },
-    {
-      targetId: 'wizard-progress-dots',
-      panel: 'edit',
-      title: '📑 Form Wizard Steps',
-      desc: 'Jump directly between Personal Details, Summary, Skills, Experience, Projects, Education, and Certifications.',
-      tip: 'Look for the ⚡ AI Bullet Suggester inside each section to generate Google XYZ bullets.',
-      badge: 'Step 10 of 12'
-    },
-    {
-      targetId: 'btn-spacing-toggle',
-      panel: 'preview',
-      title: '⚙️ Spacing & Fit to 1 Page',
-      desc: 'Fine-tune page margins, section gaps, line spacing, font scale, or click <strong>⚡ Fit to 1 Single Page</strong> to automatically fit your content perfectly onto one page.',
-      tip: 'Prevents awkward 2-line overflow onto a blank second page.',
-      badge: 'Step 11 of 12'
+      title: '🎯 3. Real-Time ATS Score & Matcher',
+      desc: 'Watch your <strong>ATS Health Meter</strong> calculate in real time as you add action verbs and metrics. Click <strong>ATS Matcher</strong> to paste any target job description and detect missing keywords.',
+      tip: 'Aim for a score of 85%+ to maximize recruiter callback rates on Workday, Taleo, and Greenhouse.',
+      badge: 'Step 3 of 4 • ATS Health'
     },
     {
       targetId: 'btn-trigger-download',
       panel: 'preview',
-      title: '📥 Download 100% Vector PDF',
-      desc: 'Generate a crisp, machine-parsable vector PDF with 100% text readability for ATS bots, zero watermarks, and zero hidden fees.',
-      tip: 'In browser print settings, uncheck "Headers and Footers" for the cleanest result.',
-      badge: 'Step 12 of 12'
+      title: '📥 4. Instant 100% Free Vector PDF',
+      desc: 'Click <strong>Download PDF</strong> to export a high-fidelity, machine-parsable vector PDF directly to your device. <strong>Zero paywalls, zero watermarks, 100% free always.</strong>',
+      tip: 'In your browser print dialog, uncheck "Headers and Footers" for the cleanest professional finish.',
+      badge: 'Step 4 of 4 • Instant Export'
     }
   ];
 
@@ -127,8 +63,8 @@
               <div class="zenguide-avatar">🧭</div>
             </div>
             <div class="zenguide-header-text">
-              <div class="zenguide-badge" id="zenguide-step-badge">Step 1 of 12</div>
-              <h4 class="zenguide-title" id="zenguide-title">ZenGuide Navigator</h4>
+              <div class="zenguide-badge" id="zenguide-step-badge">Step 1 of 4</div>
+              <h4 class="zenguide-title" id="zenguide-title">ZenGuide Quick Tour</h4>
             </div>
             <button type="button" class="zenguide-close-btn" onclick="window.closeZenGuideTour()" aria-label="Close Guided Tour">&times;</button>
           </div>
@@ -143,9 +79,9 @@
             <button type="button" class="zenguide-btn-secondary" id="zenguide-prev-btn" onclick="window.prevZenGuideStep()">
               <i class="fas fa-arrow-left"></i> Back
             </button>
-            <div class="zenguide-step-counter" id="zenguide-step-counter">1 / 12</div>
+            <div class="zenguide-step-counter" id="zenguide-step-counter">1 / 4</div>
             <button type="button" class="zenguide-btn-primary" id="zenguide-next-btn" onclick="window.nextZenGuideStep()">
-              Next Button <i class="fas fa-arrow-right"></i>
+              Next <i class="fas fa-arrow-right"></i>
             </button>
           </div>
         </div>
@@ -281,7 +217,7 @@
         nextBtn.innerHTML = '⚡ Done! Start Building <i class="fas fa-check"></i>';
         nextBtn.classList.add('btn-finish');
       } else {
-        nextBtn.innerHTML = 'Next Button <i class="fas fa-arrow-right"></i>';
+        nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
         nextBtn.classList.remove('btn-finish');
       }
     }
