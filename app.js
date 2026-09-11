@@ -3977,6 +3977,101 @@ function attachEvents() {
 /* ==========================================================================
    9. APPLICATION BOOTSTRAP
    ========================================================================== */
+function formatRoleTitle(slug) {
+  const SPECIAL_TITLES = {
+    'tcs-nqt-fresher': 'TCS NQT Fresher',
+    'infosys-fresher': 'Infosys Fresher',
+    'wipro-turbo': 'Wipro Turbo / Elite Fresher',
+    'accenture-placement': 'Accenture Placement Fresher',
+    'college-campus-placement': 'College Campus Placement Fresher',
+    'data-analyst-fresher-projects': 'Data Analyst Fresher',
+    'java-developer-2-years-experience': 'Java Developer (2+ Years)',
+    'aws-cloud-engineer': 'AWS Cloud Engineer',
+    'ai-engineer': 'AI & Prompt Engineer',
+    'ui-ux-designer': 'UI/UX Designer',
+    'it-support-specialist': 'IT Support Specialist',
+    'chief-financial-officer': 'Chief Financial Officer (CFO)',
+    'registered-nurse': 'Registered Nurse (RN)',
+    'clinical-pharmacist': 'Clinical Pharmacist (PharmD)',
+    'pharmacist': 'Pharmacist',
+    'physical-therapist': 'Physical Therapist (DPT)',
+    'medical-assistant': 'Medical Assistant (CMA)',
+    'dental-hygienist': 'Dental Hygienist (RDH)',
+    'seo-specialist': 'SEO & Growth Specialist',
+    'human-resources-manager': 'HR Manager (Human Resources)'
+  };
+  if (SPECIAL_TITLES[slug]) return SPECIAL_TITLES[slug];
+  return (slug || '')
+    .replace(/-resume$/, '')
+    .split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+function getOptimalTemplateForRole(cleanSlug) {
+  if (!cleanSlug) return 'software_experienced_enterprise';
+  
+  // 1. Campus Placements & Freshers
+  if (cleanSlug.includes('fresher') || cleanSlug.includes('campus') || cleanSlug.includes('tcs') || cleanSlug.includes('wipro') || cleanSlug.includes('accenture') || cleanSlug.includes('infosys')) {
+    if (cleanSlug.includes('data')) return 'data_science_fresher_analytical';
+    return 'software_fresher_minimalist';
+  }
+  
+  // 2. Data & AI Roles
+  if (cleanSlug.includes('ai') || cleanSlug.includes('prompt')) {
+    return 'data_science_experienced_mlops';
+  }
+  if (cleanSlug.includes('data') || cleanSlug.includes('scientist') || cleanSlug.includes('analyst')) {
+    return 'data_science_experienced_lead';
+  }
+  
+  // 3. Civil, Architecture & Drafting
+  if (cleanSlug.includes('architect') || cleanSlug.includes('civil') || cleanSlug.includes('draftsman')) {
+    return 'civil_experienced_structural';
+  }
+  
+  // 4. Electrical & Hardware
+  if (cleanSlug.includes('electrical')) {
+    return 'electrical_experienced_grid';
+  }
+  
+  // 5. Mechanical, Industrial & Biomedical
+  if (cleanSlug.includes('mechanical') || cleanSlug.includes('industrial') || cleanSlug.includes('biomedical')) {
+    return 'mechanical_experienced_automotive';
+  }
+  
+  // 6. Healthcare, Clinical & Medical
+  if (cleanSlug.includes('nurse') || cleanSlug.includes('pharmacist') || cleanSlug.includes('therapist') ||
+      cleanSlug.includes('medical') || cleanSlug.includes('dental') || cleanSlug.includes('healthcare') ||
+      cleanSlug.includes('clinical')) {
+    if (cleanSlug.includes('assistant') || cleanSlug.includes('hygienist')) {
+      return 'medical_fresher_minimalist';
+    }
+    return 'medical_experienced_clinical';
+  }
+  
+  // 7. Design & Creative
+  if (cleanSlug.includes('graphic') || cleanSlug.includes('art-director') || cleanSlug.includes('animator') || cleanSlug.includes('video-editor')) {
+    return 'software_creative_dark';
+  }
+  if (cleanSlug.includes('ui-ux') || cleanSlug.includes('designer') || cleanSlug.includes('content') || cleanSlug.includes('social-media') || cleanSlug.includes('digital-marketing')) {
+    return 'software_experienced_sleek';
+  }
+  
+  // 8. Cloud & DevOps Infrastructure
+  if (cleanSlug.includes('cloud') || cleanSlug.includes('devops') || cleanSlug.includes('aws')) {
+    return 'software_experienced_cloud';
+  }
+  
+  // 9. Technical Systems & Security
+  if (cleanSlug.includes('cyber') || cleanSlug.includes('seo')) {
+    return 'software_fresher_tech_mono';
+  }
+  
+  // 10. Default Business, Finance, Management & Engineering Enterprise Layout
+  return 'software_experienced_enterprise';
+}
+
 function checkURLParamsOnLoad() {
   try {
     const urlParams = new URLSearchParams(window.location.search);
@@ -3986,27 +4081,26 @@ function checkURLParamsOnLoad() {
     
     if (roleSlug || templateId) {
       const cleanSlug = (roleSlug || '').replace('-resume', '').toLowerCase();
-      const formattedTitle = cleanSlug ? cleanSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : '';
+      const formattedTitle = formatRoleTitle(cleanSlug);
       
-      // Determine exact valid template ID from TEMPLATE_STYLES
+      // Determine optimal valid template ID from TEMPLATE_STYLES
       let targetTemplate = templateId;
       if (!targetTemplate || !TEMPLATE_STYLES[targetTemplate]) {
-        if (cleanSlug.includes('ai')) {
-          targetTemplate = 'data_science_experienced_mlops';
-        } else if (cleanSlug.includes('data')) {
-          targetTemplate = 'data_science_experienced_lead';
-        } else if (cleanSlug.includes('mechanical')) {
-          targetTemplate = 'mechanical_experienced_automotive';
-        } else if (cleanSlug.includes('fresher') || cleanSlug.includes('tcs')) {
-          targetTemplate = 'software_fresher_minimalist';
-        } else {
-          targetTemplate = 'software_experienced_enterprise';
-        }
+        targetTemplate = getOptimalTemplateForRole(cleanSlug);
       }
       
-      // Select template style (ensures state.selectedTemplateId is valid)
+      // Set hasLoadedProfile true beforehand to prevent selectTemplateStyle from triggering overwrite prompts
+      state.hasLoadedProfile = true;
+      
+      // Select template style (ensures state.selectedTemplateId is valid and styles apply)
       if (typeof selectTemplateStyle === 'function') {
         selectTemplateStyle(targetTemplate);
+      }
+      
+      // Synchronize industry and experience filters with chosen template
+      if (TEMPLATE_STYLES[targetTemplate]) {
+        state.selectedInd = TEMPLATE_STYLES[targetTemplate].industry || state.selectedInd;
+        state.selectedExp = TEMPLATE_STYLES[targetTemplate].experience || state.selectedExp;
       }
       
       // Direct Transition to Editor Workspace (Bypass Template Gallery)
@@ -4032,16 +4126,18 @@ function checkURLParamsOnLoad() {
       const blueprintData = blueprints[cleanSlug] || blueprints[roleSlug];
 
       if (blueprintData && autoFillParam !== 'false') {
-        state.hasLoadedProfile = true;
         if (typeof loadProfileIntoForm === 'function') {
           loadProfileIntoForm(blueprintData);
+        }
+        if (typeof autoSaveResume === 'function') {
+          autoSaveResume();
         }
         if (typeof syncFormToPreview === 'function') {
           syncFormToPreview();
         }
         setTimeout(() => {
           if (typeof window.showToast === 'function') {
-            window.showToast(`✨ Loaded ${formattedTitle} Blueprint into Editor!`, 'success', 3500);
+            window.showToast(`✨ 1-Click ATS Blueprint Loaded: ${formattedTitle}!`, 'success', 3500);
           }
         }, 300);
       } else if (formattedTitle) {
@@ -4055,12 +4151,16 @@ function checkURLParamsOnLoad() {
         }, 150);
       }
 
-      // Dismiss tour popover on role fast-track
+      // Suppress tour overlays so user can immediately view & edit their prefilled resume
       try {
+        localStorage.setItem('zenresume_tour_seen_v5', 'true');
         localStorage.setItem('zenresume_tour_seen_v4', 'true');
-        const activeTour = document.querySelector('.zen-tour-tooltip');
+        if (typeof window.closeZenGuideTour === 'function') {
+          window.closeZenGuideTour();
+        }
+        const activeTour = document.querySelector('.zen-tour-tooltip, .zenguide-overlay');
         if (activeTour) activeTour.remove();
-        const activeSpot = document.querySelector('.zen-tour-spotlight');
+        const activeSpot = document.querySelector('.zen-tour-spotlight, .zenguide-spotlight');
         if (activeSpot) activeSpot.remove();
       } catch(e) {}
 
