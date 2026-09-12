@@ -2600,49 +2600,55 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
 }
 
 async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf = false, pdfData = '') {
-  // 1. Try serverless Edge API proxy first (protects API keys, handles throttling)
+  // 1. Primary: Secure Serverless AI Proxy Gateway (Keeps master credentials isolated on backend)
   try {
     const res = await fetch('/api/gemini', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action, payload, prompt: fallbackPromptText })
     });
-    if (res.ok) {
-      const json = await res.json();
-      if (json.success && json.data) {
-        return json.data;
-      }
+    const json = await res.json();
+    if (res.ok && json.success && json.data) {
+      return json.data;
     }
+    if (res.status === 429) {
+      throw new Error(json.error || 'AI request limit reached. Please wait a moment before trying again.');
+    }
+    if (!res.ok && json.error) {
+      throw new Error(json.error);
+    }
+    if (json.data) return json.data;
   } catch (proxyErr) {
-    console.warn('Serverless Gemini proxy offline or running standalone, falling back to client engine:', proxyErr);
-  }
-
-  // 2. Resilient Client-Side Fallback
-  const _gk = () => { const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]; const _s = "ZenResume2026"; return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
-  let apiKey = localStorage.getItem('GEMINI_API_KEY') || _gk();
-
-  const parts = [{ text: fallbackPromptText }];
-  if (isPdf && pdfData) {
-    parts.push({
-      inline_data: {
-        mime_type: "application/pdf",
-        data: pdfData
+    // 2. Client-Side Fallback ONLY IF user provided their own personal custom key in local settings
+    const customUserKey = localStorage.getItem('GEMINI_API_KEY');
+    if (customUserKey && customUserKey.trim().length > 10) {
+      console.info('Using user-provided custom Gemini API key for fallback.');
+      const parts = [{ text: fallbackPromptText }];
+      if (isPdf && pdfData) {
+        parts.push({
+          inline_data: {
+            mime_type: "application/pdf",
+            data: pdfData
+          }
+        });
       }
-    });
+
+      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(customUserKey.trim())}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: parts }] })
+      });
+
+      const data = await response.json();
+      if (data.error) throw new Error(data.error.message);
+
+      const rawResponse = data.candidates[0].content.parts[0].text;
+      const jsonString = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+      return JSON.parse(jsonString);
+    }
+
+    throw proxyErr;
   }
-
-  const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ contents: [{ parts: parts }] })
-  });
-
-  const data = await response.json();
-  if (data.error) throw new Error(data.error.message);
-
-  const rawResponse = data.candidates[0].content.parts[0].text;
-  const jsonString = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
-  return JSON.parse(jsonString);
 }
 
 async function parseHeuristics(inputData, isPdf = false) {
@@ -3682,8 +3688,6 @@ function attachEvents() {
       }
 
       if (subManager) subManager.incrementDailyUsage('tailor');
-      
-      const _gk2 = () => { const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45]; const _s = "ZenResume2026"; return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join(''); };
       
       const originalBtnText = btnGenerateAi.textContent;
       btnGenerateAi.textContent = "Analyzing & Tailoring...";

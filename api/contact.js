@@ -2,16 +2,11 @@
 // Endpoint: /api/contact
 
 import nodemailer from 'nodemailer';
+import { applyCors, checkRateLimit, sanitizeString, isValidEmail } from './_security.js';
 
 export default async function handler(req, res) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  // CORS Configuration & Strict Origin Validation
+  applyCors(req, res, ['GET', 'OPTIONS', 'POST']);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -21,6 +16,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
+  // Rate Limiting: Max 5 contact submissions per 10 minutes per IP
+  const rateLimit = checkRateLimit(req, 'contact', 5, 10 * 60 * 1000);
+  if (!rateLimit.allowed) {
+    res.setHeader('Retry-After', rateLimit.retryAfter);
+    return res.status(429).json({
+      error: 'Too many messages sent. Please wait a few minutes before submitting another inquiry.',
+      retryAfter: rateLimit.retryAfter
+    });
+  }
+
   try {
     const { name = 'Anonymous Visitor', email, message, rating = 5 } = req.body || {};
 
@@ -28,22 +33,21 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Email and message are required fields.' });
     }
 
-    let emailDispatched = false;
-    let whatsappDispatched = false;
-
-    function escapeHtml(str) {
-      if (typeof str !== 'string') return '';
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ error: 'Please provide a valid email address.' });
     }
 
-    const safeName = escapeHtml(name);
-    const safeEmail = escapeHtml(email);
-    const safeMessage = escapeHtml(message).replace(/\n/g, '<br />');
+    const safeName = sanitizeString(String(name || 'Anonymous Visitor'), 100);
+    const safeEmail = sanitizeString(String(email), 254);
+    const rawMessage = String(message || '').trim().substring(0, 3000);
+    if (!rawMessage) {
+      return res.status(400).json({ error: 'Message cannot be empty.' });
+    }
+    const safeMessage = sanitizeString(rawMessage, 3000).replace(/\n/g, '<br />');
+    const safeRating = Math.min(Math.max(parseInt(rating, 10) || 5, 1), 5);
+
+    let emailDispatched = false;
+    let whatsappDispatched = false;
 
     // 1. Dispatch Email Alert via Nodemailer (Gmail SMTP)
     const gmailUser = process.env.GMAIL_USER || 'aneevarpsolutions@gmail.com';

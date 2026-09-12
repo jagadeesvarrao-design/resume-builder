@@ -11,7 +11,8 @@
  * SECURITY: Only runs the expensive LLM call AFTER verifying payment in Firestore.
  */
 
-const admin = require('firebase-admin');
+import admin from 'firebase-admin';
+import { applyCors, checkRateLimit } from './_security.js';
 
 // Initialize Firebase Admin (uses GOOGLE_APPLICATION_CREDENTIALS or default Vercel env)
 if (!admin.apps.length) {
@@ -31,14 +32,22 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-module.exports = async (req, res) => {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', 'https://www.zenresume.online');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+export default async function handler(req, res) {
+  // CORS Origin Validation
+  applyCors(req, res, ['POST', 'OPTIONS']);
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Rate Limiting: Max 20 ATS tailor requests per minute per IP
+  const rateLimit = checkRateLimit(req, 'ats-tailor', 20, 60 * 1000);
+  if (!rateLimit.allowed) {
+    res.setHeader('Retry-After', rateLimit.retryAfter);
+    return res.status(429).json({
+      error: 'Too many requests. Please wait a few moments before trying again.',
+      retryAfter: rateLimit.retryAfter
+    });
+  }
 
   try {
     // 1. Extract and verify Firebase Auth token

@@ -2,16 +2,11 @@
 // Endpoint: POST /api/create-order
 
 import Razorpay from 'razorpay';
+import { applyCors, checkRateLimit, sanitizeString } from './_security.js';
 
 export default async function handler(req, res) {
-  // CORS Configuration
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  // CORS Configuration & Origin Validation
+  applyCors(req, res, ['GET', 'OPTIONS', 'POST']);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -21,21 +16,23 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
-  let keyId = process.env.RAZORPAY_KEY_ID;
-  let keySecret = process.env.RAZORPAY_KEY_SECRET;
+  // Rate Limiting: Max 15 order creation attempts per minute per IP
+  const rateLimit = checkRateLimit(req, 'create-order', 15, 60 * 1000);
+  if (!rateLimit.allowed) {
+    res.setHeader('Retry-After', rateLimit.retryAfter);
+    return res.status(429).json({
+      error: 'Too many order requests. Please try again in a few moments.',
+      retryAfter: rateLimit.retryAfter
+    });
+  }
 
-  // Auto-heal if environment variable is missing or still holds the revoked old key
-  if (!keyId || keyId === 'rzp_test_TZ9yrhl52qFqfA') {
-    keyId = 'rzp_test_TZAwp8FChxYHnR';
-  }
-  if (!keySecret || keySecret === 'jI3Lmc8fDoRDodRXXrwYsYzJ') {
-    keySecret = '6069llzzX9k5Ve1RcTIwr370';
-  }
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
   if (!keyId || !keySecret) {
     console.error('[Razorpay Backend] Missing RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET in environment.');
     return res.status(500).json({
-      error: 'Razorpay server credentials are not configured on the backend.'
+      error: 'Payment gateway service is not configured. Please contact support.'
     });
   }
 

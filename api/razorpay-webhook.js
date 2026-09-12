@@ -4,8 +4,9 @@
 import crypto from 'crypto';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  // Webhooks are called server-to-server from Razorpay
+  res.setHeader('Access-Control-Allow-Origin', 'https://api.razorpay.com');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -15,14 +16,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  let webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET;
-  if (!webhookSecret || webhookSecret === 'jI3Lmc8fDoRDodRXXrwYsYzJ') {
-    webhookSecret = '6069llzzX9k5Ve1RcTIwr370';
-  }
+  const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET;
   const signature = req.headers['x-razorpay-signature'];
 
-  if (!webhookSecret || !signature) {
-    return res.status(400).json({ error: 'Missing webhook secret or x-razorpay-signature header' });
+  if (!webhookSecret) {
+    console.error('[Razorpay Webhook] Missing webhook secret configuration in environment.');
+    return res.status(500).json({ error: 'Webhook secret is not configured on the server.' });
+  }
+
+  if (!signature) {
+    return res.status(400).json({ error: 'Missing x-razorpay-signature header' });
   }
 
   try {

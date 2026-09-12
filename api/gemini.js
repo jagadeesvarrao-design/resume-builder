@@ -1,45 +1,47 @@
 // Vercel Serverless Function: Secure Gemini AI Proxy Gateway
 // Endpoint: /api/gemini
 
+import { applyCors, checkRateLimit } from './_security.js';
+
 export default async function handler(req, res) {
-  // Set CORS & Security Headers
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  // Set CORS & Strict Origin Validation
+  applyCors(req, res, ['GET', 'OPTIONS', 'POST']);
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
+  // Rate Limiting: Max 15 AI requests per minute per IP to prevent quota abuse & DoS
+  const rateLimit = checkRateLimit(req, 'gemini-ai', 15, 60 * 1000);
+  if (!rateLimit.allowed) {
+    res.setHeader('Retry-After', rateLimit.retryAfter);
+    return res.status(429).json({
+      error: 'AI request limit reached. Please wait a few moments before trying again.',
+      retryAfter: rateLimit.retryAfter
+    });
+  }
+
   try {
     const { action, prompt, payload } = req.body || {};
 
-    // Retrieve API key securely from server environment variables
-    const _gkEnv = () => {
-      const _d = [27,52,64,19,7,75,39,35,83,120,65,72,3,12,4,28,43,44,17,37,5,28,75,111,123,27,119,6,6,6,0,16,37,55,61,66,8,112,116,16,11,6,49,50,1,60,4,21,11,122,122,67,45];
-      const _s = "ZenResume2026";
-      return _d.map((c,i) => String.fromCharCode(c ^ _s.charCodeAt(i % _s.length))).join('');
-    };
-
-    const apiKey = process.env.GEMINI_API_KEY || _gkEnv();
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: 'Gemini API key is not configured on the server.' });
+      console.error('[Gemini Backend] Missing GEMINI_API_KEY in environment.');
+      return res.status(500).json({ error: 'AI processing service is not configured on the server.' });
     }
 
-    let finalPrompt = prompt;
+    let finalPrompt = '';
 
     if (action === 'parse_resume') {
-      const rawText = payload?.rawText || '';
+      const rawText = String(payload?.rawText || '').substring(0, 40000);
+      if (!rawText.trim()) {
+        return res.status(400).json({ error: 'Missing or empty resume text to parse.' });
+      }
       finalPrompt = `You are a high-accuracy ATS resume parser. Extract the following text into a clean JSON structure:
 ${rawText}
 
@@ -92,23 +94,27 @@ Respond ONLY with valid JSON in this exact structure, with no markdown code bloc
   ]
 }`;
     } else if (action === 'tailor_keywords') {
-      const { summary, skills, jobDescription } = payload || {};
+      const summary = String(payload?.summary || '').substring(0, 5000);
+      const skills = String(payload?.skills || '').substring(0, 5000);
+      const jobDescription = String(payload?.jobDescription || '').substring(0, 20000);
       finalPrompt = `You are an expert ATS resume writer. Tailor the candidate's Summary and Skills to match the Job Description keywords precisely while maintaining honesty.
 
 Current Summary:
-${summary || ''}
+${summary}
 
 Current Skills:
-${skills || ''}
+${skills}
 
 Target Job Description:
-${jobDescription || ''}
+${jobDescription}
 
 Respond ONLY with valid JSON in this exact format with no extra text or markdown:
 {
   "summary": "new optimized summary...",
   "skills": "Skill 1, Skill 2, Skill 3..."
 }`;
+    } else if (prompt) {
+      finalPrompt = String(prompt).substring(0, 40000);
     }
 
     if (!finalPrompt) {
