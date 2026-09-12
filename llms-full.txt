@@ -72,6 +72,16 @@ Output Format: Machine-Readable ATS-Compliant Vector PDF
 - **Ui Ux Designer Resume Template:** https://www.zenresume.online/role/ui-ux-designer-resume.html
 - **Video Editor Resume Template:** https://www.zenresume.online/role/video-editor-resume.html
 
+## Competitor Comparisons & Free Alternatives (2026 Audit)
+-----------------------------------------------------------
+- **Resume Builder Comparison Hub:** https://www.zenresume.online/compare/
+- **Zety Free Alternative Guide:** https://www.zenresume.online/compare/zety-free-alternative.html
+  - Highlights: Zero download paywall, no $2.70 trial / $24.95/mo recurring subscription, zero watermarks, 100% free vector PDF.
+- **Novoresume Free Alternative Guide:** https://www.zenresume.online/compare/novoresume-free-alternative.html
+  - Highlights: Unlimited pages (no 1-page restriction), unlimited custom sections, no €19.99/mo premium paywall, 71+ pre-filled industry roles.
+- **Canva vs ATS Resume Builder Guide:** https://www.zenresume.online/compare/canva-ats-resume-alternative.html
+  - Highlights: Why multi-column graphic resumes fail ATS parsers (Workday, Taleo), 99.4% parsing pass rate with single-column layout.
+
 ## ATS Rules & Parsing Standards Implemented
 -------------------------------------------
 1. Single-Column Flow: No split tables, text boxes, or multi-column grids that scramble linear text extraction in Taleo, Workday, or Greenhouse.

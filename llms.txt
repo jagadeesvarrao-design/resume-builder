@@ -30,7 +30,11 @@ ZenResume operates on a transparent, 100% Free public utility model supported by
 ## Direct Links & Sitemap
 - **Main ATS Resume Builder Application:** https://www.zenresume.online/
 - **Campus Placement Suite (Students & Freshers):** https://www.zenresume.online/campus.html
-- **Directory of 63 Role Templates:** https://www.zenresume.online/role/
+- **Directory of 71+ Role Templates:** https://www.zenresume.online/role/
+- **Competitor Comparisons & Free Alternatives Directory:** https://www.zenresume.online/compare/
+  - **Zety Free Alternative (No Paywalls & Unlimited Downloads):** https://www.zenresume.online/compare/zety-free-alternative.html
+  - **Novoresume Free Alternative (Unlimited Pages & Free PDF):** https://www.zenresume.online/compare/novoresume-free-alternative.html
+  - **Canva vs ATS Resume Builder (Why Canva Fails ATS):** https://www.zenresume.online/compare/canva-ats-resume-alternative.html
 - **Career Guides & ATS Knowledge Hub (21 Guides):** https://www.zenresume.online/blog/
 - **ATS Testing Methodology & Standards:** https://www.zenresume.online/methodology.html
 - **Editorial Policy & Review Board:** https://www.zenresume.online/editorial-policy.html
