@@ -65,8 +65,13 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Ignore non-GET, API routes, and non-HTTP
-  if (req.method !== 'GET' || url.pathname.startsWith('/api/') || !url.protocol.startsWith('http')) {
+  // Only handle same-origin GET requests; bypass API routes, cross-origin assets (Google/Razorpay/Firebase/Analytics), and non-HTTP
+  if (
+    req.method !== 'GET' ||
+    url.origin !== self.location.origin ||
+    url.pathname.startsWith('/api/') ||
+    !url.protocol.startsWith('http')
+  ) {
     return;
   }
 
@@ -84,7 +89,7 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => {
-          return caches.match(req).then((cached) => cached || caches.match('/index.html'));
+          return caches.match(req).then((cached) => cached || caches.match('/index.html') || new Response('Offline', { status: 503 }));
         })
     );
     return;
@@ -102,7 +107,7 @@ self.addEventListener('fetch', (event) => {
           }
           return networkResponse;
         })
-        .catch(() => caches.match(req))
+        .catch(() => caches.match(req).then((cached) => cached || new Response('', { status: 404 })))
     );
     return;
   }
@@ -110,17 +115,23 @@ self.addEventListener('fetch', (event) => {
   // 3. FOR STATIC MEDIA (Images, Fonts, Icons): Cache-First with Background Revalidation
   event.respondWith(
     caches.match(req).then((cachedResponse) => {
-      const fetchPromise = fetch(req)
-        .then((networkResponse) => {
+      if (cachedResponse) {
+        // Revalidate in background
+        fetch(req).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             const copy = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
           }
-          return networkResponse;
-        })
-        .catch(() => cachedResponse);
-
-      return cachedResponse || fetchPromise;
+        }).catch(() => {});
+        return cachedResponse;
+      }
+      return fetch(req).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const copy = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+        }
+        return networkResponse;
+      });
     })
   );
 });
