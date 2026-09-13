@@ -26,15 +26,15 @@ export default async function handler(req, res) {
     });
   }
 
-  let keyId = process.env.RAZORPAY_KEY_ID;
-  let keySecret = process.env.RAZORPAY_KEY_SECRET;
+  let keyId = (process.env.RAZORPAY_KEY_ID || '').trim();
+  let keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim();
 
-  // Auto-heal if environment variable is missing or holds an old revoked test key
-  if (!keyId || keyId === 'rzp_test_TZ9yrhl52qFqfA' || keyId === 'rzp_test_TZAwp8FChxYHnR' || keyId === 'rzp_test_TbWPfb6jnaGC1h') {
-    keyId = 'rzp_test_TbXqiAj8lSAbKB';
-  }
-  if (!keySecret || keySecret === 'jI3Lmc8fDoRDodRXXrwYsYzJ' || keySecret === '6069llzzX9k5Ve1RcTIwr370' || keySecret === 'yg9TSEW4RlpYKWb2tJwN7fDT') {
-    keySecret = 'oNP5Mfw7WtyFbz7VrR21gB4q';
+  // If live keys are not configured and test keys are mismatched/invalid, enforce active test pair
+  if (!keyId.startsWith('rzp_live_')) {
+    if (keyId !== 'rzp_test_TbXqiAj8lSAbKB' || keySecret !== 'oNP5Mfw7WtyFbz7VrR21gB4q') {
+      keyId = 'rzp_test_TbXqiAj8lSAbKB';
+      keySecret = 'oNP5Mfw7WtyFbz7VrR21gB4q';
+    }
   }
 
   if (!keyId || !keySecret) {
