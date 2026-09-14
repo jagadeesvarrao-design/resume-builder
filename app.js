@@ -2051,7 +2051,7 @@ window.triggerActualPrint = function() {
   executeSystemPrint();
 };
 
-function executeSystemPrint() {
+function executeSystemPrint(forcedMode) {
   // Double-check quota before downloading
   if (window.SubscriptionManager && !window.SubscriptionManager.canDownloadResume()) {
     closePrintModal();
@@ -2060,11 +2060,47 @@ function executeSystemPrint() {
     return;
   }
 
-  closePrintModal();
-  if (window.SubscriptionManager) {
-    window.SubscriptionManager.recordDownload();
+  // Ensure DOM is fully synced first
+  syncFormToPreview();
+
+  // If forcedMode is supplied (e.g. from 2-page modal), proceed directly
+  if (forcedMode) {
+    closePrintModal();
+    const multiModal = document.getElementById('multi-page-modal');
+    if (multiModal) multiModal.style.display = 'none';
+
+    if (window.SubscriptionManager) {
+      window.SubscriptionManager.recordDownload();
+    }
+    runPdfGeneration(forcedMode);
+    return;
   }
-  runPdfGeneration();
+
+  // Check page overflow
+  const overflow = checkResumePageOverflow();
+
+  if (overflow.isSinglePage) {
+    // Single page: proceed directly with zero-blank-page PDF export
+    closePrintModal();
+    if (window.SubscriptionManager) {
+      window.SubscriptionManager.recordDownload();
+    }
+    runPdfGeneration('single');
+  } else {
+    // Multi-page detected: prompt the user with choices
+    closePrintModal();
+    const multiModal = document.getElementById('multi-page-modal');
+    if (multiModal) {
+      const badge = document.getElementById('multipage-badge-text');
+      if (badge) badge.textContent = `${overflow.pageCount}-Page Resume Detected`;
+      multiModal.style.display = 'flex';
+    } else {
+      if (window.SubscriptionManager) {
+        window.SubscriptionManager.recordDownload();
+      }
+      runPdfGeneration('multi');
+    }
+  }
 }
 
 function loadHtml2Pdf() {
@@ -2081,28 +2117,35 @@ function loadHtml2Pdf() {
   });
 }
 
-async function runPdfGeneration() {
+async function runPdfGeneration(mode = 'single') {
   window.isGeneratingPdf = true;
 
   // CRITICAL FIX: Ensure the live preview print area is 100% synchronized and rendered with all sections
   syncFormToPreview();
   const element = document.getElementById('resume-print-area');
 
+  // Handle mode adjustments on preview element
+  if (mode === 'single-force-fit') {
+    autoFitToSinglePage(true);
+  } else if (mode === 'single') {
+    autoFitToSinglePage(false);
+  }
+
   // CRITICAL MOBILE FIX: If the preview panel is hidden (display: none !important),
   // html2canvas will render a completely blank image. We must temporarily show it.
-  // NOTE: builderWorkspace is declared at the top of the file (line 32), reusing it here.
   const wasPreviewShown = builderWorkspace ? builderWorkspace.classList.contains('show-preview') : false;
   if (!wasPreviewShown && builderWorkspace) {
     builderWorkspace.classList.add('show-preview');
   }
 
-  // ULTIMATE FIX: Create a deep clone to completely avoid mutating the live CSS Grid / Flexbox layout
+  // Deep clone to isolate from live DOM
   const clone = element.cloneNode(true);
   
-  // Create an absolute container isolated from all layout constraints
+  // Dimensions
   const isLetter = state.paperSize === 'letter';
   const paperWidth = isLetter ? '816px' : '794px';
-  const paperMinHeight = isLetter ? '1056px' : '1122px';
+  const targetHeight = isLetter ? 1056 : 1122; // Letter: 1056px, A4: 1122px
+  const paperMinHeight = `${targetHeight}px`;
 
   const printContainer = document.createElement('div');
   printContainer.style.cssText = `
@@ -2119,7 +2162,7 @@ async function runPdfGeneration() {
     background: white !important;
   `;
 
-  // Strip scaling from the clone but KEEP original paddings and allow full natural height!
+  // Clone styling
   clone.style.transform = 'none';
   clone.style.transformOrigin = 'unset';
   clone.style.position = 'relative';
@@ -2127,11 +2170,42 @@ async function runPdfGeneration() {
   clone.style.top = '0';
   clone.style.margin = '0';
   clone.style.width = paperWidth;
-  clone.style.minHeight = paperMinHeight;
-  clone.style.height = 'auto';
-  clone.style.maxHeight = 'none';
-  clone.style.overflow = 'visible';
+  clone.style.boxSizing = 'border-box';
   clone.style.boxShadow = 'none';
+
+  if (mode === 'single' || mode === 'single-force-fit') {
+    // 1-PAGE GUARANTEE: Lock clone to exact single-page dimensions with overflow hidden and zero trailing margin
+    clone.style.minHeight = paperMinHeight;
+    clone.style.height = paperMinHeight;
+    clone.style.maxHeight = paperMinHeight;
+    clone.style.overflow = 'hidden';
+
+    const allSections = clone.querySelectorAll('.resume-section, .section-block');
+    if (allSections.length > 0) {
+      allSections[allSections.length - 1].style.marginBottom = '0px';
+    }
+    const footnote = clone.querySelector('.resume-ats-footnote');
+    if (footnote) {
+      footnote.style.marginBottom = '0px';
+      footnote.style.paddingBottom = '0px';
+    }
+  } else {
+    // MULTI-PAGE MODE: Full natural height with clean pagination and trailing margin trimmed
+    clone.style.minHeight = paperMinHeight;
+    clone.style.height = 'auto';
+    clone.style.maxHeight = 'none';
+    clone.style.overflow = 'visible';
+
+    const allSections = clone.querySelectorAll('.resume-section, .section-block');
+    if (allSections.length > 0) {
+      allSections[allSections.length - 1].style.marginBottom = '0px';
+    }
+    const footnote = clone.querySelector('.resume-ats-footnote');
+    if (footnote) {
+      footnote.style.marginBottom = '0px';
+      footnote.style.paddingBottom = '0px';
+    }
+  }
   
   printContainer.appendChild(clone);
   document.body.appendChild(printContainer);
@@ -2163,13 +2237,20 @@ async function runPdfGeneration() {
       y: 0,
       scrollY: 0,
       scrollX: 0,
-      windowWidth: isLetter ? 816 : 794
+      width: isLetter ? 816 : 794,
+      windowWidth: isLetter ? 816 : 794,
+      ...((mode === 'single' || mode === 'single-force-fit') ? {
+        height: targetHeight,
+        windowHeight: targetHeight
+      } : {})
     },
     jsPDF:        { unit: 'mm', format: isLetter ? 'letter' : 'a4', orientation: 'portrait' },
-    pagebreak:    { 
-      mode: ['avoid-all', 'css', 'legacy'],
-      avoid: ['.resume-section', '.section-block', '.education-item-card', '.experience-item-card', '.project-item-card', '.certification-item-card', 'table', 'tr', 'li']
-    }
+    pagebreak:    (mode === 'single' || mode === 'single-force-fit')
+      ? { mode: 'legacy' }
+      : { 
+          mode: ['avoid-all', 'css', 'legacy'],
+          avoid: ['.resume-section', '.section-block', '.education-item-card', '.experience-item-card', '.project-item-card', '.certification-item-card', 'table', 'tr', 'li']
+        }
   };
   
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
@@ -2206,14 +2287,19 @@ async function runPdfGeneration() {
         template_id: state.selectedTemplateId,
         industry: state.selectedInd,
         experience_level: state.selectedExp,
-        paper_size: state.paperSize
+        paper_size: state.paperSize,
+        mode: mode
       });
       
-      // Close the Print/AI Modal if it's open
+      // Close any open modals
       const printModal = document.getElementById('print-modal');
       if (printModal) {
         printModal.style.display = 'none';
         printModal.style.opacity = '0';
+      }
+      const multiModal = document.getElementById('multi-page-modal');
+      if (multiModal) {
+        multiModal.style.display = 'none';
       }
 
       // Trigger Post-Download Retention & Job Tailor Modal (Retention Engine)
@@ -2467,67 +2553,96 @@ function generateSummarySuggestions() {
 /* ==========================================================================
    7E. DYNAMIC SINGLE-PAGE AUTO-FIT ENGINE
    ========================================================================== */
-function autoFitToSinglePage() {
+function autoFitToSinglePage(allowUltra = false) {
   const paper = document.getElementById('resume-print-area');
-  if (!paper) return;
+  if (!paper) return { fitted: true, naturalHeight: 1122, targetHeight: 1122 };
   
   // Clear any existing compression/expansion classes first
   paper.classList.remove(
-    'compress-1', 'compress-2', 'compress-3', 'compress-4',
+    'compress-1', 'compress-2', 'compress-3', 'compress-4', 'compress-ultra',
     'expand-1', 'expand-2', 'expand-3'
   );
   
-  // Temporarily set min-height to auto to get the natural natural height of the content
-  paper.style.minHeight = 'auto';
+  // Temporarily set min-height to 0px with !important to get the real natural height of the content
+  const prevMinHeight = paper.style.minHeight;
+  paper.style.setProperty('min-height', '0px', 'important');
   let naturalHeight = paper.scrollHeight;
-  paper.style.minHeight = '';
+  paper.style.minHeight = prevMinHeight;
   
   const isLetter = state.paperSize === 'letter';
   const targetHeight = isLetter ? 1056 : 1122; // Letter: 11in (1056px), A4: 297mm (1122px)
   
   // 1. If it overflows the single page, apply compression classes step-by-step
-  if (naturalHeight > targetHeight) {
-    const compressClasses = ['compress-1', 'compress-2', 'compress-3', 'compress-4'];
+  if (naturalHeight > targetHeight + 5) {
+    const compressClasses = allowUltra 
+      ? ['compress-1', 'compress-2', 'compress-3', 'compress-4', 'compress-ultra']
+      : ['compress-1', 'compress-2', 'compress-3', 'compress-4'];
     let fitted = false;
     for (let i = 0; i < compressClasses.length; i++) {
       paper.classList.add(compressClasses[i]);
       
-      paper.style.minHeight = 'auto';
+      paper.style.setProperty('min-height', '0px', 'important');
       naturalHeight = paper.scrollHeight;
-      paper.style.minHeight = '';
+      paper.style.minHeight = prevMinHeight;
       
-      if (naturalHeight <= targetHeight) {
+      if (naturalHeight <= targetHeight + 8) {
         fitted = true;
         break; // Successfully fit on a single page!
       }
     }
     
-    // If even maximum compression can't fit it on 1 page, it is a true multi-page resume!
-    // We remove compression to let it flow naturally and beautifully in full size over multiple pages.
-    if (!fitted) {
+    // If even maximum compression can't fit it on 1 page and we're not force-fitting,
+    // remove compression to let it flow naturally over multiple pages.
+    if (!fitted && !allowUltra) {
       paper.classList.remove('compress-1', 'compress-2', 'compress-3', 'compress-4');
+      return { fitted: false, naturalHeight, targetHeight };
     }
+    return { fitted, naturalHeight, targetHeight };
   } 
   // 2. If it is shorter than a single page, apply expansion classes step-by-step to fill the space
-  // CRITICAL: The "fill page" (expansion) feature is ONLY triggered if the resume is a single-page document
-  // (i.e. is shorter than 1122px). It is never triggered for multi-page resumes.
   else if (naturalHeight < targetHeight - 80) {
     const expandClasses = ['expand-1', 'expand-2', 'expand-3'];
     for (let i = 0; i < expandClasses.length; i++) {
-      // Check if applying this class remains within target height
       paper.classList.add(expandClasses[i]);
       
-      paper.style.minHeight = 'auto';
+      paper.style.setProperty('min-height', '0px', 'important');
       naturalHeight = paper.scrollHeight;
-      paper.style.minHeight = '';
+      paper.style.minHeight = prevMinHeight;
       
-      if (naturalHeight > targetHeight) {
-        // If it overflows, back off by removing this expansion class and sticking to the previous one
+      if (naturalHeight > targetHeight + 5) {
         paper.classList.remove(expandClasses[i]);
         break;
       }
     }
+    return { fitted: true, naturalHeight, targetHeight };
   }
+  return { fitted: true, naturalHeight, targetHeight };
+}
+
+function checkResumePageOverflow() {
+  const paper = document.getElementById('resume-print-area');
+  if (!paper) return { isSinglePage: true, scrollHeight: 1122, targetHeight: 1122, pageCount: 1 };
+
+  const isLetter = state.paperSize === 'letter';
+  const targetHeight = isLetter ? 1056 : 1122;
+
+  const prevMinHeight = paper.style.minHeight;
+  
+  // Test if standard auto-fit can fit the content cleanly into 1 page
+  const fitResult = autoFitToSinglePage(false);
+  paper.style.setProperty('min-height', '0px', 'important');
+  const currentHeight = paper.scrollHeight;
+  paper.style.minHeight = prevMinHeight;
+
+  const isSinglePage = fitResult ? fitResult.fitted : (currentHeight <= targetHeight + 10);
+  const pageCount = isSinglePage ? 1 : Math.max(2, Math.ceil((currentHeight - 10) / targetHeight));
+
+  return {
+    isSinglePage,
+    scrollHeight: currentHeight,
+    targetHeight,
+    pageCount
+  };
 }
 
 /* ==========================================================================
@@ -4193,6 +4308,56 @@ function attachEvents() {
         if (warningModal) warningModal.style.display = 'flex';
       } else {
         executeSystemPrint();
+      }
+    });
+  }
+
+  // Multi-page Modal Actions
+  const btnCloseMultipageX = document.getElementById('btn-close-multipage-x');
+  if (btnCloseMultipageX) {
+    btnCloseMultipageX.addEventListener('click', () => {
+      const multiModal = document.getElementById('multi-page-modal');
+      if (multiModal) multiModal.style.display = 'none';
+    });
+  }
+
+  const btnOptFit1Page = document.getElementById('btn-opt-fit-1page');
+  if (btnOptFit1Page) {
+    btnOptFit1Page.addEventListener('click', () => {
+      const multiModal = document.getElementById('multi-page-modal');
+      if (multiModal) multiModal.style.display = 'none';
+      executeSystemPrint('single-force-fit');
+    });
+  }
+
+  const btnOptDownload2Page = document.getElementById('btn-opt-download-2page');
+  if (btnOptDownload2Page) {
+    btnOptDownload2Page.addEventListener('click', () => {
+      const multiModal = document.getElementById('multi-page-modal');
+      if (multiModal) multiModal.style.display = 'none';
+      executeSystemPrint('multi');
+    });
+  }
+
+  const btnOptTrimEditor = document.getElementById('btn-opt-trim-editor');
+  if (btnOptTrimEditor) {
+    btnOptTrimEditor.addEventListener('click', () => {
+      const multiModal = document.getElementById('multi-page-modal');
+      if (multiModal) multiModal.style.display = 'none';
+      
+      // Switch to editor tab if on mobile
+      if (typeof setMobileTab === 'function') {
+        setMobileTab('edit');
+      }
+      
+      // Scroll to Experience section
+      const expSection = document.getElementById('section-experience');
+      if (expSection) {
+        expSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      
+      if (typeof showToast === 'function') {
+        showToast("💡 Tip: Shorten 1-2 bullet points or remove an older role to fit cleanly on 1 page!", "info");
       }
     });
   }

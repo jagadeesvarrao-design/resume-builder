@@ -3038,6 +3038,31 @@ textarea.form-input {
   gap: 8px !important;
 }
 
+.resume-paper.compress-ultra {
+  padding: 6mm 10mm !important;
+}
+.resume-paper.compress-ultra .resume-header { margin-bottom: 4px !important; }
+.resume-paper.compress-ultra .resume-name { font-size: 15px !important; }
+.resume-paper.compress-ultra .resume-title { font-size: 9.5px !important; margin-bottom: 2px !important; }
+.resume-paper.compress-ultra .resume-contact { gap: 2px 4px !important; margin-top: 0px !important; font-size: 8.5px !important; }
+.resume-paper.compress-ultra .resume-section { margin-bottom: 4px !important; }
+.resume-paper.compress-ultra .section-title { margin-bottom: 2px !important; padding-bottom: 0px !important; font-size: 10px !important; }
+.resume-paper.compress-ultra .resume-item { margin-bottom: 2px !important; }
+.resume-paper.compress-ultra .resume-item table { margin-bottom: 0px !important; font-size: 8.5px !important; }
+.resume-paper.compress-ultra p, 
+.resume-paper.compress-ultra li, 
+.resume-paper.compress-ultra td,
+.resume-paper.compress-ultra div,
+.resume-paper.compress-ultra span { 
+  font-size: 8.5px !important; 
+  line-height: 1.2 !important; 
+}
+.resume-paper.compress-ultra .left-sidebar,
+.resume-paper.compress-ultra .right-content {
+  padding: 6px 6px !important;
+  gap: 6px !important;
+}
+
 /* --- Spacing Expansion Classes to Fill Page Elegantly --- */
 .resume-paper.expand-1 {
   padding-top: 24mm !important;
