@@ -3006,11 +3006,11 @@ function parseResumeTextHeuristically(rawText) {
       const isTechLine = /^(?:Tech|Technologies|Stack|Built with):/i.test(line);
       const urlInLine = line.match(/(?:https?:\/\/?|https?:\/|github[\s.]com\/)[^\s)]+/i);
 
-      const isContinuationLink = line.startsWith('(') && urlInLine && currentProj && !currentProj.link;
-      const isNewHeader = !isBullet && !isTechLine && !isContinuationLink && !isActionVerbStart(line) && (
+      const isSentenceContinuation = line.endsWith('.') || /\b(?:during|events|enabled|enabling|allowing|featuring|powered|tracking|intercept|across|between|without)\b/i.test(line);
+      const isNewHeader = !isBullet && !isTechLine && !isContinuationLink && !isActionVerbStart(line) && !isSentenceContinuation && (
         line.match(/^[A-Z0-9\s_-]{3,40}\s*\(/i) ||
-        (line.length < 110 && (line.includes('|') || line.includes('–') || urlInLine || techKeywords.test(line))) ||
-        (line.length < 65 && !line.endsWith('.'))
+        (line.length < 110 && (line.includes('|') || line.includes('–') || (urlInLine && !line.includes('.')))) ||
+        (line.length < 65 && !line.includes('.') && !line.includes(','))
       );
 
       if (isNewHeader) {
@@ -3080,7 +3080,8 @@ function parseResumeTextHeuristically(rawText) {
 
     let currentEdu = null;
     for (const line of sections.education) {
-      const isDegreeLine = /(?:Bachelor|Master|B\.?Tech|M\.?Tech|B\.?S|M\.?S|B\.?E|Diploma|Intermediate|TENTH|Higher Secondary|High School|Ph\.?D)/i.test(line);
+      const isDegreeLine = /^(?:Bachelor|Master|B\.?Tech|M\.?Tech|B\.?S|M\.?S|B\.?E|Diploma|Intermediate|TENTH|10th|12th|Higher Secondary|Ph\.?D)\b/i.test(line) ||
+        /\b(?:B\.?Tech|M\.?Tech|Bachelor of|Master of|Associate Degree|Diploma in)\b/i.test(line);
 
       if (isDegreeLine) {
         if (currentEdu && (currentEdu.degree || currentEdu.institution)) {
