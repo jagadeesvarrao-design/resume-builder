@@ -17,6 +17,47 @@
     merchantVpa: '8790906267-2@ybl',
     merchantName: 'ZenResume',
     razorpayKeyId: window.RAZORPAY_KEY_ID || 'rzp_test_TbXqiAj8lSAbKB',
+    _razorpayLoadingPromise: null,
+
+    /**
+     * Lazy Loader for Razorpay Checkout SDK (loads only on demand when user initiates checkout)
+     */
+    loadRazorpaySdk: function() {
+      if (window.Razorpay) {
+        return Promise.resolve(window.Razorpay);
+      }
+      if (this._razorpayLoadingPromise) {
+        return this._razorpayLoadingPromise;
+      }
+      this._razorpayLoadingPromise = new Promise((resolve, reject) => {
+        const existingScript = document.querySelector('script[src*="checkout.razorpay.com"]');
+        if (existingScript) {
+          existingScript.addEventListener('load', () => {
+            this._razorpayLoadingPromise = null;
+            resolve(window.Razorpay);
+          });
+          existingScript.addEventListener('error', (err) => {
+            this._razorpayLoadingPromise = null;
+            reject(err);
+          });
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        script.onload = () => {
+          this._razorpayLoadingPromise = null;
+          resolve(window.Razorpay);
+        };
+        script.onerror = (err) => {
+          this._razorpayLoadingPromise = null;
+          reject(err);
+        };
+        document.head.appendChild(script);
+      });
+      return this._razorpayLoadingPromise;
+    },
     
     // Configuration Catalog
     catalog: {
@@ -355,20 +396,15 @@
         rzp.open();
       };
 
-      if (!window.Razorpay) {
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.async = true;
-        script.onload = () => launchRazorpay();
-        script.onerror = () => {
-          if (typeof window.showToast === 'function') {
-            window.showToast('Could not load Razorpay SDK. Please use direct UPI QR.', 'warning');
-          }
-          this.openIndianCheckout(planKey);
-        };
-        document.head.appendChild(script);
-      } else {
+      try {
+        await this.loadRazorpaySdk();
         launchRazorpay();
+      } catch (sdkErr) {
+        console.warn('[Razorpay] SDK failed to load:', sdkErr);
+        if (typeof window.showToast === 'function') {
+          window.showToast('Could not load Razorpay SDK. Falling back to direct UPI QR...', 'warning', 4000);
+        }
+        this.openIndianCheckout(planKey);
       }
     },
 
