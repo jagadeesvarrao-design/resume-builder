@@ -2800,14 +2800,16 @@ async function extractTextFromPdf(input) {
   if (typeof window.Tesseract === 'undefined') {
     await new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js';
+      script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
       script.onload = resolve;
       script.onerror = () => reject(new Error('Failed to load OCR library.'));
       document.head.appendChild(script);
     });
   }
 
+  const worker = await window.Tesseract.createWorker('eng');
   let ocrText = '';
+
   for (let pageNum = 1; pageNum <= Math.min(pdfDoc.numPages, 3); pageNum++) {
     const page = await pdfDoc.getPage(pageNum);
     const viewport = page.getViewport({ scale: 2.0 }); // High scale for optimal character recognition
@@ -2818,12 +2820,13 @@ async function extractTextFromPdf(input) {
 
     await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
-    const ocrResult = await window.Tesseract.recognize(canvas, 'eng');
+    const ocrResult = await worker.recognize(canvas);
     if (ocrResult?.data?.text) {
       ocrText += ocrResult.data.text + '\n\n';
     }
   }
 
+  await worker.terminate();
   return ocrText.trim();
 }
 
