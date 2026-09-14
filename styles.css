@@ -6357,6 +6357,26 @@ footer a:active,
 #resume-print-area .resume-section,
 #resume-print-area > div[class*="section"] {
   margin-bottom: var(--resume-section-gap, 16px) !important;
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+#resume-print-area table,
+#resume-print-area tr,
+#resume-print-area li,
+#resume-print-area .education-item,
+#resume-print-area .experience-item,
+#resume-print-area .project-item,
+#resume-print-area .certification-item {
+  break-inside: avoid !important;
+  page-break-inside: avoid !important;
+}
+
+#resume-print-area h1,
+#resume-print-area h2,
+#resume-print-area .section-title {
+  break-after: avoid !important;
+  page-break-after: avoid !important;
 }
 
 /* ==========================================================================

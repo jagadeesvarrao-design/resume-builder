@@ -2083,45 +2083,10 @@ function loadHtml2Pdf() {
 
 async function runPdfGeneration() {
   window.isGeneratingPdf = true;
+
+  // CRITICAL FIX: Ensure the live preview print area is 100% synchronized and rendered with all sections
+  syncFormToPreview();
   const element = document.getElementById('resume-print-area');
-
-  // CRITICAL FIX: Force-render the resume into the print area before PDF capture.
-  // On mobile, syncFormToPreview() skips rendering when the preview tab is hidden.
-  // This ensures the print area always has fresh, up-to-date content.
-  const currentData = extractCurrentFormData();
-  const template = TEMPLATE_STYLES[state.selectedTemplateId];
-  if (template) {
-    const rawHTML = template.render(currentData);
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = rawHTML;
-
-    const sectionMap = {};
-    const sections = tempDiv.querySelectorAll('[data-section]');
-    sections.forEach(sec => {
-      const sectionName = sec.getAttribute('data-section');
-      if (['experience', 'projects', 'education', 'certifications'].includes(sectionName)) {
-        sectionMap[sectionName] = sec;
-        sec.parentNode.removeChild(sec);
-      }
-    });
-    if (state.sectionOrder) {
-      state.sectionOrder.forEach(secName => {
-        if (sectionMap[secName]) {
-          tempDiv.appendChild(sectionMap[secName]);
-        }
-      });
-    }
-    element.innerHTML = tempDiv.innerHTML;
-
-    if (state.selectedTemplateId === 'sidebar') {
-      element.classList.add('sidebar-layout');
-    } else {
-      element.classList.remove('sidebar-layout');
-    }
-
-    // Run single-page auto-fit before capture
-    autoFitToSinglePage();
-  }
 
   // CRITICAL MOBILE FIX: If the preview panel is hidden (display: none !important),
   // html2canvas will render a completely blank image. We must temporarily show it.
@@ -2137,7 +2102,7 @@ async function runPdfGeneration() {
   // Create an absolute container isolated from all layout constraints
   const isLetter = state.paperSize === 'letter';
   const paperWidth = isLetter ? '816px' : '794px';
-  const paperHeight = isLetter ? '278mm' : '295.5mm';
+  const paperMinHeight = isLetter ? '1056px' : '1122px';
 
   const printContainer = document.createElement('div');
   printContainer.style.cssText = `
@@ -2145,6 +2110,7 @@ async function runPdfGeneration() {
     top: 0 !important;
     left: 0 !important;
     width: ${paperWidth} !important;
+    min-height: ${paperMinHeight} !important;
     height: auto !important;
     z-index: -9999 !important;
     overflow: visible !important;
@@ -2153,7 +2119,7 @@ async function runPdfGeneration() {
     background: white !important;
   `;
 
-  // Strip scaling from the clone but KEEP original paddings!
+  // Strip scaling from the clone but KEEP original paddings and allow full natural height!
   clone.style.transform = 'none';
   clone.style.transformOrigin = 'unset';
   clone.style.position = 'relative';
@@ -2161,7 +2127,10 @@ async function runPdfGeneration() {
   clone.style.top = '0';
   clone.style.margin = '0';
   clone.style.width = paperWidth;
-  clone.style.height = paperHeight;
+  clone.style.minHeight = paperMinHeight;
+  clone.style.height = 'auto';
+  clone.style.maxHeight = 'none';
+  clone.style.overflow = 'visible';
   clone.style.boxShadow = 'none';
   
   printContainer.appendChild(clone);
@@ -2184,20 +2153,23 @@ async function runPdfGeneration() {
   const opt = {
     margin:       0,
     filename:     fileName,
-    image:        { type: 'jpeg', quality: 0.92 },
+    image:        { type: 'jpeg', quality: 0.95 },
     html2canvas:  { 
       scale: pdfScale,
       useCORS: true, 
-      letterRendering: false, 
+      letterRendering: true, 
       logging: false, 
       x: 0,
       y: 0,
       scrollY: 0,
       scrollX: 0,
-      windowWidth: isLetter ? 816 : 794, 
-      height: clone.offsetHeight - 1 
+      windowWidth: isLetter ? 816 : 794
     },
-    jsPDF:        { unit: 'mm', format: isLetter ? 'letter' : 'a4', orientation: 'portrait' }
+    jsPDF:        { unit: 'mm', format: isLetter ? 'letter' : 'a4', orientation: 'portrait' },
+    pagebreak:    { 
+      mode: ['avoid-all', 'css', 'legacy'],
+      avoid: ['.resume-section', '.section-block', '.education-item-card', '.experience-item-card', '.project-item-card', '.certification-item-card', 'table', 'tr', 'li']
+    }
   };
   
   const oldText = btnModalConfirm ? btnModalConfirm.innerHTML : '';
