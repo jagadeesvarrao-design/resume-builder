@@ -1882,13 +1882,17 @@ function updateProgressDots() {
     }
   });
 
-  // Sync horizontal section navigation pills
+  // Sync horizontal section navigation pills safely within pill container only
   const pills = document.querySelectorAll('.section-nav-pill');
+  const pillsContainer = document.getElementById('editor-section-nav-pills');
   pills.forEach(pill => {
     const pillStep = parseInt(pill.getAttribute('data-nav-step'), 10);
     if (pillStep === current) {
       pill.classList.add('active');
-      pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      if (pillsContainer) {
+        const targetScroll = pill.offsetLeft - (pillsContainer.clientWidth / 2) + (pill.clientWidth / 2);
+        pillsContainer.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' });
+      }
     } else {
       pill.classList.remove('active');
     }
@@ -1923,10 +1927,15 @@ function showStep(stepNum) {
     activeStep.classList.add('active');
   }
   
-  // 3. Smooth scroll top on form container
-  const formScroll = document.querySelector('.form-scroll-container') || document.querySelector('.form-panel');
+  // 3. Smooth scroll top on form container & lock horizontal scroll position
+  const formPanel = document.querySelector('.form-panel');
+  if (formPanel) {
+    formPanel.scrollLeft = 0;
+  }
+  const formScroll = document.querySelector('.form-scroll-container');
   if (formScroll) {
     formScroll.scrollTop = 0;
+    formScroll.scrollLeft = 0;
   }
   
   // 4. Generate dynamic summary suggestions when step 2 is active
@@ -6010,6 +6019,18 @@ if (document.readyState === 'loading') {
 } else {
   initCurrencyAndSubscriptionStartup();
 }
+
+// Ensure form panel never scrolls horizontally on input focus or step changes
+document.addEventListener('focusin', () => {
+  const formPanel = document.querySelector('.form-panel');
+  if (formPanel && formPanel.scrollLeft !== 0) {
+    formPanel.scrollLeft = 0;
+  }
+  const formScroll = document.querySelector('.form-scroll-container');
+  if (formScroll && formScroll.scrollLeft !== 0) {
+    formScroll.scrollLeft = 0;
+  }
+});
 
 
 

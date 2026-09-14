@@ -1579,9 +1579,13 @@ body {
   height: 100%;
   max-height: 100%;
   overflow: hidden !important;
+  overflow-x: hidden !important;
   display: flex;
   flex-direction: column;
   position: relative;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .workspace-actions {
@@ -1591,25 +1595,40 @@ body {
   margin-bottom: 24px;
   border-bottom: 1px solid var(--border-glass);
   padding-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .data-actions {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  max-width: 100%;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 0;
+  box-sizing: border-box;
+}
+
+.data-actions::-webkit-scrollbar {
+  display: none;
 }
 
 .btn-data-action {
   background: var(--white);
   border: 1px solid var(--border-glass-strong);
   color: var(--primary-calm);
-  padding: 6px 12px;
+  padding: 6px 11px;
   font-size: 11px;
   font-weight: 600;
   border-radius: var(--radius-sm);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: var(--transition-smooth);
 }
 
@@ -2060,11 +2079,17 @@ body {
   display: none !important; /* Dynamic step display */
   flex-direction: column;
   gap: 20px;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .form-step.active {
   display: flex !important;
   animation: fadeIn 0.25s ease-out;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .step-title {
@@ -2086,12 +2111,17 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 600px) {
@@ -2138,9 +2168,13 @@ textarea.form-input {
   align-items: center;
   gap: 6px;
   overflow-x: auto;
-  padding: 8px 4px 4px 4px;
-  margin-top: 4px;
+  padding: 6px 2px 2px 2px;
+  margin-top: 2px;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
   scrollbar-width: none; /* Hide scrollbar for clean look */
+  -webkit-overflow-scrolling: touch;
 }
 
 .editor-section-nav-pills::-webkit-scrollbar {
@@ -2148,6 +2182,7 @@ textarea.form-input {
 }
 
 .section-nav-pill {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -4815,18 +4850,42 @@ textarea.form-input {
 
 /* 2. Editor Panel Top Header */
 .stitch-editor-top-bar {
-  padding: 14px 20px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-card);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
 }
 
 .stitch-editor-top-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.stitch-editor-left-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stitch-editor-right-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: auto;
 }
 
 .stitch-editor-actions-row {
@@ -4834,13 +4893,16 @@ textarea.form-input {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 4px;
+  gap: 8px;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: 2px;
 }
 
 .stitch-editor-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-main);
   margin: 0;
@@ -4849,20 +4911,21 @@ textarea.form-input {
 .stitch-save-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
+  gap: 5px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--primary-calm);
-  background: rgba(0, 104, 86, 0.12);
-  padding: 4px 10px;
+  background: rgba(0, 104, 86, 0.1);
+  padding: 3px 8px;
   border-radius: 9999px;
+  white-space: nowrap;
 }
 
 /* 3. Preview Studio Controls Header */
 .stitch-preview-floating-bar {
   display: flex;
   align-items: center;
-  padding: 10px 16px;
+  padding: 8px 14px;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
@@ -4877,14 +4940,22 @@ textarea.form-input {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .stitch-preview-tools-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
+}
+
+.stitch-preview-cta-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 /* Live Preview Real-Time ATS Score Pill */
@@ -7959,6 +8030,18 @@ body.in-editor .stitch-footer {
 body.in-editor .app-container {
   padding-top: 16px !important;
   margin-top: 0 !important;
+}
+
+/* Suppress stray floating auto-ad buttons & search overlays inside editor */
+body.in-editor .google-auto-placed,
+body.in-editor .adsbygoogle[data-anchor-status],
+body.in-editor [class*="google-anno"],
+body.in-editor [id*="google_ads"],
+body.in-editor iframe[name*="google_ads"],
+body.in-editor > button:not([class]):not([id]) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* ZenGuide Target Spotlight */
