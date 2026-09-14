@@ -2740,15 +2740,18 @@ async function extractTextFromPdf(input) {
       script.onerror = () => reject(new Error('Failed to load PDF library.'));
       document.head.appendChild(script);
     });
+  } else if (window.pdfjsLib && !window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }
 
   let data;
   if (input instanceof ArrayBuffer) {
-    data = input;
+    data = new Uint8Array(input);
   } else if (input instanceof Uint8Array) {
     data = input;
   } else if (input instanceof Blob || input instanceof File) {
-    data = await input.arrayBuffer();
+    const ab = await input.arrayBuffer();
+    data = new Uint8Array(ab);
   } else if (typeof input === 'string') {
     let clean = input;
     if (clean.includes(',')) clean = clean.split(',')[1];
@@ -2757,13 +2760,14 @@ async function extractTextFromPdf(input) {
     for (let i = 0; i < binary.length; i++) {
       bytes[i] = binary.charCodeAt(i);
     }
-    data = bytes.buffer;
+    data = bytes;
   }
 
   const loadingTask = window.pdfjsLib.getDocument({ data: data });
   const pdfDoc = await loadingTask.promise;
   let fullText = '';
 
+  // Pass 1: Try native text layer extraction
   for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
     const page = await pdfDoc.getPage(pageNum);
     const textContent = await page.getTextContent();
@@ -2782,7 +2786,45 @@ async function extractTextFromPdf(input) {
     fullText += pageText + '\n\n';
   }
 
-  return fullText.trim();
+  if (fullText.trim().length > 40) {
+    return fullText.trim();
+  }
+
+  // Pass 2: Canvas image PDF (e.g. html2pdf or scanned). Run local Tesseract OCR engine
+  console.info("[PDF Extractor] Embedded text layer is empty. Rendering canvas and running client-side OCR...");
+  const btnMagic = document.getElementById('btn-magic-import');
+  if (btnMagic) {
+    btnMagic.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running Optical OCR...';
+  }
+
+  if (typeof window.Tesseract === 'undefined') {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js';
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('Failed to load OCR library.'));
+      document.head.appendChild(script);
+    });
+  }
+
+  let ocrText = '';
+  for (let pageNum = 1; pageNum <= Math.min(pdfDoc.numPages, 3); pageNum++) {
+    const page = await pdfDoc.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 2.0 }); // High scale for optimal character recognition
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+
+    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+    const ocrResult = await window.Tesseract.recognize(canvas, 'eng');
+    if (ocrResult?.data?.text) {
+      ocrText += ocrResult.data.text + '\n\n';
+    }
+  }
+
+  return ocrText.trim();
 }
 
 function parseResumeTextHeuristically(rawText) {
