@@ -2840,10 +2840,10 @@ function parseResumeTextHeuristically(rawText) {
   const sectionKeywords = [
     { type: 'summary', regex: /^(?:summary|professional summary|executive summary|about me|profile|career objective|objective)$/i },
     { type: 'skills', regex: /^(?:skills|technical skills|skills directory|core competencies|areas of expertise|technologies|tools & technologies)$/i },
-    { type: 'experience', regex: /^(?:experience|work experience|professional experience|employment history|work history|internships?)$/i },
-    { type: 'projects', regex: /^(?:projects|key projects|academic projects|personal projects|technical projects)$/i },
-    { type: 'education', regex: /^(?:education|academic background|academics|qualifications)$/i },
-    { type: 'certifications', regex: /^(?:certifications?|certificates|licenses & certifications|badges|achievements|honors & awards|technical badges(?: & certifications)?)$/i }
+    { type: 'experience', regex: /^(?:experience|work experience|professional experience|employment history|work history|experience history|internships?)$/i },
+    { type: 'projects', regex: /^(?:projects|key projects|academic projects|personal projects|technical projects|code repositories & prototypes|code repositories|repositories & prototypes|repositories)$/i },
+    { type: 'education', regex: /^(?:education|academic background|academics|qualifications|education & credentials|education & qualifications)$/i },
+    { type: 'certifications', regex: /^(?:certifications?|certificates|licenses & certifications|badges|achievements|honors & awards|technical badges(?: & courses)?|technical badges(?: & certifications)?|courses & certificates)$/i }
   ];
 
   function isSectionHeader(line) {
@@ -2858,11 +2858,17 @@ function parseResumeTextHeuristically(rawText) {
   const phoneMatch = rawText.match(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}/);
   const phone = phoneMatch ? phoneMatch[0].trim() : '';
 
+  let locationMatch = rawText.match(/Location:\s*([^,\n]+(?:,\s*[^,\n]+)*)/i);
+  let location = locationMatch ? locationMatch[1].replace(/(?:Web|Website|Portfolio):.*$/i, '').trim() : '';
+
+  const websiteMatch = rawText.match(/(?:Web|Website|Portfolio):\s*(https?:\/\/[^\s]+)/i);
+  const website = websiteMatch ? websiteMatch[1].trim() : '';
+
   const linkedinMatch = rawText.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/([a-zA-Z0-9_%-]+)/i);
-  const linkedin = linkedinMatch ? linkedinMatch[0] : '';
+  const linkedin = linkedinMatch ? (linkedinMatch[0].startsWith('http') ? linkedinMatch[0] : 'https://' + linkedinMatch[0]) : '';
 
   const githubMatch = rawText.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9_%-]+)/i);
-  const github = githubMatch ? githubMatch[0] : '';
+  const github = githubMatch ? (githubMatch[0].startsWith('http') ? githubMatch[0] : 'https://' + githubMatch[0]) : '';
 
   // Extract name & title from header lines
   let name = '';
@@ -2871,20 +2877,30 @@ function parseResumeTextHeuristically(rawText) {
 
   for (let i = 0; i < Math.min(lines.length, 5); i++) {
     const line = lines[i];
-    if (line.includes('@') || line.match(/https?:\/\//i) || line.match(/linkedin\.com|github\.com/i) || line.match(/^\+?\d/)) {
+    if (line.includes('@') || line.match(/https?:\/\//i) || line.match(/linkedin\.com|github\.com/i) || line.match(/Email:|Phone:|Location:/i)) {
       continue;
     }
     if (isSectionHeader(line)) {
       headerEndIdx = i;
       break;
     }
-    if (!name) {
+    if (line.includes('|')) {
+      title = line.trim();
+      headerEndIdx = i + 1;
+    } else if (!name) {
       name = line.replace(/^[#*\-•\s]+/, '').trim();
       headerEndIdx = i + 1;
-    } else if (!title && line.length < 80 && !isSectionHeader(line)) {
+    } else if (!title) {
       title = line.replace(/^[#*\-•\s]+/, '').trim();
       headerEndIdx = i + 1;
-      break;
+    }
+  }
+
+  // Deduce name if missing from LinkedIn username or email
+  if (!name && linkedin) {
+    const slug = linkedin.split('/in/')[1]?.split('-')?.slice(0, 3)?.join(' ');
+    if (slug) {
+      name = slug.replace(/[0-9_]/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
     }
   }
 
@@ -2913,28 +2929,31 @@ function parseResumeTextHeuristically(rawText) {
   }
 
   // 3. Parse Individual Sections
+  // Summary
   const summary = (sections.summary || []).join(' ');
 
+  // Skills
   let skills = [];
   if (sections.skills) {
     const skillText = sections.skills.join('\n');
     skills = skillText
-      .split(/[\n,•|·;]+/)
-      .map(s => s.replace(/^[A-Za-z\s&]+:\s*/, '').replace(/^[*\-•\s]+/, '').trim())
-      .filter(s => s && s.length > 1 && s.length < 40 && !isSectionHeader(s));
+      .split(/[\n,•|·;*«»+]+/)
+      .map(s => s.replace(/^(?:Core Skills|Languages|Frameworks|Databases|Tools|Libraries)[A-Za-z\s&]*:\s*/i, '').replace(/^[*\-•«»+\s]+/, '').trim())
+      .filter(s => s && s.length > 1 && s.length < 45 && !isSectionHeader(s) && !/^(?:Core Skills|Languages|Tools|Databases)$/i.test(s));
     skills = [...new Set(skills)];
   }
 
+  // Experience
   const experience = [];
   if (sections.experience) {
     let currentExp = null;
-    const dateRegex = /(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4}|\b\d{4}\b)\s*(?:-|–|to)\s*(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4}|\b\d{4}\b|Present|Current)/i;
+    const dateRegex = /(?:(?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s*\d{4}|\b\d{4}\b)\s*(?:-|–|to)\s*(?:(?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s*\d{4}|\b\d{4}\b|Present|Current)/i;
 
     for (const line of sections.experience) {
       const hasDate = dateRegex.test(line);
-      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·');
+      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«');
 
-      if (hasDate || (!isBullet && line.length < 70 && !currentExp)) {
+      if (hasDate || (!isBullet && line.length < 90 && !currentExp)) {
         if (currentExp && (currentExp.role || currentExp.company)) {
           experience.push(currentExp);
         }
@@ -2942,16 +2961,27 @@ function parseResumeTextHeuristically(rawText) {
         const dates = dateMatch ? dateMatch[0] : '';
         const lineWithoutDate = line.replace(dateRegex, '').replace(/[|•,–-]$/, '').trim();
 
-        const parts = lineWithoutDate.split(/\s*\|\s*|\s*–\s*|\s*-\s*|,\s*/);
-        currentExp = {
-          role: parts[0] ? parts[0].trim() : 'Role',
-          company: parts[1] ? parts[1].trim() : '',
-          dates: dates,
-          location: parts[2] ? parts[2].trim() : '',
-          descriptions: []
-        };
+        const atMatch = lineWithoutDate.match(/(.+?)\s+at\s+(.+)/i);
+        if (atMatch) {
+          currentExp = {
+            role: atMatch[1].trim(),
+            company: atMatch[2].trim(),
+            dates: dates,
+            location: '',
+            descriptions: []
+          };
+        } else {
+          const parts = lineWithoutDate.split(/\s*\|\s*|\s*–\s*|\s*-\s*|,\s*/);
+          currentExp = {
+            role: parts[0] ? parts[0].trim() : 'Role',
+            company: parts[1] ? parts[1].trim() : '',
+            dates: dates,
+            location: parts[2] ? parts[2].trim() : '',
+            descriptions: []
+          };
+        }
       } else if (currentExp) {
-        const bulletText = line.replace(/^[•*\-·\s]+/, '').trim();
+        const bulletText = line.replace(/^[•*\-·«»\s]+/, '').trim();
         if (bulletText) currentExp.descriptions.push(bulletText);
       }
     }
@@ -2960,33 +2990,77 @@ function parseResumeTextHeuristically(rawText) {
     }
   }
 
+  // Projects
   const projects = [];
   if (sections.projects) {
     let currentProj = null;
-    for (const line of sections.projects) {
-      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·');
-      const isTechLine = /^(?:Tech|Technologies|Stack|Built with):/i.test(line);
-      const isLinkLine = /https?:\/\//i.test(line) || /github\.com\//i.test(line);
 
-      if (!isBullet && !isTechLine && !isLinkLine && line.length < 80) {
+    function isActionVerbStart(l) {
+      return /^(?:Built|Engineered|Architected|Developed|Created|Designed|Implemented|Spearheaded|Integrated|Authored|Trained|Optimized|Maintained|Automated|Deployed|Managed|Led|Constructed)\b/i.test(l);
+    }
+
+    const techKeywords = /(?:Python|FastAPI|React|Next\.?js|Node|TypeScript|JavaScript|Java|C\+\+|Go|Rust|Docker|AWS|SQL|Prisma|Gemini|LLM|Ollama)/i;
+
+    for (const line of sections.projects) {
+      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«');
+      const isTechLine = /^(?:Tech|Technologies|Stack|Built with):/i.test(line);
+      const urlInLine = line.match(/(?:https?:\/\/?|https?:\/|github[\s.]com\/)[^\s)]+/i);
+
+      const isContinuationLink = line.startsWith('(') && urlInLine && currentProj && !currentProj.link;
+      const isNewHeader = !isBullet && !isTechLine && !isContinuationLink && !isActionVerbStart(line) && (
+        line.match(/^[A-Z0-9\s_-]{3,40}\s*\(/i) ||
+        (line.length < 110 && (line.includes('|') || line.includes('–') || urlInLine || techKeywords.test(line))) ||
+        (line.length < 65 && !line.endsWith('.'))
+      );
+
+      if (isNewHeader) {
         if (currentProj && currentProj.title) {
           projects.push(currentProj);
         }
-        const parts = line.split(/\s*\|\s*|\s*–\s*|\s*-\s*/);
+        
+        let title = line;
+        let link = '';
+        let tech = '';
+
+        if (urlInLine) {
+          let rawUrl = urlInLine[0].replace('github com', 'github.com');
+          if (!rawUrl.startsWith('http')) rawUrl = 'https://' + rawUrl.replace(/^\/+/, '');
+          link = rawUrl;
+
+          const idx = line.indexOf(urlInLine[0]);
+          title = line.substring(0, idx).replace(/[()]/g, '').replace(/\s*https?:\/?\/?$/i, '').trim();
+          tech = line.substring(idx + urlInLine[0].length).replace(/^[),.\s]+/, '').trim();
+        } else {
+          const techMatch = line.match(techKeywords);
+          if (techMatch && techMatch.index > 5) {
+            title = line.substring(0, techMatch.index).replace(/[()]/g, '').trim();
+            tech = line.substring(techMatch.index).trim();
+          } else {
+            const parts = line.split(/\s*\|\s*|\s*–\s*|\s*-\s*/);
+            title = parts[0] ? parts[0].trim() : 'Project';
+            tech = parts[1] ? parts[1].trim() : '';
+          }
+        }
+
         currentProj = {
-          title: parts[0] ? parts[0].trim() : 'Project',
-          technologies: parts[1] ? parts[1].trim() : '',
+          title: title || 'Project',
+          technologies: tech,
           description: '',
-          link: ''
+          link: link
         };
       } else if (currentProj) {
-        if (isTechLine) {
+        if (urlInLine && !currentProj.link) {
+          let rawUrl = urlInLine[0].replace('github com', 'github.com');
+          if (!rawUrl.startsWith('http')) rawUrl = 'https://' + rawUrl.replace(/^\/+/, '');
+          currentProj.link = rawUrl;
+          const extraText = line.replace(urlInLine[0], '').replace(/[()]/g, '').trim();
+          if (extraText && !isActionVerbStart(extraText)) {
+            currentProj.technologies = (currentProj.technologies ? currentProj.technologies + ', ' : '') + extraText;
+          }
+        } else if (isTechLine) {
           currentProj.technologies = line.replace(/^(?:Tech|Technologies|Stack|Built with):\s*/i, '').trim();
-        } else if (isLinkLine) {
-          const urlMatch = line.match(/https?:\/\/[^\s]+/i) || line.match(/github\.com\/[^\s]+/i);
-          if (urlMatch) currentProj.link = urlMatch[0];
         } else {
-          const bullet = line.replace(/^[•*\-·\s]+/, '').trim();
+          const bullet = line.replace(/^[•*\-·«»\s]+/, '').trim();
           if (bullet) {
             currentProj.description += (currentProj.description ? '\n' : '') + bullet;
           }
@@ -2998,6 +3072,7 @@ function parseResumeTextHeuristically(rawText) {
     }
   }
 
+  // Education
   const education = [];
   if (sections.education) {
     const yearRangeRegex = /\b(19\d{2}|20\d{2})\s*(?:-|–|to)\s*(19\d{2}|20\d{2}|Present)\b|\b(19\d{2}|20\d{2})\b/i;
@@ -3005,35 +3080,29 @@ function parseResumeTextHeuristically(rawText) {
 
     let currentEdu = null;
     for (const line of sections.education) {
-      const isDegreeLine = /(?:Bachelor|Master|B\.?Tech|M\.?Tech|B\.?S|M\.?S|B\.?E|Diploma|Higher Secondary|High School|Ph\.?D)/i.test(line);
+      const isDegreeLine = /(?:Bachelor|Master|B\.?Tech|M\.?Tech|B\.?S|M\.?S|B\.?E|Diploma|Intermediate|TENTH|Higher Secondary|High School|Ph\.?D)/i.test(line);
 
-      if (isDegreeLine || !currentEdu) {
+      if (isDegreeLine) {
         if (currentEdu && (currentEdu.degree || currentEdu.institution)) {
           education.push(currentEdu);
         }
-        const parts = line.split(/\s*\|\s*|\s*–\s*/);
         const yearMatch = line.match(yearRangeRegex);
-
-        let degree = parts[0] ? parts[0].replace(yearRangeRegex, '').trim() : 'Degree';
-        let institution = parts[1] ? parts[1].replace(yearRangeRegex, '').trim() : '';
-
         currentEdu = {
-          degree,
-          institution,
-          location: parts[2] || '',
+          degree: line.replace(yearRangeRegex, '').trim(),
+          institution: '',
+          location: '',
           dates: yearMatch ? yearMatch[0] : '',
           gpa: ''
         };
       } else if (currentEdu) {
-        const parts = line.split(/\s*\|\s*/);
-        for (const p of parts) {
-          if (cgpaRegex.test(p) && !currentEdu.gpa) {
-            currentEdu.gpa = p.trim();
-          } else if (!currentEdu.institution && !yearRangeRegex.test(p)) {
-            currentEdu.institution = p.trim();
-          } else if (!currentEdu.location && p.includes(',')) {
-            currentEdu.location = p.trim();
-          }
+        if (cgpaRegex.test(line) && !currentEdu.gpa) {
+          const gMatch = line.match(cgpaRegex);
+          currentEdu.gpa = gMatch ? gMatch[0].trim() : '';
+          currentEdu.institution = line.replace(cgpaRegex, '').replace(/Grade:\s*/i, '').trim();
+        } else if (!currentEdu.institution) {
+          currentEdu.institution = line.trim();
+        } else if (!currentEdu.location && line.includes(',')) {
+          currentEdu.location = line.trim();
         }
       }
     }
@@ -3042,19 +3111,52 @@ function parseResumeTextHeuristically(rawText) {
     }
   }
 
+  // Certifications
   const certifications = [];
   if (sections.certifications) {
+    let currentCert = null;
     for (const line of sections.certifications) {
-      const clean = line.replace(/^[•*\-·\s]+/, '').trim();
+      const clean = line.replace(/^[•*\-·«»+\s]+/, '').trim();
       if (!clean || isSectionHeader(clean)) continue;
-      
-      const parts = clean.split(/\s*\|\s*|\s*–\s*|\s*-\s*/);
-      certifications.push({
-        name: parts[0] ? parts[0].trim() : clean,
-        issuer: parts[1] ? parts[1].trim() : '',
-        date: parts[2] ? parts[2].trim() : '',
-        desc: parts[3] ? parts[3].trim() : ''
-      });
+
+      if (clean.startsWith('http://') || clean.startsWith('https://') || clean.startsWith('htps://')) {
+        if (currentCert) {
+          currentCert.desc = clean;
+        }
+        continue;
+      }
+
+      const isDateLine = /(?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d{1,2}\/\d{1,2}\/\d{2,4}|\b\d{4}\b)/i.test(clean);
+      const parts = clean.split(/\s*»\s*|\s*\|\s*|\s*–\s*|\s*\+\s*/);
+
+      if (parts.length >= 2 || isDateLine) {
+        if (currentCert && currentCert.name) {
+          if (!currentCert.issuer && parts[0]) currentCert.issuer = parts[0].trim();
+          if (!currentCert.date && parts[1]) currentCert.date = parts[1].trim();
+          certifications.push(currentCert);
+          currentCert = null;
+        } else {
+          certifications.push({
+            name: parts[0] ? parts[0].trim() : clean,
+            issuer: parts[1] ? parts[1].trim() : '',
+            date: parts[2] ? parts[2].trim() : '',
+            desc: ''
+          });
+        }
+      } else {
+        if (currentCert && currentCert.name) {
+          certifications.push(currentCert);
+        }
+        currentCert = {
+          name: clean,
+          issuer: '',
+          date: '',
+          desc: ''
+        };
+      }
+    }
+    if (currentCert && currentCert.name) {
+      certifications.push(currentCert);
     }
   }
 
@@ -3064,8 +3166,8 @@ function parseResumeTextHeuristically(rawText) {
       title,
       email,
       phone,
-      location: '',
-      website: '',
+      location,
+      website,
       linkedin,
       github,
       customSocial: ''
