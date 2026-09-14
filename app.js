@@ -2608,8 +2608,8 @@ async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf 
       body: JSON.stringify({ action, payload, prompt: fallbackPromptText })
     });
     const json = await res.json();
-    if (res.ok && json.success && json.data) {
-      return json.data;
+    if (res.ok && json.success && (json.data || json.text)) {
+      return json.data || json.text;
     }
     if (res.status === 429) {
       throw new Error(json.error || 'AI request limit reached. Please wait a moment before trying again.');
@@ -2624,16 +2624,18 @@ async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf 
     if (customUserKey && customUserKey.trim().length > 10) {
       console.info('Using user-provided custom Gemini API key for fallback.');
       const parts = [{ text: fallbackPromptText }];
-      if (isPdf && pdfData) {
+      let cleanPdf = isPdf && pdfData ? String(pdfData) : '';
+      if (cleanPdf.includes(',')) cleanPdf = cleanPdf.split(',')[1];
+      if (isPdf && cleanPdf) {
         parts.push({
           inline_data: {
             mime_type: "application/pdf",
-            data: pdfData
+            data: cleanPdf
           }
         });
       }
 
-      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(customUserKey.trim())}`, {
+      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(customUserKey.trim())}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contents: [{ parts: parts }] })
@@ -2642,19 +2644,94 @@ async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf 
       const data = await response.json();
       if (data.error) throw new Error(data.error.message);
 
-      const rawResponse = data.candidates[0].content.parts[0].text;
+      const rawResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
       const jsonString = rawResponse.replace(/```json/g, '').replace(/```/g, '').trim();
-      return JSON.parse(jsonString);
+      try {
+        return JSON.parse(jsonString);
+      } catch {
+        const firstBrace = jsonString.indexOf('{');
+        const lastBrace = jsonString.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+          return JSON.parse(jsonString.substring(firstBrace, lastBrace + 1));
+        }
+        return jsonString;
+      }
     }
 
     throw proxyErr;
   }
 }
 
+function normalizeResumeProfile(data) {
+  if (!data || typeof data !== 'object') return { personal: {}, summary: '', skills: [], experience: [], projects: [], education: [], certifications: [] };
+
+  const personal = data.personal || {};
+  let skills = data.skills || [];
+  if (typeof skills === 'string') {
+    skills = skills.split(/[,•\n]+/).map(s => s.trim()).filter(Boolean);
+  } else if (!Array.isArray(skills)) {
+    skills = [];
+  }
+
+  const experience = (Array.isArray(data.experience) ? data.experience : []).map(exp => ({
+    role: exp.role || exp.title || exp.position || '',
+    company: exp.company || exp.employer || exp.organization || '',
+    dates: exp.dates || exp.date || exp.period || exp.duration || '',
+    location: exp.location || '',
+    descriptions: Array.isArray(exp.descriptions)
+      ? exp.descriptions
+      : (typeof exp.description === 'string' ? exp.description.split('\n').filter(Boolean) : (Array.isArray(exp.highlights) ? exp.highlights : []))
+  }));
+
+  const projects = (Array.isArray(data.projects) ? data.projects : []).map(proj => ({
+    title: proj.title || proj.name || '',
+    technologies: proj.technologies || proj.tech || proj.tools || '',
+    description: Array.isArray(proj.description) ? proj.description.join(' ') : (proj.description || proj.summary || ''),
+    link: proj.link || proj.url || proj.github || ''
+  }));
+
+  const education = (Array.isArray(data.education) ? data.education : []).map(edu => ({
+    degree: edu.degree || edu.major || edu.qualification || '',
+    institution: edu.institution || edu.school || edu.university || edu.college || '',
+    location: edu.location || '',
+    dates: edu.dates || edu.year || edu.date || edu.duration || '',
+    gpa: edu.gpa || edu.grade || edu.score || edu.percentage || ''
+  }));
+
+  const certifications = (Array.isArray(data.certifications) ? data.certifications : (Array.isArray(data.certificates) ? data.certificates : [])).map(cert => ({
+    name: cert.name || cert.title || cert.badge || '',
+    issuer: cert.issuer || cert.organization || cert.authority || '',
+    date: cert.date || cert.year || '',
+    desc: cert.desc || cert.description || cert.credential_id || cert.link || ''
+  }));
+
+  return {
+    personal: {
+      name: personal.name || data.name || '',
+      title: personal.title || personal.role || data.title || '',
+      email: personal.email || data.email || '',
+      phone: personal.phone || data.phone || '',
+      location: personal.location || data.location || '',
+      website: personal.website || data.website || '',
+      linkedin: personal.linkedin || data.linkedin || '',
+      github: personal.github || data.github || '',
+      customSocial: personal.customSocial || data.customSocial || ''
+    },
+    summary: data.summary || data.objective || data.about || '',
+    skills,
+    experience,
+    projects,
+    education,
+    certifications
+  };
+}
+
 async function parseHeuristics(inputData, isPdf = false) {
   const btnMagicImport = document.getElementById('btn-magic-import');
+  const originalHTML = btnMagicImport ? btnMagicImport.innerHTML : '';
   if (btnMagicImport) {
-    btnMagicImport.innerHTML = "AI Analyzing Resume...";
+    btnMagicImport.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Analyzing Resume...';
+    btnMagicImport.disabled = true;
   }
   
   try {
@@ -2671,7 +2748,9 @@ async function parseHeuristics(inputData, isPdf = false) {
         "phone": "string",
         "location": "string",
         "website": "string",
-        "linkedin": "string"
+        "linkedin": "string",
+        "github": "string",
+        "customSocial": "string"
       },
       "summary": "string",
       "skills": ["string", "string"],
@@ -2708,16 +2787,25 @@ async function parseHeuristics(inputData, isPdf = false) {
     ${isPdf ? '' : `\n\nRaw Resume Text:\n${inputData}`}
     `;
 
+    let cleanPdf = isPdf && inputData ? String(inputData) : '';
+    if (cleanPdf.includes(',')) cleanPdf = cleanPdf.split(',')[1];
+
+    const payload = isPdf
+      ? { isPdf: true, pdfData: cleanPdf }
+      : { rawText: inputData };
+
     const parsedData = await callSecureGeminiProxy(
       'parse_resume',
-      { rawText: isPdf ? '' : inputData },
+      payload,
       promptText,
       isPdf,
-      isPdf ? inputData : ''
+      cleanPdf
     );
     
+    const normalized = normalizeResumeProfile(parsedData);
+
     if (typeof loadProfileIntoForm === 'function') {
-      loadProfileIntoForm(parsedData);
+      loadProfileIntoForm(normalized);
       state.hasLoadedProfile = true;
     }
     
@@ -2726,22 +2814,49 @@ async function parseHeuristics(inputData, isPdf = false) {
     // Track GA4 Conversion Event: gemini_ai_import_success
     trackGAEvent('gemini_ai_import_success', {
       is_pdf: isPdf,
-      has_experience: !!(parsedData.experience && parsedData.experience.length),
-      has_projects: !!(parsedData.projects && parsedData.projects.length),
-      has_education: !!(parsedData.education && parsedData.education.length)
+      has_experience: !!(normalized.experience && normalized.experience.length),
+      has_projects: !!(normalized.projects && normalized.projects.length),
+      has_education: !!(normalized.education && normalized.education.length)
     });
 
     window.showToast("🎉 AI Magic Import successful! All sections have been structured.", "success");
     
   } catch (err) {
     console.error("AI Parse Error:", err);
-    // Fallback to raw heuristic dump
-    const summaryField = document.getElementById('input-summary');
-    if (summaryField) {
-      summaryField.value = "--- AUTO EXTRACTED RAW TEXT ---\n(Copy & Paste into the fields below)\n\n" + text;
+    // Fallback to raw heuristic dump if text is available
+    const rawFallbackText = isPdf ? '' : String(inputData || '');
+    if (rawFallbackText) {
+      const summaryField = document.getElementById('input-summary');
+      if (summaryField) {
+        summaryField.value = "--- AUTO EXTRACTED RAW TEXT ---\n(Copy & Paste into the fields below)\n\n" + rawFallbackText;
+      }
+      if (window.showFriendlyNoticeModal) { 
+        window.showFriendlyNoticeModal({ title: "Partial Import", message: "We placed your raw resume text into the Summary section for easy manual review and copying.", primaryBtnText: "Edit Summary", type: "info" }); 
+      } else { 
+        window.showToast("Raw text placed in Summary section.", "info"); 
+      }
+    } else {
+      if (window.showFriendlyNoticeModal) {
+        window.showFriendlyNoticeModal({ 
+          title: "Could Not Read PDF", 
+          badgeText: "Scanned / Image PDF", 
+          badgeIcon: "fas fa-file-pdf", 
+          type: "warning", 
+          message: "We encountered an issue analyzing this PDF: " + (err.message || 'Please check the file and try again.'), 
+          primaryBtnText: "⚡ Explore 71 Role Blueprints", 
+          onPrimary: () => window.location.href = "/role/", 
+          secondaryBtnText: "Close" 
+        });
+      } else {
+        window.showToast(err.message || "Could not read PDF.", "warning");
+      }
     }
-    if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Partial Import", message: "We placed your raw resume text into the Summary section for easy manual review and copying.", primaryBtnText: "Edit Summary", type: "info" }); } else { window.showToast("Raw text placed in Summary section.", "info"); }
     syncFormToPreview();
+  } finally {
+    if (btnMagicImport && originalHTML) {
+      btnMagicImport.innerHTML = originalHTML;
+      btnMagicImport.disabled = false;
+    }
   }
 }
 
