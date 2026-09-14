@@ -2726,82 +2726,412 @@ function normalizeResumeProfile(data) {
   };
 }
 
-async function parseHeuristics(inputData, isPdf = false) {
+async function extractTextFromPdf(input) {
+  if (typeof window.pdfjsLib === 'undefined') {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = () => {
+        if (window.pdfjsLib) {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+        resolve();
+      };
+      script.onerror = () => reject(new Error('Failed to load PDF library.'));
+      document.head.appendChild(script);
+    });
+  }
+
+  let data;
+  if (input instanceof ArrayBuffer) {
+    data = input;
+  } else if (input instanceof Uint8Array) {
+    data = input;
+  } else if (input instanceof Blob || input instanceof File) {
+    data = await input.arrayBuffer();
+  } else if (typeof input === 'string') {
+    let clean = input;
+    if (clean.includes(',')) clean = clean.split(',')[1];
+    const binary = atob(clean);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    data = bytes.buffer;
+  }
+
+  const loadingTask = window.pdfjsLib.getDocument({ data: data });
+  const pdfDoc = await loadingTask.promise;
+  let fullText = '';
+
+  for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+    const page = await pdfDoc.getPage(pageNum);
+    const textContent = await page.getTextContent();
+    let lastY = null;
+    let pageText = '';
+
+    for (const item of textContent.items) {
+      if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) {
+        pageText += '\n';
+      } else if (pageText && !pageText.endsWith(' ') && !pageText.endsWith('\n')) {
+        pageText += ' ';
+      }
+      pageText += item.str;
+      lastY = item.transform[5];
+    }
+    fullText += pageText + '\n\n';
+  }
+
+  return fullText.trim();
+}
+
+function parseResumeTextHeuristically(rawText) {
+  if (!rawText || typeof rawText !== 'string') {
+    return { personal: {}, summary: '', skills: [], experience: [], projects: [], education: [], certifications: [] };
+  }
+
+  const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+  const sectionKeywords = [
+    { type: 'summary', regex: /^(?:summary|professional summary|executive summary|about me|profile|career objective|objective)$/i },
+    { type: 'skills', regex: /^(?:skills|technical skills|skills directory|core competencies|areas of expertise|technologies|tools & technologies)$/i },
+    { type: 'experience', regex: /^(?:experience|work experience|professional experience|employment history|work history|internships?)$/i },
+    { type: 'projects', regex: /^(?:projects|key projects|academic projects|personal projects|technical projects)$/i },
+    { type: 'education', regex: /^(?:education|academic background|academics|qualifications)$/i },
+    { type: 'certifications', regex: /^(?:certifications?|certificates|licenses & certifications|badges|achievements|honors & awards|technical badges(?: & certifications)?)$/i }
+  ];
+
+  function isSectionHeader(line) {
+    const clean = line.replace(/[:\-_#*]/g, '').trim();
+    return sectionKeywords.some(s => s.regex.test(clean));
+  }
+  
+  // 1. Contact details extraction
+  const emailMatch = rawText.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/i);
+  const email = emailMatch ? emailMatch[0] : '';
+
+  const phoneMatch = rawText.match(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}/);
+  const phone = phoneMatch ? phoneMatch[0].trim() : '';
+
+  const linkedinMatch = rawText.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/([a-zA-Z0-9_%-]+)/i);
+  const linkedin = linkedinMatch ? linkedinMatch[0] : '';
+
+  const githubMatch = rawText.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9_%-]+)/i);
+  const github = githubMatch ? githubMatch[0] : '';
+
+  // Extract name & title from header lines
+  let name = '';
+  let title = '';
+  let headerEndIdx = 0;
+
+  for (let i = 0; i < Math.min(lines.length, 5); i++) {
+    const line = lines[i];
+    if (line.includes('@') || line.match(/https?:\/\//i) || line.match(/linkedin\.com|github\.com/i) || line.match(/^\+?\d/)) {
+      continue;
+    }
+    if (isSectionHeader(line)) {
+      headerEndIdx = i;
+      break;
+    }
+    if (!name) {
+      name = line.replace(/^[#*\-•\s]+/, '').trim();
+      headerEndIdx = i + 1;
+    } else if (!title && line.length < 80 && !isSectionHeader(line)) {
+      title = line.replace(/^[#*\-•\s]+/, '').trim();
+      headerEndIdx = i + 1;
+      break;
+    }
+  }
+
+  // 2. Identify Section Boundaries
+  const sections = {};
+  let currentSection = null;
+  let sectionLines = [];
+
+  for (let i = headerEndIdx; i < lines.length; i++) {
+    const line = lines[i];
+    const clean = line.replace(/[:\-_#*]/g, '').trim();
+    const matched = sectionKeywords.find(s => s.regex.test(clean));
+
+    if (matched) {
+      if (currentSection) {
+        sections[currentSection] = sectionLines;
+      }
+      currentSection = matched.type;
+      sectionLines = [];
+    } else if (currentSection) {
+      sectionLines.push(line);
+    }
+  }
+  if (currentSection) {
+    sections[currentSection] = sectionLines;
+  }
+
+  // 3. Parse Individual Sections
+  const summary = (sections.summary || []).join(' ');
+
+  let skills = [];
+  if (sections.skills) {
+    const skillText = sections.skills.join('\n');
+    skills = skillText
+      .split(/[\n,•|·;]+/)
+      .map(s => s.replace(/^[A-Za-z\s&]+:\s*/, '').replace(/^[*\-•\s]+/, '').trim())
+      .filter(s => s && s.length > 1 && s.length < 40 && !isSectionHeader(s));
+    skills = [...new Set(skills)];
+  }
+
+  const experience = [];
+  if (sections.experience) {
+    let currentExp = null;
+    const dateRegex = /(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4}|\b\d{4}\b)\s*(?:-|–|to)\s*(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4}|\b\d{4}\b|Present|Current)/i;
+
+    for (const line of sections.experience) {
+      const hasDate = dateRegex.test(line);
+      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·');
+
+      if (hasDate || (!isBullet && line.length < 70 && !currentExp)) {
+        if (currentExp && (currentExp.role || currentExp.company)) {
+          experience.push(currentExp);
+        }
+        const dateMatch = line.match(dateRegex);
+        const dates = dateMatch ? dateMatch[0] : '';
+        const lineWithoutDate = line.replace(dateRegex, '').replace(/[|•,–-]$/, '').trim();
+
+        const parts = lineWithoutDate.split(/\s*\|\s*|\s*–\s*|\s*-\s*|,\s*/);
+        currentExp = {
+          role: parts[0] ? parts[0].trim() : 'Role',
+          company: parts[1] ? parts[1].trim() : '',
+          dates: dates,
+          location: parts[2] ? parts[2].trim() : '',
+          descriptions: []
+        };
+      } else if (currentExp) {
+        const bulletText = line.replace(/^[•*\-·\s]+/, '').trim();
+        if (bulletText) currentExp.descriptions.push(bulletText);
+      }
+    }
+    if (currentExp && (currentExp.role || currentExp.company)) {
+      experience.push(currentExp);
+    }
+  }
+
+  const projects = [];
+  if (sections.projects) {
+    let currentProj = null;
+    for (const line of sections.projects) {
+      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·');
+      const isTechLine = /^(?:Tech|Technologies|Stack|Built with):/i.test(line);
+      const isLinkLine = /https?:\/\//i.test(line) || /github\.com\//i.test(line);
+
+      if (!isBullet && !isTechLine && !isLinkLine && line.length < 80) {
+        if (currentProj && currentProj.title) {
+          projects.push(currentProj);
+        }
+        const parts = line.split(/\s*\|\s*|\s*–\s*|\s*-\s*/);
+        currentProj = {
+          title: parts[0] ? parts[0].trim() : 'Project',
+          technologies: parts[1] ? parts[1].trim() : '',
+          description: '',
+          link: ''
+        };
+      } else if (currentProj) {
+        if (isTechLine) {
+          currentProj.technologies = line.replace(/^(?:Tech|Technologies|Stack|Built with):\s*/i, '').trim();
+        } else if (isLinkLine) {
+          const urlMatch = line.match(/https?:\/\/[^\s]+/i) || line.match(/github\.com\/[^\s]+/i);
+          if (urlMatch) currentProj.link = urlMatch[0];
+        } else {
+          const bullet = line.replace(/^[•*\-·\s]+/, '').trim();
+          if (bullet) {
+            currentProj.description += (currentProj.description ? '\n' : '') + bullet;
+          }
+        }
+      }
+    }
+    if (currentProj && currentProj.title) {
+      projects.push(currentProj);
+    }
+  }
+
+  const education = [];
+  if (sections.education) {
+    const yearRangeRegex = /\b(19\d{2}|20\d{2})\s*(?:-|–|to)\s*(19\d{2}|20\d{2}|Present)\b|\b(19\d{2}|20\d{2})\b/i;
+    const cgpaRegex = /(?:CGPA|GPA|Grade|Percentage|Score)?\s*[:=]?\s*(\d+(?:\.\d+)?\s*(?:\/\s*\d+(?:\.\d+)?)?\s*(?:CGPA|GPA|%)?)/i;
+
+    let currentEdu = null;
+    for (const line of sections.education) {
+      const isDegreeLine = /(?:Bachelor|Master|B\.?Tech|M\.?Tech|B\.?S|M\.?S|B\.?E|Diploma|Higher Secondary|High School|Ph\.?D)/i.test(line);
+
+      if (isDegreeLine || !currentEdu) {
+        if (currentEdu && (currentEdu.degree || currentEdu.institution)) {
+          education.push(currentEdu);
+        }
+        const parts = line.split(/\s*\|\s*|\s*–\s*/);
+        const yearMatch = line.match(yearRangeRegex);
+
+        let degree = parts[0] ? parts[0].replace(yearRangeRegex, '').trim() : 'Degree';
+        let institution = parts[1] ? parts[1].replace(yearRangeRegex, '').trim() : '';
+
+        currentEdu = {
+          degree,
+          institution,
+          location: parts[2] || '',
+          dates: yearMatch ? yearMatch[0] : '',
+          gpa: ''
+        };
+      } else if (currentEdu) {
+        const parts = line.split(/\s*\|\s*/);
+        for (const p of parts) {
+          if (cgpaRegex.test(p) && !currentEdu.gpa) {
+            currentEdu.gpa = p.trim();
+          } else if (!currentEdu.institution && !yearRangeRegex.test(p)) {
+            currentEdu.institution = p.trim();
+          } else if (!currentEdu.location && p.includes(',')) {
+            currentEdu.location = p.trim();
+          }
+        }
+      }
+    }
+    if (currentEdu && (currentEdu.degree || currentEdu.institution)) {
+      education.push(currentEdu);
+    }
+  }
+
+  const certifications = [];
+  if (sections.certifications) {
+    for (const line of sections.certifications) {
+      const clean = line.replace(/^[•*\-·\s]+/, '').trim();
+      if (!clean || isSectionHeader(clean)) continue;
+      
+      const parts = clean.split(/\s*\|\s*|\s*–\s*|\s*-\s*/);
+      certifications.push({
+        name: parts[0] ? parts[0].trim() : clean,
+        issuer: parts[1] ? parts[1].trim() : '',
+        date: parts[2] ? parts[2].trim() : '',
+        desc: parts[3] ? parts[3].trim() : ''
+      });
+    }
+  }
+
+  return {
+    personal: {
+      name,
+      title,
+      email,
+      phone,
+      location: '',
+      website: '',
+      linkedin,
+      github,
+      customSocial: ''
+    },
+    summary,
+    skills,
+    experience,
+    projects,
+    education,
+    certifications
+  };
+}
+
+async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
   const btnMagicImport = document.getElementById('btn-magic-import');
   const originalHTML = btnMagicImport ? btnMagicImport.innerHTML : '';
   if (btnMagicImport) {
-    btnMagicImport.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Analyzing Resume...';
+    btnMagicImport.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing Resume...';
     btnMagicImport.disabled = true;
   }
   
   try {
-    const promptText = `
-    You are an expert resume parser. I have provided a resume. 
-    Extract the information and perfectly map it to this strict JSON schema. If any field is missing, leave it blank or empty array.
-    
-    JSON Schema to return ONLY (no markdown or code blocks):
-    {
-      "personal": {
-        "name": "string",
-        "title": "string",
-        "email": "string",
-        "phone": "string",
-        "location": "string",
-        "website": "string",
-        "linkedin": "string",
-        "github": "string",
-        "customSocial": "string"
-      },
-      "summary": "string",
-      "skills": ["string", "string"],
-      "experience": [
-        {
-          "role": "string",
-          "company": "string",
-          "dates": "string",
-          "location": "string",
-          "descriptions": ["string", "string"]
-        }
-      ],
-      "projects": [
-        {
-          "title": "string",
-          "technologies": "string",
-          "description": "string",
-          "link": "string"
-        }
-      ],
-      "education": [
-        {
-          "degree": "string",
-          "institution": "string",
-          "location": "string",
-          "dates": "string",
-          "gpa": "string"
-        }
-      ],
-      "certifications": [
-        { "name": "string", "issuer": "string", "date": "string", "desc": "string" }
-      ]
-    }
-    ${isPdf ? '' : `\n\nRaw Resume Text:\n${inputData}`}
-    `;
-
     let cleanPdf = isPdf && inputData ? String(inputData) : '';
     if (cleanPdf.includes(',')) cleanPdf = cleanPdf.split(',')[1];
 
-    const payload = isPdf
-      ? { isPdf: true, pdfData: cleanPdf }
-      : { rawText: inputData };
+    let parsedData = null;
 
-    const parsedData = await callSecureGeminiProxy(
-      'parse_resume',
-      payload,
-      promptText,
-      isPdf,
-      cleanPdf
-    );
-    
+    // 1. Primary: Try Gemini Cloud AI Multimodal/Text Extraction
+    try {
+      const promptText = `
+      You are an expert resume parser. I have provided a resume. 
+      Extract the information and perfectly map it to this strict JSON schema. If any field is missing, leave it blank or empty array.
+      
+      JSON Schema to return ONLY (no markdown or code blocks):
+      {
+        "personal": {
+          "name": "string",
+          "title": "string",
+          "email": "string",
+          "phone": "string",
+          "location": "string",
+          "website": "string",
+          "linkedin": "string",
+          "github": "string",
+          "customSocial": "string"
+        },
+        "summary": "string",
+        "skills": ["string", "string"],
+        "experience": [
+          {
+            "role": "string",
+            "company": "string",
+            "dates": "string",
+            "location": "string",
+            "descriptions": ["string", "string"]
+          }
+        ],
+        "projects": [
+          {
+            "title": "string",
+            "technologies": "string",
+            "description": "string",
+            "link": "string"
+          }
+        ],
+        "education": [
+          {
+            "degree": "string",
+            "institution": "string",
+            "location": "string",
+            "dates": "string",
+            "gpa": "string"
+          }
+        ],
+        "certifications": [
+          { "name": "string", "issuer": "string", "date": "string", "desc": "string" }
+        ]
+      }
+      ${isPdf ? '' : `\n\nRaw Resume Text:\n${inputData}`}
+      `;
+
+      const payload = isPdf
+        ? { isPdf: true, pdfData: cleanPdf }
+        : { rawText: inputData };
+
+      parsedData = await callSecureGeminiProxy(
+        'parse_resume',
+        payload,
+        promptText,
+        isPdf,
+        cleanPdf
+      );
+    } catch (cloudErr) {
+      console.warn("Cloud AI parse unavailable or returned error, switching to instant client-side ATS engine:", cloudErr);
+    }
+
+    // 2. Secondary / Fallback: Client-Side PDF.js Extractor + Smart Heuristic ATS Engine
+    if (!parsedData || typeof parsedData !== 'object' || (!parsedData.personal && !parsedData.experience && !parsedData.skills)) {
+      if (isPdf) {
+        const extractedPdfText = await extractTextFromPdf(rawFile || cleanPdf);
+        if (extractedPdfText && extractedPdfText.trim().length > 20) {
+          parsedData = parseResumeTextHeuristically(extractedPdfText);
+        } else {
+          throw new Error("We could not extract readable text from this PDF file. Scanned images or protected PDFs cannot be parsed automatically.");
+        }
+      } else {
+        parsedData = parseResumeTextHeuristically(inputData);
+      }
+    }
+
+    // 3. Normalize & Load into UI
     const normalized = normalizeResumeProfile(parsedData);
 
     if (typeof loadProfileIntoForm === 'function') {
@@ -2819,11 +3149,10 @@ async function parseHeuristics(inputData, isPdf = false) {
       has_education: !!(normalized.education && normalized.education.length)
     });
 
-    window.showToast("🎉 AI Magic Import successful! All sections have been structured.", "success");
+    window.showToast("🎉 Resume imported and structured successfully! All sections are ready.", "success");
     
   } catch (err) {
-    console.error("AI Parse Error:", err);
-    // Fallback to raw heuristic dump if text is available
+    console.error("Resume Import Error:", err);
     const rawFallbackText = isPdf ? '' : String(inputData || '');
     if (rawFallbackText) {
       const summaryField = document.getElementById('input-summary');
@@ -2842,7 +3171,7 @@ async function parseHeuristics(inputData, isPdf = false) {
           badgeText: "Scanned / Image PDF", 
           badgeIcon: "fas fa-file-pdf", 
           type: "warning", 
-          message: "We encountered an issue analyzing this PDF: " + (err.message || 'Please check the file and try again.'), 
+          message: err.message || "We could not extract readable text from this PDF file. Pick a 1-click ATS role blueprint to get started!", 
           primaryBtnText: "⚡ Explore 71 Role Blueprints", 
           onPrimary: () => window.location.href = "/role/", 
           secondaryBtnText: "Close" 
@@ -3973,9 +4302,8 @@ function attachEvents() {
       const reader = new FileReader();
       reader.onloadend = async () => {
         try {
-          // Extract base64 part of the data URL
-          const base64Pdf = reader.result.split(',')[1];
-          await parseHeuristics(base64Pdf, true);
+          const base64Pdf = reader.result && reader.result.includes(',') ? reader.result.split(',')[1] : reader.result;
+          await parseHeuristics(base64Pdf, true, file);
         } catch (err) {
           console.error("PDF Parsing Error:", err);
           if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Could Not Read PDF", badgeText: "Scanned / Image PDF", badgeIcon: "fas fa-file-pdf", type: "warning", message: "We could not extract readable text from this PDF file. Scanned images or protected PDFs cannot be parsed automatically. Pick a 1-click ATS role blueprint to get started!", primaryBtnText: "⚡ Explore 71 Role Blueprints", onPrimary: () => window.location.href = "/role/", secondaryBtnText: "Try Another PDF" }); } else { window.showToast("Could not read PDF.", "warning"); }
