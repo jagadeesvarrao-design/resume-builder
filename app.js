@@ -3006,6 +3006,7 @@ function parseResumeTextHeuristically(rawText) {
       const isTechLine = /^(?:Tech|Technologies|Stack|Built with):/i.test(line);
       const urlInLine = line.match(/(?:https?:\/\/?|https?:\/|github[\s.]com\/)[^\s)]+/i);
 
+      const isContinuationLink = line.startsWith('(') && urlInLine && currentProj && !currentProj.link;
       const isSentenceContinuation = line.endsWith('.') || /\b(?:during|events|enabled|enabling|allowing|featuring|powered|tracking|intercept|across|between|without)\b/i.test(line);
       const isNewHeader = !isBullet && !isTechLine && !isContinuationLink && !isActionVerbStart(line) && !isSentenceContinuation && (
         line.match(/^[A-Z0-9\s_-]{3,40}\s*\(/i) ||
