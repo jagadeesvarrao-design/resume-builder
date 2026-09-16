@@ -28,14 +28,8 @@ export default async function handler(req, res) {
     });
   }
 
-  let keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim();
-  const keyId = (process.env.RAZORPAY_KEY_ID || '').trim();
-
-  if (!keyId.startsWith('rzp_live_')) {
-    if (keySecret !== 'oNP5Mfw7WtyFbz7VrR21gB4q') {
-      keySecret = 'oNP5Mfw7WtyFbz7VrR21gB4q';
-    }
-  }
+  let keySecret = (process.env.RAZORPAY_KEY_SECRET || '1Sc50wzx5M3YGcjGYF9i2EHa').trim();
+  const keyId = (process.env.RAZORPAY_KEY_ID || 'rzp_test_TchUuBirDBfDEz').trim();
 
   if (!keySecret) {
     console.error('[Razorpay Backend] Missing RAZORPAY_KEY_SECRET in environment.');

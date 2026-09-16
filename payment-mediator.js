@@ -314,7 +314,7 @@
         }
 
         const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || {};
-        const rzpKeyId = orderData.key_id || window.RAZORPAY_KEY_ID || 'rzp_test_TbXqiAj8lSAbKB';
+        const rzpKeyId = orderData.key_id || window.RAZORPAY_KEY_ID || 'rzp_test_TchUuBirDBfDEz';
         const userEmail = user.email || 'customer@zenresume.online';
         const userName = user.displayName || (user.email ? user.email.split('@')[0] : 'Professional');
 
