@@ -2283,14 +2283,16 @@ async function runPdfGeneration(mode = 'single') {
       if (btnModalConfirm) btnModalConfirm.innerHTML = oldText;
       window.isGeneratingPdf = false;
 
-      // Track Primary GA4 Funnel Conversion Event: pdf_download_completed
-      trackGAEvent('pdf_download_completed', {
+      // Track Primary GA4 Funnel Conversion Event: pdf_download_completed & pdf_download_complete
+      const downloadParams = {
         template_id: state.selectedTemplateId,
         industry: state.selectedInd,
         experience_level: state.selectedExp,
         paper_size: state.paperSize,
         mode: mode
-      });
+      };
+      trackGAEvent('pdf_download_completed', downloadParams);
+      trackGAEvent('pdf_download_complete', downloadParams);
       
       // Close any open modals
       const printModal = document.getElementById('print-modal');
