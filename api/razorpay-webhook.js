@@ -16,10 +16,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  let webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET;
-  if (!webhookSecret || webhookSecret === 'jI3Lmc8fDoRDodRXXrwYsYzJ' || webhookSecret === '6069llzzX9k5Ve1RcTIwr370' || webhookSecret === 'yg9TSEW4RlpYKWb2tJwN7fDT') {
-    webhookSecret = 'oNP5Mfw7WtyFbz7VrR21gB4q';
-  }
+  let webhookSecret = (process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET || '1Qo067fwVdSSpUO2UyO4ALen').trim();
   const signature = req.headers['x-razorpay-signature'];
 
   if (!webhookSecret) {
