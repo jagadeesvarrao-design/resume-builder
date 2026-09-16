@@ -40,6 +40,9 @@
     if (modal) {
       modal.style.display = 'flex';
       console.log('[ExitIntent] Recovery modal displayed (strictly capped once per session).');
+      if (typeof window.trackGAEvent === 'function') {
+        window.trackGAEvent('exit_intent_shown');
+      }
     }
   }
 
@@ -68,6 +71,9 @@
   // Helper to load 1-click blueprint directly from exit modal
   window.loadExitIntentBlueprint = function(roleKey) {
     const key = roleKey || 'tcs_fresher';
+    if (typeof window.trackGAEvent === 'function') {
+      window.trackGAEvent('exit_intent_blueprint_accepted', { role: key });
+    }
     if (typeof window.loadPreset === 'function') {
       window.loadPreset(key);
     } else if (typeof window.selectTemplateStyle === 'function') {

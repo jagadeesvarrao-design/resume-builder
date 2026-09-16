@@ -127,6 +127,21 @@ function extractResumeKeywords() {
 // MODAL CONTROL FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
 
+// Safe Event Dispatcher (GA4 & DataLayer Fallback)
+function trackATSEvent(eventName, params = {}) {
+  try {
+    if (typeof window.trackGAEvent === 'function') {
+      window.trackGAEvent(eventName, params);
+    } else if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, params);
+    } else if (window.dataLayer && Array.isArray(window.dataLayer)) {
+      window.dataLayer.push({ event: eventName, ...params });
+    }
+  } catch (err) {
+    console.warn('[ATS Event Error]', err);
+  }
+}
+
 function openATSMatcher() {
   const modal = document.getElementById('ats-matcher-modal');
   if (!modal) return;
@@ -141,7 +156,7 @@ function openATSMatcher() {
   document.body.style.overflow = 'hidden';
   
   // Track event
-  if (typeof gtag === 'function') gtag('event', 'ats_matcher_opened', { event_category: 'monetization' });
+  trackATSEvent('ats_matcher_opened', { event_category: 'monetization' });
 }
 
 function closeATSMatcher() {
@@ -317,13 +332,11 @@ function runATSScan() {
   window._atsScanResults = { jdText, jdKeywords, resumeKeywords, matched, missing, score };
   
   // Track event
-  if (typeof gtag === 'function') {
-    gtag('event', 'ats_scan_completed', {
-      event_category: 'monetization',
-      event_label: `score_${score}`,
-      value: score
-    });
-  }
+  trackATSEvent('ats_scan_completed', {
+    event_category: 'monetization',
+    event_label: `score_${score}`,
+    value: score
+  });
 }
 
 
@@ -358,12 +371,10 @@ function injectFreeKeyword(keyword) {
   window.showToast && window.showToast(`✨ "${keyword}" added to your resume! Your ATS score just improved.`);
   
   // Track conversion
-  if (typeof gtag === 'function') {
-    gtag('event', 'ats_free_keyword_injected', {
-      event_category: 'monetization',
-      event_label: keyword
-    });
-  }
+  trackATSEvent('ats_free_keyword_injected', {
+    event_category: 'monetization',
+    event_label: keyword
+  });
 }
 
 
@@ -428,15 +439,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initiatePayment() {
   const planKey = selectedTier === 'week' ? 'sprint' : (selectedTier === 'month' ? 'suite' : 'day');
+  const tier = (PRICING_TIERS[detectedCurrency] && PRICING_TIERS[detectedCurrency][selectedTier]) || {};
   
-  if (typeof gtag === 'function') {
-    const tier = PRICING_TIERS[detectedCurrency][selectedTier] || {};
-    gtag('event', 'payment_initiated', {
-      event_category: 'monetization',
-      event_label: `${selectedTier}_${detectedCurrency}`,
-      value: tier.value || 49
-    });
-  }
+  trackATSEvent('payment_initiated', {
+    event_category: 'monetization',
+    event_label: `${selectedTier}_${detectedCurrency}`,
+    value: tier.value || 49
+  });
 
   // Open unified Pro Payment modal with selected tier pre-selected
   if (typeof window.openProPaymentModal === 'function') {
@@ -554,12 +563,10 @@ function showFeaturePreview(featureKey) {
   popup.style.display = 'flex';
 
   // Track event
-  if (typeof gtag === 'function') {
-    gtag('event', 'feature_preview_clicked', {
-      event_category: 'monetization',
-      event_label: featureKey
-    });
-  }
+  trackATSEvent('feature_preview_clicked', {
+    event_category: 'monetization',
+    event_label: featureKey
+  });
 }
 
 function closeFeaturePreview() {

@@ -623,8 +623,16 @@
      * GA4 Event Dispatcher
      */
     trackEvent: function(eventName, params) {
-      if (typeof gtag === 'function') {
-        gtag('event', eventName, params);
+      try {
+        if (typeof window.trackGAEvent === 'function') {
+          window.trackGAEvent(eventName, params);
+        } else if (typeof window.gtag === 'function') {
+          window.gtag('event', eventName, params);
+        } else if (window.dataLayer && Array.isArray(window.dataLayer)) {
+          window.dataLayer.push({ event: eventName, ...params });
+        }
+      } catch (err) {
+        console.warn('[Payment GA4 Event Error]', err);
       }
     },
 

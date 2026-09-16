@@ -39,22 +39,23 @@ const selectionScreen = document.getElementById('selection-screen');
 const builderWorkspace = document.getElementById('builder-workspace');
 const templatesGrid = document.getElementById('templates-grid');
 
-// GA4 Conversion Tracking Helper
+// GA4 Conversion Tracking Helper (AdBlocker & Network-Safe)
 function trackGAEvent(eventName, params = {}) {
   try {
     if (typeof window.gtag === 'function') {
       window.gtag('event', eventName, params);
       console.log(`[GA4 Event] ${eventName}:`, params);
-    } else if (typeof window.trackGAEvent === 'function') {
-      window.trackGAEvent(eventName, params);
-    } else if (window.dataLayer) {
+    } else if (window.dataLayer && Array.isArray(window.dataLayer)) {
       window.dataLayer.push({ event: eventName, ...params });
       console.log(`[DataLayer Event] ${eventName}:`, params);
+    } else {
+      console.log(`[Event Tracked (Offline/Blocked)] ${eventName}:`, params);
     }
   } catch (err) {
     console.warn(`[GA4 Event Error] ${eventName}:`, err);
   }
 }
+window.trackGAEvent = trackGAEvent;
 
 // Dynamic AdSense Initializer Helper to prevent 0-width layout errors
 function triggerAdPush(containerId) {
