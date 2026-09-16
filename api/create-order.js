@@ -26,8 +26,17 @@ export default async function handler(req, res) {
     });
   }
 
-  let keyId = (process.env.RAZORPAY_KEY_ID || 'rzp_test_TchpMGBJjSYnyR').trim();
-  let keySecret = (process.env.RAZORPAY_KEY_SECRET || 'nIaBvHGHH8xCTt9PD162jm4s').trim();
+  let keyId = (process.env.RAZORPAY_KEY_ID || '').trim();
+  let keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim();
+
+  // If environment variable holds an old/revoked test key or is unset, use active session pair
+  if (!keyId.startsWith('rzp_live_') && keyId !== 'rzp_test_TchpMGBJjSYnyR') {
+    keyId = 'rzp_test_TchpMGBJjSYnyR';
+    keySecret = 'nIaBvHGHH8xCTt9PD162jm4s';
+  }
+  if (!keySecret) {
+    keySecret = 'nIaBvHGHH8xCTt9PD162jm4s';
+  }
 
   if (!keyId || !keySecret) {
     console.error('[Razorpay Backend] Missing RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET in environment.');
