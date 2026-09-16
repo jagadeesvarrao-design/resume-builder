@@ -16,7 +16,7 @@
     version: '2.0.0',
     merchantVpa: '8790906267-2@ybl',
     merchantName: 'ZenResume',
-    razorpayKeyId: window.RAZORPAY_KEY_ID || 'rzp_test_TbXqiAj8lSAbKB',
+    razorpayKeyId: window.RAZORPAY_KEY_ID || 'rzp_live_TciD9ezIWYo86x',
     _razorpayLoadingPromise: null,
 
     /**
@@ -314,7 +314,7 @@
         }
 
         const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || {};
-        const rzpKeyId = orderData.key_id || window.RAZORPAY_KEY_ID || 'rzp_test_TchpMGBJjSYnyR';
+        const rzpKeyId = orderData.key_id || window.RAZORPAY_KEY_ID || 'rzp_live_TciD9ezIWYo86x';
         const userEmail = user.email || 'customer@zenresume.online';
         const userName = user.displayName || (user.email ? user.email.split('@')[0] : 'Professional');
 

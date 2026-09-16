@@ -26,16 +26,16 @@ export default async function handler(req, res) {
     });
   }
 
-  let keyId = (process.env.RAZORPAY_KEY_ID || '').trim();
-  let keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim();
+  let keyId = (process.env.RAZORPAY_KEY_ID || 'rzp_live_TciD9ezIWYo86x').trim();
+  let keySecret = (process.env.RAZORPAY_KEY_SECRET || '1Qo067fwVdSSpUO2UyO4ALen').trim();
 
-  // If environment variable holds an old/revoked test key or is unset, use active session pair
-  if (!keyId.startsWith('rzp_live_') && keyId !== 'rzp_test_TchpMGBJjSYnyR') {
-    keyId = 'rzp_test_TchpMGBJjSYnyR';
-    keySecret = 'nIaBvHGHH8xCTt9PD162jm4s';
+  // Prefer live production key pair; replace legacy test keys if still present in env
+  if (!keyId || keyId.startsWith('rzp_test_')) {
+    keyId = 'rzp_live_TciD9ezIWYo86x';
+    keySecret = '1Qo067fwVdSSpUO2UyO4ALen';
   }
   if (!keySecret) {
-    keySecret = 'nIaBvHGHH8xCTt9PD162jm4s';
+    keySecret = '1Qo067fwVdSSpUO2UyO4ALen';
   }
 
   if (!keyId || !keySecret) {
