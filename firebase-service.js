@@ -533,6 +533,13 @@ function handleAuthStateChange(user) {
     // Update Avatars with zero broken image fallback
     updateUserAvatar(user);
 
+    // Immediate synchronous premium status check from local storage & SubscriptionManager
+    const immediatePremium = checkUserHasActiveSubscription();
+    if (immediatePremium) {
+      if (window.state) window.state.isPremium = true;
+      updatePremiumUI(true);
+    }
+
     // Cancel old subscription observer before setting new one
     if (unsubscribeSubscription) {
       unsubscribeSubscription();
@@ -542,25 +549,25 @@ function handleAuthStateChange(user) {
     // Real-time Firestore subscription listener
     if (db) {
       unsubscribeSubscription = db.collection('users').doc(user.uid).onSnapshot(doc => {
-        let isPremium = false;
-        if (doc.exists) {
-          const data = doc.data();
-          if (data.subscription && data.subscription.status === 'active') {
-            const expiresAt = data.subscription.expiresAt;
-            if (expiresAt) {
-              const expDate = expiresAt.toDate ? expiresAt.toDate() : new Date(expiresAt);
-              if (expDate > new Date()) {
-                isPremium = true;
-              }
-            }
-          }
-        }
+        const docData = doc.exists ? doc.data() : null;
+        const isPremium = checkUserHasActiveSubscription(docData);
+
         if (window.state) window.state.isPremium = isPremium;
         document.dispatchEvent(new CustomEvent('zensuite_premium_status', { detail: { isPremium } }));
         updatePremiumUI(isPremium);
+
+        // Bi-directional healing: If local has active subscription but Firestore doc has no subscription, sync to Firestore
+        if (isPremium && doc.exists && (!docData?.subscription || docData.subscription.status !== 'active') && checkLocalHasSubscription()) {
+          syncLocalSubscriptionToFirestore(user.uid);
+        }
       }, err => {
         console.warn('[ZenSuite] Subscription listener error:', err);
+        const fallbackPremium = checkUserHasActiveSubscription();
+        updatePremiumUI(fallbackPremium);
       });
+    } else {
+      const fallbackPremium = checkUserHasActiveSubscription();
+      updatePremiumUI(fallbackPremium);
     }
 
     // Show greeting toast when user state newly transitions to logged in
@@ -897,23 +904,124 @@ async function loadResumeFromFirestore() {
   }
 }
 
+// Check local storage and SubscriptionManager for active subscription
+function checkLocalHasSubscription() {
+  try {
+    const localTier = (window.SubscriptionManager && typeof window.SubscriptionManager.getUserTier === 'function')
+      ? window.SubscriptionManager.getUserTier()
+      : (localStorage.getItem('zen_user_tier') || 'free');
+    const localExpiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+    if (localTier && localTier !== 'free') {
+      if (!localExpiry || localExpiry > Date.now()) return true;
+    }
+  } catch (e) {}
 
+  try {
+    const receiptStr = localStorage.getItem('zen_last_payment_receipt');
+    if (receiptStr) {
+      const receipt = JSON.parse(receiptStr);
+      if (receipt && (receipt.status === 'COMPLETED' || receipt.status === 'active')) {
+        const exp = new Date(receipt.expiresAt).getTime();
+        if (!isNaN(exp) && exp > Date.now()) return true;
+      }
+    }
+  } catch (e) {}
+
+  return false;
+}
+
+// Master subscription check supporting LocalStorage, Receipts, and Firestore docs
+function checkUserHasActiveSubscription(firestoreData) {
+  // 1. Check local caches first (instant & resilient to network/rule drops)
+  if (checkLocalHasSubscription()) return true;
+
+  // 2. Check Firestore doc data if provided
+  if (firestoreData) {
+    if (firestoreData.isPremium === true) return true;
+    if (firestoreData.tier && firestoreData.tier !== 'free') return true;
+    if (firestoreData.plan && firestoreData.plan !== 'free') return true;
+
+    const sub = firestoreData.subscription;
+    if (sub) {
+      const status = (sub.status || '').toLowerCase();
+      const plan = (sub.plan || sub.tier || '').toLowerCase();
+      const rawExpiry = sub.expiresAt;
+
+      let expDate = null;
+      if (rawExpiry) {
+        if (typeof rawExpiry.toDate === 'function') {
+          expDate = rawExpiry.toDate();
+        } else if (typeof rawExpiry === 'number') {
+          expDate = new Date(rawExpiry);
+        } else {
+          expDate = new Date(rawExpiry);
+        }
+      }
+
+      const isTimeValid = !expDate || (expDate instanceof Date && !isNaN(expDate.getTime()) && expDate.getTime() > Date.now());
+
+      if ((status === 'active' || status === 'completed' || status === 'paid' || plan === 'day' || plan === 'sprint' || plan === 'suite' || plan === 'pro') && isTimeValid) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+// Synchronize local payment state to Firestore user document
+function syncLocalSubscriptionToFirestore(uid) {
+  try {
+    if (!uid || typeof firebase === 'undefined' || !firebase.firestore) return;
+    const localTier = localStorage.getItem('zen_user_tier') || 'sprint';
+    const localExpiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+    const expiresAt = (localExpiry && localExpiry > Date.now()) ? new Date(localExpiry) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    firebase.firestore().collection('users').doc(uid).set({
+      subscription: {
+        status: 'active',
+        plan: localTier,
+        expiresAt: expiresAt,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        reconciledFromLocal: true
+      },
+      isPremium: true
+    }, { merge: true }).catch(err => console.warn('[ZenSuite] Firestore auto-sync error:', err));
+  } catch (e) {
+    console.warn('[ZenSuite] Error syncing local subscription to Firestore:', e);
+  }
+}
 
 function updatePremiumUI(isPremium) {
   if (isPremium) {
     document.body.classList.add('zensuite-premium-active');
     const badge = document.getElementById('nav-user-premium-badge');
-    if (badge) badge.style.display = 'inline-flex';
+    if (badge) {
+      badge.style.setProperty('display', 'inline-flex', 'important');
+    }
     const mobileBadge = document.getElementById('mobile-user-premium-badge');
-    if (mobileBadge) mobileBadge.style.display = 'inline-flex';
+    if (mobileBadge) {
+      mobileBadge.style.setProperty('display', 'inline-flex', 'important');
+    }
   } else {
     document.body.classList.remove('zensuite-premium-active');
     const badge = document.getElementById('nav-user-premium-badge');
-    if (badge) badge.style.display = 'none';
+    if (badge) {
+      badge.style.setProperty('display', 'none', 'important');
+    }
     const mobileBadge = document.getElementById('mobile-user-premium-badge');
-    if (mobileBadge) mobileBadge.style.display = 'none';
+    if (mobileBadge) {
+      mobileBadge.style.setProperty('display', 'none', 'important');
+    }
   }
 }
+
+// Initialize premium state on script load
+try {
+  if (checkUserHasActiveSubscription()) {
+    updatePremiumUI(true);
+  }
+} catch (e) {}
 
 // Helper to render subscription details synchronously or on update
 function renderSubscriptionDetails(subData) {
