@@ -57,10 +57,12 @@ function trackGAEvent(eventName, params = {}) {
 }
 window.trackGAEvent = trackGAEvent;
 
-// Ad Initializer stub (AdSense decommissioned for pure SaaS experience)
-function triggerAdPush(containerId) {
-  // No-op
-}
+// Ad Initializer stubs (AdSense decommissioned for pure SaaS experience)
+function triggerAdPush(containerId) {}
+function pushAllVisibleAds() {}
+window.triggerAdPush = triggerAdPush;
+window.pushAllVisibleAds = pushAllVisibleAds;
+window.adsbygoogle = window.adsbygoogle || [];
 
 const expFilters = document.getElementById('exp-filters');
 const industryFilters = document.getElementById('industry-filters');
@@ -391,7 +393,6 @@ window.selectTemplateStyle = function selectTemplateStyle(templateId) {
   showStep(state.currentStep);
   updateProgressDots();
   adjustPreviewScale(); // Scale the print preview container once workspace is visible
-  setTimeout(pushAllVisibleAds, 250);
   updateHeaderNavCTA();
   
   // Sync the form values immediately to screen preview
@@ -1440,7 +1441,6 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     showStep(state.currentStep);
     updateProgressDots();
     adjustPreviewScale(); // Scale the print preview container once workspace is visible
-    setTimeout(pushAllVisibleAds, 250);
     updateHeaderNavCTA();
     
     // Render and Sync live preview
