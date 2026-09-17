@@ -57,18 +57,9 @@ function trackGAEvent(eventName, params = {}) {
 }
 window.trackGAEvent = trackGAEvent;
 
-// Dynamic AdSense Initializer Helper to prevent 0-width layout errors
+// Ad Initializer stub (AdSense decommissioned for pure SaaS experience)
 function triggerAdPush(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  if (container.getAttribute('data-ad-initialized') === 'true') return;
-  container.setAttribute('data-ad-initialized', 'true');
-  try {
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
-    console.log(`[AdSense] Dynamic initialization successful for: #${containerId}`);
-  } catch (e) {
-    console.warn(`[AdSense] Dynamic push warning for #${containerId}:`, e);
-  }
+  // No-op
 }
 
 const expFilters = document.getElementById('exp-filters');
@@ -4987,10 +4978,10 @@ function updateThemeIcon(btn, theme) {
 window.addEventListener('DOMContentLoaded', bootstrap);
 
 /* ==========================================================================
-   10. ADSENSE UI COMPLIANCE (FAQ, COOKIES, MODALS)
+   10. SITE UI INTERACTION (FAQ, COOKIES, MODALS)
    ========================================================================== */
 
-function initAdSenseUI() {
+function initSiteUI() {
   // FAQ Accordion
   const faqQuestions = document.querySelectorAll('.faq-question');
   faqQuestions.forEach(q => {
@@ -5009,7 +5000,6 @@ function initAdSenseUI() {
   const btnAcceptCookies = document.getElementById('btn-accept-cookies');
   if (cookieBanner && btnAcceptCookies) {
     if (!localStorage.getItem('cookiesAccepted')) {
-      // Delay showing it slightly for smooth UX
       setTimeout(() => {
         cookieBanner.classList.add('show');
       }, 1000);
@@ -5021,78 +5011,7 @@ function initAdSenseUI() {
   }
 }
 
-// Fire it on DOMContentLoaded separately
-window.addEventListener('DOMContentLoaded', initAdSenseUI);
-
-// Lazy load Google AdSense script only on first user interaction to boost PageSpeed performance score
-let adSenseLoaded = false;
-const interactionEvents = ['mouseover', 'keydown', 'touchstart', 'scroll'];
-
-let topAdPushed = false;
-let horizontalAdPushed = false;
-let sidebarAdPushed = false;
-
-function pushAllVisibleAds() {
-  if (typeof window.adsbygoogle === 'undefined') return;
-  
-  // 1. Top banner
-  if (!topAdPushed) {
-    const ad = document.querySelector('#promo-banner-top .adsbygoogle');
-    if (ad && ad.offsetWidth > 0) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        topAdPushed = true;
-      } catch (e) { console.warn(e); }
-    }
-  }
-
-  // 2. Horizontal banner
-  if (!horizontalAdPushed) {
-    const ad = document.querySelector('.ad-container-horizontal .adsbygoogle');
-    if (ad && ad.offsetWidth > 0) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        horizontalAdPushed = true;
-      } catch (e) { console.warn(e); }
-    }
-  }
-
-  // 3. Sidebar banner
-  if (!sidebarAdPushed) {
-    const ad = document.querySelector('#promo-banner-sidebar .adsbygoogle');
-    if (ad && ad.offsetWidth > 0) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        sidebarAdPushed = true;
-      } catch (e) { console.warn(e); }
-    }
-  }
-}
-
-function lazyLoadAdSense() {
-  if (adSenseLoaded) return;
-  adSenseLoaded = true;
-  
-  const script = document.createElement('script');
-  script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1993051486567311";
-  script.crossOrigin = "anonymous";
-  script.async = true;
-  script.onload = () => {
-    setTimeout(pushAllVisibleAds, 250);
-  };
-  document.head.appendChild(script);
-  
-  // Clean up listeners
-  interactionEvents.forEach(evt => {
-    window.removeEventListener(evt, lazyLoadAdSense);
-  });
-}
-
-window.addEventListener('load', () => {
-  interactionEvents.forEach(evt => {
-    window.addEventListener(evt, lazyLoadAdSense, { passive: true });
-  });
-});
+window.addEventListener('DOMContentLoaded', initSiteUI);
 
 /* ==========================================================================
    12. LEGAL MODALS (PRIVACY, TOS, CONTACT)
@@ -5631,17 +5550,11 @@ window.SubscriptionManager = {
     return count;
   },
   applyAdVisibility: function() {
-    const tier = this.getUserTier();
-    const isAdFree = tier !== 'free';
-    const adElements = document.querySelectorAll('.ad-banner, .ad-slot, .developer-support-note, [id*="adsbygoogle"], [class*="ad-"]');
+    // Pure ad-free SaaS experience
+    const adElements = document.querySelectorAll('.ad-banner, .ad-slot, .developer-support-note, [class*="ad-"]');
     adElements.forEach(el => {
-      if (isAdFree) {
-        el.classList.add('ad-hidden');
-        el.style.display = 'none';
-      } else {
-        el.classList.remove('ad-hidden');
-        el.style.display = '';
-      }
+      el.classList.add('ad-hidden');
+      el.style.display = 'none';
     });
   }
 };

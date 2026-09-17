@@ -4,19 +4,19 @@
  * Stale-While-Revalidate for media, fonts & icons.
  */
 
-const CACHE_NAME = 'zenresume-cache-v2.7';
+const CACHE_NAME = 'zenresume-cache-v2.8';
 const STATIC_SHELL = [
   '/',
   '/index.html',
-  '/styles.css?v=2.7',
-  '/adaptive-engine.js?v=2.7',
-  '/app.js?v=2.7',
-  '/templates-data.js?v=2.7',
-  '/firebase-service.js?v=2.7',
-  '/role-hub.js?v=2.7',
-  '/live-pulse.js?v=2.7',
-  '/ats-matcher.js?v=2.7',
-  '/payment-mediator.js?v=2.7',
+  '/styles.css?v=2.8',
+  '/adaptive-engine.js?v=2.8',
+  '/app.js?v=2.8',
+  '/templates-data.js?v=2.8',
+  '/firebase-service.js?v=2.8',
+  '/role-hub.js?v=2.8',
+  '/live-pulse.js?v=2.8',
+  '/ats-matcher.js?v=2.8',
+  '/payment-mediator.js?v=2.8',
   '/manifest.json',
   '/favicon-96x96.png',
   '/apple-touch-icon.png',
