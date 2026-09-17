@@ -145,13 +145,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=2.6">
+  <link rel="stylesheet" href="styles.css?v=3.0.5">
   
   <!-- Instant Client-Side Cache Busting & PWA Version Synchronizer -->
   <script>
     (function() {
       try {
-        var APP_DEPLOY_VERSION = 'v2.0';
+        var APP_DEPLOY_VERSION = 'v3.0.5';
         var storedVersion = localStorage.getItem('zen_deploy_version');
         if (storedVersion !== APP_DEPLOY_VERSION) {
           localStorage.setItem('zen_deploy_version', APP_DEPLOY_VERSION);
@@ -162,12 +162,17 @@
                   return caches.delete(name);
                 })
               );
+            }).then(function() {
+              if (window.location.search.indexOf('reloaded=3.0.5') === -1) {
+                var sep = window.location.href.indexOf('?') === -1 ? '?' : '&';
+                window.location.href = window.location.href.split('?')[0] + '?reloaded=3.0.5';
+              }
             });
           }
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function(regs) {
               for (var reg of regs) {
-                reg.update();
+                reg.unregister();
               }
             });
           }
@@ -772,6 +777,240 @@
     }
   </style>
 
+  <style id="zenresume-darkmode-editor-critical">
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* CRITICAL DARK MODE EDITOR ENGINE (Embedded Directly in HTML Head)      */
+    /* Prevents white header flash, overrides all cached media queries, and    */
+    /* delivers 100% unified dark slate styling across the entire editor       */
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    [data-theme="dark"] .builder-workspace {
+      background: #0B0F12 !important;
+    }
+    [data-theme="dark"] .form-panel {
+      background: #11161B !important;
+      border: 1px solid #232D36 !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+    }
+    [data-theme="dark"] .form-scroll-container {
+      background: #11161B !important;
+    }
+    [data-theme="dark"] .stitch-editor-top-bar {
+      background: #161D24 !important;
+      border-bottom: 1px solid #232D36 !important;
+    }
+    [data-theme="dark"] .stitch-editor-title {
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .btn-back {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .btn-back:hover {
+      background: rgba(255, 255, 255, 0.12) !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .btn-editor-tour-trigger {
+      background: rgba(45, 212, 191, 0.1) !important;
+      border: 1px solid rgba(45, 212, 191, 0.25) !important;
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] #editor-realtime-ats {
+      background: rgba(45, 212, 191, 0.08) !important;
+      border: 1px solid rgba(45, 212, 191, 0.25) !important;
+    }
+    [data-theme="dark"] #editor-realtime-ats span {
+      color: #94A3B8 !important;
+    }
+    [data-theme="dark"] #editor-realtime-ats #realtime-ats-number {
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .version-profile-switch {
+      background: rgba(45, 212, 191, 0.08) !important;
+      border: 1px solid rgba(45, 212, 191, 0.25) !important;
+    }
+    [data-theme="dark"] #btn-open-profile-manager i,
+    [data-theme="dark"] #active-profile-label {
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .editor-parent-badge {
+      background: rgba(45, 212, 191, 0.08) !important;
+      border: 1px solid rgba(45, 212, 191, 0.25) !important;
+    }
+    [data-theme="dark"] .editor-parent-badge i {
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .quick-layout-switch {
+      background: #161D24 !important;
+      border: 1.5px solid #232D36 !important;
+    }
+    [data-theme="dark"] .quick-switch-label {
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .quick-switch-label i {
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .quick-switch-select {
+      color: #F8FAFC !important;
+      background: #161D24 !important;
+    }
+    [data-theme="dark"] .quick-switch-select option {
+      background: #161D24 !important;
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .btn-data-action {
+      background: #161D24 !important;
+      border: 1px solid #232D36 !important;
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .btn-data-action:hover {
+      background: #1E2730 !important;
+      border-color: #2DD4BF !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .mini-data-tools {
+      border: 1px solid #232D36 !important;
+      background: #161D24 !important;
+    }
+    [data-theme="dark"] .mini-data-tools .btn-data-action {
+      border: none !important;
+      background: transparent !important;
+    }
+    [data-theme="dark"] .mini-data-tools .btn-data-action:hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+    [data-theme="dark"] .wizard-progress-track {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+    [data-theme="dark"] .editor-section-nav-pills {
+      background: transparent !important;
+    }
+    [data-theme="dark"] .section-nav-pill {
+      background: rgba(255, 255, 255, 0.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #94A3B8 !important;
+    }
+    [data-theme="dark"] .section-nav-pill:hover {
+      background: rgba(45, 212, 191, 0.1) !important;
+      border-color: rgba(45, 212, 191, 0.3) !important;
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .section-nav-pill.active {
+      background: #00846D !important;
+      border-color: #2DD4BF !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 2px 10px rgba(0, 132, 109, 0.4) !important;
+    }
+    [data-theme="dark"] .section-nav-pill .pill-badge {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .section-nav-pill.active .pill-badge {
+      background: rgba(255, 255, 255, 0.25) !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .step-title {
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .step-desc {
+      color: #94A3B8 !important;
+    }
+    [data-theme="dark"] .form-label,
+    [data-theme="dark"] .form-group label {
+      color: #94A3B8 !important;
+    }
+    [data-theme="dark"] .form-input,
+    [data-theme="dark"] .form-textarea,
+    [data-theme="dark"] select.form-input {
+      background: #161D24 !important;
+      border: 1px solid #232D36 !important;
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .form-input:focus,
+    [data-theme="dark"] .form-textarea:focus {
+      border-color: #2DD4BF !important;
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15) !important;
+    }
+    [data-theme="dark"] .list-item-card {
+      background: #161D24 !important;
+      border: 1px solid #232D36 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    }
+    [data-theme="dark"] .card-title-preview {
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .card-order-badge {
+      background: rgba(45, 212, 191, 0.12) !important;
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .btn-card-action {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #94A3B8 !important;
+    }
+    [data-theme="dark"] .btn-card-action:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .btn-card-action.btn-card-delete {
+      color: #F87171 !important;
+      border-color: rgba(248, 113, 113, 0.25) !important;
+    }
+    [data-theme="dark"] .btn-card-action.btn-card-delete:hover {
+      background: rgba(239, 68, 68, 0.15) !important;
+      color: #EF4444 !important;
+    }
+    [data-theme="dark"] .btn-add-item {
+      background: rgba(45, 212, 191, 0.05) !important;
+      border: 1.5px dashed rgba(45, 212, 191, 0.45) !important;
+      color: #2DD4BF !important;
+    }
+    [data-theme="dark"] .btn-add-item:hover {
+      background: rgba(45, 212, 191, 0.12) !important;
+      border-color: #2DD4BF !important;
+      color: #5EEAD4 !important;
+    }
+    [data-theme="dark"] .preview-panel,
+    [data-theme="dark"] .stitch-preview-column {
+      background: #11161B !important;
+      border-left: 1px solid #232D36 !important;
+    }
+    [data-theme="dark"] .stitch-preview-floating-bar {
+      background: #161D24 !important;
+      border-bottom: 1px solid #232D36 !important;
+    }
+    [data-theme="dark"] .stitch-floating-btn {
+      background: #161D24 !important;
+      border: 1px solid #232D36 !important;
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .stitch-floating-btn:hover {
+      background: #1E2730 !important;
+      border-color: #2DD4BF !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .stitch-floating-btn.primary {
+      background: #00846D !important;
+      border-color: #00846D !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .stitch-floating-zoom {
+      background: rgba(22, 29, 36, 0.92) !important;
+      border: 1px solid #232D36 !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+    }
+    [data-theme="dark"] .stitch-zoom-label {
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .stitch-zoom-btn {
+      color: #CBD5E1 !important;
+    }
+    [data-theme="dark"] .stitch-zoom-btn:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #2DD4BF !important;
+    }
+  </style>
+
   <!-- Instant Pre-Render Currency Localization Script (Strict India INR vs International USD) -->
   <script>
     (function() {
@@ -1061,6 +1300,35 @@
                 <span><i class="fas fa-check-circle"></i> Instant Vector PDF</span>
                 <span class="guarantee-dot">•</span>
                 <span><i class="fas fa-check-circle"></i> 100% Privacy First</span>
+              </div>
+            </div>
+
+            <!-- Interactive Target Job Matcher Hero Card -->
+            <div class="hero-ats-sandbox-card" style="margin-top: 24px; max-width: 640px; width: 100%; margin-left: auto; margin-right: auto; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(45, 212, 191, 0.3); border-radius: 16px; padding: 18px; backdrop-filter: blur(12px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);">
+              <div class="hero-ats-sandbox-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="ats-hero-pulse-dot" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2DD4BF; box-shadow: 0 0 8px #2DD4BF;"></span>
+                  <strong style="font-size: 13.5px; color: #FFFFFF;"><i class="fas fa-bullseye" style="color: #2DD4BF; margin-right: 4px;"></i> Target Job Matcher</strong>
+                  <span class="hero-sandbox-tag" style="background: rgba(45, 212, 191, 0.15); color: #2DD4BF; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 9999px; border: 1px solid rgba(45, 212, 191, 0.3);">AI SCANNER</span>
+                </div>
+                <span style="font-size: 11.5px; color: #94A3B8;">Test your Swiggy, TCS, or Google interview odds in 10s</span>
+              </div>
+
+              <div class="hero-ats-sandbox-body">
+                <textarea id="hero-ats-jd-input" class="hero-ats-sandbox-textarea" rows="3" style="width: 100%; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(15, 23, 42, 0.6); color: #FFFFFF; font-size: 12.5px; padding: 10px 12px; font-family: inherit; resize: vertical; box-sizing: border-box; outline: none;" placeholder="Paste target Job Description here (or click a 1-click sample below)..."></textarea>
+                
+                <div class="hero-ats-sandbox-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                  <div class="hero-sample-buttons" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                    <span style="font-size: 11px; font-weight: 700; color: #CBD5E1;">⚡ Test with:</span>
+                    <button type="button" class="btn-hero-sample" onclick="window.handleHeroJDScan && window.handleHeroJDScan('swiggy');" title="Test with Swiggy SDE-1 JD" style="font-size: 11px; font-weight: 700; color: #2DD4BF; background: rgba(45, 212, 191, 0.1); border: 1px solid rgba(45, 212, 191, 0.3); border-radius: 6px; padding: 4px 9px; cursor: pointer; transition: all 0.15s ease;">🍔 Swiggy SDE-1</button>
+                    <button type="button" class="btn-hero-sample" onclick="window.handleHeroJDScan && window.handleHeroJDScan('tcs');" title="Test with TCS NQT Fresher JD" style="font-size: 11px; font-weight: 700; color: #F59E0B; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; padding: 4px 9px; cursor: pointer; transition: all 0.15s ease;">🎓 TCS NQT</button>
+                  </div>
+
+                  <button type="button" id="btn-hero-scan-ats" class="btn-hero-glow-scan" onclick="window.handleHeroJDScan && window.handleHeroJDScan();" style="background: linear-gradient(135deg, #00C896 0%, #00846D 100%); color: #FFFFFF; border: 1px solid rgba(45, 212, 191, 0.4); padding: 8px 18px; border-radius: 8px; font-size: 12.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 16px rgba(0, 200, 150, 0.35); transition: all 0.2s ease;">
+                    <i class="fas fa-bolt" style="color: #FFDE59;"></i>
+                    <span>Scan ATS Match Free</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1898,65 +2166,97 @@
         <div class="form-panel no-print" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
           
           <!-- Stitch Editor Top Bar -->
-          <div class="stitch-editor-top-bar">
-            <!-- Row 1: Back, Title, Profiles & Save Status -->
-            <div class="stitch-editor-top-row">
-              <div class="stitch-editor-left-group" style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                <button class="btn-back" id="btn-back-to-templates" onclick="window.goToTemplates && window.goToTemplates();" style="padding: 5px 10px; font-size: 11.5px; margin: 0;">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                  Templates
+          <div class="stitch-editor-top-bar" style="padding: 10px 14px 6px 14px;">
+            <!-- Row 1: Back, Title, Tour, ATS Health, Profiles & Save Status -->
+            <div class="stitch-editor-top-row" style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 10px;">
+              <div class="stitch-editor-left-group" style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                <button class="btn-back" id="btn-back-to-templates" onclick="window.goToTemplates && window.goToTemplates();" style="padding: 4px 8px; font-size: 11px; margin: 0; display: inline-flex; align-items: center; gap: 4px; border-radius: 6px;" title="Return to Templates">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  <span>Templates</span>
                 </button>
-                <h2 class="stitch-editor-title">Edit Resume</h2>
-                <button type="button" class="btn-editor-tour-trigger" id="btn-editor-tour-trigger" onclick="window.startZenGuideTour && window.startZenGuideTour(true);" title="Take Quick Interactive Tour">
+                <h2 class="stitch-editor-title" style="margin: 0; font-size: 1.1rem; font-weight: 800;">Edit Resume</h2>
+                <span class="editor-version-tag" style="font-size: 9.5px; font-weight: 800; border-radius: 4px; padding: 1px 4px;">v3.0</span>
+                <button type="button" class="btn-editor-tour-trigger" id="btn-editor-tour-trigger" onclick="window.startZenGuideTour && window.startZenGuideTour(true);" title="Take Quick Interactive Tour" style="font-size: 10.5px; padding: 2px 6px;">
                   <i class="fas fa-compass"></i> <span>Tour</span>
                 </button>
               </div>
 
-              <div class="stitch-editor-right-group" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end;">
+              <div class="stitch-editor-right-group" style="display: flex; align-items: center; gap: 5px; flex-shrink: 0;">
                 <!-- Real-Time Universal ATS Score Badge -->
-                <div id="editor-realtime-ats" class="editor-ats-score-pill score-elite" title="Live ATS Quality Score based on formatting, action verbs, metrics & completeness">
+                <div id="editor-realtime-ats" class="editor-ats-score-pill score-elite" title="Live ATS Quality Score based on formatting, action verbs, metrics & completeness" style="margin: 0; padding: 2px 6px; display: inline-flex; align-items: center; gap: 5px;">
                   <span class="ats-score-meter-circle" id="realtime-ats-circle">
-                    <svg width="20" height="20" viewBox="0 0 36 36" class="circular-chart" style="display: block;">
+                    <svg width="16" height="16" viewBox="0 0 36 36" class="circular-chart" style="display: block;">
                       <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E2E8F0" stroke-width="3.5" />
-                      <path class="circle" id="realtime-ats-svg-path" stroke-dasharray="92, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#476550" stroke-width="3.5" stroke-linecap="round" />
+                      <path class="circle" id="realtime-ats-svg-path" stroke-dasharray="92, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#00846D" stroke-width="3.5" stroke-linecap="round" />
                     </svg>
                   </span>
-                  <div style="display: flex; flex-direction: column; line-height: 1.1;">
-                    <span style="font-size: 8.5px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">ATS Health</span>
-                    <span style="font-size: 11.5px; font-weight: 800; color: #476550;"><span id="realtime-ats-number">92</span><small style="font-size: 9px; font-weight: 600; opacity: 0.7;">/100</small></span>
+                  <div style="display: flex; flex-direction: column; line-height: 1;">
+                    <span style="font-size: 7.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">ATS</span>
+                    <span style="font-size: 10.5px; font-weight: 800; color: #00846D;"><span id="realtime-ats-number">92</span><small style="font-size: 8px; font-weight: 600; opacity: 0.7;">/100</small></span>
                   </div>
                 </div>
 
                 <!-- Application Profile / Job Version Selector (Retention Engine) -->
-                <div class="version-profile-switch" style="display: flex; align-items: center; gap: 4px; background: rgba(0, 104, 86, 0.08); padding: 3px 6px; border-radius: 8px; border: 1px solid rgba(0, 104, 86, 0.18);">
-                  <i class="fas fa-folder-open" style="color: #476550; font-size: 10px;"></i>
-                  <select id="select-profile-version" style="background: transparent; border: none; font-size: 11px; font-weight: 700; color: #476550; cursor: pointer; max-width: 110px; outline: none;">
+                <div class="version-profile-switch" style="display: flex; align-items: center; gap: 3px; padding: 2px 5px; border-radius: 6px;">
+                  <button type="button" id="btn-open-profile-manager" onclick="window.openProfileManager && window.openProfileManager();" style="display: inline-flex; align-items: center; gap: 4px; background: transparent; border: none; cursor: pointer; padding: 1px 3px;" title="Manage Job Profiles (Master, Swiggy, Amazon, Google)">
+                    <i class="fas fa-folder-open" style="font-size: 10px;"></i>
+                    <span id="active-profile-label" style="font-size: 10.5px; font-weight: 700; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Master</span>
+                    <i class="fas fa-chevron-down" style="font-size: 7px; opacity: 0.7;"></i>
+                  </button>
+                  <select id="select-profile-version" style="display: none;">
                     <option value="default">Master</option>
                   </select>
-                  <button type="button" id="btn-new-version" title="Save / Tailor as new job profile" style="background: #476550; color: white; border: none; border-radius: 4px; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 9px; cursor: pointer;">
+                  <button type="button" id="btn-new-version" title="Save / Tailor as new job profile" onclick="window.promptCreateNewProfileVersion && window.promptCreateNewProfileVersion();" style="background: #00846D; color: white; border: none; border-radius: 4px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 8.5px; cursor: pointer;">
                     <i class="fas fa-plus"></i>
                   </button>
                 </div>
 
-                <span class="stitch-save-badge" style="font-size: 11px; padding: 3px 8px;">
-                  <span class="status-pulse" style="display: inline-block; width: 6px; height: 6px; background: #476550; border-radius: 50%;"></span>
-                  Draft saved
+                <span class="stitch-save-badge" style="font-size: 10px; padding: 2px 6px;">
+                  <span class="status-pulse" style="display: inline-block; width: 5px; height: 5px; background: #00846D; border-radius: 50%;"></span>
+                  Saved
                 </span>
 
                 <!-- Parent Company Badge for In-Editor Users -->
-                <a href="https://aneevarpsolutions.vercel.app/" target="_blank" rel="noopener noreferrer" class="editor-parent-badge" style="font-size: 10.5px; font-weight: 700; color: #00685F; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; padding: 3px 7px; border-radius: 6px; background: rgba(0, 104, 86, 0.08); border: 1px solid rgba(0, 104, 86, 0.2); white-space: nowrap;" title="Visit Parent Company: Aneevarp Solutions">
-                  <i class="fas fa-building" style="color: #00685F; font-size: 9px;"></i>
-                  <span class="parent-badge-text">Aneevarp</span>
-                  <i class="fas fa-arrow-up-right-from-square" style="font-size: 7.5px; opacity: 0.85;"></i>
+                <a href="https://aneevarpsolutions.vercel.app/" target="_blank" rel="noopener noreferrer" class="editor-parent-badge" style="font-size: 10px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px;" title="Visit Parent Company: Aneevarp Solutions">
+                  <i class="fas fa-building" style="font-size: 9.5px;"></i>
                 </a>
               </div>
             </div>
 
-            <!-- Row 2: Quick Template Selector & Actions Row -->
-            <div class="stitch-editor-actions-row">
-              <div class="quick-layout-switch" style="margin: 0;">
-                <label for="select-layout-inline" class="quick-switch-label"><i class="fas fa-palette" style="color: #476550; font-size: 11px;"></i> Style:</label>
-                <select id="select-layout-inline" class="quick-switch-select">
+            <!-- Row 2: VIP AI Career Accelerator (Two High-Impact, Prominent Hero Action Cards) -->
+            <div class="editor-vip-toolbar" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+              <button type="button" class="btn-vip-accelerator btn-vip-ats-matcher" id="btn-open-ats-matcher" onclick="window.openATSMatcher && window.openATSMatcher();" title="Match Live Resume Against Target Job Description" style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%); color: #FFFFFF; border: 1px solid rgba(196, 181, 253, 0.4); border-radius: 10px; padding: 8px 12px; cursor: pointer; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.28); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); text-align: left;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 13px; color: #FDE047; flex-shrink: 0;">
+                    <i class="fas fa-bullseye"></i>
+                  </div>
+                  <div>
+                    <strong style="display: block; font-size: 12px; font-weight: 800; line-height: 1.2; letter-spacing: 0.2px;">Target JD Matcher</strong>
+                    <span style="display: block; font-size: 10px; opacity: 0.85; line-height: 1.2;">Score &amp; Missing Keywords</span>
+                  </div>
+                </div>
+                <span style="font-size: 9px; font-weight: 800; background: rgba(255, 255, 255, 0.25); color: #FFFFFF; padding: 2px 6px; border-radius: 9999px; letter-spacing: 0.5px;">FREE</span>
+              </button>
+
+              <button type="button" class="btn-vip-accelerator btn-vip-cover-letter" id="btn-open-cover-letter" onclick="window.openCoverLetterModal && window.openCoverLetterModal();" title="1-Click Tailored Cover Letter & Recruiter InMail" style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); color: #FFFFFF; border: 1px solid rgba(125, 211, 252, 0.4); border-radius: 10px; padding: 8px 12px; cursor: pointer; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.28); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); text-align: left;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 13px; color: #FFFFFF; flex-shrink: 0;">
+                    <i class="fas fa-envelope-open-text"></i>
+                  </div>
+                  <div>
+                    <strong style="display: block; font-size: 12px; font-weight: 800; line-height: 1.2; letter-spacing: 0.2px;">Cover Letter &amp; InMail</strong>
+                    <span style="display: block; font-size: 10px; opacity: 0.85; line-height: 1.2;">1-Click Outreach Kit</span>
+                  </div>
+                </div>
+                <span style="font-size: 9px; font-weight: 800; background: rgba(255, 255, 255, 0.25); color: #FFFFFF; padding: 2px 6px; border-radius: 9999px; letter-spacing: 0.5px;">AI</span>
+              </button>
+            </div>
+
+            <!-- Row 3: Visual Style Selector & Clean Secondary Utility Actions -->
+            <div class="stitch-editor-actions-row" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+              <div class="quick-layout-switch" style="margin: 0; display: flex; align-items: center; gap: 6px; border-radius: 8px; padding: 3px 8px;">
+                <label for="select-layout-inline" class="quick-switch-label" style="font-size: 11px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 4px;"><i class="fas fa-palette" style="font-size: 11px;"></i> Style:</label>
+                <select id="select-layout-inline" class="quick-switch-select" style="border: none; background: transparent; font-size: 11.5px; font-weight: 700; cursor: pointer; outline: none; padding: 2px 4px;">
                   <option value="classic">Minimalist Classic</option>
                   <option value="modern">Serene Modern</option>
                   <option value="grid">Technical Grid</option>
@@ -1968,33 +2268,37 @@
                 </select>
               </div>
 
-              <div class="data-actions" style="margin: 0; gap: 6px;">
-                <button type="button" class="btn-data-action" id="btn-magic-import" style="color: #476550; border-color: rgba(0, 104, 86, 0.3); font-weight: 600;" title="Auto-fill from an existing PDF Resume">
-                  <i class="fas fa-magic" style="margin-right: 4px;"></i> AI Import
+              <div class="data-actions" style="margin: 0; gap: 5px; display: flex; align-items: center;">
+                <button type="button" class="btn-data-action" id="btn-magic-import" style="font-weight: 700; font-size: 11px; padding: 4px 9px; border-radius: 6px;" title="Auto-fill from an existing PDF Resume">
+                  <i class="fas fa-file-pdf" style="margin-right: 4px;"></i> Import PDF
                 </button>
                 <input type="file" id="input-magic-pdf" accept="application/pdf" style="display: none;">
+
+                <button type="button" class="btn-data-action" id="btn-open-bullet-bank-toolbar" onclick="window.ZenBulletBank && window.ZenBulletBank.openBulletBank();" style="font-weight: 700; font-size: 11px; padding: 4px 9px; border-radius: 6px;" title="Browse Google XYZ Formula Bullets">
+                  <i class="fas fa-bolt" style="margin-right: 4px; color: #F59E0B;"></i> Bullets
+                </button>
                 
-                <button type="button" class="btn-data-action" id="btn-open-ats-matcher" style="color: #7C3AED; border-color: rgba(124, 58, 237, 0.3); font-weight: 600;" title="Live ATS Job Description Matcher (Optional)">
-                  <i class="fas fa-bullseye" style="margin-right: 4px;"></i> ATS Matcher
+                <button type="button" class="btn-data-action" id="btn-reorder-layout" style="font-weight: 700; font-size: 11px; padding: 4px 9px; border-radius: 6px;" title="Reorder Resume Sections">
+                  <i class="fas fa-bars-staggered" style="margin-right: 4px;"></i> Reorder
                 </button>
-                <button type="button" class="btn-data-action" id="btn-reorder-layout" style="color: #2980b9; border-color: rgba(41, 128, 185, 0.25);">
-                  <i class="fas fa-bars" style="margin-right: 4px;"></i> Reorder
-                </button>
-                <button type="button" class="btn-data-action" id="btn-export-json" title="Export JSON">
-                  <i class="fas fa-download"></i> Backup
-                </button>
-                <button type="button" class="btn-data-action" id="btn-import-json" title="Restore JSON">
-                  <i class="fas fa-upload"></i> Restore
-                </button>
-                <button type="button" class="btn-data-action" id="btn-reset-defaults" title="Reset Defaults" style="color: #c97d7d; border-color: rgba(201, 125, 125, 0.25);">
-                  <i class="fas fa-undo"></i>
-                </button>
+
+                <div class="mini-data-tools" style="display: inline-flex; border-radius: 6px; overflow: hidden;">
+                  <button type="button" class="btn-data-action" id="btn-export-json" title="Export JSON Backup" style="border: none; padding: 4px 7px; font-size: 10.5px; border-radius: 0; background: transparent;">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button type="button" class="btn-data-action" id="btn-import-json" title="Restore JSON Backup" style="border: none; padding: 4px 7px; font-size: 10.5px; border-radius: 0; background: transparent;">
+                    <i class="fas fa-upload"></i>
+                  </button>
+                  <button type="button" class="btn-data-action" id="btn-reset-defaults" title="Reset to Defaults" style="border: none; padding: 4px 7px; font-size: 10.5px; border-radius: 0; background: transparent; color: #EF4444;">
+                    <i class="fas fa-undo"></i>
+                  </button>
+                </div>
                 <input type="file" id="input-import-file" accept=".json" style="display: none;">
               </div>
             </div>
             
             <!-- 3px Sleek Progress Bar Line -->
-            <div class="wizard-progress-track" style="height: 3px; background: rgba(0, 104, 86, 0.08); width: 100%; border-radius: 2px; overflow: hidden; margin-top: 2px;">
+            <div class="wizard-progress-track" style="height: 3px; width: 100%; border-radius: 2px; overflow: hidden; margin-top: 2px;">
               <div id="wizard-progress-fill" style="height: 100%; width: 14.3%; background: linear-gradient(90deg, #476550, #2DD4BF); transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);"></div>
             </div>
 
@@ -2175,9 +2479,14 @@
                       <h2 class="step-title" style="margin: 0;">Work Experience</h2>
                       <p class="step-desc" style="margin: 4px 0 0 0;">Add, edit, reorder (▲/▼), or delete your professional work history &amp; internships.</p>
                     </div>
-                    <button type="button" class="btn-add-item" id="btn-add-experience" style="margin: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 700;">
-                      <i class="fas fa-plus"></i> Add Work Experience
-                    </button>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                      <button type="button" class="btn-bullet-bank-trigger" onclick="window.openBulletBank && window.openBulletBank('experience');" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.1); color: #059669; border: 1.5px solid rgba(16, 185, 129, 0.35); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s ease;" title="Insert battle-tested Google XYZ metric bullets">
+                        <i class="fas fa-bolt" style="color: #10B981;"></i> <span>Metric Bullet Bank</span>
+                      </button>
+                      <button type="button" class="btn-add-item" id="btn-add-experience" style="margin: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 700;">
+                        <i class="fas fa-plus"></i> Add Work Experience
+                      </button>
+                    </div>
                   </div>
                   
                   <div class="list-container" id="experience-list-container">
@@ -2196,9 +2505,14 @@
                       <h2 class="step-title" style="margin: 0;">Technical Projects</h2>
                       <p class="step-desc" style="margin: 4px 0 0 0;">Showcase major repositories, capstones, client deliverables, and prototypes.</p>
                     </div>
-                    <button type="button" class="btn-add-item" id="btn-add-project" style="margin: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 700;">
-                      <i class="fas fa-plus"></i> Add Project
-                    </button>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                      <button type="button" class="btn-bullet-bank-trigger" onclick="window.openBulletBank && window.openBulletBank('projects');" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.1); color: #059669; border: 1.5px solid rgba(16, 185, 129, 0.35); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s ease;" title="Insert battle-tested Google XYZ metric bullets">
+                        <i class="fas fa-bolt" style="color: #10B981;"></i> <span>Metric Bullet Bank</span>
+                      </button>
+                      <button type="button" class="btn-add-item" id="btn-add-project" style="margin: 0; padding: 7px 14px; font-size: 12.5px; font-weight: 700;">
+                        <i class="fas fa-plus"></i> Add Project
+                      </button>
+                    </div>
                   </div>
                   
                   <div class="list-container" id="projects-list-container">
@@ -2713,71 +3027,7 @@
     </div>
   </div>
 
-  <!-- Live ATS Job Description Keyword Matcher & Scanner Modal (Optional) -->
-  <div class="modal-overlay no-print" id="ats-matcher-modal" style="display: none; align-items: center; justify-content: center; z-index: 3000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px);">
-    <div class="modal-card" style="background: #ffffff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1.5px solid rgba(124, 58, 237, 0.2); padding: 30px; max-width: 580px; width: 92%; max-height: 90vh; overflow-y: auto; text-align: left; position: relative;">
-      <button type="button" class="btn-close" id="btn-close-ats-matcher" style="position: absolute; top: 16px; right: 18px; background: none; border: none; font-size: 24px; cursor: pointer; color: #94A3B8;">&times;</button>
-      
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-        <div style="width: 44px; height: 44px; background: rgba(124, 58, 237, 0.12); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #7C3AED; font-size: 20px; flex-shrink: 0;">
-          <i class="fas fa-bullseye"></i>
-        </div>
-        <div>
-          <h3 style="margin: 0; color: #0F172A; font-size: 20px; font-weight: 800; font-family: 'Outfit', sans-serif;">Live ATS Job Matcher (Optional)</h3>
-          <p style="margin: 0; font-size: 13px; color: #64748B;">Compare your resume keywords against any job posting in real-time.</p>
-        </div>
-      </div>
-
-      <div style="margin-bottom: 14px;">
-        <label style="display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px;">Target Job Description (Optional)</label>
-        <textarea id="input-ats-job-desc" rows="4" style="width: 100%; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 12px; font-family: inherit; font-size: 13px; color: #334155; resize: vertical; box-sizing: border-box; outline: none;" placeholder="Paste the job posting, responsibilities, or required skills from LinkedIn, Indeed, or company portal..."></textarea>
-      </div>
-
-      <div style="display: flex; gap: 10px; margin-bottom: 18px;">
-        <button type="button" id="btn-run-ats-scan" style="background: #7C3AED; color: white; border: none; border-radius: 10px; padding: 11px 18px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);">
-          <i class="fas fa-search"></i> Scan &amp; Match Keywords
-        </button>
-        <button type="button" id="btn-clear-ats-scan" style="background: #F1F5F9; color: #64748B; border: none; border-radius: 10px; padding: 11px 14px; font-weight: 600; font-size: 13px; cursor: pointer;">
-          Clear
-        </button>
-      </div>
-
-      <!-- ATS Match Result Container -->
-      <div id="ats-scan-results" style="display: none; border-top: 1px solid #E2E8F0; padding-top: 16px;">
-        <!-- Score Bar -->
-        <div style="display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 14px 18px; border-radius: 12px; margin-bottom: 16px;">
-          <div>
-            <span style="font-size: 11.5px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">ATS Match Score</span>
-            <div style="font-size: 26px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif;" id="ats-score-display">0%</div>
-          </div>
-          <div style="text-align: right;">
-            <span class="ats-status-badge" id="ats-status-badge" style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 9999px; background: rgba(46, 204, 113, 0.15); color: #27AE60;">Good Match</span>
-            <div style="font-size: 11.5px; color: #64748B; margin-top: 4px;" id="ats-match-ratio">0 of 0 matched</div>
-          </div>
-        </div>
-
-        <!-- Missing Keywords Section -->
-        <div style="margin-bottom: 16px;">
-          <div style="font-size: 13px; font-weight: 700; color: #DC2626; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-            <i class="fas fa-circle-exclamation"></i> Missing Keywords (Tap to Add to Skills):
-          </div>
-          <div id="ats-missing-tags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px;">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-        <!-- Found Keywords Section -->
-        <div>
-          <div style="font-size: 13px; font-weight: 700; color: #16A34A; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-            <i class="fas fa-circle-check"></i> Already in Your Resume:
-          </div>
-          <div id="ats-found-tags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px;">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Legacy ATS modal placeholder removed to prevent ID collisions with ZenSuite ATS Matcher Engine -->
 
 
   <!-- SortableJS for drag-and-drop reordering -->
@@ -3616,20 +3866,22 @@
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
-  <script src="templates-data.js?v=2.9" defer></script>
-  <script src="indexeddb-storage.js?v=2.9" defer></script>
-  <script src="firebase-service.js?v=2.9" defer></script>
-  <script src="app.js?v=2.9" defer></script>
-  <script src="profile-sync.js?v=2.9" defer></script>
-  <script src="exit-intent.js?v=2.9" defer></script>
-  <script src="hero-playground.js?v=2.9" defer></script>
-  <script src="navigator-tour.js?v=2.9" defer></script>
-  <script src="role-hub.js?v=2.9" defer></script>
-  <script src="live-pulse.js?v=2.9" defer></script>
-  <script src="ats-matcher.js?v=2.9" defer></script>
+  <script src="templates-data.js?v=3.0" defer></script>
+  <script src="indexeddb-storage.js?v=3.0" defer></script>
+  <script src="firebase-service.js?v=3.0" defer></script>
+  <script src="app.js?v=3.0.4" defer></script>
+  <script src="profile-sync.js?v=3.0" defer></script>
+  <script src="exit-intent.js?v=3.0" defer></script>
+  <script src="hero-playground.js?v=3.0" defer></script>
+  <script src="navigator-tour.js?v=3.0" defer></script>
+  <script src="role-hub.js?v=3.0" defer></script>
+  <script src="live-pulse.js?v=3.0" defer></script>
+  <script src="ats-matcher.js?v=3.0.4" defer></script>
+  <script src="cover-letter-engine.js?v=3.0.4" defer></script>
+  <script src="bullet-bank.js?v=3.0" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
-  <script src="payment-mediator.js?v=2.9" defer></script>
+  <!-- Razorpay Checkout SDK is loaded on-demand via window.PaymentMediator.loadRazorpaySdk() to prevent 1,400+ unused preload warnings on page load -->
+  <script src="payment-mediator.js?v=3.0" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -3650,19 +3902,86 @@
 
       <!-- Step 1: Input JD -->
       <div id="ats-matcher-step-input" class="ats-matcher-step">
-        <div class="ats-matcher-header">
-          <span class="ats-matcher-badge">⚡ AI JD MATCHER</span>
-          <h2>Check Your ATS Match Score</h2>
-          <p>Paste any job description below. We'll instantly scan your resume against it and show you exactly what's missing.</p>
+        <!-- Dedicated Redirect Notice Banner when user clicked Cover Letter button -->
+        <div id="ats-cover-letter-redirect-banner" style="display: none; background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(3, 105, 161, 0.12) 100%); border: 1.5px solid rgba(2, 132, 199, 0.35); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <div style="width: 32px; height: 32px; border-radius: 8px; background: #0284C7; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 1px;">
+              <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <div style="flex: 1;">
+              <strong style="font-size: 13px; color: #0284C7; display: block; margin-bottom: 2px;">Target Job Description Required</strong>
+              <p style="font-size: 11.5px; color: #475569; margin: 0; line-height: 1.45;">
+                Please paste your target Job Description below (or pick a 1-click sample). We will save it for your current session and instantly craft your tailored <strong>Cover Letter &amp; Recruiter InMail</strong>!
+              </p>
+            </div>
+          </div>
         </div>
-        <textarea id="ats-jd-input" class="ats-jd-textarea" rows="8" placeholder="Paste the full job description here...&#10;&#10;Example: We are looking for a Software Engineer with 2+ years of experience in React, Node.js, and AWS..."></textarea>
-        <button id="btn-run-ats-scan" class="ats-btn-primary" onclick="runATSScan()">
-          🔍 Analyze My Resume Against This JD
+
+        <div class="ats-matcher-header">
+          <span class="ats-matcher-badge">⚡ AI TARGET JOB MATCHER</span>
+          <h2>Paste Target Job Description (JD)</h2>
+          <p>Compare your resume against any job description to discover missing hard keywords, ATS match score, and Google XYZ metric improvements.</p>
+        </div>
+
+        <!-- Resume Source Card with 1-Click Import Option -->
+        <div class="ats-resume-source-card" style="display: flex; align-items: center; justify-content: space-between; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; gap: 10px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 132, 109, 0.12); display: flex; align-items: center; justify-content: center; color: #00846D; font-size: 16px; flex-shrink: 0;">
+              <i class="fas fa-file-invoice"></i>
+            </div>
+            <div>
+              <strong style="font-size: 12.5px; color: #0F172A; display: block;">Resume Source: <span id="ats-active-resume-name" style="color: #00846D;">Current Editor Resume</span></strong>
+              <span style="font-size: 11px; color: #64748B;">Want to scan your existing resume? Upload your PDF/JSON below.</span>
+            </div>
+          </div>
+          <button type="button" id="btn-ats-modal-import-resume" onclick="window.triggerResumeImport && window.triggerResumeImport('pdf');" style="background: #FFFFFF; border: 1.5px solid #00846D; color: #00846D; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0, 132, 109, 0.15); transition: all 0.2s ease;">
+            <i class="fas fa-file-arrow-up"></i>
+            <span>Import My Resume (PDF)</span>
+          </button>
+        </div>
+
+        <label for="ats-jd-input" style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px;">
+          Paste Job Description:
+        </label>
+        <textarea id="ats-jd-input" class="ats-jd-textarea" rows="6" placeholder="Paste the target job description or requirements here... (e.g. from LinkedIn, Naukri, Indeed, or company portal)&#10;&#10;Example: We are looking for a Software Engineer with 2+ years of experience in React, Node.js, and AWS..."></textarea>
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 11.5px; font-weight: 700; color: #64748B;">⚡ Or Try 1-Click Sample:</span>
+            <button type="button" onclick="window.trySampleJD && window.trySampleJD('swiggy')" style="font-size: 11px; font-weight: 700; color: #00846D; background: rgba(0, 132, 109, 0.1); border: 1px solid rgba(0, 132, 109, 0.3); border-radius: 6px; padding: 4px 10px; cursor: pointer;">🍔 Swiggy SDE-1</button>
+            <button type="button" onclick="window.trySampleJD && window.trySampleJD('tcs')" style="font-size: 11px; font-weight: 700; color: #D97706; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; padding: 4px 10px; cursor: pointer;">🎓 TCS NQT Fresher</button>
+          </div>
+        </div>
+
+        <button id="btn-ats-generate-cover-letter" type="button" onclick="window.confirmJDForCoverLetter && window.confirmJDForCoverLetter()" style="display: none; margin-bottom: 8px; width: 100%; background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%); color: #FFFFFF; border: none; border-radius: 10px; padding: 12px 20px; font-size: 14px; font-weight: 800; cursor: pointer; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35); transition: all 0.2s ease;">
+          <i class="fas fa-wand-magic-sparkles"></i>
+          <span>Generate Tailored Cover Letter &amp; InMail 🚀</span>
+        </button>
+
+        <button id="btn-run-ats-scan" class="ats-btn-primary" onclick="runATSScan()" style="margin-top: 4px; width: 100%; background: linear-gradient(135deg, #00C896 0%, #00846D 100%); color: #FFFFFF; border: none; border-radius: 10px; padding: 12px 20px; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 16px rgba(0, 200, 150, 0.35); transition: all 0.2s ease;">
+          <i class="fas fa-search"></i>
+          <span>Scan &amp; Match Resume Keywords Free</span>
         </button>
       </div>
 
-      <!-- Step 2: Results (Teaser + Blurred Premium) -->
+      <!-- Step 2: Results (ATS Match Report & Metric Audit) -->
       <div id="ats-matcher-step-results" class="ats-matcher-step" style="display:none;">
+        
+        <!-- Back to Edit JD Bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid rgba(0, 0, 0, 0.06); padding-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+          <button type="button" onclick="window.resetATSScan && window.resetATSScan();" style="background: transparent; border: 1px solid #CBD5E1; color: #475569; padding: 5px 12px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;">
+            <i class="fas fa-arrow-left"></i> Change / Edit Job Description
+          </button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button type="button" onclick="window.closeATSMatcher && window.closeATSMatcher(); window.openCoverLetterModal && window.openCoverLetterModal();" style="background: linear-gradient(135deg, #0284C7, #0369A1); color: white; border: none; padding: 5px 12px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);">
+              <i class="fas fa-envelope-open-text"></i> Cover Letter &amp; InMail
+            </button>
+            <span style="font-size: 11px; font-weight: 700; color: #00846D; background: rgba(0, 132, 109, 0.08); padding: 3px 8px; border-radius: 9999px;">
+              Target JD Analysis
+            </span>
+          </div>
+        </div>
+
         <div class="ats-matcher-header">
           <span class="ats-matcher-badge">📊 ATS SCAN RESULTS</span>
           <h2>Your ATS Match Report</h2>
@@ -3687,6 +4006,9 @@
           <h3>⚠️ Critical Missing Keyword (Free Fix)</h3>
           <div id="ats-free-missing" class="ats-free-missing-box"></div>
         </div>
+
+        <!-- Google XYZ Metric Analysis Review -->
+        <div id="ats-bullet-metrics-review" class="ats-result-section"></div>
 
         <!-- VISIBLE Premium Features (Clickable - Opens Explanation Popup) -->
         <div class="ats-result-section" id="ats-premium-section">
@@ -3718,7 +4040,7 @@
             <div class="ats-premium-card" onclick="showFeaturePreview('zendoc')">
               <span class="ats-premium-card-icon">🎤</span>
               <strong>ZenDoc Interview Prep</strong>
-              <p>AI mock interviewer that prepares you for HR & technical rounds</p>
+              <p>AI mock interviewer that prepares you for HR &amp; technical rounds</p>
               <span class="ats-premium-card-badge">TAP TO LEARN MORE</span>
             </div>
 
@@ -3731,7 +4053,7 @@
             <button class="ats-feature-popup-close" onclick="closeFeaturePreview()">&times;</button>
             <div id="ats-feature-popup-body"></div>
             <button class="ats-btn-view-plans" onclick="scrollToPlanSelection()">
-              📋 View Plans & Pricing
+              📋 View Plans &amp; Pricing
             </button>
           </div>
         </div>
@@ -3769,12 +4091,12 @@
             <span class="ats-price-period" id="ats-price-period">/ 24 hours</span>
           </div>
           <p class="ats-price-includes">Includes: Full keyword gap report + AI bullet rewrites + Unlimited PDF exports</p>
-          <button class="ats-btn-unlock" id="btn-ats-unlock" onclick="initiatePayment()">
-            🔓 Unlock Full Report &amp; AI Fixes
+          <button class="ats-btn-unlock" id="btn-ats-unlock" onclick="initiatePayment()" style="background: linear-gradient(135deg, #00C896 0%, #00846D 100%); box-shadow: 0 6px 28px rgba(0, 200, 150, 0.45); font-weight: 800; font-size: 1.15rem; letter-spacing: 0.3px; border: 1.5px solid rgba(255, 255, 255, 0.3);">
+            ⚡ 🔓 Unlock Full Report &amp; AI Fixes
           </button>
           <p class="ats-refund-seal">🛡️ <strong>ATS Pass Guarantee:</strong> If your score doesn't improve, get an instant no-questions-asked refund.</p>
         </div>
-      </div>
+      </div> <!-- /#ats-matcher-step-results -->
 
       <!-- Step 3: Premium Unlocked Results -->
       <div id="ats-matcher-step-premium" class="ats-matcher-step" style="display:none;">
@@ -3783,6 +4105,155 @@
           <h2>Full ATS Match Report</h2>
         </div>
         <div id="ats-premium-results"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- DEDICATED COVER LETTER & RECRUITER INMAIL MODAL                     -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <div id="modal-cover-letter" class="ats-matcher-overlay" style="display: none;">
+    <div class="ats-matcher-container" style="max-width: 760px; max-height: 90vh; display: flex; flex-direction: column;">
+      <button class="ats-matcher-close" onclick="closeCoverLetterModal()" aria-label="Close">&times;</button>
+      
+      <!-- Modal Header -->
+      <div class="ats-matcher-header" style="text-align: left; margin-bottom: 14px; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <span class="ats-matcher-badge" style="background: linear-gradient(135deg, #0284C7, #0369A1);">💼 1-CLICK APPLICATION OUTREACH</span>
+          <span style="font-size: 11px; font-weight: 700; color: #0284C7; background: rgba(2, 132, 199, 0.1); padding: 3px 8px; border-radius: 9999px;">
+            <i class="fas fa-sparkles"></i> Tailored from Active Resume
+          </span>
+        </div>
+        <h2 style="margin: 6px 0 2px; font-size: 1.45rem;">Tailored Cover Letter &amp; Recruiter InMail</h2>
+        <p style="font-size: 12.5px; color: #64748B; margin: 0;">
+          Auto-generated using your resume background and the target company requirements.
+        </p>
+      </div>
+
+      <!-- Scrollable Modal Content -->
+      <div style="overflow-y: auto; padding-right: 4px; flex: 1;">
+        
+        <!-- JD Input / Target Job Bar -->
+        <div style="background: #F1F5F9; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 12px; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+            <label for="cover-letter-jd-input" style="font-weight: 700; font-size: 12px; color: #1E293B; display: flex; align-items: center; gap: 6px; margin: 0;">
+              <i class="fas fa-bullseye" style="color: #0284C7;"></i> Target Job Description:
+            </label>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <span style="font-size: 11px; color: #64748B;">Quick Samples:</span>
+              <button type="button" class="ats-sample-btn" onclick="window.loadCoverLetterSample && window.loadCoverLetterSample('swiggy')" style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #00846D; cursor: pointer;">
+                🍔 Swiggy SDE-1
+              </button>
+              <button type="button" class="ats-sample-btn" onclick="window.loadCoverLetterSample && window.loadCoverLetterSample('tcs')" style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid #CBD5E1; background: #FFFFFF; color: #D97706; cursor: pointer;">
+                🎓 TCS NQT
+              </button>
+            </div>
+          </div>
+          <textarea id="cover-letter-jd-input" class="ats-jd-textarea" rows="3" placeholder="Paste the job description here (or click a sample above) to tailor your cover letter and InMail..." style="font-size: 12px; background: #FFFFFF; margin-bottom: 8px;"></textarea>
+          <button type="button" onclick="window.generateCoverLetterMaterials && window.generateCoverLetterMaterials()" style="background: linear-gradient(135deg, #0284C7, #0369A1); color: #FFFFFF; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);">
+            <i class="fas fa-wand-magic-sparkles"></i> Generate / Refresh Materials
+          </button>
+        </div>
+
+        <!-- Outreach Materials Tabs / Switcher -->
+        <div style="display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 2px solid rgba(0, 0, 0, 0.06); padding-bottom: 8px;">
+          <button type="button" id="tab-btn-cover-letter" class="ats-nav-tab active" onclick="window.switchCoverLetterTab && window.switchCoverLetterTab('cover')" style="flex: 1; padding: 9px 12px; border: none; background: #0284C7; color: #FFFFFF; font-weight: 800; font-size: 12.5px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+            <i class="fas fa-file-lines"></i> 3-Paragraph Cover Letter
+          </button>
+          <button type="button" id="tab-btn-inmail" class="ats-nav-tab" onclick="window.switchCoverLetterTab && window.switchCoverLetterTab('inmail')" style="flex: 1; padding: 9px 12px; border: 1px solid rgba(2, 132, 199, 0.25); background: rgba(2, 132, 199, 0.05); color: #0284C7; font-weight: 700; font-size: 12.5px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+            <i class="fab fa-linkedin"></i> 75-Word Recruiter InMail
+          </button>
+        </div>
+
+        <!-- Tab 1: 3-Paragraph Cover Letter -->
+        <div id="pane-cover-letter" style="display: block;">
+          <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+              <span style="font-size: 12px; font-weight: 700; color: #334155;">
+                <i class="fas fa-feather-pointed" style="color: #0284C7; margin-right: 5px;"></i> Tailored 3-Paragraph High-Converting Structure
+              </span>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn-copy-cover" onclick="window.copyCoverLetterText && window.copyCoverLetterText()" style="background: rgba(2, 132, 199, 0.1); color: #0284C7; border: 1px solid rgba(2, 132, 199, 0.3); padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease;">
+                  <i class="fas fa-copy"></i> Copy Letter
+                </button>
+                <button type="button" class="btn-download-cover-pdf" onclick="window.downloadCoverLetterPDF && window.downloadCoverLetterPDF()" style="background: #0284C7; color: white; border: none; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease;">
+                  <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+              </div>
+            </div>
+            <textarea id="standalone-cover-letter-text" class="ats-jd-textarea" rows="10" style="font-size: 12.5px; line-height: 1.6; background: #F8FAFC; border: 1px solid #CBD5E1;"></textarea>
+          </div>
+        </div>
+
+        <!-- Tab 2: Recruiter InMail -->
+        <div id="pane-inmail" style="display: none;">
+          <div style="background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+              <span style="font-size: 12px; font-weight: 700; color: #334155;">
+                <i class="fab fa-linkedin" style="color: #0077B5; margin-right: 5px;"></i> 75-Word Punchy InMail / Cold Pitch
+              </span>
+              <button type="button" class="btn-copy-inmail" onclick="window.copyInMailText && window.copyInMailText()" style="background: rgba(0, 119, 181, 0.1); color: #0077B5; border: 1px solid rgba(0, 119, 181, 0.3); padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.15s ease;">
+                <i class="fas fa-copy"></i> Copy InMail
+              </button>
+            </div>
+            <label style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; display: block;">Subject Line:</label>
+            <input type="text" id="standalone-inmail-subject" class="form-input" style="margin-bottom: 10px; font-weight: 700; font-size: 12px; padding: 8px 12px; background: #F8FAFC; border: 1px solid #CBD5E1;" placeholder="Subject Line">
+            <label style="font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; display: block;">Message Body:</label>
+            <textarea id="standalone-inmail-body" class="ats-jd-textarea" rows="6" style="font-size: 12.5px; line-height: 1.5; background: #F8FAFC; border: 1px solid #CBD5E1;"></textarea>
+          </div>
+        </div>
+
+        <div style="background: rgba(2, 132, 199, 0.05); border: 1px dashed rgba(2, 132, 199, 0.3); border-radius: 8px; padding: 10px 14px; font-size: 11.5px; color: #475569;">
+          💡 <strong>Pro Tip:</strong> Recruiters receive hundreds of generic messages daily. This customized pitch mentions specific metrics from your resume and matches the target company's job keywords directly to maximize your reply rate!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE MANAGEMENT MODAL (Multi-Role Versions) -->
+  <div id="modal-profile-manager" class="ats-matcher-overlay" style="display: none;">
+    <div class="ats-matcher-container" style="max-width: 520px;">
+      <button class="ats-matcher-close" onclick="closeProfileManager()" aria-label="Close">&times;</button>
+      <div class="ats-matcher-header" style="text-align: left; margin-bottom: 18px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span class="ats-matcher-badge" style="background: linear-gradient(135deg, #00846D, #2DD4BF);">MULTI-APPLICATION VAULT</span>
+        </div>
+        <h2 style="font-size: 1.35rem; margin: 4px 0;">Job Application Profiles</h2>
+        <p style="font-size: 0.88rem; color: #64748B;">Keep separate, tailored versions of your resume for each target company or role.</p>
+      </div>
+
+      <div id="profile-manager-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; max-height: 280px; overflow-y: auto;">
+        <!-- Dynamically rendered by app.js -->
+      </div>
+
+      <button type="button" onclick="closeProfileManager(); window.promptCreateNewProfileVersion && window.promptCreateNewProfileVersion();" style="width: 100%; padding: 11px 16px; border-radius: 10px; border: 2px dashed rgba(0, 132, 109, 0.4); background: rgba(0, 132, 109, 0.06); color: #00846D; font-weight: 800; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;">
+        <i class="fas fa-plus-circle"></i> + Tailor New Profile from Current Resume
+      </button>
+    </div>
+  </div>
+
+  <!-- GOOGLE XYZ METRIC BULLET BANK MODAL -->
+  <div id="bullet-bank-modal" class="ats-matcher-overlay" style="display: none;">
+    <div class="ats-matcher-container" style="max-width: 680px; max-height: 85vh; display: flex; flex-direction: column;">
+      <button class="ats-matcher-close" onclick="ZenBulletBank.closeBulletBank()" aria-label="Close">&times;</button>
+      
+      <div class="ats-matcher-header" style="text-align: left; margin-bottom: 14px; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span class="ats-matcher-badge" style="background: linear-gradient(135deg, #10B981, #059669);">GOOGLE XYZ FORMULA</span>
+          <span style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 9999px;">100% Free &amp; ATS-Proven</span>
+        </div>
+        <h2 style="font-size: 1.35rem; margin: 4px 0;">⚡ Metric Bullet Bank</h2>
+        <p style="font-size: 0.88rem; color: #64748B;">Tap any battle-tested bullet point below to insert directly into your active resume experience.</p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div id="bullet-bank-tabs" class="bullet-bank-tabs" style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; flex-shrink: 0;">
+        <!-- Rendered by bullet-bank.js -->
+      </div>
+
+      <!-- Scrollable Bullets List -->
+      <div id="bullet-bank-list" class="bullet-bank-list" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px; padding-right: 4px;">
+        <!-- Rendered by bullet-bank.js -->
       </div>
     </div>
   </div>
@@ -3799,7 +4270,7 @@
       });
 
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js?v=2.3')
+        navigator.serviceWorker.register('/sw.js?v=3.0')
           .then(function(reg) {
             reg.update();
             if (reg.waiting) {

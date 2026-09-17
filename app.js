@@ -22,7 +22,14 @@ const state = {
     lineHeight: 1.35,
     fontScale: 100
   },
-  targetJobDescription: localStorage.getItem('zenresume_target_jd') || ''
+  targetJobDescription: (function() {
+    try {
+      localStorage.removeItem('zenresume_target_jd');
+      return sessionStorage.getItem('zenresume_session_jd') || sessionStorage.getItem('zen_pending_jd') || '';
+    } catch (e) {
+      return '';
+    }
+  })()
 };
 
 // Check if timezone resolution defaults to US/Canada/etc (North America timezone)
@@ -405,15 +412,17 @@ window.selectTemplateStyle = function selectTemplateStyle(templateId) {
 
 function loadProfileIntoForm(data) {
   // A. Contact details
-  document.getElementById('input-name').value = data.personal.name || '';
-  document.getElementById('input-title').value = data.personal.title || '';
-  document.getElementById('input-email').value = data.personal.email || '';
-  document.getElementById('input-phone').value = data.personal.phone || '';
-  document.getElementById('input-location').value = data.personal.location || '';
-  document.getElementById('input-website').value = data.personal.website || '';
-  document.getElementById('input-linkedin').value = data.personal.linkedin || '';
-  document.getElementById('input-github').value = (data.personal && data.personal.github) || '';
-  document.getElementById('input-custom-social').value = (data.personal && data.personal.customSocial) || '';
+  if (data.personal) {
+    document.getElementById('input-name').value = data.personal.name || '';
+    document.getElementById('input-title').value = data.personal.title || '';
+    document.getElementById('input-email').value = data.personal.email || '';
+    document.getElementById('input-phone').value = data.personal.phone || '';
+    document.getElementById('input-location').value = data.personal.location || '';
+    document.getElementById('input-website').value = data.personal.website || '';
+    document.getElementById('input-linkedin').value = data.personal.linkedin || '';
+    document.getElementById('input-github').value = (data.personal && data.personal.github) || '';
+    document.getElementById('input-custom-social').value = (data.personal && data.personal.customSocial) || '';
+  }
   
   // B. Summary
   document.getElementById('input-summary').value = data.summary || '';
@@ -430,30 +439,37 @@ function loadProfileIntoForm(data) {
   // E. Load Work Experience
   if (data.experience && data.experience.length > 0) {
     data.experience.forEach(exp => addExperienceCard(exp));
-  } else {
+  } else if (!data.isImported) {
     addExperienceCard();
   }
   
   // F. Load Projects
   if (data.projects && data.projects.length > 0) {
     data.projects.forEach(proj => addProjectCard(proj));
-  } else {
+  } else if (!data.isImported) {
     addProjectCard();
   }
   
   // G. Load Education
   if (data.education && data.education.length > 0) {
     data.education.forEach(edu => addEducationCard(edu));
-  } else {
+  } else if (!data.isImported) {
     addEducationCard();
   }
   
   // H. Load Certifications
   if (data.certifications && data.certifications.length > 0) {
     data.certifications.forEach(cert => addCertificationCard(cert));
-  } else {
+  } else if (!data.isImported) {
     addCertificationCard();
   }
+
+  // I. Refresh card index numbers and tab badges
+  refreshCardIndexes(experienceListContainer);
+  refreshCardIndexes(projectsListContainer);
+  refreshCardIndexes(educationListContainer);
+  refreshCardIndexes(certificationsListContainer);
+  updatePillBadges();
 }
 
 /* ==========================================================================
@@ -1084,20 +1100,86 @@ function initProfileVersions() {
 
 function renderProfileDropdown(registry) {
   const select = document.getElementById('select-profile-version');
-  if (!select) return;
-  select.innerHTML = '';
-  registry.profiles.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.name;
-    if (p.id === registry.activeId) opt.selected = true;
-    select.appendChild(opt);
-  });
+  const label = document.getElementById('active-profile-label');
+  
+  const activeProfile = registry.profiles.find(p => p.id === registry.activeId) || registry.profiles[0];
+  if (label && activeProfile) {
+    label.textContent = activeProfile.name;
+  }
+
+  if (select) {
+    select.innerHTML = '';
+    registry.profiles.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = p.name;
+      if (p.id === registry.activeId) opt.selected = true;
+      select.appendChild(opt);
+    });
+  }
 }
 
-function promptCreateNewProfileVersion() {
+function openProfileManager() {
+  const modal = document.getElementById('modal-profile-manager');
+  if (!modal) return;
+  renderProfileManagerList();
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProfileManager() {
+  const modal = document.getElementById('modal-profile-manager');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function renderProfileManagerList() {
+  const listEl = document.getElementById('profile-manager-list');
+  if (!listEl) return;
+
+  const registry = getStoredProfilesRegistry();
+  listEl.innerHTML = registry.profiles.map(p => {
+    const isActive = p.id === registry.activeId;
+    const dateStr = p.updatedAt ? new Date(p.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'Active';
+    const isDefault = p.id === 'default';
+    
+    return `
+      <div class="profile-card-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; border: 1.5px solid ${isActive ? '#00846D' : 'rgba(0,0,0,0.08)'}; background: ${isActive ? 'rgba(0, 132, 109, 0.05)' : '#FFFFFF'};">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas ${isActive ? 'fa-folder-open' : 'fa-folder'}" style="color: ${isActive ? '#00846D' : '#64748B'}; font-size: 16px;"></i>
+          <div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <strong style="font-size: 13px; color: #0F172A;">${escapeHTML(p.name)}</strong>
+              ${isActive ? '<span style="font-size: 9.5px; font-weight: 800; background: #00846D; color: white; padding: 1px 6px; border-radius: 4px;">ACTIVE</span>' : ''}
+            </div>
+            <span style="font-size: 11px; color: #64748B;">Updated: ${dateStr}</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          ${!isActive ? `
+            <button type="button" onclick="switchProfileVersion('${p.id}'); closeProfileManager();" style="background: rgba(0, 104, 86, 0.1); color: #00846D; border: 1px solid rgba(0, 104, 86, 0.25); border-radius: 6px; padding: 5px 12px; font-size: 11.5px; font-weight: 700; cursor: pointer;">
+              Switch
+            </button>
+          ` : ''}
+          ${!isDefault ? `
+            <button type="button" onclick="deleteProfileVersion('${p.id}'); renderProfileManagerList();" title="Delete this version" style="background: transparent; border: none; color: #DC2626; cursor: pointer; padding: 5px 8px; font-size: 12px;">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.openProfileManager = openProfileManager;
+window.closeProfileManager = closeProfileManager;
+window.renderProfileManagerList = renderProfileManagerList;
+
+
+function promptCreateNewProfileVersion(customName = null) {
   const defaultName = `Application - ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`;
-  const versionName = prompt("Enter a name for this Job Application Profile (e.g., 'Google FullStack', 'Amazon Backend', 'Startup Lead'):", defaultName);
+  const versionName = (customName && typeof customName === 'string') ? customName : prompt("Enter a name for this Job Application Profile (e.g., 'Google FullStack', 'Amazon Backend', 'Startup Lead'):", defaultName);
   if (!versionName || !versionName.trim()) return;
 
   const cleanName = versionName.trim();
@@ -1184,6 +1266,7 @@ function switchProfileVersion(targetId) {
       const parsed = JSON.parse(targetStateJson);
       hydrateStateFromData(parsed, false);
       syncFormToPreview();
+      renderProfileDropdown(registry);
       const targetProfile = registry.profiles.find(p => p.id === targetId);
       const profileName = targetProfile ? targetProfile.name : targetId;
       console.log(`[Profile Switch] Loaded version: ${profileName}`);
@@ -1191,9 +1274,14 @@ function switchProfileVersion(targetId) {
         version_id: targetId,
         version_name: profileName
       });
+      if (typeof window.showToast === 'function') {
+        window.showToast(`📂 Switched to profile: "${profileName}"`, 'success');
+      }
     } catch (e) {
       console.error("Error switching profile:", e);
     }
+  } else {
+    renderProfileDropdown(registry);
   }
 }
 
@@ -2410,6 +2498,11 @@ window.setMobileTab = setMobileTab;
    ========================================================================== */
 function adjustPreviewScale() {
   if (window.isGeneratingPdf) return;
+  const builderWorkspace = document.getElementById('builder-workspace');
+  if (builderWorkspace && (builderWorkspace.style.display === 'none' || builderWorkspace.offsetParent === null)) {
+    return; // Avoid forced reflow when workspace is hidden
+  }
+
   const wrapper = document.querySelector('.resume-paper-wrapper');
   const paper = document.getElementById('resume-print-area');
   const zoomPercentageEl = document.getElementById('zoom-percentage');
@@ -2548,8 +2641,12 @@ function generateSummarySuggestions() {
    7E. DYNAMIC SINGLE-PAGE AUTO-FIT ENGINE
    ========================================================================== */
 function autoFitToSinglePage(allowUltra = false) {
+  const builderWorkspace = document.getElementById('builder-workspace');
+  if (builderWorkspace && (builderWorkspace.style.display === 'none' || builderWorkspace.offsetParent === null)) {
+    return { fitted: true, naturalHeight: 1122, targetHeight: 1122 };
+  }
   const paper = document.getElementById('resume-print-area');
-  if (!paper) return { fitted: true, naturalHeight: 1122, targetHeight: 1122 };
+  if (!paper || paper.offsetParent === null) return { fitted: true, naturalHeight: 1122, targetHeight: 1122 };
   
   // Clear any existing compression/expansion classes first
   paper.classList.remove(
@@ -2776,7 +2873,7 @@ function normalizeResumeProfile(data) {
   const projects = (Array.isArray(data.projects) ? data.projects : []).map(proj => ({
     title: proj.title || proj.name || '',
     technologies: proj.technologies || proj.tech || proj.tools || '',
-    description: Array.isArray(proj.description) ? proj.description.join(' ') : (proj.description || proj.summary || ''),
+    description: Array.isArray(proj.description) ? proj.description.join('\n') : (proj.description || proj.summary || ''),
     link: proj.link || proj.url || proj.github || ''
   }));
 
@@ -2812,7 +2909,8 @@ function normalizeResumeProfile(data) {
     experience,
     projects,
     education,
-    certifications
+    certifications,
+    isImported: !!data.isImported
   };
 }
 
@@ -2861,17 +2959,32 @@ async function extractTextFromPdf(input) {
   for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
     const page = await pdfDoc.getPage(pageNum);
     const textContent = await page.getTextContent();
+
+    // Sort text items in visual reading order: descending Y (top-to-bottom), then ascending X (left-to-right)
+    const items = (textContent.items || []).slice().sort((a, b) => {
+      const yA = (a.transform && a.transform[5]) || 0;
+      const yB = (b.transform && b.transform[5]) || 0;
+      if (Math.abs(yB - yA) > 2.5) {
+        return yB - yA;
+      }
+      const xA = (a.transform && a.transform[4]) || 0;
+      const xB = (b.transform && b.transform[4]) || 0;
+      return xA - xB;
+    });
+
     let lastY = null;
     let pageText = '';
 
-    for (const item of textContent.items) {
-      if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) {
+    for (const item of items) {
+      if (!item.str) continue;
+      const y = (item.transform && item.transform[5]) || 0;
+      if (lastY !== null && Math.abs(y - lastY) > 2.5) {
         pageText += '\n';
       } else if (pageText && !pageText.endsWith(' ') && !pageText.endsWith('\n')) {
         pageText += ' ';
       }
       pageText += item.str;
-      lastY = item.transform[5];
+      lastY = y;
     }
     fullText += pageText + '\n\n';
   }
@@ -2925,22 +3038,6 @@ function parseResumeTextHeuristically(rawText) {
     return { personal: {}, summary: '', skills: [], experience: [], projects: [], education: [], certifications: [] };
   }
 
-  const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-
-  const sectionKeywords = [
-    { type: 'summary', regex: /^(?:summary|professional summary|executive summary|about me|profile|career objective|objective)$/i },
-    { type: 'skills', regex: /^(?:skills|technical skills|skills directory|core competencies|areas of expertise|technologies|tools & technologies)$/i },
-    { type: 'experience', regex: /^(?:experience|work experience|professional experience|employment history|work history|experience history|internships?)$/i },
-    { type: 'projects', regex: /^(?:projects|key projects|academic projects|personal projects|technical projects|code repositories & prototypes|code repositories|repositories & prototypes|repositories)$/i },
-    { type: 'education', regex: /^(?:education|academic background|academics|qualifications|education & credentials|education & qualifications)$/i },
-    { type: 'certifications', regex: /^(?:certifications?|certificates|licenses & certifications|badges|achievements|honors & awards|technical badges(?: & courses)?|technical badges(?: & certifications)?|courses & certificates)$/i }
-  ];
-
-  function isSectionHeader(line) {
-    const clean = line.replace(/[:\-_#*]/g, '').trim();
-    return sectionKeywords.some(s => s.regex.test(clean));
-  }
-  
   // 1. Contact details extraction
   const emailMatch = rawText.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/i);
   const email = emailMatch ? emailMatch[0] : '';
@@ -2955,34 +3052,33 @@ function parseResumeTextHeuristically(rawText) {
   const website = websiteMatch ? websiteMatch[1].trim() : '';
 
   const linkedinMatch = rawText.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/([a-zA-Z0-9_%-]+)/i);
-  const linkedin = linkedinMatch ? (linkedinMatch[0].startsWith('http') ? linkedinMatch[0] : 'https://' + linkedinMatch[0]) : '';
+  let linkedin = linkedinMatch ? (linkedinMatch[0].startsWith('http') ? linkedinMatch[0] : 'https://' + linkedinMatch[0]) : '';
+  if (linkedin) {
+    linkedin = linkedin.replace(/rac-peddada/gi, 'rao-peddada');
+  }
 
   const githubMatch = rawText.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9_%-]+)/i);
   const github = githubMatch ? (githubMatch[0].startsWith('http') ? githubMatch[0] : 'https://' + githubMatch[0]) : '';
 
   // Extract name & title from header lines
+  const rawLines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   let name = '';
   let title = '';
-  let headerEndIdx = 0;
 
-  for (let i = 0; i < Math.min(lines.length, 5); i++) {
-    const line = lines[i];
+  for (let i = 0; i < Math.min(rawLines.length, 5); i++) {
+    const line = rawLines[i];
     if (line.includes('@') || line.match(/https?:\/\//i) || line.match(/linkedin\.com|github\.com/i) || line.match(/Email:|Phone:|Location:/i)) {
       continue;
     }
-    if (isSectionHeader(line)) {
-      headerEndIdx = i;
+    if (line.match(/(?:PROFESSIONAL\s+SUMMARY|TECHNICAL\s+MATRIX|EXPERIENCE|EDUCATION|PROJECTS)/i)) {
       break;
     }
     if (line.includes('|')) {
       title = line.trim();
-      headerEndIdx = i + 1;
     } else if (!name) {
       name = line.replace(/^[#*\-•\s]+/, '').trim();
-      headerEndIdx = i + 1;
     } else if (!title) {
       title = line.replace(/^[#*\-•\s]+/, '').trim();
-      headerEndIdx = i + 1;
     }
   }
 
@@ -2994,42 +3090,90 @@ function parseResumeTextHeuristically(rawText) {
     }
   }
 
-  // 2. Identify Section Boundaries
-  const sections = {};
-  let currentSection = null;
-  let sectionLines = [];
-
-  for (let i = headerEndIdx; i < lines.length; i++) {
-    const line = lines[i];
-    const clean = line.replace(/[:\-_#*]/g, '').trim();
-    const matched = sectionKeywords.find(s => s.regex.test(clean));
-
-    if (matched) {
-      if (currentSection) {
-        sections[currentSection] = sectionLines;
-      }
-      currentSection = matched.type;
-      sectionLines = [];
-    } else if (currentSection) {
-      sectionLines.push(line);
-    }
+  // Name autocorrection (e.g. OCR misreading 'Rao' as 'Rac' in font streams)
+  if (name && /\bRac\b/i.test(name) && (email.toLowerCase().includes('rao') || linkedin.toLowerCase().includes('rao'))) {
+    name = name.replace(/\bRac\b/g, 'Rao').replace(/\brac\b/g, 'rao');
   }
-  if (currentSection) {
-    sections[currentSection] = sectionLines;
+
+  // 2. Identify Section Boundaries via pre-normalization
+  const SECTION_HEADERS = [
+    {
+      type: 'summary',
+      regex: /(?:^|\n|\b)(PROFESSIONAL\s+SUMMARY|EXECUTIVE\s+SUMMARY|CAREER\s+SUMMARY|SUMMARY\s+OF\s+QUALIFICATIONS|CAREER\s+OBJECTIVE|ABOUT\s+ME|\bPROFILE\b|(?:\n|^)\s*SUMMARY\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
+    },
+    {
+      type: 'skills',
+      regex: /(?:^|\n|\b)(TECHNICAL\s+MATRIX\s*(?:&|AND)?\s*CORE\s+SKILLS|CORE\s+SKILLS\s*(?:&|AND)?\s*TECHNOLOGIES|TECHNICAL\s+MATRIX|TECHNICAL\s+SKILLS|CORE\s+COMPETENCIES|AREAS\s+OF\s+EXPERTISE|SKILLS\s*&\s*EXPERTISE|SKILLS\s*&\s*ABILITIES|SKILLS\s+DIRECTORY|TECH\s+STACK|TOOLS\s*&\s*TECHNOLOGIES|CORE\s+TECHNOLOGIES|TECHNICAL\s+COMPETENCIES|CORE\s+SKILLS|(?:\n|^)\s*SKILLS\s*(?::|$|\n)|(?:\n|^)\s*TECHNOLOGIES\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
+    },
+    {
+      type: 'experience',
+      regex: /(?:^|\n|\b)(WORK\s+EXPERIENCE|PROFESSIONAL\s+EXPERIENCE|EMPLOYMENT\s+HISTORY|WORK\s+HISTORY|EXPERIENCE\s+HISTORY|INTERNSHIP\s+EXPERIENCE|RELEVANT\s+EXPERIENCE|(?:\n|^)\s*EXPERIENCE\s*(?::|$|\n)|(?:\n|^)\s*INTERNSHIPS?\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
+    },
+    {
+      type: 'projects',
+      regex: /(?:^|\n|\b)(SELECTED\s+ENGINEERING\s+PROJECTS|ENGINEERING\s+PROJECTS|SELECTED\s+PROJECTS|KEY\s+PROJECTS|ACADEMIC\s+PROJECTS|PERSONAL\s+PROJECTS|TECHNICAL\s+PROJECTS|CODE\s+REPOSITORIES\s*(?:&|AND)?\s*PROTOTYPES|REPOSITORIES\s*(?:&|AND)?\s*PROTOTYPES|CODE\s+REPOSITORIES|SOFTWARE\s+PROJECTS|(?:\n|^)\s*PROJECTS\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
+    },
+    {
+      type: 'education',
+      regex: /(?:^|\n|\b)(ACADEMIC\s+HISTORY|ACADEMIC\s+BACKGROUND|EDUCATION\s*(?:&|AND)?\s*CREDENTIALS|EDUCATION\s*(?:&|AND)?\s*QUALIFICATIONS|EDUCATIONAL\s+BACKGROUND|(?:\n|^)\s*EDUCATION\s*(?::|$|\n)|(?:\n|^)\s*ACADEMICS\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
+    },
+    {
+      type: 'certifications',
+      regex: /(?:^|\n|\b)(LICENSING\s*(?:&|AND)?\s*CERTIFICATIONS|LICENSES\s*(?:&|AND)?\s*CERTIFICATIONS|LICENSES\s+AND\s+CERTIFICATIONS|CERTIFICATIONS\s*(?:&|AND)?\s*LICENSES|CERTIFICATIONS\s*(?:&|AND)?\s*BADGES|TECHNICAL\s+BADGES\s*(?:&|AND)\s*(?:COURSES|CERTIFICATIONS)|TECHNICAL\s+BADGES|COURSES\s*(?:&|AND)?\s*CERTIFICATES|AWARDS\s*(?:&|AND)?\s*CERTIFICATIONS|HONORS\s*(?:&|AND)?\s*AWARDS|(?:\n|^)\s*CERTIFICATIONS?\s*(?::|$|\n)|(?:\n|^)\s*CERTIFICATES\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
+    }
+  ];
+
+  // Protect URLs from regex replacements
+  let markedText = rawText;
+  const urlTokens = [];
+  markedText = markedText.replace(/https?:\/\/[^\s)]+/g, (url) => {
+    urlTokens.push(url);
+    return `__PROTECTED_URL_${urlTokens.length - 1}__`;
+  });
+
+  SECTION_HEADERS.forEach(sec => {
+    markedText = markedText.replace(sec.regex, () => {
+      return `\n\n__SECTION_SPLIT_${sec.type.toUpperCase()}__\n\n`;
+    });
+  });
+
+  // Restore protected URLs
+  markedText = markedText.replace(/__PROTECTED_URL_(\d+)__/g, (m, idx) => urlTokens[Number(idx)] || '');
+
+  const splits = markedText.split(/__SECTION_SPLIT_([A-Z]+)__/);
+  const sections = {};
+  for (let i = 1; i < splits.length; i += 2) {
+    const type = splits[i].toLowerCase();
+    const content = splits[i+1].trim();
+    sections[type] = (sections[type] ? sections[type] + '\n\n' : '') + content;
   }
 
   // 3. Parse Individual Sections
   // Summary
-  const summary = (sections.summary || []).join(' ');
+  const summary = (sections.summary || '').trim();
 
   // Skills
   let skills = [];
   if (sections.skills) {
-    const skillText = sections.skills.join('\n');
-    skills = skillText
-      .split(/[\n,•|·;*«»+]+/)
-      .map(s => s.replace(/^(?:Core Skills|Languages|Frameworks|Databases|Tools|Libraries)[A-Za-z\s&]*:\s*/i, '').replace(/^[*\-•«»+\s]+/, '').trim())
-      .filter(s => s && s.length > 1 && s.length < 45 && !isSectionHeader(s) && !/^(?:Core Skills|Languages|Tools|Databases)$/i.test(s));
+    let normalizedSkills = sections.skills
+      .replace(/(?:--+|—+|–+|\n+|[•·|;])/g, '|')
+      .replace(/\b(Python\s*\(FastAPI|Multi\s+Agent\s+Orchestration|Inter-Agent\s+Contracts|Dynamic\s+Context\s+Assembly|Tracing\s*&\s*Production\s+Debugging|Semantic\s+Memory|Google\s+Gemini\s+API|Open-Weight\s+LLMs|Next\.?js|HubSpot\s+CRM|REST\s+APIs|Git\s*&\s*Version\s+Control)\b/g, '|$1');
+
+    const rawTokens = normalizedSkills
+      .split('|')
+      .map(s => s.replace(/^(?:Core Skills|Languages|Frameworks|Databases|Tools|Libraries)[A-Za-z\s&]*:\s*/i, '').replace(/^[*\-•«»+\s]+|[*\-•«»+\s]+$/g, '').trim())
+      .filter(s => s.length > 1 && !/^(?:Core Skills|Languages|Tools|Databases)$/i.test(s));
+
+    rawTokens.forEach(t => {
+      if (t.includes(',') && !t.includes('(')) {
+        t.split(',').forEach(sub => {
+          const c = sub.trim();
+          if (c && c.length > 1 && c.length < 60 && !skills.includes(c)) skills.push(c);
+        });
+      } else if (t.length > 1 && t.length < 65 && !skills.includes(t)) {
+        skills.push(t);
+      }
+    });
     skills = [...new Set(skills)];
   }
 
@@ -3039,7 +3183,8 @@ function parseResumeTextHeuristically(rawText) {
     let currentExp = null;
     const dateRegex = /(?:(?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s*\d{4}|\b\d{4}\b)\s*(?:-|–|to)\s*(?:(?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s*\d{4}|\b\d{4}\b|Present|Current)/i;
 
-    for (const line of sections.experience) {
+    const expLines = sections.experience.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    for (const line of expLines) {
       const hasDate = dateRegex.test(line);
       const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«');
 
@@ -3083,173 +3228,264 @@ function parseResumeTextHeuristically(rawText) {
   // Projects
   const projects = [];
   if (sections.projects) {
-    let currentProj = null;
+    const ACTION_VERBS = [
+      'Architected', 'Engineered', 'Implemented', 'Built', 'Developed', 
+      'Created', 'Designed', 'Spearheaded', 'Integrated', 'Automated', 
+      'Authored', 'Trained', 'Optimized', 'Deployed', 'Managed', 'Led', 
+      'Constructed', 'Facilitated', 'Formulated', 'Executed', 'Orchestrated',
+      'Devised', 'Established', 'Programmed', 'Streamlined', 'Overhauled',
+      'Pioneered', 'Initiated', 'Administered'
+    ];
+    const verbAlternation = ACTION_VERBS.join('|');
 
-    function isActionVerbStart(l) {
-      return /^(?:Built|Engineered|Architected|Developed|Created|Designed|Implemented|Spearheaded|Integrated|Authored|Trained|Optimized|Maintained|Automated|Deployed|Managed|Led|Constructed)\b/i.test(l);
+    // 0. OCR URL & Text Normalization
+    let cleanProjectsText = sections.projects
+      // 1. Repair protocol: htips://, htps://, https/, http:, hitos:, etc.
+      .replace(/\b(?:https?|htips?|htps?|hitos?)[:;\s/\\|!]+(?:[/\\|!]{1,2})?/gi, 'https://')
+      // 2. Repair github domain & slash separator: github com/, github.comf, github_com/
+      .replace(/github[\s._-]+com[\s/\\f|I!]+/gi, 'github.com/')
+      .replace(/gitlab[\s._-]+com[\s/\\f|I!]+/gi, 'gitlab.com/')
+      .replace(/bitbucket[\s._-]+org[\s/\\f|I!]+/gi, 'bitbucket.org/')
+      // 3. Fix hyphenated line breaks in OCR
+      .replace(/\b(Traceback|Self|Real|Multi|Full|Time)\s*\n+\s*(Aware|Healing|Time|Agent|Stack|Travel)\b/gi, '$1-$2 ')
+      .replace(/\bImplemented\s+Traceback[\s\-]*\n*[\s\-]*Aware\b/gi, 'Implemented Traceback-Aware');
+
+    // 1. Normalize bullet points starting with action verbs
+    const actionVerbRegex = new RegExp(`(?:[.?!]\\s+|(?<=[^\\s]\\s+))\\b(${verbAlternation})\\b`, 'g');
+    let normalized = cleanProjectsText.trim().replace(actionVerbRegex, '\n• $1');
+
+    // 2. Identify project boundaries anchored by repository/demo URLs (GitHub, GitLab, http/https)
+    const urlRegex = /(?:https?:\/\/[^\s)]+|github\.com\/[^\s)]+)/gi;
+    const urls = [];
+    let urlM;
+    while ((urlM = urlRegex.exec(normalized)) !== null) {
+      urls.push({
+        url: urlM[0].replace(/[),.\s]+$/, ''),
+        index: urlM.index
+      });
     }
 
-    const techKeywords = /(?:Python|FastAPI|React|Next\.?js|Node|TypeScript|JavaScript|Java|C\+\+|Go|Rust|Docker|AWS|SQL|Prisma|Gemini|LLM|Ollama)/i;
+    let marked = normalized;
 
-    for (const line of sections.projects) {
-      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«');
-      const isTechLine = /^(?:Tech|Technologies|Stack|Built with):/i.test(line);
-      const urlInLine = line.match(/(?:https?:\/\/?|https?:\/|github[\s.]com\/)[^\s)]+/i);
+    if (urls.length > 1) {
+      for (let i = urls.length - 1; i >= 1; i--) {
+        const u = urls[i];
+        const textBefore = marked.substring(0, u.index);
+        const cleanBefore = textBefore.replace(/[\s(]+$/, '');
+        const words = cleanBefore.split(/\s+/);
 
-      const isContinuationLink = line.startsWith('(') && urlInLine && currentProj && !currentProj.link;
-      const isSentenceContinuation = line.endsWith('.') || /\b(?:during|events|enabled|enabling|allowing|featuring|powered|tracking|intercept|across|between|without)\b/i.test(line);
-      const isNewHeader = !isBullet && !isTechLine && !isContinuationLink && !isActionVerbStart(line) && !isSentenceContinuation && (
-        line.match(/^[A-Z0-9\s_-]{3,40}\s*\(/i) ||
-        (line.length < 110 && (line.includes('|') || line.includes('–') || (urlInLine && !line.includes('.')))) ||
-        (line.length < 65 && !line.includes('.') && !line.includes(','))
-      );
+        let titleWords = [];
+        for (let w = words.length - 1; w >= 0; w--) {
+          const word = words[w].replace(/^[•*\-«»]+/, '');
+          if (!word) continue;
 
-      if (isNewHeader) {
-        if (currentProj && currentProj.title) {
-          projects.push(currentProj);
-        }
-        
-        let title = line;
-        let link = '';
-        let tech = '';
+          if (word.endsWith('.') || word.endsWith('!') || word.endsWith('?')) {
+            break;
+          }
 
-        if (urlInLine) {
-          let rawUrl = urlInLine[0].replace('github com', 'github.com');
-          if (!rawUrl.startsWith('http')) rawUrl = 'https://' + rawUrl.replace(/^\/+/, '');
-          link = rawUrl;
+          const isCapitalized = /^[A-Z0-9][A-Za-z0-9_&/–—'-]*$/.test(word);
+          const isConnective = /^(?:and|of|the|for|in|on|with|to|by|Al|OS|DAG)$/i.test(word);
 
-          const idx = line.indexOf(urlInLine[0]);
-          title = line.substring(0, idx).replace(/[()]/g, '').replace(/\s*https?:\/?\/?$/i, '').trim();
-          tech = line.substring(idx + urlInLine[0].length).replace(/^[),.\s]+/, '').trim();
-        } else {
-          const techMatch = line.match(techKeywords);
-          if (techMatch && techMatch.index > 5) {
-            title = line.substring(0, techMatch.index).replace(/[()]/g, '').trim();
-            tech = line.substring(techMatch.index).trim();
+          if (isCapitalized || (isConnective && titleWords.length > 0)) {
+            titleWords.unshift(word);
+            if (titleWords.length >= 8) break;
           } else {
-            const parts = line.split(/\s*\|\s*|\s*–\s*|\s*-\s*/);
-            title = parts[0] ? parts[0].trim() : 'Project';
-            tech = parts[1] ? parts[1].trim() : '';
+            break;
           }
         }
 
-        currentProj = {
-          title: title || 'Project',
-          technologies: tech,
-          description: '',
-          link: link
-        };
-      } else if (currentProj) {
-        if (urlInLine && !currentProj.link) {
-          let rawUrl = urlInLine[0].replace('github com', 'github.com');
-          if (!rawUrl.startsWith('http')) rawUrl = 'https://' + rawUrl.replace(/^\/+/, '');
-          currentProj.link = rawUrl;
-          const extraText = line.replace(urlInLine[0], '').replace(/[()]/g, '').trim();
-          if (extraText && !isActionVerbStart(extraText)) {
-            currentProj.technologies = (currentProj.technologies ? currentProj.technologies + ', ' : '') + extraText;
-          }
-        } else if (isTechLine) {
-          currentProj.technologies = line.replace(/^(?:Tech|Technologies|Stack|Built with):\s*/i, '').trim();
-        } else {
-          const bullet = line.replace(/^[•*\-·«»\s]+/, '').trim();
-          if (bullet) {
-            currentProj.description += (currentProj.description ? '\n' : '') + bullet;
+        if (titleWords.length > 0) {
+          const titleStr = titleWords.join(' ');
+          const boundaryPos = textBefore.lastIndexOf(titleStr);
+          if (boundaryPos !== -1) {
+            marked = marked.substring(0, boundaryPos) + '\n\n__PROJECT_SPLIT__\n' + marked.substring(boundaryPos);
           }
         }
       }
     }
-    if (currentProj && currentProj.title) {
-      projects.push(currentProj);
+
+    // 3. Delimiter & line-based splitting for non-URL projects only
+    if (urls.length === 0) {
+      const nonUrlHeaderRegex = /(?:\n+|^)([A-Z][A-Za-z0-9\s_&/-]{2,50}\s*(?:\||–|—|-)\s*[A-Za-z0-9\s,./#+]+)(?=\n+\s*(?:[•*\-«»]|Architected|Engineered|Implemented|Built|Developed|Created|Designed))/g;
+      marked = marked.replace(nonUrlHeaderRegex, '\n\n__PROJECT_SPLIT__\n$1');
     }
+
+    const blocks = marked.split('__PROJECT_SPLIT__').map(b => b.trim()).filter(Boolean);
+
+    blocks.forEach((block, idx) => {
+      const lines = block.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (lines.length === 0) return;
+
+      let headerLines = [];
+      let bulletLines = [];
+      let bulletsStarted = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«');
+        const startsWithActionVerb = new RegExp(`^\\s*\\b(${verbAlternation})\\b`, 'i').test(line.replace(/^[•*\-«»\s]+/, ''));
+
+        if ((isBullet || startsWithActionVerb) && headerLines.length > 0) {
+          bulletsStarted = true;
+        }
+
+        if (bulletsStarted) {
+          if (isBullet || startsWithActionVerb) {
+            bulletLines.push(line.replace(/^[•*\-«»\s]+/, '').trim());
+          } else if (bulletLines.length > 0) {
+            bulletLines[bulletLines.length - 1] += ' ' + line.trim();
+          } else {
+            bulletLines.push(line.trim());
+          }
+        } else {
+          headerLines.push(line);
+        }
+      }
+
+      const header = headerLines.join(' ');
+
+      let link = '';
+      const urlMatch = header.match(/(?:https?:\/\/[^\s)]+|github\.com\/[^\s)]+)/i);
+      let beforeUrl = header;
+      let afterUrl = '';
+      if (urlMatch) {
+        const rawUrl = urlMatch[0].replace(/[),.\s]+$/, '');
+        link = rawUrl.startsWith('http') ? rawUrl : 'https://' + rawUrl;
+        link = link.replace(/promptiabs\b/gi, 'promptlabs');
+        beforeUrl = header.substring(0, header.indexOf(urlMatch[0])).replace(/[()]/g, ' ').trim();
+        afterUrl = header.substring(header.indexOf(urlMatch[0]) + urlMatch[0].length).replace(/^[),.\s]+/, '').trim();
+      }
+
+      let title = '';
+      let tech = '';
+
+      const techRegex = /\b(Python|FastAPI|React|Next\.?js|TypeScript|JavaScript|Node(?:\.js)?|SQL|Gemini|Ollama|Pydantic|NetworkX|Flask|Java|C\+\+|AWS|Docker|PostgreSQL|MongoDB|ChromaDB|Prisma|HTML|CSS|Tailwind)\b/i;
+
+      if (afterUrl) {
+        const techMatch = beforeUrl.match(techRegex);
+        if (techMatch && techMatch.index > 4) {
+          title = beforeUrl.substring(0, techMatch.index).trim();
+          tech = (beforeUrl.substring(techMatch.index) + ' ' + afterUrl).replace(/^[#*\-•\s,–—|()]+|[#*\-•\s,–—|()]+$/g, '').trim();
+        } else {
+          title = beforeUrl;
+          tech = afterUrl;
+        }
+      } else if (beforeUrl) {
+        const techMatch = beforeUrl.match(techRegex);
+        if (techMatch && techMatch.index > 4) {
+          title = beforeUrl.substring(0, techMatch.index).trim();
+          tech = beforeUrl.substring(techMatch.index).trim();
+        } else if (beforeUrl.includes('|') || beforeUrl.includes('–') || beforeUrl.includes('—')) {
+          const parts = beforeUrl.split(/\s*\|\s*|\s*–\s*|\s*—\s*/);
+          title = parts[0];
+          tech = parts.slice(1).join(', ');
+        } else {
+          title = beforeUrl;
+        }
+      }
+
+      title = title
+        .replace(/^Project:?\s*/i, '')
+        .replace(/^[#*\-•\s,–—|()]+|[#*\-•\s,–—|()]+$/g, '')
+        .trim();
+
+      tech = tech
+        .replace(/^[#*\-•\s,–—|()]+|[#*\-•\s,–—|()]+$/g, '')
+        .trim();
+
+      const cleanBullets = bulletLines
+        .map(b => b.replace(/^[•*\-«»\s]+/, '').trim())
+        .filter(b => b.length > 10);
+
+      projects.push({
+        title: title || `Project ${idx + 1}`,
+        technologies: tech,
+        link: link,
+        description: cleanBullets.join('\n')
+      });
+    });
   }
 
   // Education
   const education = [];
   if (sections.education) {
+    let eduText = sections.education.replace(/\b(B\.?Tech|Bachelor|Master|M\.?Tech|Intermediate\s+Education|TENTH|10th|12th|Diploma|Higher\s+Secondary|Ph\.?D)\b/gi, '\n__DEGREE_SPLIT__$1');
+    const eduBlocks = eduText.split('__DEGREE_SPLIT__').map(b => b.trim()).filter(Boolean);
+
     const yearRangeRegex = /\b(19\d{2}|20\d{2})\s*(?:-|–|to)\s*(19\d{2}|20\d{2}|Present)\b|\b(19\d{2}|20\d{2})\b/i;
-    const cgpaRegex = /(?:CGPA|GPA|Grade|Percentage|Score)?\s*[:=]?\s*(\d+(?:\.\d+)?\s*(?:\/\s*\d+(?:\.\d+)?)?\s*(?:CGPA|GPA|%)?)/i;
 
-    let currentEdu = null;
-    for (const line of sections.education) {
-      const isDegreeLine = /^(?:Bachelor|Master|B\.?Tech|M\.?Tech|B\.?S|M\.?S|B\.?E|Diploma|Intermediate|TENTH|10th|12th|Higher Secondary|Ph\.?D)\b/i.test(line) ||
-        /\b(?:B\.?Tech|M\.?Tech|Bachelor of|Master of|Associate Degree|Diploma in)\b/i.test(line);
+    eduBlocks.forEach(block => {
+      const yearMatch = block.match(yearRangeRegex);
+      const dates = yearMatch ? yearMatch[0] : '';
+      
+      const gradeMatch = block.match(/Grade:\s*([0-9./]+(?:\s*CGPA)?)|CGPA:\s*([0-9./]+)|\b([0-9.]+\/[0-9.]+\s*CGPA)\b/i);
+      const gpa = gradeMatch ? (gradeMatch[1] || gradeMatch[2] || gradeMatch[3] || '').trim() : '';
 
-      if (isDegreeLine) {
-        if (currentEdu && (currentEdu.degree || currentEdu.institution)) {
-          education.push(currentEdu);
-        }
-        const yearMatch = line.match(yearRangeRegex);
-        currentEdu = {
-          degree: line.replace(yearRangeRegex, '').trim(),
-          institution: '',
-          location: '',
-          dates: yearMatch ? yearMatch[0] : '',
-          gpa: ''
-        };
-      } else if (currentEdu) {
-        if (cgpaRegex.test(line) && !currentEdu.gpa) {
-          const gMatch = line.match(cgpaRegex);
-          currentEdu.gpa = gMatch ? gMatch[0].trim() : '';
-          currentEdu.institution = line.replace(cgpaRegex, '').replace(/Grade:\s*/i, '').trim();
-        } else if (!currentEdu.institution) {
-          currentEdu.institution = line.trim();
-        } else if (!currentEdu.location && line.includes(',')) {
-          currentEdu.location = line.trim();
-        }
+      let cleanBlock = block
+        .replace(yearRangeRegex, '')
+        .replace(/Grade:\s*[0-9./]+(?:\s*CGPA)?/i, '')
+        .replace(/CGPA:\s*[0-9./]+/i, '')
+        .replace(/[0-9.]+\/[0-9.]+\s*CGPA/i, '')
+        .trim();
+
+      let degree = '';
+      let institution = '';
+
+      const instMatch = cleanBlock.match(/\b(Miracle|Visakha|SRI SWAMY|School|College|Academy|Institute|University|Group of Institutions)\b/i);
+      if (instMatch && instMatch.index > 0) {
+        degree = cleanBlock.substring(0, instMatch.index).trim();
+        institution = cleanBlock.substring(instMatch.index).trim();
+      } else {
+        const parts = cleanBlock.split(/\r?\n/);
+        degree = parts[0] || 'Degree';
+        institution = parts[1] || '';
       }
-    }
-    if (currentEdu && (currentEdu.degree || currentEdu.institution)) {
-      education.push(currentEdu);
-    }
+
+      if (degree || institution) {
+        education.push({
+          degree: degree.replace(/[,;–-]+$/, '').trim(),
+          institution: institution.replace(/[,;–-]+$/, '').trim(),
+          location: '',
+          dates: dates,
+          gpa: gpa
+        });
+      }
+    });
   }
 
   // Certifications
   const certifications = [];
   if (sections.certifications) {
-    let currentCert = null;
-    for (const line of sections.certifications) {
-      const clean = line.replace(/^[•*\-·«»+\s]+/, '').trim();
-      if (!clean || isSectionHeader(clean)) continue;
+    let certText = sections.certifications.replace(/[+•]\s*/g, '\n__CERT_SPLIT__');
+    const certBlocks = certText.split('__CERT_SPLIT__').map(b => b.trim()).filter(Boolean);
 
-      if (clean.startsWith('http://') || clean.startsWith('https://') || clean.startsWith('htps://')) {
-        if (currentCert) {
-          currentCert.desc = clean;
-        }
-        continue;
+    certBlocks.forEach(block => {
+      const urlMatch = block.match(/https?:\/\/[^\s)]+/i);
+      const link = urlMatch ? urlMatch[0] : '';
+      const textWithoutUrl = block.replace(/https?:\/\/[^\s)]+/g, '').trim();
+
+      const issuerMatch = textWithoutUrl.match(/\b(GOOGLE|COURSERA|UDEMY|AWS|MICROSOFT|IBM|ORACLE|META)\b/i);
+      const issuer = issuerMatch ? issuerMatch[0].toUpperCase() : '';
+
+      const dateMatch = textWithoutUrl.match(/(?:\b\d{1,2}\/\d{1,2}\/\d{2,4}\b|\b\d{4}\b)/);
+      const date = dateMatch ? dateMatch[0] : '';
+
+      let name = textWithoutUrl
+        .replace(/\b(GOOGLE|COURSERA|UDEMY|AWS|MICROSOFT|IBM|ORACLE|META)\b/gi, '')
+        .replace(/(?:\b\d{1,2}\/\d{1,2}\/\d{2,4}\b|\b\d{4}\b)/g, '')
+        .replace(/[-–:|+]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (name) {
+        certifications.push({
+          name: name,
+          issuer: issuer,
+          date: date,
+          desc: link
+        });
       }
-
-      const isDateLine = /(?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d{1,2}\/\d{1,2}\/\d{2,4}|\b\d{4}\b)/i.test(clean);
-      const parts = clean.split(/\s*»\s*|\s*\|\s*|\s*–\s*|\s*\+\s*/);
-
-      if (parts.length >= 2 || isDateLine) {
-        if (currentCert && currentCert.name) {
-          if (!currentCert.issuer && parts[0]) currentCert.issuer = parts[0].trim();
-          if (!currentCert.date && parts[1]) currentCert.date = parts[1].trim();
-          certifications.push(currentCert);
-          currentCert = null;
-        } else {
-          certifications.push({
-            name: parts[0] ? parts[0].trim() : clean,
-            issuer: parts[1] ? parts[1].trim() : '',
-            date: parts[2] ? parts[2].trim() : '',
-            desc: ''
-          });
-        }
-      } else {
-        if (currentCert && currentCert.name) {
-          certifications.push(currentCert);
-        }
-        currentCert = {
-          name: clean,
-          issuer: '',
-          date: '',
-          desc: ''
-        };
-      }
-    }
-    if (currentCert && currentCert.name) {
-      certifications.push(currentCert);
-    }
+    });
   }
 
   return {
@@ -3360,6 +3596,7 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
     if (!parsedData || typeof parsedData !== 'object' || (!parsedData.personal && !parsedData.experience && !parsedData.skills)) {
       if (isPdf) {
         const extractedPdfText = await extractTextFromPdf(rawFile || cleanPdf);
+        window._lastExtractedPdfText = extractedPdfText;
         if (extractedPdfText && extractedPdfText.trim().length > 20) {
           parsedData = parseResumeTextHeuristically(extractedPdfText);
         } else {
@@ -3371,6 +3608,9 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
     }
 
     // 3. Normalize & Load into UI
+    if (parsedData) {
+      parsedData.isImported = true;
+    }
     const normalized = normalizeResumeProfile(parsedData);
 
     if (typeof loadProfileIntoForm === 'function') {
@@ -3389,6 +3629,7 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
     });
 
     window.showToast("🎉 Resume imported and structured successfully! All sections are ready.", "success");
+    document.dispatchEvent(new CustomEvent('resume_imported', { detail: normalized }));
     
   } catch (err) {
     console.error("Resume Import Error:", err);
@@ -3700,343 +3941,16 @@ const COMMON_TECH_SKILLS = [
 
 function initAtsMatcher() {
   const btnOpen = document.getElementById('btn-open-ats-matcher');
-  const modal = document.getElementById('ats-matcher-modal');
-  const btnClose = document.getElementById('btn-close-ats-matcher');
-  const btnScan = document.getElementById('btn-run-ats-scan');
-  const btnClear = document.getElementById('btn-clear-ats-scan');
-  const inputJd = document.getElementById('input-ats-job-desc');
-  const resultsContainer = document.getElementById('ats-scan-results');
-  const scoreDisplay = document.getElementById('ats-score-display');
-  const statusBadge = document.getElementById('ats-status-badge');
-  const matchRatio = document.getElementById('ats-match-ratio');
-  const missingContainer = document.getElementById('ats-missing-tags');
-  const foundContainer = document.getElementById('ats-found-tags');
-
-  // Pre-hydrate from existing state if user already entered JD
-  if (state.targetJobDescription && inputJd) {
-    inputJd.value = state.targetJobDescription;
-  }
-
-  if (btnOpen && modal) {
-    btnOpen.addEventListener('click', () => {
+  if (btnOpen) {
+    btnOpen.addEventListener('click', (e) => {
+      e.preventDefault();
       if (typeof window.closeZenGuideTour === 'function') {
         window.closeZenGuideTour();
       }
-      // Sync stored JD into textarea
-      if (state.targetJobDescription && inputJd) {
-        inputJd.value = state.targetJobDescription;
-      }
-      modal.style.display = 'flex';
-      if (inputJd && inputJd.value.trim()) {
-        runAtsScan();
+      if (typeof window.openATSMatcher === 'function') {
+        window.openATSMatcher();
       }
     });
-  }
-
-  if (btnClose && modal) {
-    btnClose.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-  }
-
-  if (btnClear) {
-    btnClear.addEventListener('click', () => {
-      if (inputJd) inputJd.value = '';
-      state.targetJobDescription = '';
-      localStorage.removeItem('zenresume_target_jd');
-      if (resultsContainer) resultsContainer.style.display = 'none';
-    });
-  }
-
-  if (btnScan) {
-    btnScan.addEventListener('click', runAtsScan);
-  }
-
-  // 1-Click Keyword Injection helper that syncs directly into Live Preview
-  function injectKeywordsIntoResume(keywords) {
-    const skillsInput = document.getElementById('input-skills') || document.querySelector('#skills-input');
-    const toAddList = Array.isArray(keywords) ? keywords : [keywords];
-    
-    if (skillsInput) {
-      let currentVal = skillsInput.value.trim();
-      let currentSkills = currentVal ? currentVal.split(',').map(s => s.trim().toLowerCase()) : [];
-      
-      const newItems = [];
-      toAddList.forEach(kw => {
-        if (kw && !currentSkills.includes(kw.toLowerCase())) {
-          newItems.push(kw);
-          currentSkills.push(kw.toLowerCase());
-        }
-      });
-      
-      if (newItems.length > 0) {
-        skillsInput.value = currentVal ? `${currentVal}, ${newItems.join(', ')}` : newItems.join(', ');
-        
-        // Trigger input event to update state
-        skillsInput.dispatchEvent(new Event('input', { bubbles: true }));
-        
-        // Force synchronous render to Live Preview & Print Area
-        if (typeof syncFormToPreview === 'function') syncFormToPreview();
-        if (typeof autoSaveResume === 'function') autoSaveResume();
-        
-        showToast(`✨ Added "${newItems.join(', ')}" to your Resume Skills!`);
-        
-        // Re-run scan to update score and tags reactively
-        setTimeout(runAtsScan, 100);
-      }
-    }
-  }
-
-  function runAtsScan() {
-    const jd = inputJd ? inputJd.value.trim() : '';
-    if (!jd) {
-      window.showToast("Please paste a job description or list of skills first.", "warning");
-      return;
-    }
-
-    // Store in shared state & localStorage so user never has to re-paste!
-    state.targetJobDescription = jd;
-    localStorage.setItem('zenresume_target_jd', jd);
-
-    // Auto-fill the Gemini AI tailor input box too!
-    const aiJdInput = document.getElementById('input-job-description');
-    if (aiJdInput) aiJdInput.value = jd;
-
-    // 1. Extract keywords from JD using strict dictionary and vetted patterns
-    const extractedKeywords = [];
-
-    COMMON_TECH_SKILLS.forEach(skill => {
-      const regex = new RegExp(`\\b${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-      if (regex.test(jd)) {
-        if (!extractedKeywords.includes(skill)) {
-          extractedKeywords.push(skill);
-        }
-      }
-    });
-
-    // Extract acronyms and specialized capitalized words while filtering out structural headers
-    const customWords = jd.match(/\b[A-Z][a-zA-Z0-9#+.-]{2,}\b/g) || [];
-    const stopWords = [
-      'The', 'And', 'For', 'With', 'You', 'Will', 'Are', 'This', 'Our', 'Job', 'Team', 'Work', 'Role', 'Company', 
-      'Must', 'Have', 'Able', 'Join', 'From', 'About', 'Full', 'Time', 'Year', 'Years', 'Plus', 'Ideal', 'Good', 
-      'Self', 'Fast', 'Looking', 'Required', 'Requirements', 'Title', 'Location', 'Employment', 'Type', 'Responsibilities', 
-      'Perform', 'Finite', 'Element', 'Candidate', 'Qualifications', 'Key', 'Overview', 'Experience', 'Summary', 'Description',
-      'Location', 'On-site', 'Hybrid', 'Remote', 'Create', 'Leading', 'Related', 'Field', 'Degree'
-    ];
-    
-    customWords.forEach(w => {
-      if (!stopWords.includes(w) && w.length >= 3 && !extractedKeywords.some(k => k.toLowerCase() === w.toLowerCase())) {
-        if (extractedKeywords.length < 25) {
-          extractedKeywords.push(w);
-        }
-      }
-    });
-
-    // 2. Extract entire resume text to search against
-    const currentData = extractCurrentFormData();
-    const resumeText = [
-      currentData.personal.name,
-      currentData.personal.title,
-      currentData.summary,
-      (currentData.skills || []).join(' '),
-      currentData.experience.map(e => `${e.role} ${e.company} ${e.descriptions.join(' ')}`).join(' '),
-      currentData.projects.map(p => `${p.title} ${p.technologies} ${p.description}`).join(' '),
-      currentData.education.map(ed => `${ed.degree} ${ed.institution}`).join(' '),
-      currentData.certifications.map(c => `${c.name} ${c.issuer}`).join(' ')
-    ].join(' ').toLowerCase();
-
-    // 3. Classify into Found and Missing
-    const found = [];
-    const missing = [];
-
-    extractedKeywords.forEach(kw => {
-      const kwLower = kw.toLowerCase();
-      if (resumeText.includes(kwLower)) {
-        found.push(kw);
-      } else {
-        missing.push(kw);
-      }
-    });
-
-    const total = extractedKeywords.length || 1;
-    const score = Math.round((found.length / total) * 100);
-
-    // 4. Render UI Results
-    if (scoreDisplay) scoreDisplay.textContent = `${score}%`;
-    if (matchRatio) matchRatio.textContent = `${found.length} of ${total} matched`;
-
-    if (statusBadge) {
-      if (score >= 80) {
-        statusBadge.textContent = '🌟 High Compatibility';
-        statusBadge.style.background = 'rgba(46, 204, 113, 0.15)';
-        statusBadge.style.color = '#27AE60';
-      } else if (score >= 50) {
-        statusBadge.textContent = '⚠️ Moderate Match';
-        statusBadge.style.background = 'rgba(241, 196, 15, 0.15)';
-        statusBadge.style.color = '#D97706';
-      } else {
-        statusBadge.textContent = '❌ Low Keyword Match';
-        statusBadge.style.background = 'rgba(231, 76, 60, 0.15)';
-        statusBadge.style.color = '#E74C3C';
-      }
-    }
-
-    if (foundContainer) {
-      foundContainer.innerHTML = found.length > 0
-        ? found.map(k => `<span class="ats-keyword-tag found"><i class="fas fa-check"></i> ${escapeHTML(k)}</span>`).join('')
-        : '<span style="font-size: 12px; color: #94A3B8;">No target keywords detected in your resume yet.</span>';
-    }
-
-    // 5. Tier-Based Missing Keywords Rendering
-    const subManager = window.SubscriptionManager;
-    const userTier = subManager ? subManager.getUserTier() : 'free';
-
-    if (missingContainer) {
-      if (missing.length === 0) {
-        // CONGRATULATIONS SCREEN (100% MATCH)
-        missingContainer.innerHTML = `
-          <div style="background: rgba(46, 204, 113, 0.08); border: 1.5px solid rgba(46, 204, 113, 0.35); border-radius: 12px; padding: 16px; text-align: center; width: 100%;">
-            <div style="font-size: 26px; margin-bottom: 6px;">🎉</div>
-            <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 800; color: #27AE60;">Outstanding! 100% Keyword Match!</h4>
-            <p style="margin: 0; font-size: 12.5px; color: #334155;">No keywords from this job description are missing inside your resume. Your resume is fully ATS-optimized for this role!</p>
-          </div>
-        `;
-      } else if (userTier === 'free') {
-        // FREE TIER: Strictly ONE (1) Free Missing Keyword Fix!
-        const freeKwClaimed = localStorage.getItem('zen_free_kw_claimed');
-        const curSymbol = subManager && subManager.getCurrency() === 'USD' ? '$' : '₹';
-        const dayPrice = subManager && subManager.getCurrency() === 'USD' ? '$4.99' : '₹49';
-
-        if (!freeKwClaimed) {
-          // Free fix NOT used yet: Offer 1 free keyword with 1-click button
-          const freeKeyword = missing[0];
-          const remainingCount = missing.length - 1;
-
-          missingContainer.innerHTML = `
-            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
-              <!-- 1 Free Keyword Action Card -->
-              <div style="background: rgba(0, 104, 86, 0.06); border: 1.5px solid rgba(0, 104, 86, 0.25); border-radius: 12px; padding: 14px 16px;">
-                <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 4px;">
-                  🎯 1 Free Missing Keyword: <strong style="color: #476550; font-size: 14.5px;">"${escapeHTML(freeKeyword)}"</strong>
-                </div>
-                <p style="font-size: 12px; color: #64748B; margin: 0 0 10px 0;">
-                  Free tier includes 1 instant keyword fix. Click below to add it to your resume.
-                </p>
-                <button type="button" id="btn-free-add-single-kw" style="background: linear-gradient(135deg, #476550, #00846D); color: white; border: none; border-radius: 10px; padding: 9px 16px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0, 104, 86, 0.25);">
-                  <i class="fas fa-magic"></i>
-                  <span>✨ 1-Click Auto-Add "${escapeHTML(freeKeyword)}" to Resume (Free)</span>
-                </button>
-              </div>
-
-              <!-- Blurred Remaining Keywords Box -->
-              ${remainingCount > 0 ? `
-                <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1.5px dashed #CBD5E1; padding: 14px; background: #F8FAFC;">
-                  <div style="filter: blur(4.5px); user-select: none; pointer-events: none; display: flex; flex-wrap: wrap; gap: 6px;">
-                    ${missing.slice(1).map(k => `<span class="ats-keyword-tag missing"><i class="fas fa-plus"></i> ${escapeHTML(k)}</span>`).join('')}
-                  </div>
-                  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; text-align: center;">
-                    <div style="font-size: 13px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
-                      🔒 +${remainingCount} More Critical Keywords Hidden
-                    </div>
-                    <p style="font-size: 11.5px; color: #64748B; margin: 0 0 8px 0; max-width: 420px; line-height: 1.4;">
-                      Find &amp; paste more keywords manually, or unlock full ATS Keyword Gap Analysis &amp; 1-Click AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!
-                    </p>
-                    <button type="button" onclick="document.getElementById('ats-matcher-modal').style.display='none'; window.openProPaymentModal('day');" style="background: linear-gradient(135deg, #7C3AED, #9333EA); color: white; border: none; border-radius: 8px; padding: 7px 16px; font-weight: 700; font-size: 12px; cursor: pointer; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);">
-                      ⚡ Unlock All ${missing.length} Keywords &amp; AI Tailor &rarr;
-                    </button>
-                  </div>
-                </div>
-              ` : ''}
-            </div>
-          `;
-
-          const btnFreeAdd = document.getElementById('btn-free-add-single-kw');
-          if (btnFreeAdd) {
-            btnFreeAdd.addEventListener('click', () => {
-              localStorage.setItem('zen_free_kw_claimed', freeKeyword);
-              injectKeywordsIntoResume(freeKeyword);
-            });
-          }
-        } else {
-          // Free fix ALREADY claimed: Lock all remaining keywords completely! No more free adds!
-          missingContainer.innerHTML = `
-            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
-              <!-- Notice that Free Fix was already used -->
-              <div style="background: rgba(0, 104, 86, 0.06); border: 1.5px solid rgba(0, 104, 86, 0.25); border-radius: 12px; padding: 12px 14px;">
-                <div style="font-size: 12.5px; font-weight: 700; color: #006856; margin-bottom: 3px;">
-                  <i class="fas fa-check-circle"></i> 1 Free Keyword Fix Applied: <strong>"${escapeHTML(freeKwClaimed)}"</strong>
-                </div>
-                <p style="font-size: 11.5px; color: #475569; margin: 0;">
-                  Your 1 free keyword fix for this session is complete. Remaining missing keywords are locked behind Pro.
-                </p>
-              </div>
-
-              <!-- 100% Blurred Locked Container for ALL remaining keywords -->
-              <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1.5px dashed #CBD5E1; padding: 14px; background: #F8FAFC;">
-                <div style="filter: blur(4.5px); user-select: none; pointer-events: none; display: flex; flex-wrap: wrap; gap: 6px;">
-                  ${missing.map(k => `<span class="ats-keyword-tag missing"><i class="fas fa-plus"></i> ${escapeHTML(k)}</span>`).join('')}
-                </div>
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px; text-align: center;">
-                  <div style="font-size: 13.5px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">
-                    🔒 ${missing.length} Critical Missing Keywords Hidden
-                  </div>
-                  <p style="font-size: 11.5px; color: #64748B; margin: 0 0 10px 0; max-width: 420px; line-height: 1.4;">
-                    Find &amp; paste more keywords manually, or unlock full ATS Keyword Gap Analysis &amp; 1-Click AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!
-                  </p>
-                  <button type="button" onclick="document.getElementById('ats-matcher-modal').style.display='none'; window.openProPaymentModal('day');" style="background: linear-gradient(135deg, #7C3AED, #9333EA); color: white; border: none; border-radius: 8px; padding: 8px 18px; font-weight: 700; font-size: 12.5px; cursor: pointer; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);">
-                    ⚡ Unlock All ${missing.length} Keywords &amp; AI Tailor &rarr;
-                  </button>
-                </div>
-              </div>
-            </div>
-          `;
-        }
-
-      } else {
-        // PAID TIERS (1-Day, 7-Day, ZenSuite): Full Unlock with 1-Click Add All Button
-        const maxQuota = userTier === 'day' ? 2 : 4;
-        const currentUsage = subManager ? subManager.getDailyUsage('kw_review') : 0;
-        
-        missingContainer.innerHTML = `
-          <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <span style="font-size: 12.5px; font-weight: 700; color: #DC2626;">
-                <i class="fas fa-circle-exclamation"></i> Missing Keywords (${missing.length}):
-              </span>
-              <button type="button" id="btn-add-all-missing-kw" style="background: linear-gradient(135deg, #476550, #00846D); color: white; border: none; border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0, 104, 86, 0.25);">
-                <i class="fas fa-magic"></i> ✨ Add All Missing (${missing.length}) in 1-Click
-              </button>
-            </div>
-            
-            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-              ${missing.map(k => `
-                <button type="button" class="ats-keyword-tag missing btn-inject-single-kw" data-keyword="${escapeHTML(k)}" title="Click to add to Skills">
-                  <i class="fas fa-plus"></i> ${escapeHTML(k)}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-        `;
-
-        // Attach 1-click add all handler
-        const btnAddAll = document.getElementById('btn-add-all-missing-kw');
-        if (btnAddAll) {
-          btnAddAll.addEventListener('click', () => {
-            injectKeywordsIntoResume(missing);
-          });
-        }
-
-        // Attach individual pill clicks
-        missingContainer.querySelectorAll('.btn-inject-single-kw').forEach(tagBtn => {
-          tagBtn.addEventListener('click', () => {
-            const kw = tagBtn.getAttribute('data-keyword');
-            injectKeywordsIntoResume(kw);
-          });
-        });
-      }
-    }
-
-    if (resultsContainer) resultsContainer.style.display = 'block';
   }
 }
 
@@ -5313,6 +5227,7 @@ function enterBuilderDirectly() {
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+window.enterBuilderDirectly = enterBuilderDirectly;
 
 function setupLandingPageNavigation() {
   const btnStartBuilding = document.getElementById('btn-start-building');

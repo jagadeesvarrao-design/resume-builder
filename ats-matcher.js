@@ -12,6 +12,55 @@
  */
 
 // ═══════════════════════════════════════════════════════════════
+// UNIFIED SESSION JOB DESCRIPTION (JD) MANAGEMENT
+// Stored in sessionStorage so it persists across all features for the
+// active session and is automatically purged when the user closes the site.
+// ═══════════════════════════════════════════════════════════════
+
+const SESSION_JD_KEY = 'zenresume_session_jd';
+
+function getSessionJD() {
+  try {
+    const jd = sessionStorage.getItem(SESSION_JD_KEY) || sessionStorage.getItem('zen_pending_jd') || (window.state && window.state.targetJobDescription) || '';
+    return typeof jd === 'string' ? jd.trim() : '';
+  } catch (e) {
+    return (window.state && window.state.targetJobDescription) || '';
+  }
+}
+
+function setSessionJD(jdText) {
+  const text = (typeof jdText === 'string') ? jdText.trim() : '';
+  try {
+    if (text) {
+      sessionStorage.setItem(SESSION_JD_KEY, text);
+      sessionStorage.setItem('zen_pending_jd', text);
+    } else {
+      sessionStorage.removeItem(SESSION_JD_KEY);
+      sessionStorage.removeItem('zen_pending_jd');
+    }
+  } catch (e) {}
+
+  if (window.state) {
+    window.state.targetJobDescription = text;
+  }
+
+  // Synchronize across all active JD input fields
+  const atsJd = document.getElementById('ats-jd-input');
+  if (atsJd && atsJd.value !== text) atsJd.value = text;
+
+  const clJd = document.getElementById('cover-letter-jd-input');
+  if (clJd && clJd.value !== text) clJd.value = text;
+
+  const heroJd = document.getElementById('hero-ats-jd-input');
+  if (heroJd && heroJd.value !== text) heroJd.value = text;
+
+  const aiJd = document.getElementById('input-job-description');
+  if (aiJd && aiJd.value !== text) aiJd.value = text;
+
+  return text;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // KEYWORD EXTRACTION ENGINE (Local Regex - Zero Server Cost)
 // ═══════════════════════════════════════════════════════════════
 
@@ -78,14 +127,40 @@ function extractResumeKeywords() {
   // Pull text from the live resume editor state
   const resumeText = [];
   
-  // Try to get text from the resume preview panel
-  const previewEl = document.querySelector('.resume-preview') || document.querySelector('#resume-content');
+  // Try to get text from the resume print/preview area
+  const previewEl = document.getElementById('resume-print-area') || document.querySelector('.resume-preview') || document.querySelector('#resume-content');
   if (previewEl) {
     resumeText.push(previewEl.innerText || previewEl.textContent || '');
   }
+
+  // Try extractCurrentFormData if available
+  if (typeof window.extractCurrentFormData === 'function') {
+    try {
+      const data = window.extractCurrentFormData();
+      if (data) {
+        if (data.skills) resumeText.push(data.skills);
+        if (data.summary) resumeText.push(data.summary);
+        if (Array.isArray(data.experience)) {
+          data.experience.forEach(exp => {
+            if (exp.role) resumeText.push(exp.role);
+            if (exp.company) resumeText.push(exp.company);
+            if (exp.description) resumeText.push(exp.description);
+            if (Array.isArray(exp.descriptions)) resumeText.push(exp.descriptions.join(' '));
+          });
+        }
+        if (Array.isArray(data.projects)) {
+          data.projects.forEach(p => {
+            if (p.title) resumeText.push(p.title);
+            if (p.technologies) resumeText.push(p.technologies);
+            if (p.description) resumeText.push(p.description);
+          });
+        }
+      }
+    } catch(e) {}
+  }
   
   // Also try to get from form inputs
-  const inputs = document.querySelectorAll('#editor-form input, #editor-form textarea, .section-content input, .section-content textarea');
+  const inputs = document.querySelectorAll('#resume-form input, #resume-form textarea, #editor-form input, #editor-form textarea, .section-content input, .section-content textarea');
   inputs.forEach(el => {
     if (el.value) resumeText.push(el.value);
   });
@@ -123,6 +198,173 @@ function extractResumeKeywords() {
 }
 
 
+
+// ═══════════════════════════════════════════════════════════════
+// QUANTIFIABLE METRICS & WEAK BULLETS SCANNER
+// ═══════════════════════════════════════════════════════════════
+
+function analyzeBulletMetrics() {
+  const bullets = [];
+  const textareas = document.querySelectorAll('.input-exp-desc, .input-proj-desc, .item-bullets-textarea, textarea[placeholder*="metric"], textarea[class*="desc"], .experience-item-card textarea, .project-item-card textarea');
+  textareas.forEach(ta => {
+    if (ta.value && ta.value.trim()) {
+      ta.value.split('\n').forEach(line => {
+        const clean = line.replace(/^[•\-\*]\s*/, '').trim();
+        if (clean.length > 15) bullets.push(clean);
+      });
+    }
+  });
+
+  if (bullets.length === 0) {
+    const previewBullets = document.querySelectorAll('.resume-preview li, #resume-content li');
+    previewBullets.forEach(li => {
+      const text = (li.textContent || '').trim();
+      if (text.length > 15) bullets.push(text);
+    });
+  }
+
+  if (bullets.length === 0 && window.state && window.state.experience) {
+    (Array.isArray(window.state.experience) ? window.state.experience : [window.state.experience]).forEach(exp => {
+      if (exp && exp.bullets && Array.isArray(exp.bullets)) {
+        exp.bullets.forEach(b => {
+          if (b && b.trim().length > 15) bullets.push(b.trim());
+        });
+      }
+    });
+  }
+
+  const metricRegex = /\b\d+%(?:\s+growth|\s+increase|\s+reduction|\s+boost)?\b|\b\d+\+?\s*(?:k|m|million|lakh|crore|users|requests|req\/s|rps|ms|seconds|minutes|hours|days|engineers|clients|customers|downloads)\b|[\$₹€£]\s*\d+|\b(?:reduced|increased|improved|scaled|accelerated|slashed|saved|boosted)\s+by\s+\d+/i;
+
+  let metricCount = 0;
+  const weakBullets = [];
+
+  bullets.forEach(b => {
+    if (metricRegex.test(b)) {
+      metricCount++;
+    } else {
+      weakBullets.push(b);
+    }
+  });
+
+  const total = Math.max(bullets.length, 1);
+  const metricScore = Math.round((metricCount / total) * 100);
+
+  return {
+    total: bullets.length,
+    metricCount,
+    weakCount: weakBullets.length,
+    metricScore,
+    weakBullets: weakBullets.slice(0, 3)
+  };
+}
+
+function renderBulletMetricsReview(analysis) {
+  const container = document.getElementById('ats-bullet-metrics-review');
+  if (!container) return;
+
+  if (analysis.total === 0) {
+    container.innerHTML = `
+      <div class="ats-metric-card ats-metric-card-neutral">
+        <div class="ats-metric-header">
+          <span class="ats-metric-badge">Google XYZ Metric Health</span>
+          <strong style="font-size: 12.5px;">No experience bullets detected</strong>
+        </div>
+        <p style="font-size: 12px; color: #64748B; margin: 6px 0 10px;">Add bullet points with measurable metrics (e.g. <em>"Reduced latency by 40%"</em>) to pass recruiter screening.</p>
+        <button type="button" class="ats-btn-open-bullet-bank" onclick="closeATSMatcher(); window.openBulletBank && window.openBulletBank('experience');">
+          ⚡ Browse Metric Bullet Bank
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  const isHealthy = analysis.weakCount === 0 || analysis.metricScore >= 70;
+  const statusClass = isHealthy ? 'ats-metric-card-good' : 'ats-metric-card-warning';
+
+  container.innerHTML = `
+    <div class="ats-metric-card ${statusClass}">
+      <div class="ats-metric-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="ats-metric-score-pill">${analysis.metricScore}% Quantified</span>
+          <strong style="font-size: 13px;">Google XYZ Metric Health (${analysis.metricCount}/${analysis.total} Bullets)</strong>
+        </div>
+        <span style="font-size: 11px; font-weight: 700; color: ${isHealthy ? '#16A34A' : '#D97706'};">
+          ${isHealthy ? '✓ Recruiter-Grade' : '⚠️ Gaps Detected'}
+        </span>
+      </div>
+
+      ${analysis.weakCount > 0 ? `
+        <div class="ats-metric-warning-box">
+          <p style="margin: 0 0 6px 0; font-weight: 700; font-size: 12.5px; color: #B45309;">
+            <i class="fas fa-triangle-exclamation"></i> ${analysis.weakCount} of your bullets lack measurable numbers or scale metrics!
+          </p>
+          <p style="margin: 0 0 8px 0; font-size: 11.5px; color: #78350F; line-height: 1.4;">
+            Bullets with quantifiable metrics (%, ₹, users, latency) achieve a <strong>3.8x higher interview callback rate</strong>.
+          </p>
+          ${analysis.weakBullets.length > 0 ? `
+            <div style="background: rgba(255, 255, 255, 0.85); border: 1px dashed rgba(217, 119, 6, 0.4); border-radius: 6px; padding: 6px 10px; margin-bottom: 8px; font-size: 11.5px; color: #92400E; font-style: italic;">
+              Weak example: "${analysis.weakBullets[0].slice(0, 85)}..."
+            </div>
+          ` : ''}
+          <button type="button" class="ats-btn-open-bullet-bank" onclick="closeATSMatcher(); window.openBulletBank && window.openBulletBank('experience');">
+            ⚡ Fix Weak Bullets with Metric Bank (Free)
+          </button>
+        </div>
+      ` : `
+        <p style="margin: 6px 0 0 0; font-size: 12px; color: #15803D;">
+          🎉 Outstanding! Your bullet points demonstrate quantifiable achievements using numbers, percentages, and scale metrics.
+        </p>
+      `}
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SAMPLE TECH JDS FOR INSTANT 1-CLICK TESTING
+// ═══════════════════════════════════════════════════════════════
+
+const SAMPLE_JDS = {
+  swiggy: `We are looking for a Software Development Engineer (SDE-1) to join our Consumer Tech team at Swiggy in Bangalore.
+
+Role Responsibilities:
+- Build high-scale, responsive web applications using React, TypeScript, and modern JavaScript.
+- Collaborate with backend engineers to design RESTful APIs and integrate Redis caching layers.
+- Optimize web application performance, core web vitals, and asset bundles.
+- Work with Docker containers, CI/CD pipelines, and AWS cloud infrastructure.
+
+Required Skills:
+- 1-3 years experience in JavaScript, TypeScript, React, Node.js, and Redis.
+- Solid understanding of REST APIs, Docker, microservices, and PostgreSQL/MySQL.
+- Hands-on experience with unit testing (Jest/Cypress) and Git version control.`,
+  
+  tcs: `Tata Consultancy Services (TCS) is hiring Graduate Engineer Trainees via TCS NQT across pan-India offices.
+
+Job Requirements:
+- BE/B.Tech/MCA freshers with strong foundation in Object-Oriented Programming (OOPs) and Data Structures.
+- Hands-on coding proficiency in Java, Python, and SQL database querying.
+- Fundamental knowledge of HTML5, CSS3, JavaScript, REST APIs, and Git.
+- Demonstrated problem-solving capabilities and excellent written and verbal communication.`
+};
+
+function trySampleJD(type) {
+  const jd = SAMPLE_JDS[type] || SAMPLE_JDS.swiggy;
+  const input = document.getElementById('ats-jd-input');
+  if (input) {
+    input.value = jd;
+  }
+  setSessionJD(jd);
+
+  const banner = document.getElementById('ats-cover-letter-redirect-banner');
+  const isCoverLetterMode = banner && banner.style.display !== 'none';
+  if (isCoverLetterMode) {
+    if (typeof window.showToast === 'function') {
+      window.showToast(`🎯 Loaded ${type === 'swiggy' ? 'Swiggy SDE-1' : 'TCS NQT'} Job Description! Click generate below.`, 'success');
+    }
+  } else {
+    runATSScan();
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════
 // MODAL CONTROL FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
@@ -142,28 +384,142 @@ function trackATSEvent(eventName, params = {}) {
   }
 }
 
-function openATSMatcher() {
+function updateATSActiveResumeName() {
+  const label = document.getElementById('ats-active-resume-name');
+  if (!label) return;
+  const nameInput = document.getElementById('input-name');
+  if (nameInput && nameInput.value.trim()) {
+    label.textContent = `${nameInput.value.trim()}'s Resume`;
+  } else if (window.state && window.state.fullName) {
+    label.textContent = `${window.state.fullName}'s Resume`;
+  } else {
+    label.textContent = 'Current Editor Resume';
+  }
+}
+
+function triggerResumeImport(type = 'pdf') {
+  if (type === 'json') {
+    const jsonInput = document.getElementById('input-import-file');
+    if (jsonInput) jsonInput.click();
+    return;
+  }
+  const pdfInput = document.getElementById('input-magic-pdf');
+  if (pdfInput) {
+    pdfInput.click();
+  } else {
+    window.showToast && window.showToast('Please upload your resume in the editor.', 'info');
+  }
+}
+
+function openATSMatcher(options = null) {
   const modal = document.getElementById('ats-matcher-modal');
   if (!modal) return;
   
+  let presetJD = null;
+  let isCoverLetterRedirect = false;
+
+  if (typeof options === 'string') {
+    presetJD = options;
+  } else if (options && typeof options === 'object') {
+    presetJD = options.presetJD || null;
+    isCoverLetterRedirect = options.purpose === 'cover_letter';
+  }
+
   // Reset to Step 1
-  document.getElementById('ats-matcher-step-input').style.display = 'block';
-  document.getElementById('ats-matcher-step-results').style.display = 'none';
-  document.getElementById('ats-matcher-step-premium').style.display = 'none';
-  document.getElementById('ats-jd-input').value = '';
+  const stepInput = document.getElementById('ats-matcher-step-input');
+  const stepResults = document.getElementById('ats-matcher-step-results');
+  const stepPremium = document.getElementById('ats-matcher-step-premium');
+  if (stepInput) stepInput.style.display = 'block';
+  if (stepResults) stepResults.style.display = 'none';
+  if (stepPremium) stepPremium.style.display = 'none';
+
+  const banner = document.getElementById('ats-cover-letter-redirect-banner');
+  const clBtn = document.getElementById('btn-ats-generate-cover-letter');
+  const scanBtn = document.getElementById('btn-run-ats-scan');
+
+  if (isCoverLetterRedirect) {
+    if (banner) banner.style.display = 'block';
+    if (clBtn) clBtn.style.display = 'flex';
+  } else {
+    if (banner) banner.style.display = 'none';
+    if (clBtn) clBtn.style.display = 'none';
+  }
+  if (scanBtn) scanBtn.style.display = 'flex';
+
+  const jdInput = document.getElementById('ats-jd-input');
+  if (jdInput) {
+    if (presetJD && typeof presetJD === 'string') {
+      jdInput.value = presetJD;
+      setSessionJD(presetJD);
+    } else {
+      const sessJD = getSessionJD();
+      if (sessJD) {
+        jdInput.value = sessJD;
+      }
+    }
+  }
+
+  updateATSActiveResumeName();
   
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
   
+  if (jdInput) {
+    setTimeout(() => jdInput.focus(), 150);
+  }
+
   // Track event
-  trackATSEvent('ats_matcher_opened', { event_category: 'monetization' });
+  trackATSEvent(isCoverLetterRedirect ? 'cover_letter_jd_prompt_opened' : 'ats_matcher_opened', { 
+    event_category: isCoverLetterRedirect ? 'outreach' : 'monetization' 
+  });
 }
 
 function closeATSMatcher() {
   const modal = document.getElementById('ats-matcher-modal');
   if (modal) modal.style.display = 'none';
   document.body.style.overflow = '';
+
+  const banner = document.getElementById('ats-cover-letter-redirect-banner');
+  if (banner) banner.style.display = 'none';
+  const clBtn = document.getElementById('btn-ats-generate-cover-letter');
+  if (clBtn) clBtn.style.display = 'none';
 }
+
+function confirmJDForCoverLetter() {
+  const atsJd = document.getElementById('ats-jd-input');
+  const jdText = atsJd ? atsJd.value.trim() : '';
+
+  if (!jdText || jdText.length < 15) {
+    if (typeof window.showToast === 'function') {
+      window.showToast('⚠️ Please paste a Job Description first (at least 15 characters).', 'warning');
+    }
+    if (atsJd) atsJd.focus();
+    return;
+  }
+
+  setSessionJD(jdText);
+  closeATSMatcher();
+  openCoverLetterModal();
+
+  if (typeof window.showToast === 'function') {
+    window.showToast('🎯 Target Job Description saved for this session! Generated tailored Cover Letter & InMail.', 'success');
+  }
+}
+
+// Auto-update when a resume is imported via Magic PDF or JSON
+document.addEventListener('resume_imported', () => {
+  updateATSActiveResumeName();
+  const modal = document.getElementById('ats-matcher-modal');
+  const jdInput = document.getElementById('ats-jd-input');
+  if (modal && modal.style.display === 'flex' && jdInput && jdInput.value.trim().length >= 20) {
+    setTimeout(() => {
+      runATSScan();
+      if (typeof window.showToast === 'function') {
+        window.showToast('🎯 Analyzed match score for your imported resume!', 'success');
+      }
+    }, 400);
+  }
+});
 
 
 // ═══════════════════════════════════════════════════════════════
@@ -209,7 +565,11 @@ function runATSScan() {
   ringEl.style.background = `conic-gradient(${ringColor} ${score * 3.6}deg, #e0e0e0 ${score * 3.6}deg)`;
   scoreEl.textContent = score + '%';
   labelEl.textContent = labelText;
-  
+
+  // Analyze experience bullet metrics (Google XYZ formula check)
+  const metricAnalysis = analyzeBulletMetrics();
+  renderBulletMetricsReview(metricAnalysis);
+
   // Check user tier & quotas
   const subManager = window.SubscriptionManager;
   const userTier = subManager ? subManager.getUserTier() : 'free';
@@ -328,8 +688,9 @@ function runATSScan() {
     }
   }
   
-  // Store scan results for premium unlock
+  // Store scan results & save target JD for subsequent tailoring
   window._atsScanResults = { jdText, jdKeywords, resumeKeywords, matched, missing, score };
+  setSessionJD(jdText);
   
   // Track event
   trackATSEvent('ats_scan_completed', {
@@ -337,6 +698,260 @@ function runATSScan() {
     event_label: `score_${score}`,
     value: score
   });
+}
+
+function resetATSScan() {
+  const stepInput = document.getElementById('ats-matcher-step-input');
+  const stepResults = document.getElementById('ats-matcher-step-results');
+  const stepPremium = document.getElementById('ats-matcher-step-premium');
+  if (stepInput) stepInput.style.display = 'block';
+  if (stepResults) stepResults.style.display = 'none';
+  if (stepPremium) stepPremium.style.display = 'none';
+  const jdInput = document.getElementById('ats-jd-input');
+  if (jdInput) jdInput.focus();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STANDALONE COVER LETTER & RECRUITER INMAIL MODAL HANDLERS
+// ═══════════════════════════════════════════════════════════════
+
+function openCoverLetterModal() {
+  const currentJD = getSessionJD();
+  
+  // If no JD has been given in this session yet (or too short to be a valid JD)
+  if (!currentJD || currentJD.length < 15) {
+    if (typeof window.showToast === 'function') {
+      window.showToast('🎯 Please paste your target Job Description first to tailor your Cover Letter & InMail!', 'info');
+    }
+    openATSMatcher({ purpose: 'cover_letter' });
+    return;
+  }
+
+  const modal = document.getElementById('modal-cover-letter');
+  if (!modal) return;
+  
+  const jdInput = document.getElementById('cover-letter-jd-input');
+  if (jdInput) {
+    jdInput.value = currentJD;
+  }
+
+  generateCoverLetterMaterials();
+  switchCoverLetterTab('cover');
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  trackATSEvent('cover_letter_modal_opened', { event_category: 'outreach' });
+}
+
+function closeCoverLetterModal() {
+  const modal = document.getElementById('modal-cover-letter');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function loadCoverLetterSample(sampleType) {
+  const jdInput = document.getElementById('cover-letter-jd-input');
+  if (jdInput && SAMPLE_JDS[sampleType]) {
+    const jd = SAMPLE_JDS[sampleType];
+    jdInput.value = jd;
+    setSessionJD(jd);
+    generateCoverLetterMaterials();
+    if (typeof window.showToast === 'function') {
+      window.showToast(`🎯 Loaded ${sampleType === 'swiggy' ? 'Swiggy SDE-1' : 'TCS NQT'} Job Description!`, 'success');
+    }
+  }
+}
+
+function generateCoverLetterMaterials() {
+  const jdInput = document.getElementById('cover-letter-jd-input');
+  const jdText = (jdInput && jdInput.value) || getSessionJD() || '';
+  if (!window.CoverLetterEngine) return;
+
+  const clData = window.CoverLetterEngine.generateCoverLetter(jdText);
+  const inmailData = window.CoverLetterEngine.generateRecruiterInMail(jdText);
+
+  // Standalone modal fields
+  const clTextarea = document.getElementById('standalone-cover-letter-text') || document.getElementById('ats-cover-letter-text');
+  if (clTextarea) {
+    clTextarea.value = clData.fullText;
+  }
+
+  const inmailSubject = document.getElementById('standalone-inmail-subject') || document.getElementById('ats-inmail-subject');
+  if (inmailSubject) {
+    inmailSubject.value = inmailData.subject;
+  }
+
+  const inmailBody = document.getElementById('standalone-inmail-body') || document.getElementById('ats-inmail-body');
+  if (inmailBody) {
+    inmailBody.value = inmailData.body;
+  }
+
+  // Update target JD state
+  if (jdText) {
+    setSessionJD(jdText);
+  }
+}
+
+function switchCoverLetterTab(tab) {
+  const tabCover = document.getElementById('tab-btn-cover-letter');
+  const tabInmail = document.getElementById('tab-btn-inmail');
+  const paneCover = document.getElementById('pane-cover-letter');
+  const paneInmail = document.getElementById('pane-inmail');
+
+  if (tab === 'inmail') {
+    if (tabCover) {
+      tabCover.style.background = 'rgba(2, 132, 199, 0.05)';
+      tabCover.style.color = '#0284C7';
+      tabCover.style.border = '1px solid rgba(2, 132, 199, 0.25)';
+    }
+    if (tabInmail) {
+      tabInmail.style.background = '#0284C7';
+      tabInmail.style.color = '#FFFFFF';
+      tabInmail.style.border = 'none';
+    }
+    if (paneCover) paneCover.style.display = 'none';
+    if (paneInmail) paneInmail.style.display = 'block';
+  } else {
+    if (tabCover) {
+      tabCover.style.background = '#0284C7';
+      tabCover.style.color = '#FFFFFF';
+      tabCover.style.border = 'none';
+    }
+    if (tabInmail) {
+      tabInmail.style.background = 'rgba(2, 132, 199, 0.05)';
+      tabInmail.style.color = '#0284C7';
+      tabInmail.style.border = '1px solid rgba(2, 132, 199, 0.25)';
+    }
+    if (paneCover) paneCover.style.display = 'block';
+    if (paneInmail) paneInmail.style.display = 'none';
+  }
+}
+
+function copyCoverLetterText() {
+  const ta = document.getElementById('standalone-cover-letter-text') || document.getElementById('ats-cover-letter-text');
+  if (!ta || !ta.value) return;
+  navigator.clipboard.writeText(ta.value).then(() => {
+    if (typeof window.showToast === 'function') {
+      window.showToast('📋 Copied Tailored Cover Letter to clipboard!', 'success');
+    }
+  });
+}
+
+function copyInMailText() {
+  const subj = document.getElementById('standalone-inmail-subject') || document.getElementById('ats-inmail-subject');
+  const body = document.getElementById('standalone-inmail-body') || document.getElementById('ats-inmail-body');
+  const full = (subj ? 'Subject: ' + subj.value + '\n\n' : '') + (body ? body.value : '');
+  navigator.clipboard.writeText(full).then(() => {
+    if (typeof window.showToast === 'function') {
+      window.showToast('📋 Copied Recruiter InMail script to clipboard!', 'success');
+    }
+  });
+}
+
+function downloadCoverLetterPDF() {
+  const ta = document.getElementById('standalone-cover-letter-text') || document.getElementById('ats-cover-letter-text');
+  if (!ta || !ta.value) return;
+
+  const candidate = (window.CoverLetterEngine && window.CoverLetterEngine.getCandidateData()) || { name: 'Applicant' };
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    if (typeof window.showToast === 'function') window.showToast('Please allow popups to download Cover Letter PDF');
+    return;
+  }
+
+  const paragraphs = ta.value.split('\n\n').map(p => `<p style="margin: 0 0 16px 0; line-height: 1.6; font-size: 14px; color: #1E293B;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Cover Letter - ${candidate.name}</title>
+      <style>
+        @page { size: letter; margin: 24mm 20mm; }
+        body { font-family: 'Inter', -apple-system, sans-serif; color: #0F172A; max-width: 750px; margin: 0 auto; padding: 30px; }
+        .header { border-bottom: 2px solid #0284C7; padding-bottom: 16px; margin-bottom: 24px; }
+        .name { font-size: 24px; font-weight: 800; color: #0284C7; margin: 0 0 4px 0; }
+        .contact { font-size: 12px; color: #64748B; margin: 0; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1 class="name">${candidate.name}</h1>
+        <p class="contact">${[candidate.title, candidate.email, candidate.phone, candidate.linkedin].filter(Boolean).join(' • ')}</p>
+      </div>
+      <div class="content">${paragraphs}</div>
+      <script>
+        window.onload = function() {
+          window.print();
+        };
+      </script>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+function switchATSTab(tabName) {
+  // Backwards compatibility shim: if anything calls switchATSTab, open the right modal
+  if (tabName === 'coverletter') {
+    closeATSMatcher();
+    openCoverLetterModal();
+  }
+}
+
+function handleHeroJDScan(sampleType) {
+  let jd = '';
+  if (sampleType && SAMPLE_JDS[sampleType]) {
+    jd = SAMPLE_JDS[sampleType];
+  } else {
+    const heroInput = document.getElementById('hero-ats-jd-input');
+    jd = heroInput ? heroInput.value.trim() : '';
+  }
+
+  if (jd) {
+    setSessionJD(jd);
+  }
+
+  // Check if we need to load a starter template if form is empty
+  const saved = localStorage.getItem('zenresume_state');
+  if (!saved && typeof RESUME_PROFILES !== 'undefined' && RESUME_PROFILES.software_fresher) {
+    if (typeof loadProfileIntoForm === 'function') {
+      loadProfileIntoForm(RESUME_PROFILES.software_fresher);
+    }
+  }
+
+  // REDIRECT DIRECTLY TO BUILDER WORKSPACE (EDITOR PAGE - NOT TEMPLATE SELECTION!)
+  if (typeof window.enterBuilderDirectly === 'function') {
+    window.enterBuilderDirectly();
+  } else {
+    document.body.classList.add('in-editor');
+    const landingScreen = document.getElementById('landing-screen');
+    const appContainer = document.getElementById('app-container');
+    const selectionScreen = document.getElementById('selection-screen');
+    const builderWorkspace = document.getElementById('builder-workspace');
+    const welcomeHeader = document.getElementById('app-header-welcome');
+    if (landingScreen) landingScreen.style.display = 'none';
+    if (appContainer) appContainer.style.display = 'flex';
+    if (selectionScreen) selectionScreen.style.display = 'none';
+    if (welcomeHeader) welcomeHeader.style.display = 'none';
+    if (builderWorkspace) builderWorkspace.style.display = 'grid';
+    if (typeof syncFormToPreview === 'function') syncFormToPreview();
+  }
+
+  // In the editor, open the ATS Matcher modal
+  setTimeout(() => {
+    openATSMatcher(jd || null);
+    if (jd && jd.length >= 20) {
+      runATSScan();
+    } else {
+      const modalInput = document.getElementById('ats-jd-input');
+      if (modalInput) {
+        modalInput.value = '';
+        modalInput.focus();
+      }
+    }
+  }, 350);
 }
 
 
@@ -596,6 +1211,10 @@ document.addEventListener('resume_downloaded', () => {
 });
 
 // Expose globally
+window.SAMPLE_JDS = SAMPLE_JDS;
+window.ATS_SKILL_DICTIONARY = ATS_SKILL_DICTIONARY;
+window.extractJDKeywords = extractJDKeywords;
+window.extractResumeKeywords = extractResumeKeywords;
 window.openATSMatcher = openATSMatcher;
 window.closeATSMatcher = closeATSMatcher;
 window.runATSScan = runATSScan;
@@ -604,3 +1223,52 @@ window.initiatePayment = initiatePayment;
 window.showFeaturePreview = showFeaturePreview;
 window.closeFeaturePreview = closeFeaturePreview;
 window.scrollToPlanSelection = scrollToPlanSelection;
+window.trySampleJD = trySampleJD;
+window.switchATSTab = switchATSTab;
+window.copyCoverLetterText = copyCoverLetterText;
+window.copyInMailText = copyInMailText;
+window.downloadCoverLetterPDF = downloadCoverLetterPDF;
+window.openCoverLetterModal = openCoverLetterModal;
+window.handleHeroJDScan = handleHeroJDScan;
+window.analyzeBulletMetrics = analyzeBulletMetrics;
+window.triggerResumeImport = triggerResumeImport;
+window.updateATSActiveResumeName = updateATSActiveResumeName;
+window.resetATSScan = resetATSScan;
+window.closeCoverLetterModal = closeCoverLetterModal;
+window.loadCoverLetterSample = loadCoverLetterSample;
+window.generateCoverLetterMaterials = generateCoverLetterMaterials;
+window.switchCoverLetterTab = switchCoverLetterTab;
+window.getSessionJD = getSessionJD;
+window.setSessionJD = setSessionJD;
+window.confirmJDForCoverLetter = confirmJDForCoverLetter;
+
+// Live Two-Way Sync for Session JD Across all Inputs
+function initJDSessionSync() {
+  const atsJd = document.getElementById('ats-jd-input');
+  if (atsJd) {
+    atsJd.addEventListener('input', () => setSessionJD(atsJd.value));
+  }
+  const clJd = document.getElementById('cover-letter-jd-input');
+  if (clJd) {
+    clJd.addEventListener('input', () => setSessionJD(clJd.value));
+  }
+  const heroJd = document.getElementById('hero-ats-jd-input');
+  if (heroJd) {
+    heroJd.addEventListener('input', () => setSessionJD(heroJd.value));
+  }
+  const aiJd = document.getElementById('input-job-description');
+  if (aiJd) {
+    aiJd.addEventListener('input', () => setSessionJD(aiJd.value));
+  }
+
+  const initialJD = getSessionJD();
+  if (initialJD) {
+    setSessionJD(initialJD);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initJDSessionSync);
+} else {
+  initJDSessionSync();
+}
