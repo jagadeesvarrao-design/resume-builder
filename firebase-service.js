@@ -538,6 +538,9 @@ function handleAuthStateChange(user) {
     if (immediatePremium) {
       if (window.state) window.state.isPremium = true;
       updatePremiumUI(true);
+      // Auto-sync local subscription & stored resume profiles to Firestore immediately
+      syncLocalSubscriptionToFirestore(user.uid);
+      syncAllUserDataToFirestore();
     }
 
     // Cancel old subscription observer before setting new one
@@ -560,11 +563,9 @@ function handleAuthStateChange(user) {
           const sub = docData.subscription;
           const status = (sub.status || '').toLowerCase();
           const plan = (sub.plan || sub.tier || 'sprint').toLowerCase();
-          let expDate = null;
-          if (sub.expiresAt) {
-            expDate = sub.expiresAt.toDate ? sub.expiresAt.toDate() : new Date(sub.expiresAt);
-          }
-          if ((status === 'active' || status === 'completed' || status === 'paid') && expDate && expDate.getTime() > Date.now()) {
+          const expDate = parseExpiryDate(sub.expiresAt);
+
+          if ((status === 'active' || status === 'completed' || status === 'paid' || plan !== 'free') && expDate && expDate.getTime() > Date.now()) {
             const expMs = expDate.getTime();
             if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
               await window.ZenResumeDB.saveSubscription(plan, expMs, {
@@ -580,8 +581,9 @@ function handleAuthStateChange(user) {
         }
 
         // Bi-directional healing: If local has active subscription but Firestore doc has no subscription, sync to Firestore
-        if (isPremium && (!docData?.subscription || docData.subscription.status !== 'active') && checkLocalHasSubscription()) {
+        if (checkLocalHasSubscription()) {
           syncLocalSubscriptionToFirestore(user.uid);
+          syncAllUserDataToFirestore();
         }
       }, err => {
         console.warn('[ZenSuite] Subscription listener error:', err);
@@ -974,22 +976,28 @@ async function loadUserDataFromFirestore(user) {
     let doc = await db.collection('users').doc(user.uid).get();
     let docData = doc.exists ? doc.data() : null;
 
-    // Email fallback search: if document has no active subscription, search for any document matching user email
-    if ((!docData || !docData.subscription || docData.subscription.status !== 'active') && userEmail) {
+    // Email fallback search: if document has no active subscription or stored profiles, search for any document matching user email
+    const docExpDate = parseExpiryDate(docData?.subscription?.expiresAt);
+    const hasValidSubInDoc = docData && (docData.isPremium || (docData.subscription && (docData.subscription.status === 'active' || docData.subscription.status === 'completed' || docData.subscription.status === 'paid') && docExpDate && docExpDate.getTime() > Date.now()));
+    const hasProfilesInDoc = docData && docData.profilesRegistry && docData.profilesRegistry.profiles && docData.profilesRegistry.profiles.length > 0;
+
+    if ((!hasValidSubInDoc || !hasProfilesInDoc) && userEmail) {
       try {
         const querySnapshot = await db.collection('users').where('email', '==', userEmail).get();
         if (!querySnapshot.empty) {
           for (const matchDoc of querySnapshot.docs) {
             const mData = matchDoc.data();
-            if (mData && mData.subscription && mData.subscription.status === 'active') {
-              const exp = mData.subscription.expiresAt;
-              const expDate = exp ? (exp.toDate ? exp.toDate() : new Date(exp)) : null;
-              if (expDate && expDate.getTime() > Date.now()) {
-                console.log('[ZenCloud] Recovered active subscription via email lookup:', userEmail);
-                docData = Object.assign({}, docData || {}, mData);
-                await db.collection('users').doc(user.uid).set(docData, { merge: true });
-                break;
-              }
+            if (!mData) continue;
+
+            const mExpDate = parseExpiryDate(mData.subscription?.expiresAt);
+            const mHasActiveSub = (mData.isPremium || mData.subscription?.status === 'active' || mData.subscription?.status === 'completed' || mData.subscription?.status === 'paid') && (!mExpDate || mExpDate.getTime() > Date.now());
+            const mHasProfiles = mData.profilesRegistry && Array.isArray(mData.profilesRegistry.profiles) && mData.profilesRegistry.profiles.length > 0;
+
+            if (mHasActiveSub || mHasProfiles) {
+              console.log('[ZenCloud] Recovered subscription/profiles via email lookup:', userEmail);
+              docData = Object.assign({}, docData || {}, mData);
+              await db.collection('users').doc(user.uid).set(docData, { merge: true });
+              break;
             }
           }
         }
@@ -998,37 +1006,40 @@ async function loadUserDataFromFirestore(user) {
       }
     }
 
-    if (!docData) return;
+    if (!docData) {
+      // Local has subscription, auto-sync to Firestore
+      if (checkLocalHasSubscription()) {
+        syncLocalSubscriptionToFirestore(user.uid);
+      }
+      syncAllUserDataToFirestore();
+      return;
+    }
 
     // 1. Hydrate Active Subscription into IndexedDB & SubscriptionManager
     const sub = docData.subscription;
-    if (sub) {
-      const status = (sub.status || '').toLowerCase();
-      const plan = (sub.plan || sub.tier || 'sprint').toLowerCase();
-      let expDate = null;
-      if (sub.expiresAt) {
-        expDate = sub.expiresAt.toDate ? sub.expiresAt.toDate() : new Date(sub.expiresAt);
-      }
-      const isTimeValid = expDate && expDate.getTime() > Date.now();
+    const expDate = parseExpiryDate(sub?.expiresAt || docData.expiresAt);
+    const isTimeValid = !expDate || expDate.getTime() > Date.now();
 
-      if ((status === 'active' || status === 'completed' || status === 'paid') && isTimeValid) {
-        const expMs = expDate.getTime();
-        if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
-          await window.ZenResumeDB.saveSubscription(plan, expMs, {
-            orderId: sub.orderId || '',
-            transactionRef: sub.transactionRef || sub.transactionId || ''
-          });
-        }
-        if (window.SubscriptionManager && typeof window.SubscriptionManager.setUserTierWithExpiry === 'function') {
-          window.SubscriptionManager.setUserTierWithExpiry(plan, expMs);
-        } else if (window.SubscriptionManager) {
-          const daysLeft = Math.ceil((expMs - Date.now()) / (24 * 60 * 60 * 1000));
-          window.SubscriptionManager.setUserTier(plan, daysLeft);
-        }
-        if (window.state) window.state.isPremium = true;
-        updatePremiumUI(true);
-        renderSubscriptionDetails(sub);
+    if ((docData.isPremium || sub?.status === 'active' || sub?.status === 'completed' || sub?.status === 'paid') && isTimeValid) {
+      const plan = (sub?.plan || sub?.tier || docData.tier || docData.plan || 'sprint').toLowerCase();
+      const expMs = expDate ? expDate.getTime() : (Date.now() + 7 * 24 * 60 * 60 * 1000);
+      if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
+        await window.ZenResumeDB.saveSubscription(plan, expMs, {
+          orderId: sub?.orderId || '',
+          transactionRef: sub?.transactionRef || sub?.transactionId || ''
+        });
       }
+      if (window.SubscriptionManager && typeof window.SubscriptionManager.setUserTierWithExpiry === 'function') {
+        window.SubscriptionManager.setUserTierWithExpiry(plan, expMs);
+      } else if (window.SubscriptionManager) {
+        const daysLeft = Math.ceil((expMs - Date.now()) / (24 * 60 * 60 * 1000));
+        window.SubscriptionManager.setUserTier(plan, daysLeft);
+      }
+      if (window.state) window.state.isPremium = true;
+      updatePremiumUI(true);
+      renderSubscriptionDetails(sub || { plan, status: 'active', expiresAt: expDate });
+    } else if (checkLocalHasSubscription()) {
+      syncLocalSubscriptionToFirestore(user.uid);
     }
 
     // 2. Hydrate Stored Resumes from Master Vault into IndexedDB
@@ -1089,6 +1100,35 @@ window.loadResumeFromFirestore = function() {
   if (currentUser) loadUserDataFromFirestore(currentUser);
 };
 
+// Universal date parser for Firestore timestamps, objects, numbers, and strings
+function parseExpiryDate(rawExpiry) {
+  if (!rawExpiry) return null;
+  try {
+    if (typeof rawExpiry.toDate === 'function') {
+      const d = rawExpiry.toDate();
+      if (d instanceof Date && !isNaN(d.getTime())) return d;
+    }
+    if (typeof rawExpiry.seconds === 'number') {
+      const d = new Date(rawExpiry.seconds * 1000);
+      if (d instanceof Date && !isNaN(d.getTime())) return d;
+    }
+    if (typeof rawExpiry === 'number' && rawExpiry > 0) {
+      const d = new Date(rawExpiry);
+      if (d instanceof Date && !isNaN(d.getTime())) return d;
+    }
+    if (typeof rawExpiry === 'string') {
+      const parsed = new Date(rawExpiry);
+      if (!isNaN(parsed.getTime())) return parsed;
+      const num = parseInt(rawExpiry, 10);
+      if (!isNaN(num) && num > 0) return new Date(num);
+    }
+    if (rawExpiry instanceof Date && !isNaN(rawExpiry.getTime())) {
+      return rawExpiry;
+    }
+  } catch (e) {}
+  return null;
+}
+
 // Check local storage and SubscriptionManager for active subscription
 function checkLocalHasSubscription() {
   try {
@@ -1132,20 +1172,8 @@ function checkUserHasActiveSubscription(firestoreData) {
     if (sub) {
       const status = (sub.status || '').toLowerCase();
       const plan = (sub.plan || sub.tier || '').toLowerCase();
-      const rawExpiry = sub.expiresAt;
-
-      let expDate = null;
-      if (rawExpiry) {
-        if (typeof rawExpiry.toDate === 'function') {
-          expDate = rawExpiry.toDate();
-        } else if (typeof rawExpiry === 'number') {
-          expDate = new Date(rawExpiry);
-        } else {
-          expDate = new Date(rawExpiry);
-        }
-      }
-
-      const isTimeValid = !expDate || (expDate instanceof Date && !isNaN(expDate.getTime()) && expDate.getTime() > Date.now());
+      const expDate = parseExpiryDate(sub.expiresAt);
+      const isTimeValid = !expDate || expDate.getTime() > Date.now();
 
       if ((status === 'active' || status === 'completed' || status === 'paid' || plan === 'day' || plan === 'sprint' || plan === 'suite' || plan === 'pro') && isTimeValid) {
         return true;
