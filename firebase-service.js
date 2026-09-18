@@ -552,7 +552,16 @@ function handleAuthStateChange(user) {
     // Real-time Firestore subscription & cloud data listener
     if (db) {
       unsubscribeSubscription = db.collection('users').doc(user.uid).onSnapshot(async doc => {
-        const docData = doc.exists ? doc.data() : null;
+        let docData = doc.exists ? doc.data() : null;
+        const canonicalKey = (typeof getCanonicalEmailKey === 'function') ? getCanonicalEmailKey(user.email) : null;
+        if ((!docData || !checkUserHasActiveSubscription(docData)) && canonicalKey) {
+          try {
+            const cSnap = await db.collection('users').doc(canonicalKey).get();
+            if (cSnap.exists) {
+              docData = Object.assign({}, cSnap.data(), docData || {});
+            }
+          } catch (e) {}
+        }
         const isPremium = checkUserHasActiveSubscription(docData);
 
         if (window.state) window.state.isPremium = isPremium;
@@ -885,6 +894,14 @@ if (document.readyState === 'loading') {
   initEmailAuth();
 }
 
+  // Canonical Email Document Key Utility: Maps any email to a clean, unique Firestore doc key (e.g., account_jagadeesvarrao_gmail_com)
+  function getCanonicalEmailKey(email) {
+    if (!email || typeof email !== 'string') return null;
+    const clean = email.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
+    return clean ? `account_${clean}` : null;
+  }
+  window.getCanonicalEmailKey = getCanonicalEmailKey;
+
 // Firestore functions - strictly persisting subscription details and stored resumes (no tracking telemetry)
 async function saveResumeToFirestore(stateObj) {
   if (!currentUser || !db) return; // Only save if logged in
@@ -908,6 +925,12 @@ async function saveResumeToFirestore(stateObj) {
 
     // STRICTLY USE { merge: true } to prevent ever overwriting active subscriptions
     await db.collection('users').doc(currentUser.uid).set(updatePayload, { merge: true });
+
+    // Canonical Email Cloud Vault Sync
+    const canonicalKey = getCanonicalEmailKey(userEmail);
+    if (canonicalKey) {
+      await db.collection('users').doc(canonicalKey).set(updatePayload, { merge: true }).catch(err => console.warn('[ZenCloud] Canonical vault save error:', err));
+    }
     
     // Visual feedback for cloud sync
     const statusEl = document.querySelector('.preview-status');
@@ -961,6 +984,12 @@ async function syncAllUserDataToFirestore() {
     }
 
     await db.collection('users').doc(currentUser.uid).set(payload, { merge: true });
+
+    // Canonical Email Cloud Vault Sync
+    const canonicalKey = getCanonicalEmailKey(payload.email);
+    if (canonicalKey) {
+      await db.collection('users').doc(canonicalKey).set(payload, { merge: true }).catch(err => console.warn('[ZenCloud] Canonical vault sync error:', err));
+    }
     console.log('[ZenCloud] Stored resumes successfully synced to cloud');
   } catch (err) {
     console.warn('[ZenCloud] syncAllUserDataToFirestore error:', err);
@@ -971,48 +1000,101 @@ window.syncAllUserDataToFirestore = syncAllUserDataToFirestore;
 async function loadUserDataFromFirestore(user) {
   if (!user || !db) return;
   const userEmail = (user.email || '').toLowerCase();
+  const canonicalKey = getCanonicalEmailKey(userEmail);
 
   try {
-    let doc = await db.collection('users').doc(user.uid).get();
-    let docData = doc.exists ? doc.data() : null;
+    // 1. Fetch Primary UID document
+    let uidDocRef = db.collection('users').doc(user.uid);
+    let uidSnap = await uidDocRef.get();
+    let uidData = uidSnap.exists ? uidSnap.data() : null;
 
-    // Email fallback search: if document has no active subscription or stored profiles, search for any document matching user email
-    const docExpDate = parseExpiryDate(docData?.subscription?.expiresAt);
-    const hasValidSubInDoc = docData && (docData.isPremium || (docData.subscription && (docData.subscription.status === 'active' || docData.subscription.status === 'completed' || docData.subscription.status === 'paid') && docExpDate && docExpDate.getTime() > Date.now()));
-    const hasProfilesInDoc = docData && docData.profilesRegistry && docData.profilesRegistry.profiles && docData.profilesRegistry.profiles.length > 0;
+    // 2. Fetch Canonical Email document if email is present
+    let canonicalData = null;
+    if (canonicalKey) {
+      try {
+        let canonicalSnap = await db.collection('users').doc(canonicalKey).get();
+        if (canonicalSnap.exists) {
+          canonicalData = canonicalSnap.data();
+        }
+      } catch (cErr) {
+        console.warn('[ZenCloud] Canonical doc read note:', cErr);
+      }
+    }
 
-    if ((!hasValidSubInDoc || !hasProfilesInDoc) && userEmail) {
+    // 3. Fallback Email Query if both UID doc & Canonical doc are missing subscription/profiles
+    let queryData = null;
+    const checkHasSubOrProfiles = (d) => {
+      if (!d) return false;
+      const dExpDate = parseExpiryDate(d.subscription?.expiresAt || d.expiresAt);
+      const hasSub = d.isPremium || (d.subscription && (d.subscription.status === 'active' || d.subscription.status === 'completed' || d.subscription.status === 'paid') && (!dExpDate || dExpDate.getTime() > Date.now()));
+      const hasProfs = d.profilesRegistry && Array.isArray(d.profilesRegistry.profiles) && d.profilesRegistry.profiles.length > 0;
+      return hasSub || hasProfs;
+    };
+
+    if (!checkHasSubOrProfiles(uidData) && !checkHasSubOrProfiles(canonicalData) && userEmail) {
       try {
         const querySnapshot = await db.collection('users').where('email', '==', userEmail).get();
         if (!querySnapshot.empty) {
           for (const matchDoc of querySnapshot.docs) {
             const mData = matchDoc.data();
-            if (!mData) continue;
-
-            const mExpDate = parseExpiryDate(mData.subscription?.expiresAt);
-            const mHasActiveSub = (mData.isPremium || mData.subscription?.status === 'active' || mData.subscription?.status === 'completed' || mData.subscription?.status === 'paid') && (!mExpDate || mExpDate.getTime() > Date.now());
-            const mHasProfiles = mData.profilesRegistry && Array.isArray(mData.profilesRegistry.profiles) && mData.profilesRegistry.profiles.length > 0;
-
-            if (mHasActiveSub || mHasProfiles) {
-              console.log('[ZenCloud] Recovered subscription/profiles via email lookup:', userEmail);
-              docData = Object.assign({}, docData || {}, mData);
-              await db.collection('users').doc(user.uid).set(docData, { merge: true });
+            if (checkHasSubOrProfiles(mData)) {
+              queryData = mData;
+              console.log('[ZenCloud] Recovered subscription/profiles via email query lookup:', userEmail);
               break;
             }
           }
         }
-      } catch (queryErr) {
-        console.warn('[ZenCloud] Email fallback query note:', queryErr);
+      } catch (qErr) {
+        console.warn('[ZenCloud] Email fallback query note:', qErr);
       }
     }
 
-    if (!docData) {
+    // Combine docData with priority: canonicalData / queryData merged into uidData
+    let docData = Object.assign({}, queryData || {}, canonicalData || {}, uidData || {});
+
+    // If canonicalData or queryData has an active subscription but uidData does not, enforce active subscription
+    const canonicalSub = (canonicalData && checkHasSubOrProfiles(canonicalData)) ? canonicalData.subscription : null;
+    const querySub = (queryData && checkHasSubOrProfiles(queryData)) ? queryData.subscription : null;
+    if ((canonicalSub || querySub) && !checkHasSubOrProfiles(uidData)) {
+      docData.subscription = canonicalSub || querySub;
+      docData.isPremium = true;
+    }
+
+    // Merge stored profiles registries if present in secondary sources
+    const registries = [uidData?.profilesRegistry, canonicalData?.profilesRegistry, queryData?.profilesRegistry].filter(r => r && Array.isArray(r.profiles));
+    if (registries.length > 1) {
+      const combinedRegistry = { activeId: uidData?.profilesRegistry?.activeId || canonicalData?.profilesRegistry?.activeId || 'default', profiles: [] };
+      const seenIds = new Set();
+      for (const reg of registries) {
+        for (const p of reg.profiles) {
+          if (p && p.id && !seenIds.has(p.id)) {
+            seenIds.add(p.id);
+            combinedRegistry.profiles.push(p);
+          }
+        }
+      }
+      docData.profilesRegistry = combinedRegistry;
+    }
+
+    // Merge profilesData objects across sources
+    const profilesDataSources = [uidData?.profilesData, canonicalData?.profilesData, queryData?.profilesData].filter(p => p && typeof p === 'object');
+    if (profilesDataSources.length > 0) {
+      docData.profilesData = Object.assign({}, ...profilesDataSources.reverse());
+    }
+
+    if (!docData || (!docData.subscription && !docData.profilesRegistry && !docData.resumeData)) {
       // Local has subscription, auto-sync to Firestore
       if (checkLocalHasSubscription()) {
         syncLocalSubscriptionToFirestore(user.uid);
       }
       syncAllUserDataToFirestore();
       return;
+    }
+
+    // Write back unified docData into both UID doc and Canonical Email doc
+    await db.collection('users').doc(user.uid).set(docData, { merge: true }).catch(err => console.warn('[ZenCloud] UID doc sync error:', err));
+    if (canonicalKey) {
+      await db.collection('users').doc(canonicalKey).set(docData, { merge: true }).catch(err => console.warn('[ZenCloud] Canonical doc sync error:', err));
     }
 
     // 1. Hydrate Active Subscription into IndexedDB & SubscriptionManager
@@ -1199,7 +1281,7 @@ function syncLocalSubscriptionToFirestore(uid) {
     const user = firebase.auth().currentUser;
     const userEmail = (user && user.email) ? user.email.toLowerCase() : '';
 
-    firebase.firestore().collection('users').doc(uid).set({
+    const payload = {
       email: userEmail,
       subscription: {
         status: 'active',
@@ -1209,7 +1291,14 @@ function syncLocalSubscriptionToFirestore(uid) {
         reconciledFromLocal: true
       },
       isPremium: true
-    }, { merge: true }).catch(err => console.warn('[ZenSuite] Firestore auto-sync error:', err));
+    };
+
+    firebase.firestore().collection('users').doc(uid).set(payload, { merge: true }).catch(err => console.warn('[ZenSuite] Firestore auto-sync error:', err));
+
+    const canonicalKey = getCanonicalEmailKey(userEmail);
+    if (canonicalKey) {
+      firebase.firestore().collection('users').doc(canonicalKey).set(payload, { merge: true }).catch(err => console.warn('[ZenSuite] Canonical sub auto-sync error:', err));
+    }
   } catch (e) {
     console.warn('[ZenSuite] Error syncing local subscription to Firestore:', e);
   }

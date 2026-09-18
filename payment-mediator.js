@@ -544,7 +544,7 @@
           const uid = user.uid;
           const userEmail = (user.email || '').toLowerCase();
 
-          firebase.firestore().collection('users').doc(uid).set({
+          const payload = {
             email: userEmail,
             subscription: {
               status: 'active',
@@ -556,7 +556,14 @@
               expiresAt: expiresAtDate
             },
             isPremium: true
-          }, { merge: true }).catch(err => console.warn('[PaymentMediator] Firestore sync error:', err));
+          };
+
+          firebase.firestore().collection('users').doc(uid).set(payload, { merge: true }).catch(err => console.warn('[PaymentMediator] Firestore sync error:', err));
+
+          const canonicalKey = (typeof window.getCanonicalEmailKey === 'function') ? window.getCanonicalEmailKey(userEmail) : null;
+          if (canonicalKey) {
+            firebase.firestore().collection('users').doc(canonicalKey).set(payload, { merge: true }).catch(err => console.warn('[PaymentMediator] Canonical vault sync error:', err));
+          }
         }
       } catch (e) {
         console.warn('[PaymentMediator] Firebase error:', e);

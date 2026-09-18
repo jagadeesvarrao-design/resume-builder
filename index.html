@@ -598,15 +598,20 @@
       background: rgba(0, 0, 0, 0.08);
     }
     [data-theme="light"] .nav-user-profile {
-      background: rgba(0, 0, 0, 0.04);
-      border-color: rgba(0, 0, 0, 0.12);
+      background: #F1F5F9 !important;
+      border: 1.5px solid #CBD5E1 !important;
+      color: #0F172A !important;
     }
     [data-theme="light"] .nav-user-name {
       color: #0F172A !important;
       font-weight: 700 !important;
     }
     [data-theme="light"] .nav-user-profile i {
-      color: #64748B !important;
+      color: #475569 !important;
+    }
+    .nav-user-profile i {
+      color: rgba(255, 255, 255, 0.8);
+      transition: color 0.2s ease;
     }
 
     /* PRO Subscription Badge */
@@ -765,11 +770,17 @@
         font-size: 14px !important;
       }
       .nav-user-profile {
-        padding: 2px 4px !important;
-        gap: 4px !important;
+        padding: 3px 8px 3px 4px !important;
+        gap: 5px !important;
       }
       .nav-user-name {
-        display: none !important;
+        display: inline-block !important;
+        max-width: 65px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 11px;
+        font-weight: 700;
       }
       .btn-user-logout {
         display: none !important;
@@ -1189,7 +1200,7 @@
           </div>
           <span id="nav-user-name" class="nav-user-name">User</span>
           <span id="nav-user-premium-badge" class="nav-user-premium-badge" style="display: none; background: linear-gradient(135deg, #00846D, #2DD4BF); color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;">PRO</span>
-          <i class="fas fa-chevron-down" style="font-size: 9px; color: rgba(255, 255, 255, 0.7); margin-left: 2px; margin-right: 2px;"></i>
+          <i class="fas fa-chevron-down" style="font-size: 9px; margin-left: 2px; margin-right: 2px;"></i>
         </div>
 
         <button type="button" class="btn-header-cta stitch-nav-cta" id="btn-nav-create-resume" onclick="window.handleHeaderCTAClick ? window.handleHeaderCTAClick() : (window.enterApp ? window.enterApp() : (document.getElementById('btn-start-building') && document.getElementById('btn-start-building').click()));" title="Create Resume">
@@ -3867,9 +3878,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
   <script src="templates-data.js?v=3.0" defer></script>
-  <script src="indexeddb-storage.js?v=3.1.1" defer></script>
-  <script src="firebase-service.js?v=3.1.1" defer></script>
-  <script src="app.js?v=3.1.1" defer></script>
+  <script src="indexeddb-storage.js?v=3.1.2" defer></script>
+  <script src="firebase-service.js?v=3.1.2" defer></script>
+  <script src="app.js?v=3.1.2" defer></script>
   <script src="profile-sync.js?v=3.0" defer></script>
   <script src="exit-intent.js?v=3.0" defer></script>
   <script src="hero-playground.js?v=3.0" defer></script>
@@ -4270,7 +4281,7 @@
       });
 
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js?v=3.1.1')
+        navigator.serviceWorker.register('/sw.js?v=3.1.2')
           .then(function(reg) {
             reg.update();
             if (reg.waiting) {
