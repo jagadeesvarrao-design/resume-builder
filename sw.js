@@ -4,7 +4,7 @@
  * Stale-While-Revalidate for media, fonts & icons.
  */
 
-const CACHE_NAME = 'zenresume-cache-v3.1.2';
+const CACHE_NAME = 'zenresume-cache-v3.1.3';
 const STATIC_SHELL = [
   '/',
   '/index.html',

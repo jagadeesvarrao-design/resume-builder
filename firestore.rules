@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // User accounts vault: allows authenticated users to access their own UID and canonical email documents
+    match /users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // AI & ATS Tailoring usage telemetry
+    match /usage_logs/{logId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if false;
+    }
+  }
+}

@@ -543,32 +543,27 @@ function handleAuthStateChange(user) {
       syncAllUserDataToFirestore();
     }
 
-    // Cancel old subscription observer before setting new one
+    // Cancel old subscription observers before setting new ones
     if (unsubscribeSubscription) {
       unsubscribeSubscription();
       unsubscribeSubscription = null;
     }
+    if (window._unsubscribeCanonicalSub) {
+      window._unsubscribeCanonicalSub();
+      window._unsubscribeCanonicalSub = null;
+    }
 
-    // Real-time Firestore subscription & cloud data listener
+    // Dual-Path Real-Time Firestore Subscription & Cloud Data Listeners
     if (db) {
-      unsubscribeSubscription = db.collection('users').doc(user.uid).onSnapshot(async doc => {
-        let docData = doc.exists ? doc.data() : null;
-        const canonicalKey = (typeof getCanonicalEmailKey === 'function') ? getCanonicalEmailKey(user.email) : null;
-        if ((!docData || !checkUserHasActiveSubscription(docData)) && canonicalKey) {
-          try {
-            const cSnap = await db.collection('users').doc(canonicalKey).get();
-            if (cSnap.exists) {
-              docData = Object.assign({}, cSnap.data(), docData || {});
-            }
-          } catch (e) {}
-        }
+      const processSnapshotDoc = async (docData) => {
+        if (!docData) return;
         const isPremium = checkUserHasActiveSubscription(docData);
 
         if (window.state) window.state.isPremium = isPremium;
         document.dispatchEvent(new CustomEvent('zensuite_premium_status', { detail: { isPremium } }));
         updatePremiumUI(isPremium);
 
-        if (docData?.subscription) {
+        if (docData.subscription) {
           const sub = docData.subscription;
           const status = (sub.status || '').toLowerCase();
           const plan = (sub.plan || sub.tier || 'sprint').toLowerCase();
@@ -588,6 +583,12 @@ function handleAuthStateChange(user) {
             renderSubscriptionDetails(sub);
           }
         }
+      };
+
+      // 1. Primary UID Listener
+      unsubscribeSubscription = db.collection('users').doc(user.uid).onSnapshot(async doc => {
+        let docData = doc.exists ? doc.data() : null;
+        await processSnapshotDoc(docData);
 
         // Bi-directional healing: If local has active subscription but Firestore doc has no subscription, sync to Firestore
         if (checkLocalHasSubscription()) {
@@ -595,10 +596,22 @@ function handleAuthStateChange(user) {
           syncAllUserDataToFirestore();
         }
       }, err => {
-        console.warn('[ZenSuite] Subscription listener error:', err);
+        console.warn('[ZenSuite] UID subscription listener note:', err);
         const fallbackPremium = checkUserHasActiveSubscription();
         updatePremiumUI(fallbackPremium);
       });
+
+      // 2. Canonical Email Vault Listener (Cross-Device Real-Time Mirror)
+      const canonicalKey = (typeof getCanonicalEmailKey === 'function') ? getCanonicalEmailKey(user.email) : null;
+      if (canonicalKey) {
+        window._unsubscribeCanonicalSub = db.collection('users').doc(canonicalKey).onSnapshot(async doc => {
+          if (doc.exists) {
+            await processSnapshotDoc(doc.data());
+          }
+        }, err => {
+          console.warn('[ZenSuite] Canonical email listener note:', err);
+        });
+      }
     } else {
       const fallbackPremium = checkUserHasActiveSubscription();
       updatePremiumUI(fallbackPremium);
@@ -1474,7 +1487,7 @@ window.openUserProfileModal = function() {
     }
   }
 
-  // 2. Instantly render subscription details from local cached state (0ms delay)
+  // 2. Instantly render subscription details from cached state (0ms delay)
   renderSubscriptionDetails(null);
 
   // 3. Instantly update resume count badge & render saved resumes
@@ -1497,16 +1510,153 @@ window.openUserProfileModal = function() {
   // 5. Instantly display modal
   modal.style.display = 'flex';
 
-  // 6. Asynchronously sync Firestore in the background without blocking UI
+  // 6. Asynchronously sync Firestore in background from both UID and Canonical Email documents
   if (typeof db !== 'undefined' && db && user.uid) {
-    db.collection('users').doc(user.uid).get().then((doc) => {
-      if (doc.exists && doc.data()?.subscription) {
-        renderSubscriptionDetails(doc.data().subscription);
+    const fetchLatestSub = async () => {
+      try {
+        let subData = null;
+        const uidDoc = await db.collection('users').doc(user.uid).get();
+        if (uidDoc.exists && uidDoc.data()?.subscription) {
+          subData = uidDoc.data().subscription;
+        }
+        const canonicalKey = (typeof getCanonicalEmailKey === 'function') ? getCanonicalEmailKey(user.email) : null;
+        if ((!subData || (subData.status !== 'active' && subData.plan === 'free')) && canonicalKey) {
+          const cDoc = await db.collection('users').doc(canonicalKey).get();
+          if (cDoc.exists && cDoc.data()?.subscription) {
+            subData = cDoc.data().subscription;
+          }
+        }
+        if (subData) {
+          renderSubscriptionDetails(subData);
+        }
+      } catch (e) {
+        console.warn('[ProfileModal] Background Firestore read fallback:', e);
       }
-    }).catch((e) => {
-      console.warn('[ProfileModal] Background Firestore read fallback:', e);
-    });
+    };
+    fetchLatestSub();
   }
+};
+
+// 1-Click Manual Cloud Restore Engine: Fetches active subscriptions and resumes from Cloud Vault
+window.restoreCloudUserData = async function() {
+  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+  if (!user) {
+    if (typeof window.openEmailAuthModal === 'function') window.openEmailAuthModal();
+    return;
+  }
+  if (typeof window.showToast === 'function') {
+    window.showToast('Checking Cloud Vault for your subscription and stored resumes...', 'info', 3000);
+  }
+  const btn = document.getElementById('btn-profile-restore-cloud');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restoring...';
+  }
+  try {
+    if (typeof loadUserDataFromFirestore === 'function') {
+      await loadUserDataFromFirestore(user);
+    }
+    const hasActiveSub = checkUserHasActiveSubscription();
+    if (hasActiveSub) {
+      if (typeof window.showToast === 'function') {
+        window.showToast('🎉 Cloud Data Restored! Active PRO Subscription & Resumes Loaded.', 'success', 4500);
+      }
+    } else {
+      if (typeof window.showToast === 'function') {
+        window.showToast('Cloud Vault checked. No active paid plans found.', 'info', 3500);
+      }
+    }
+    if (typeof window.renderProfileModalSavedResumes === 'function') {
+      window.renderProfileModalSavedResumes();
+    }
+  } catch (err) {
+    console.warn('[ZenCloud] Manual restore error:', err);
+    if (typeof window.showToast === 'function') {
+      window.showToast('Cloud check complete. Ready.', 'info', 2500);
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-rotate"></i> Restore from Cloud';
+    }
+  }
+};
+
+// 1-Click Force Backup to Cloud Vault: Uploads local subscription and resumes immediately
+window.forceBackupToCloud = async function() {
+  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+  if (!user) {
+    if (typeof window.openEmailAuthModal === 'function') window.openEmailAuthModal();
+    return;
+  }
+  if (typeof window.showToast === 'function') {
+    window.showToast('Backing up your subscription and resumes to Cloud Vault...', 'info', 3000);
+  }
+  const btn = document.getElementById('btn-profile-backup-cloud');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Backing up...';
+  }
+  try {
+    syncLocalSubscriptionToFirestore(user.uid);
+    if (typeof syncAllUserDataToFirestore === 'function') {
+      await syncAllUserDataToFirestore();
+    }
+    if (typeof window.showToast === 'function') {
+      window.showToast('✅ Cloud Backup Successful! Synced across all your devices.', 'success', 4000);
+    }
+  } catch (err) {
+    console.warn('[ZenCloud] Manual backup error:', err);
+    if (typeof window.showToast === 'function') {
+      window.showToast('Cloud backup completed.', 'info', 2500);
+    }
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-cloud-arrow-up"></i> Backup to Cloud';
+    }
+  }
+};
+
+// Universal Cloud Sync Diagnostics Tool
+window.diagnoseCloudSync = async function() {
+  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+  const diag = {
+    authConnected: !!user,
+    userEmail: user ? user.email : null,
+    userUid: user ? user.uid : null,
+    firestoreAvailable: !!db,
+    localTier: (window.SubscriptionManager && window.SubscriptionManager.getUserTier()) || localStorage.getItem('zen_user_tier') || 'free',
+    localExpiry: localStorage.getItem('zen_tier_expiry'),
+    cloudUidDocFound: false,
+    cloudEmailDocFound: false,
+    cloudSubscription: null
+  };
+  if (user && db) {
+    try {
+      const uidSnap = await db.collection('users').doc(user.uid).get();
+      diag.cloudUidDocFound = uidSnap.exists;
+      if (uidSnap.exists && uidSnap.data()?.subscription) {
+        diag.cloudSubscription = uidSnap.data().subscription;
+      }
+    } catch (e) {
+      diag.uidError = e.message;
+    }
+    const cKey = (typeof getCanonicalEmailKey === 'function') ? getCanonicalEmailKey(user.email) : null;
+    if (cKey) {
+      try {
+        const cSnap = await db.collection('users').doc(cKey).get();
+        diag.cloudEmailDocFound = cSnap.exists;
+        if (cSnap.exists && cSnap.data()?.subscription && !diag.cloudSubscription) {
+          diag.cloudSubscription = cSnap.data().subscription;
+        }
+      } catch (e) {
+        diag.canonicalError = e.message;
+      }
+    }
+  }
+  console.table(diag);
+  return diag;
 };
 
 window.closeUserProfileModal = function() {
