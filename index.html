@@ -3155,7 +3155,7 @@
               </div>
               <div style="min-width: 0;">
                 <div style="font-size: 9.5px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px;">Time Remaining</div>
-                <div id="profile-modal-time-left" style="font-size: clamp(13.5px, 3.2vw, 15px); font-weight: 800; color: #006856; font-family: 'Outfit', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">13 Days, 22 Hours Left</div>
+                <div id="profile-modal-time-left" style="font-size: clamp(13px, 3.2vw, 15px); font-weight: 800; color: #006856; font-family: 'Outfit', sans-serif; line-height: 1.2;">13 Days, 22 Hours Left</div>
               </div>
             </div>
             <span id="profile-modal-active-pulse" style="display: flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.12); padding: 3px 8px; border-radius: 9999px; border: 1px solid rgba(16, 185, 129, 0.2); flex-shrink: 0;">
@@ -3867,21 +3867,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
   <script src="templates-data.js?v=3.0" defer></script>
-  <script src="indexeddb-storage.js?v=3.0" defer></script>
-  <script src="firebase-service.js?v=3.0" defer></script>
-  <script src="app.js?v=3.0.4" defer></script>
+  <script src="indexeddb-storage.js?v=3.1.0" defer></script>
+  <script src="firebase-service.js?v=3.1.0" defer></script>
+  <script src="app.js?v=3.1.0" defer></script>
   <script src="profile-sync.js?v=3.0" defer></script>
   <script src="exit-intent.js?v=3.0" defer></script>
   <script src="hero-playground.js?v=3.0" defer></script>
   <script src="navigator-tour.js?v=3.0" defer></script>
   <script src="role-hub.js?v=3.0" defer></script>
   <script src="live-pulse.js?v=3.0" defer></script>
-  <script src="ats-matcher.js?v=3.0.4" defer></script>
-  <script src="cover-letter-engine.js?v=3.0.4" defer></script>
+  <script src="ats-matcher.js?v=3.1.0" defer></script>
+  <script src="cover-letter-engine.js?v=3.1.0" defer></script>
   <script src="bullet-bank.js?v=3.0" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
   <!-- Razorpay Checkout SDK is loaded on-demand via window.PaymentMediator.loadRazorpaySdk() to prevent 1,400+ unused preload warnings on page load -->
-  <script src="payment-mediator.js?v=3.0" defer></script>
+  <script src="payment-mediator.js?v=3.1.0" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -4270,7 +4270,7 @@
       });
 
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js?v=3.0')
+        navigator.serviceWorker.register('/sw.js?v=3.1.0')
           .then(function(reg) {
             reg.update();
             if (reg.waiting) {

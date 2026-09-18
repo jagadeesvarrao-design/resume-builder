@@ -4,12 +4,13 @@
  * Stale-While-Revalidate for media, fonts & icons.
  */
 
-const CACHE_NAME = 'zenresume-cache-v3.0.5';
+const CACHE_NAME = 'zenresume-cache-v3.1.0';
 const STATIC_SHELL = [
   '/',
   '/index.html',
   '/styles.css',
   '/adaptive-engine.js',
+  '/indexeddb-storage.js',
   '/app.js',
   '/templates-data.js',
   '/firebase-service.js',

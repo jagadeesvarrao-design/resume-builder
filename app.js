@@ -1033,18 +1033,19 @@ function autoSaveResume() {
   };
   
   const registry = getStoredProfilesRegistry();
-  if (registry.activeId === 'default') {
+  const activeId = registry.activeId || 'default';
+  if (activeId === 'default') {
     localStorage.setItem('zenresume_state', JSON.stringify(stateToSave));
   } else {
-    localStorage.setItem(`zenresume_profile_${registry.activeId}`, JSON.stringify(stateToSave));
+    localStorage.setItem(`zenresume_profile_${activeId}`, JSON.stringify(stateToSave));
   }
 
   // High-resilience IndexedDB persistence (immune to 5MB quota & Safari 7-day purge)
-  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveDraft === 'function') {
-    window.ZenResumeDB.saveDraft(stateToSave, registry.activeId || 'default');
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+    window.ZenResumeDB.saveProfile(activeId, stateToSave);
   }
 
-  // Also save to cloud if logged in
+  // Also save to cloud if logged in (strictly saving subscription + stored resumes, no tracking bloat)
   if (typeof saveResumeToFirestore === 'function') {
     saveResumeToFirestore(stateToSave);
   }
@@ -1057,12 +1058,15 @@ const PROFILES_STORAGE_KEY = 'zenresume_application_profiles';
 
 function getStoredProfilesRegistry() {
   try {
-    const raw = localStorage.getItem(PROFILES_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
-        return parsed;
-      }
+    let parsed = (window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function')
+      ? window.ZenResumeDB.getSettingSync(PROFILES_STORAGE_KEY)
+      : null;
+    if (!parsed) {
+      const raw = localStorage.getItem(PROFILES_STORAGE_KEY);
+      if (raw) parsed = JSON.parse(raw);
+    }
+    if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+      return parsed;
     }
   } catch (e) {}
   return {
@@ -1075,7 +1079,13 @@ function getStoredProfilesRegistry() {
 
 function saveProfilesRegistry(registry) {
   try {
+    if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSetting === 'function') {
+      window.ZenResumeDB.saveSetting(PROFILES_STORAGE_KEY, registry);
+    }
     localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(registry));
+    if (typeof window.syncAllUserDataToFirestore === 'function') {
+      window.syncAllUserDataToFirestore();
+    }
   } catch (e) {}
 }
 
@@ -1199,13 +1209,19 @@ function promptCreateNewProfileVersion(customName = null) {
   };
 
   // Save current active profile's data first
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+    window.ZenResumeDB.saveProfile(registry.activeId || 'default', currentState);
+  }
   if (registry.activeId === 'default') {
     localStorage.setItem('zenresume_state', JSON.stringify(currentState));
   } else {
     localStorage.setItem(`zenresume_profile_${registry.activeId}`, JSON.stringify(currentState));
   }
 
-  // Save new profile data
+  // Save new profile data into IndexedDB & localStorage
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+    window.ZenResumeDB.saveProfile(newId, currentState);
+  }
   localStorage.setItem(`zenresume_profile_${newId}`, JSON.stringify(currentState));
 
   // Update registry
@@ -1243,6 +1259,9 @@ function switchProfileVersion(targetId) {
     hasLoadedProfile: state.hasLoadedProfile,
     sectionOrder: state.sectionOrder
   };
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+    window.ZenResumeDB.saveProfile(registry.activeId || 'default', currentState);
+  }
   if (registry.activeId === 'default') {
     localStorage.setItem('zenresume_state', JSON.stringify(currentState));
   } else {
@@ -1253,7 +1272,7 @@ function switchProfileVersion(targetId) {
   registry.activeId = targetId;
   saveProfilesRegistry(registry);
 
-  // Load target profile
+  // Load target profile from localStorage or ZenResumeDB
   let targetStateJson;
   if (targetId === 'default') {
     targetStateJson = localStorage.getItem('zenresume_state');
@@ -1261,9 +1280,13 @@ function switchProfileVersion(targetId) {
     targetStateJson = localStorage.getItem(`zenresume_profile_${targetId}`);
   }
 
+  let parsed = null;
   if (targetStateJson) {
+    try { parsed = JSON.parse(targetStateJson); } catch (e) {}
+  }
+
+  if (parsed) {
     try {
-      const parsed = JSON.parse(targetStateJson);
       hydrateStateFromData(parsed, false);
       syncFormToPreview();
       renderProfileDropdown(registry);
@@ -1280,6 +1303,14 @@ function switchProfileVersion(targetId) {
     } catch (e) {
       console.error("Error switching profile:", e);
     }
+  } else if (window.ZenResumeDB && typeof window.ZenResumeDB.loadProfile === 'function') {
+    window.ZenResumeDB.loadProfile(targetId).then(idbState => {
+      if (idbState) {
+        hydrateStateFromData(idbState, false);
+        syncFormToPreview();
+        renderProfileDropdown(registry);
+      }
+    });
   } else {
     renderProfileDropdown(registry);
   }
@@ -1289,6 +1320,10 @@ function deleteProfileVersion(targetId) {
   if (!targetId || targetId === 'default') return;
   const registry = getStoredProfilesRegistry();
   registry.profiles = registry.profiles.filter(p => p.id !== targetId);
+
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.deleteProfile === 'function') {
+    window.ZenResumeDB.deleteProfile(targetId);
+  }
   try {
     localStorage.removeItem(`zenresume_profile_${targetId}`);
   } catch (e) {}
@@ -1414,22 +1449,36 @@ function checkVaultOnboardingBanner() {
 
 function loadSavedResume(preventDisplayTransition = false) {
   const registry = getStoredProfilesRegistry();
-  let savedStateJson;
-  if (registry.activeId === 'default') {
-    savedStateJson = localStorage.getItem('zenresume_state');
-  } else {
-    savedStateJson = localStorage.getItem(`zenresume_profile_${registry.activeId}`) || localStorage.getItem('zenresume_state');
+  let savedState = null;
+
+  // 1. Try reading from ZenResumeDB
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.loadProfile === 'function') {
+    const cached = window.ZenResumeDB.loadProfile(registry.activeId || 'default');
+    if (cached && typeof cached.then !== 'function' && cached.formData) {
+      savedState = cached;
+    }
   }
 
-  if (!savedStateJson) return false;
-  
-  try {
-    const savedState = JSON.parse(savedStateJson);
-    return hydrateStateFromData(savedState, preventDisplayTransition);
-  } catch (err) {
-    console.error('Error loading saved state:', err);
-    return false;
+  // 2. Fallback to localStorage
+  if (!savedState) {
+    let savedStateJson;
+    if (registry.activeId === 'default') {
+      savedStateJson = localStorage.getItem('zenresume_state');
+    } else {
+      savedStateJson = localStorage.getItem(`zenresume_profile_${registry.activeId}`) || localStorage.getItem('zenresume_state');
+    }
+
+    if (savedStateJson) {
+      try {
+        savedState = JSON.parse(savedStateJson);
+      } catch (err) {
+        console.error('Error loading saved state:', err);
+      }
+    }
   }
+
+  if (!savedState) return false;
+  return hydrateStateFromData(savedState, preventDisplayTransition);
 }
 
 function hydrateStateFromData(savedState, preventDisplayTransition = false) {
@@ -5407,29 +5456,46 @@ window.zoomFit = function() {
 // ==========================================================================
 window.SubscriptionManager = {
   getUserTier: function() {
-    const tier = localStorage.getItem('zen_user_tier') || 'free';
+    let tier = (window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function')
+      ? window.ZenResumeDB.getSettingSync('zen_user_tier')
+      : null;
+    if (!tier) tier = localStorage.getItem('zen_user_tier') || 'free';
+
     if (tier !== 'free') {
-      const expiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+      let expiry = (window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function')
+        ? parseInt(window.ZenResumeDB.getSettingSync('zen_tier_expiry') || '0', 10)
+        : 0;
+      if (!expiry) expiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+
       if (expiry && Date.now() > expiry) {
-        localStorage.setItem('zen_user_tier', 'free');
-        this.applyAdVisibility();
+        this.setUserTier('free', 0);
         return 'free';
       }
     }
     return tier;
   },
-  setUserTier: function(tier, durationDays = 0) {
+  setUserTierWithExpiry: function(tier, expiryTimestamp) {
     if (!['free', 'day', 'sprint', 'suite'].includes(tier)) tier = 'free';
+    if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
+      window.ZenResumeDB.saveSubscription(tier, expiryTimestamp);
+    }
     localStorage.setItem('zen_user_tier', tier);
-    if (durationDays > 0) {
-      const currentExpiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
-      const baseTime = (currentExpiry && currentExpiry > Date.now()) ? currentExpiry : Date.now();
-      const expiry = baseTime + (durationDays * 24 * 60 * 60 * 1000);
-      localStorage.setItem('zen_tier_expiry', expiry.toString());
+    if (expiryTimestamp && expiryTimestamp > Date.now()) {
+      localStorage.setItem('zen_tier_expiry', expiryTimestamp.toString());
     } else {
       localStorage.removeItem('zen_tier_expiry');
     }
     this.applyAdVisibility();
+  },
+  setUserTier: function(tier, durationDays = 0) {
+    if (!['free', 'day', 'sprint', 'suite'].includes(tier)) tier = 'free';
+    let expiry = 0;
+    if (durationDays > 0) {
+      const currentExpiry = parseInt(localStorage.getItem('zen_tier_expiry') || (window.ZenResumeDB && window.ZenResumeDB.getSettingSync('zen_tier_expiry')) || '0', 10);
+      const baseTime = (currentExpiry && currentExpiry > Date.now()) ? currentExpiry : Date.now();
+      expiry = baseTime + (durationDays * 24 * 60 * 60 * 1000);
+    }
+    this.setUserTierWithExpiry(tier, expiry);
   },
   getCurrency: function() {
     return window.currentCurrency || localStorage.getItem('zen_user_currency') || 'INR';
@@ -5900,7 +5966,7 @@ window.confirmPaymentSuccess = function(planKey, txnId) {
   const currentExpiryMs = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
   const expiresAtDate = (currentExpiryMs && currentExpiryMs > Date.now()) ? new Date(currentExpiryMs) : new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000);
 
-  // 2. Persist Receipt
+  // 2. Persist Receipt & Update ZenResumeDB
   const receipt = {
     plan: planKey,
     transactionId: txnId || ('TXN_' + Date.now()),
@@ -5911,18 +5977,29 @@ window.confirmPaymentSuccess = function(planKey, txnId) {
     localStorage.setItem('zen_last_payment_receipt', JSON.stringify(receipt));
   } catch (e) {}
 
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
+    window.ZenResumeDB.saveSubscription(planKey, expiresAtDate.getTime(), {
+      transactionId: txnId || ('TXN_' + Date.now())
+    });
+  }
+
   // 3. Sync to Firebase Firestore if user is authenticated
   try {
     if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser && firebase.firestore) {
-      const uid = firebase.auth().currentUser.uid;
+      const user = firebase.auth().currentUser;
+      const uid = user.uid;
+      const userEmail = (user.email || '').toLowerCase();
+
       firebase.firestore().collection('users').doc(uid).set({
+        email: userEmail,
         subscription: {
           status: 'active',
           plan: planKey,
           transactionId: txnId || ('TXN_' + Date.now()),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           expiresAt: expiresAtDate
-        }
+        },
+        isPremium: true
       }, { merge: true }).catch(err => console.warn('Firestore subscription sync error:', err));
     }
   } catch (e) {

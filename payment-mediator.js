@@ -529,11 +529,23 @@
         localStorage.setItem('zen_last_payment_receipt', JSON.stringify(receipt));
       } catch (e) {}
 
+      if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
+        window.ZenResumeDB.saveSubscription(planKey, expiresAtDate.getTime(), {
+          orderId: receipt.orderId,
+          transactionRef: receipt.transactionRef,
+          provider: receipt.provider
+        });
+      }
+
       // 3. Sync to Firebase Firestore
       try {
         if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser && firebase.firestore) {
-          const uid = firebase.auth().currentUser.uid;
+          const user = firebase.auth().currentUser;
+          const uid = user.uid;
+          const userEmail = (user.email || '').toLowerCase();
+
           firebase.firestore().collection('users').doc(uid).set({
+            email: userEmail,
             subscription: {
               status: 'active',
               plan: planKey,
@@ -542,7 +554,8 @@
               provider: receipt.provider,
               updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
               expiresAt: expiresAtDate
-            }
+            },
+            isPremium: true
           }, { merge: true }).catch(err => console.warn('[PaymentMediator] Firestore sync error:', err));
         }
       } catch (e) {

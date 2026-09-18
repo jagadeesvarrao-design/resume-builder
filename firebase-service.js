@@ -546,9 +546,9 @@ function handleAuthStateChange(user) {
       unsubscribeSubscription = null;
     }
 
-    // Real-time Firestore subscription listener
+    // Real-time Firestore subscription & cloud data listener
     if (db) {
-      unsubscribeSubscription = db.collection('users').doc(user.uid).onSnapshot(doc => {
+      unsubscribeSubscription = db.collection('users').doc(user.uid).onSnapshot(async doc => {
         const docData = doc.exists ? doc.data() : null;
         const isPremium = checkUserHasActiveSubscription(docData);
 
@@ -556,8 +556,31 @@ function handleAuthStateChange(user) {
         document.dispatchEvent(new CustomEvent('zensuite_premium_status', { detail: { isPremium } }));
         updatePremiumUI(isPremium);
 
+        if (docData?.subscription) {
+          const sub = docData.subscription;
+          const status = (sub.status || '').toLowerCase();
+          const plan = (sub.plan || sub.tier || 'sprint').toLowerCase();
+          let expDate = null;
+          if (sub.expiresAt) {
+            expDate = sub.expiresAt.toDate ? sub.expiresAt.toDate() : new Date(sub.expiresAt);
+          }
+          if ((status === 'active' || status === 'completed' || status === 'paid') && expDate && expDate.getTime() > Date.now()) {
+            const expMs = expDate.getTime();
+            if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
+              await window.ZenResumeDB.saveSubscription(plan, expMs, {
+                orderId: sub.orderId || '',
+                transactionRef: sub.transactionRef || sub.transactionId || ''
+              });
+            }
+            if (window.SubscriptionManager && typeof window.SubscriptionManager.setUserTierWithExpiry === 'function') {
+              window.SubscriptionManager.setUserTierWithExpiry(plan, expMs);
+            }
+            renderSubscriptionDetails(sub);
+          }
+        }
+
         // Bi-directional healing: If local has active subscription but Firestore doc has no subscription, sync to Firestore
-        if (isPremium && doc.exists && (!docData?.subscription || docData.subscription.status !== 'active') && checkLocalHasSubscription()) {
+        if (isPremium && (!docData?.subscription || docData.subscription.status !== 'active') && checkLocalHasSubscription()) {
           syncLocalSubscriptionToFirestore(user.uid);
         }
       }, err => {
@@ -579,15 +602,11 @@ function handleAuthStateChange(user) {
       }
     }
     
-    // Attempt to load their resume from Firestore
-    if (typeof loadResumeFromFirestore === 'function') {
+    // Comprehensive cloud hydration of active subscription and stored resumes from Cloud Firestore
+    if (typeof loadUserDataFromFirestore === 'function') {
+      loadUserDataFromFirestore(user);
+    } else if (typeof loadResumeFromFirestore === 'function') {
       loadResumeFromFirestore();
-    }
-    
-    // Automatically load data when user logs in
-    if (window.state && !window.state.hasLoadedProfile && typeof loadSavedResume === 'function') {
-      loadSavedResume();
-      window.state.hasLoadedProfile = true;
     }
 
     // Auto-resume pending payment if user initiated checkout prior to authentication
@@ -864,15 +883,29 @@ if (document.readyState === 'loading') {
   initEmailAuth();
 }
 
-// Firestore functions
+// Firestore functions - strictly persisting subscription details and stored resumes (no tracking telemetry)
 async function saveResumeToFirestore(stateObj) {
-  if (!currentUser) return; // Only save if logged in
+  if (!currentUser || !db) return; // Only save if logged in
   
   try {
-    await db.collection('users').doc(currentUser.uid).set({
+    const registry = (typeof window.getStoredProfilesRegistry === 'function')
+      ? window.getStoredProfilesRegistry()
+      : { activeId: 'default', profiles: [{ id: 'default', name: 'Master Resume' }] };
+
+    const activeId = registry.activeId || 'default';
+    const userEmail = (currentUser.email || '').toLowerCase();
+
+    // Strictly save subscription info and the user's stored resumes (no tracking telemetry)
+    const updatePayload = {
+      email: userEmail,
       resumeData: stateObj,
+      profilesRegistry: registry,
+      [`profilesData.${activeId}`]: stateObj,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    };
+
+    // STRICTLY USE { merge: true } to prevent ever overwriting active subscriptions
+    await db.collection('users').doc(currentUser.uid).set(updatePayload, { merge: true });
     
     // Visual feedback for cloud sync
     const statusEl = document.querySelector('.preview-status');
@@ -887,30 +920,184 @@ async function saveResumeToFirestore(stateObj) {
   }
 }
 
-async function loadResumeFromFirestore() {
-  if (!currentUser) return;
-  
+async function syncAllUserDataToFirestore() {
+  if (!currentUser || !db) return;
   try {
-    const doc = await db.collection('users').doc(currentUser.uid).get();
-    if (doc.exists) {
-      const data = doc.data();
-      if (data.resumeData && typeof hydrateStateFromData === 'function') {
-        hydrateStateFromData(data.resumeData);
-        console.log("Resume loaded successfully");
+    const registry = (typeof window.getStoredProfilesRegistry === 'function')
+      ? window.getStoredProfilesRegistry()
+      : { activeId: 'default', profiles: [{ id: 'default', name: 'Master Resume' }] };
+
+    const profilesData = {};
+    for (const p of registry.profiles) {
+      if (p && p.id) {
+        let pData = null;
+        if (window.ZenResumeDB && typeof window.ZenResumeDB.loadProfile === 'function') {
+          pData = await window.ZenResumeDB.loadProfile(p.id);
+        }
+        if (!pData) {
+          const raw = localStorage.getItem(p.id === 'default' ? 'zenresume_state' : `zenresume_profile_${p.id}`);
+          if (raw) {
+            try { pData = JSON.parse(raw); } catch (e) {}
+          }
+        }
+        if (pData) {
+          profilesData[p.id] = pData;
+        }
+      }
+    }
+
+    const masterData = profilesData[registry.activeId || 'default'] || profilesData['default'] || null;
+
+    const payload = {
+      email: (currentUser.email || '').toLowerCase(),
+      profilesRegistry: registry,
+      profilesData: profilesData,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if (masterData) {
+      payload.resumeData = masterData;
+    }
+
+    await db.collection('users').doc(currentUser.uid).set(payload, { merge: true });
+    console.log('[ZenCloud] Stored resumes successfully synced to cloud');
+  } catch (err) {
+    console.warn('[ZenCloud] syncAllUserDataToFirestore error:', err);
+  }
+}
+window.syncAllUserDataToFirestore = syncAllUserDataToFirestore;
+
+async function loadUserDataFromFirestore(user) {
+  if (!user || !db) return;
+  const userEmail = (user.email || '').toLowerCase();
+
+  try {
+    let doc = await db.collection('users').doc(user.uid).get();
+    let docData = doc.exists ? doc.data() : null;
+
+    // Email fallback search: if document has no active subscription, search for any document matching user email
+    if ((!docData || !docData.subscription || docData.subscription.status !== 'active') && userEmail) {
+      try {
+        const querySnapshot = await db.collection('users').where('email', '==', userEmail).get();
+        if (!querySnapshot.empty) {
+          for (const matchDoc of querySnapshot.docs) {
+            const mData = matchDoc.data();
+            if (mData && mData.subscription && mData.subscription.status === 'active') {
+              const exp = mData.subscription.expiresAt;
+              const expDate = exp ? (exp.toDate ? exp.toDate() : new Date(exp)) : null;
+              if (expDate && expDate.getTime() > Date.now()) {
+                console.log('[ZenCloud] Recovered active subscription via email lookup:', userEmail);
+                docData = Object.assign({}, docData || {}, mData);
+                await db.collection('users').doc(user.uid).set(docData, { merge: true });
+                break;
+              }
+            }
+          }
+        }
+      } catch (queryErr) {
+        console.warn('[ZenCloud] Email fallback query note:', queryErr);
+      }
+    }
+
+    if (!docData) return;
+
+    // 1. Hydrate Active Subscription into IndexedDB & SubscriptionManager
+    const sub = docData.subscription;
+    if (sub) {
+      const status = (sub.status || '').toLowerCase();
+      const plan = (sub.plan || sub.tier || 'sprint').toLowerCase();
+      let expDate = null;
+      if (sub.expiresAt) {
+        expDate = sub.expiresAt.toDate ? sub.expiresAt.toDate() : new Date(sub.expiresAt);
+      }
+      const isTimeValid = expDate && expDate.getTime() > Date.now();
+
+      if ((status === 'active' || status === 'completed' || status === 'paid') && isTimeValid) {
+        const expMs = expDate.getTime();
+        if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
+          await window.ZenResumeDB.saveSubscription(plan, expMs, {
+            orderId: sub.orderId || '',
+            transactionRef: sub.transactionRef || sub.transactionId || ''
+          });
+        }
+        if (window.SubscriptionManager && typeof window.SubscriptionManager.setUserTierWithExpiry === 'function') {
+          window.SubscriptionManager.setUserTierWithExpiry(plan, expMs);
+        } else if (window.SubscriptionManager) {
+          const daysLeft = Math.ceil((expMs - Date.now()) / (24 * 60 * 60 * 1000));
+          window.SubscriptionManager.setUserTier(plan, daysLeft);
+        }
+        if (window.state) window.state.isPremium = true;
+        updatePremiumUI(true);
+        renderSubscriptionDetails(sub);
+      }
+    }
+
+    // 2. Hydrate Stored Resumes from Master Vault into IndexedDB
+    if (docData.profilesRegistry && docData.profilesRegistry.profiles && Array.isArray(docData.profilesRegistry.profiles)) {
+      if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSetting === 'function') {
+        await window.ZenResumeDB.saveSetting('zenresume_application_profiles', docData.profilesRegistry);
+      }
+      try {
+        localStorage.setItem('zenresume_application_profiles', JSON.stringify(docData.profilesRegistry));
+      } catch (e) {}
+
+      // Hydrate each stored profile
+      if (docData.profilesData && typeof docData.profilesData === 'object') {
+        for (const [pId, pContent] of Object.entries(docData.profilesData)) {
+          if (pContent) {
+            if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+              await window.ZenResumeDB.saveProfile(pId, pContent);
+            }
+            try {
+              const storageKey = pId === 'default' ? 'zenresume_state' : `zenresume_profile_${pId}`;
+              localStorage.setItem(storageKey, JSON.stringify(pContent));
+            } catch (e) {}
+          }
+        }
+      }
+
+      // Re-render UI components
+      if (typeof window.renderProfileDropdown === 'function') {
+        window.renderProfileDropdown(docData.profilesRegistry);
+      }
+      if (typeof window.renderProfileModalSavedResumes === 'function') {
+        window.renderProfileModalSavedResumes();
+      }
+      const countBadge = document.getElementById('profile-resumes-count-badge');
+      if (countBadge) countBadge.textContent = docData.profilesRegistry.profiles.length;
+    }
+
+    // 3. Hydrate Master / Active Resume
+    if (docData.resumeData) {
+      if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+        await window.ZenResumeDB.saveProfile('default', docData.resumeData);
+      }
+      try {
+        localStorage.setItem('zenresume_state', JSON.stringify(docData.resumeData));
+      } catch (e) {}
+
+      if (typeof hydrateStateFromData === 'function') {
+        const isInEditor = document.body.classList.contains('in-editor');
+        hydrateStateFromData(docData.resumeData, !isInEditor);
       }
     }
   } catch (error) {
-    console.error("Error loading resume:", error);
+    console.warn('[ZenCloud] Error loading user data from Firestore:', error);
   }
 }
+window.loadUserDataFromFirestore = loadUserDataFromFirestore;
+window.loadResumeFromFirestore = function() {
+  if (currentUser) loadUserDataFromFirestore(currentUser);
+};
 
 // Check local storage and SubscriptionManager for active subscription
 function checkLocalHasSubscription() {
   try {
-    const localTier = (window.SubscriptionManager && typeof window.SubscriptionManager.getUserTier === 'function')
-      ? window.SubscriptionManager.getUserTier()
-      : (localStorage.getItem('zen_user_tier') || 'free');
-    const localExpiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+    const localTier = (window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function')
+      ? window.ZenResumeDB.getSettingSync('zen_user_tier')
+      : (window.SubscriptionManager && typeof window.SubscriptionManager.getUserTier === 'function')
+        ? window.SubscriptionManager.getUserTier()
+        : (localStorage.getItem('zen_user_tier') || 'free');
+    const localExpiry = parseInt((window.ZenResumeDB && window.ZenResumeDB.getSettingSync('zen_tier_expiry')) || localStorage.getItem('zen_tier_expiry') || '0', 10);
     if (localTier && localTier !== 'free') {
       if (!localExpiry || localExpiry > Date.now()) return true;
     }
@@ -973,11 +1160,19 @@ function checkUserHasActiveSubscription(firestoreData) {
 function syncLocalSubscriptionToFirestore(uid) {
   try {
     if (!uid || typeof firebase === 'undefined' || !firebase.firestore) return;
-    const localTier = localStorage.getItem('zen_user_tier') || 'sprint';
-    const localExpiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+    const localTier = (window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function')
+      ? window.ZenResumeDB.getSettingSync('zen_user_tier')
+      : (window.SubscriptionManager && typeof window.SubscriptionManager.getUserTier === 'function')
+        ? window.SubscriptionManager.getUserTier()
+        : (localStorage.getItem('zen_user_tier') || 'sprint');
+    const localExpiry = parseInt((window.ZenResumeDB && window.ZenResumeDB.getSettingSync('zen_tier_expiry')) || localStorage.getItem('zen_tier_expiry') || '0', 10);
     const expiresAt = (localExpiry && localExpiry > Date.now()) ? new Date(localExpiry) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
+    const user = firebase.auth().currentUser;
+    const userEmail = (user && user.email) ? user.email.toLowerCase() : '';
+
     firebase.firestore().collection('users').doc(uid).set({
+      email: userEmail,
       subscription: {
         status: 'active',
         plan: localTier,
@@ -1025,8 +1220,10 @@ try {
 
 // Helper to render subscription details synchronously or on update
 function renderSubscriptionDetails(subData) {
-  const localTier = localStorage.getItem('zen_user_tier') || 'free';
-  const localExpiryMs = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+  const localTier = (window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function')
+    ? window.ZenResumeDB.getSettingSync('zen_user_tier')
+    : (localStorage.getItem('zen_user_tier') || 'free');
+  const localExpiryMs = parseInt((window.ZenResumeDB && window.ZenResumeDB.getSettingSync('zen_tier_expiry')) || localStorage.getItem('zen_tier_expiry') || '0', 10);
 
   let planKey = subData?.plan || (localTier !== 'free' ? localTier : 'free');
   let expDate = null;
@@ -1039,6 +1236,15 @@ function renderSubscriptionDetails(subData) {
 
   const now = new Date();
   const isActive = expDate && expDate > now && (subData?.status === 'active' || localTier !== 'free');
+
+  if (isActive && expDate) {
+    if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
+      window.ZenResumeDB.saveSubscription(planKey, expDate.getTime());
+    }
+    if (window.SubscriptionManager && typeof window.SubscriptionManager.setUserTierWithExpiry === 'function') {
+      window.SubscriptionManager.setUserTierWithExpiry(planKey, expDate.getTime());
+    }
+  }
 
   // DOM Elements for subscription details
   const planNameEl = document.getElementById('profile-modal-plan-name');
@@ -1270,25 +1476,34 @@ window.renderProfileModalSavedResumes = function() {
   profiles.forEach(p => {
     const isActive = (p.id === registry.activeId);
     let candidateName = 'Your Profile';
-    let jobTitle = 'Master Resume';
+    let jobTitle = p.name || 'Master Resume';
 
     try {
-      let stateRaw = null;
-      if (p.id === 'default') {
-        stateRaw = localStorage.getItem('zenresume_state');
-      } else {
-        stateRaw = localStorage.getItem('zenresume_profile_' + p.id);
+      let profileData = (window.ZenResumeDB && typeof window.ZenResumeDB.getProfileSync === 'function')
+        ? (window.ZenResumeDB.getProfileSync(p.id) || (p.id === 'default' ? window.ZenResumeDB.getProfileSync('master') : null))
+        : null;
+
+      if (!profileData) {
+        let stateRaw = (p.id === 'default' || p.id === 'master')
+          ? localStorage.getItem('zenresume_state')
+          : localStorage.getItem('zenresume_profile_' + p.id);
+        if (stateRaw) {
+          try { profileData = JSON.parse(stateRaw); } catch (e) {}
+        }
       }
-      if (stateRaw) {
-        const parsed = JSON.parse(stateRaw);
-        if (parsed.formData) {
-          if (parsed.formData.name && parsed.formData.name.trim()) candidateName = parsed.formData.name.trim();
-          if (parsed.formData.title && parsed.formData.title.trim()) jobTitle = parsed.formData.title.trim();
+
+      if (profileData) {
+        if (profileData.formData) {
+          if (profileData.formData.name && profileData.formData.name.trim()) candidateName = profileData.formData.name.trim();
+          if (profileData.formData.title && profileData.formData.title.trim()) jobTitle = profileData.formData.title.trim();
+        } else if (profileData.basics) {
+          if (profileData.basics.name && profileData.basics.name.trim()) candidateName = profileData.basics.name.trim();
+          if (profileData.basics.title && profileData.basics.title.trim()) jobTitle = profileData.basics.title.trim();
         }
       }
     } catch (e) {}
 
-    const isMaster = (p.id === 'default');
+    const isMaster = (p.id === 'default' || p.isMaster);
     const displayDate = p.updatedAt ? new Date(p.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently saved';
 
     html += `
