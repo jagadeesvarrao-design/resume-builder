@@ -4,7 +4,17 @@
  * Stale-While-Revalidate for media, fonts & icons.
  */
 
-const CACHE_NAME = 'zenresume-cache-v3.1.3';
+const CACHE_NAME = 'zenresume-cache-v3.2.0';
+
+// If executed on local development environment, completely bypass and unregister
+if (self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1' || self.location.hostname === '0.0.0.0' || self.location.hostname.startsWith('192.168.')) {
+  self.addEventListener('install', (e) => self.skipWaiting());
+  self.addEventListener('activate', (e) => {
+    self.registration.unregister();
+    self.clients.claim();
+  });
+}
+
 const STATIC_SHELL = [
   '/',
   '/index.html',

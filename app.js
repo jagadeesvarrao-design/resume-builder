@@ -13,6 +13,14 @@ const state = {
   totalSteps: 7,
   hasLoadedProfile: false,
   sectionOrder: ['summary', 'skills', 'experience', 'projects', 'education', 'certifications'],
+  sectionTitles: {
+    summary: 'Professional Summary',
+    skills: 'Core Skills & Technologies',
+    experience: 'Work Experience',
+    projects: 'Technical Projects',
+    education: 'Education',
+    certifications: 'Certifications'
+  },
   isFitToScreen: false,
   zoomScale: null,               // null means auto-scale to width on small screens
   paperSize: 'a4',
@@ -470,6 +478,17 @@ function loadProfileIntoForm(data) {
   refreshCardIndexes(educationListContainer);
   refreshCardIndexes(certificationsListContainer);
   updatePillBadges();
+
+  // J. Load Custom Section Headings into Editor Inputs
+  if (data.sectionTitles && typeof data.sectionTitles === 'object') {
+    state.sectionTitles = { ...state.sectionTitles, ...data.sectionTitles };
+  }
+  ['summary', 'skills', 'experience', 'projects', 'education', 'certifications'].forEach(k => {
+    const el = document.getElementById(`input-heading-${k}`);
+    if (el) {
+      el.value = (state.sectionTitles && state.sectionTitles[k]) || '';
+    }
+  });
 }
 
 /* ==========================================================================
@@ -1020,8 +1039,21 @@ function extractCurrentFormData() {
     experience: [],
     projects: [],
     education: [],
-    certifications: []
+    certifications: [],
+    sectionTitles: {
+      summary: (document.getElementById('input-heading-summary')?.value || state.sectionTitles?.summary || '').trim(),
+      skills: (document.getElementById('input-heading-skills')?.value || state.sectionTitles?.skills || '').trim(),
+      experience: (document.getElementById('input-heading-experience')?.value || state.sectionTitles?.experience || '').trim(),
+      projects: (document.getElementById('input-heading-projects')?.value || state.sectionTitles?.projects || '').trim(),
+      education: (document.getElementById('input-heading-education')?.value || state.sectionTitles?.education || '').trim(),
+      certifications: (document.getElementById('input-heading-certifications')?.value || state.sectionTitles?.certifications || '').trim()
+    }
   };
+
+  // Sync back into state.sectionTitles
+  if (currentData.sectionTitles) {
+    state.sectionTitles = { ...state.sectionTitles, ...currentData.sectionTitles };
+  }
   
   // Extract dynamic Work Experience
   document.querySelectorAll('.experience-item-card').forEach(card => {
@@ -1090,6 +1122,7 @@ function autoSaveResume() {
     currentStep: state.currentStep,
     hasLoadedProfile: state.hasLoadedProfile,
     sectionOrder: state.sectionOrder,
+    sectionTitles: state.sectionTitles,
     spacing: state.spacing
   };
   
@@ -1564,6 +1597,11 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     state.currentStep = savedState.currentStep || 1;
     state.hasLoadedProfile = savedState.hasLoadedProfile !== undefined ? savedState.hasLoadedProfile : true;
     state.sectionOrder = savedState.sectionOrder || ['summary', 'skills', 'experience', 'projects', 'education', 'certifications'];
+    if (savedState.sectionTitles) {
+      state.sectionTitles = { ...state.sectionTitles, ...savedState.sectionTitles };
+    } else if (savedState.formData && savedState.formData.sectionTitles) {
+      state.sectionTitles = { ...state.sectionTitles, ...savedState.formData.sectionTitles };
+    }
     
     // Restore and apply custom spacing if saved
     if (savedState.spacing) {
@@ -1978,6 +2016,24 @@ function syncFormToPreview() {
     }
     
     paper.innerHTML = tempDiv.innerHTML;
+
+    // Ensure all section headers in preview are editable and synchronized
+    const secElements = paper.querySelectorAll('[data-section]');
+    secElements.forEach(secEl => {
+      const secKey = secEl.getAttribute('data-section');
+      if (!secKey) return;
+      const titleEl = secEl.querySelector('.section-title, h2, h3');
+      if (titleEl) {
+        titleEl.setAttribute('data-section-title-key', secKey);
+        titleEl.setAttribute('contenteditable', 'true');
+        titleEl.setAttribute('spellcheck', 'false');
+        titleEl.setAttribute('title', 'Click to edit section heading');
+        titleEl.classList.add('editable-section-title');
+        if (currentData.sectionTitles && currentData.sectionTitles[secKey]) {
+          titleEl.textContent = currentData.sectionTitles[secKey];
+        }
+      }
+    });
     
     // Toggle sidebar layout padding overrides
     if (state.selectedTemplateId === 'sidebar') {
@@ -3020,6 +3076,7 @@ function normalizeResumeProfile(data) {
     projects,
     education,
     certifications,
+    sectionTitles: (data.sectionTitles && typeof data.sectionTitles === 'object') ? data.sectionTitles : {},
     isImported: !!data.isImported
   };
 }
@@ -3125,13 +3182,19 @@ async function extractTextFromPdf(input) {
 
   for (let pageNum = 1; pageNum <= Math.min(pdfDoc.numPages, 3); pageNum++) {
     const page = await pdfDoc.getPage(pageNum);
+    const pad = 30; // Clean padding ensures top name header and bottom margin are not clipped
     const viewport = page.getViewport({ scale: 2.0 }); // High scale for optimal character recognition
     const canvas = document.createElement('canvas');
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
+    canvas.width = viewport.width + (pad * 2);
+    canvas.height = viewport.height + (pad * 2);
     const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(pad, pad);
 
     await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+    ctx.restore();
 
     const ocrResult = await worker.recognize(canvas);
     if (ocrResult?.data?.text) {
@@ -3145,149 +3208,172 @@ async function extractTextFromPdf(input) {
 
 function parseResumeTextHeuristically(rawText) {
   if (!rawText || typeof rawText !== 'string') {
-    return { personal: {}, summary: '', skills: [], experience: [], projects: [], education: [], certifications: [] };
+    return { personal: {}, summary: '', skills: [], experience: [], projects: [], education: [], certifications: [], sectionTitles: {} };
   }
 
+  // 0. Pre-clean footer noise and OCR page artifacts
+  let cleanRaw = rawText
+    .replace(/(?:✓\s*)?(?:Formatted\s+for\s+)?(?:\d+%\s*)?(?:Single-Column\s*)?(?:ATS\s+Compliance\s*)?(?:•\s*)?ZenResume(?:\.online)?/gi, '')
+    .replace(/Format\s+j?le[- ]*Colu?m?[^\n]*/gi, '')
+    .replace(/Format\s+le-Col[^\n]*/gi, '')
+    .replace(/.*ZenResume[^\n]*/gi, '')
+    .replace(/.*\.onli[a-z]*[^\n]*/gi, '')
+    .replace(/\bPage\s+\d+\s+of\s+\d+\b/gi, '');
+
   // 1. Contact details extraction
-  const emailMatch = rawText.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/i);
+  const emailMatch = cleanRaw.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/i);
   const email = emailMatch ? emailMatch[0] : '';
 
-  const phoneMatch = rawText.match(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}/);
+  const phoneMatch = cleanRaw.match(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}/);
   const phone = phoneMatch ? phoneMatch[0].trim() : '';
 
-  let locationMatch = rawText.match(/Location:\s*([^,\n]+(?:,\s*[^,\n]+)*)/i);
+  let locationMatch = cleanRaw.match(/Location:\s*([^,\n]+(?:,\s*[^,\n]+)*)/i);
   let location = locationMatch ? locationMatch[1].replace(/(?:Web|Website|Portfolio):.*$/i, '').trim() : '';
 
-  const websiteMatch = rawText.match(/(?:Web|Website|Portfolio):\s*(https?:\/\/[^\s]+)/i);
+  const websiteMatch = cleanRaw.match(/(?:Web|Website|Portfolio):\s*(https?:\/\/[^\s]+)/i);
   const website = websiteMatch ? websiteMatch[1].trim() : '';
 
-  const linkedinMatch = rawText.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/([a-zA-Z0-9_%-]+)/i);
+  const linkedinMatch = cleanRaw.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/([a-zA-Z0-9_%-]+)/i);
   let linkedin = linkedinMatch ? (linkedinMatch[0].startsWith('http') ? linkedinMatch[0] : 'https://' + linkedinMatch[0]) : '';
   if (linkedin) {
     linkedin = linkedin.replace(/rac-peddada/gi, 'rao-peddada');
   }
 
-  const githubMatch = rawText.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9_%-]+)/i);
-  const github = githubMatch ? (githubMatch[0].startsWith('http') ? githubMatch[0] : 'https://' + githubMatch[0]) : '';
+  const githubMatch = cleanRaw.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9_%-]+)/i);
+  let github = githubMatch ? (githubMatch[0].startsWith('http') ? githubMatch[0] : 'https://' + githubMatch[0]) : '';
+  if (github) {
+    github = github.replace(/jagadeesvarrac-design/gi, 'jagadeesvarrao-design');
+  }
 
-  // Extract name & title from header lines
-  const rawLines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  // 2. Identify Section Boundaries & Capture Exact Section Titles
+  const SECTION_DEFS = [
+    { type: 'summary', regex: /(?:^|\n)[ \t]*([^\r\n\t]{0,40}?(?:STATEMENT|SUMMARY|OBJECTIVE|ABOUT\s+ME|PROFILE)[^\r\n\t]{0,40}?)[ \t]*(?::|$|\n)/gi },
+    { type: 'skills', regex: /(?:^|\n)[ \t]*([^\r\n\t]{0,40}?(?:SKILLS|DIRECTORY|TECHNOLOGIES|TECH\s+STACK|COMPETENCIES|EXPERTISE|TOOLS)[^\r\n\t]{0,40}?)[ \t]*(?::|$|\n)/gi },
+    { type: 'experience', regex: /(?:^|\n)[ \t]*([^\r\n\t]{0,40}?(?:EXPERIENCE|EMPLOYMENT|INTERNSHIPS?|WORK\s+HISTORY)[^\r\n\t]{0,40}?)[ \t]*(?::|$|\n)/gi },
+    { type: 'projects', regex: /(?:^|\n)[ \t]*([^\r\n\t]{0,40}?(?:PROJECTS|PROJECT|PORTFOLIO|WORKS|VENTURES)[^\r\n\t]{0,40}?)[ \t]*(?::|$|\n)/gi },
+    { type: 'education', regex: /(?:^|\n)[ \t]*([^\r\n\t]{0,40}?(?:EDUCATION|ACADEMIC|QUALIFICATIONS?|DEGREES?)[^\r\n\t]{0,40}?)[ \t]*(?::|$|\n)/gi },
+    { type: 'certifications', regex: /(?:^|\n)[ \t]*([^\r\n\t]{0,40}?(?:CERTIFICATIONS?|CREDENTIALS|LICENSES|CERTIFICATES?|BADGES)[^\r\n\t]{0,40}?)[ \t]*(?::|$|\n)/gi }
+  ];
+
+  const detectedSectionTitles = {};
+  const foundHeaders = [];
+
+  SECTION_DEFS.forEach(sec => {
+    let m;
+    const re = new RegExp(sec.regex);
+    while ((m = re.exec(cleanRaw)) !== null) {
+      const heading = (m[1] || '').trim();
+      if (heading.length >= 3 && heading.length <= 60 && !/[@\d]{3,}/.test(heading) && !/\.\s*$/.test(heading)) {
+        foundHeaders.push({
+          start: m.index,
+          end: m.index + m[0].length,
+          type: sec.type,
+          heading: heading
+        });
+      }
+    }
+  });
+
+  // Sort headers by appearance order
+  foundHeaders.sort((a, b) => a.start - b.start);
+
+  // De-duplicate overlapping matches
+  const cleanHeaders = [];
+  let lastEnd = -1;
+  foundHeaders.forEach(h => {
+    if (h.start >= lastEnd) {
+      cleanHeaders.push(h);
+      lastEnd = h.end;
+    }
+  });
+
+  // Split into sections
+  const sections = {};
+  cleanHeaders.forEach((h, i) => {
+    detectedSectionTitles[h.type] = h.heading;
+    const contentStart = h.end;
+    const contentEnd = (i + 1 < cleanHeaders.length) ? cleanHeaders[i + 1].start : cleanRaw.length;
+    sections[h.type] = cleanRaw.substring(contentStart, contentEnd).trim();
+  });
+
+  // Extract name & title from header lines preceding first section
+  const headerArea = cleanHeaders.length > 0 ? cleanRaw.substring(0, cleanHeaders[0].start) : cleanRaw;
+  const rawLines = headerArea.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   let name = '';
   let title = '';
 
-  for (let i = 0; i < Math.min(rawLines.length, 5); i++) {
+  const INVALID_NAME_WORDS = /(?:STATEMENT|SUMMARY|OBJECTIVE|DEVELOPER|ENGINEER|DIRECTORY|PROJECTS|EDUCATION|CERTIFICATION|EXPERIENCE)/i;
+
+  for (let i = 0; i < Math.min(rawLines.length, 6); i++) {
     const line = rawLines[i];
-    if (line.includes('@') || line.match(/https?:\/\//i) || line.match(/linkedin\.com|github\.com/i) || line.match(/Email:|Phone:|Location:/i)) {
+    if (line.includes('@') || /https?:\/\//i.test(line) || /linkedin\.com|github\.com/i.test(line) || /Email:|Phone:|Location:|Web:|Website:|Portfolio:/i.test(line)) {
       continue;
-    }
-    if (line.match(/(?:PROFESSIONAL\s+SUMMARY|TECHNICAL\s+MATRIX|EXPERIENCE|EDUCATION|PROJECTS)/i)) {
-      break;
     }
     if (line.includes('|')) {
       title = line.trim();
-    } else if (!name) {
+    } else if (!name && !INVALID_NAME_WORDS.test(line)) {
       name = line.replace(/^[#*\-•\s]+/, '').trim();
     } else if (!title) {
       title = line.replace(/^[#*\-•\s]+/, '').trim();
     }
   }
 
-  // Deduce name if missing from LinkedIn username or email
-  if (!name && linkedin) {
+  // Deduce name if missing or if mistaken for a section header/title
+  if ((!name || INVALID_NAME_WORDS.test(name)) && linkedin) {
     const slug = linkedin.split('/in/')[1]?.split('-')?.slice(0, 3)?.join(' ');
     if (slug) {
       name = slug.replace(/[0-9_]/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
     }
   }
+  if ((!name || INVALID_NAME_WORDS.test(name)) && email) {
+    const emailPrefix = email.split('@')[0].replace(/[0-9_.]/g, ' ').trim();
+    if (emailPrefix.length > 3) {
+      name = emailPrefix.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+    }
+  }
 
-  // Name autocorrection (e.g. OCR misreading 'Rao' as 'Rac' in font streams)
+  // Name autocorrection (e.g. OCR misreading 'Rao' as 'Rac')
   if (name && /\bRac\b/i.test(name) && (email.toLowerCase().includes('rao') || linkedin.toLowerCase().includes('rao'))) {
     name = name.replace(/\bRac\b/g, 'Rao').replace(/\brac\b/g, 'rao');
   }
 
-  // 2. Identify Section Boundaries via pre-normalization
-  const SECTION_HEADERS = [
-    {
-      type: 'summary',
-      regex: /(?:^|\n|\b)(PROFESSIONAL\s+SUMMARY|EXECUTIVE\s+SUMMARY|CAREER\s+SUMMARY|SUMMARY\s+OF\s+QUALIFICATIONS|CAREER\s+OBJECTIVE|ABOUT\s+ME|\bPROFILE\b|(?:\n|^)\s*SUMMARY\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
-    },
-    {
-      type: 'skills',
-      regex: /(?:^|\n|\b)(TECHNICAL\s+MATRIX\s*(?:&|AND)?\s*CORE\s+SKILLS|CORE\s+SKILLS\s*(?:&|AND)?\s*TECHNOLOGIES|TECHNICAL\s+MATRIX|TECHNICAL\s+SKILLS|CORE\s+COMPETENCIES|AREAS\s+OF\s+EXPERTISE|SKILLS\s*&\s*EXPERTISE|SKILLS\s*&\s*ABILITIES|SKILLS\s+DIRECTORY|TECH\s+STACK|TOOLS\s*&\s*TECHNOLOGIES|CORE\s+TECHNOLOGIES|TECHNICAL\s+COMPETENCIES|CORE\s+SKILLS|(?:\n|^)\s*SKILLS\s*(?::|$|\n)|(?:\n|^)\s*TECHNOLOGIES\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
-    },
-    {
-      type: 'experience',
-      regex: /(?:^|\n|\b)(WORK\s+EXPERIENCE|PROFESSIONAL\s+EXPERIENCE|EMPLOYMENT\s+HISTORY|WORK\s+HISTORY|EXPERIENCE\s+HISTORY|INTERNSHIP\s+EXPERIENCE|RELEVANT\s+EXPERIENCE|(?:\n|^)\s*EXPERIENCE\s*(?::|$|\n)|(?:\n|^)\s*INTERNSHIPS?\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
-    },
-    {
-      type: 'projects',
-      regex: /(?:^|\n|\b)(SELECTED\s+ENGINEERING\s+PROJECTS|ENGINEERING\s+PROJECTS|SELECTED\s+PROJECTS|KEY\s+PROJECTS|ACADEMIC\s+PROJECTS|PERSONAL\s+PROJECTS|TECHNICAL\s+PROJECTS|CODE\s+REPOSITORIES\s*(?:&|AND)?\s*PROTOTYPES|REPOSITORIES\s*(?:&|AND)?\s*PROTOTYPES|CODE\s+REPOSITORIES|SOFTWARE\s+PROJECTS|(?:\n|^)\s*PROJECTS\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
-    },
-    {
-      type: 'education',
-      regex: /(?:^|\n|\b)(ACADEMIC\s+HISTORY|ACADEMIC\s+BACKGROUND|EDUCATION\s*(?:&|AND)?\s*CREDENTIALS|EDUCATION\s*(?:&|AND)?\s*QUALIFICATIONS|EDUCATIONAL\s+BACKGROUND|(?:\n|^)\s*EDUCATION\s*(?::|$|\n)|(?:\n|^)\s*ACADEMICS\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
-    },
-    {
-      type: 'certifications',
-      regex: /(?:^|\n|\b)(LICENSING\s*(?:&|AND)?\s*CERTIFICATIONS|LICENSES\s*(?:&|AND)?\s*CERTIFICATIONS|LICENSES\s+AND\s+CERTIFICATIONS|CERTIFICATIONS\s*(?:&|AND)?\s*LICENSES|CERTIFICATIONS\s*(?:&|AND)?\s*BADGES|TECHNICAL\s+BADGES\s*(?:&|AND)\s*(?:COURSES|CERTIFICATIONS)|TECHNICAL\s+BADGES|COURSES\s*(?:&|AND)?\s*CERTIFICATES|AWARDS\s*(?:&|AND)?\s*CERTIFICATIONS|HONORS\s*(?:&|AND)?\s*AWARDS|(?:\n|^)\s*CERTIFICATIONS?\s*(?::|$|\n)|(?:\n|^)\s*CERTIFICATES\s*(?::|$|\n))(?:\s*[:—–\-])?/gi
-    }
-  ];
-
-  // Protect URLs from regex replacements
-  let markedText = rawText;
-  const urlTokens = [];
-  markedText = markedText.replace(/https?:\/\/[^\s)]+/g, (url) => {
-    urlTokens.push(url);
-    return `__PROTECTED_URL_${urlTokens.length - 1}__`;
-  });
-
-  SECTION_HEADERS.forEach(sec => {
-    markedText = markedText.replace(sec.regex, () => {
-      return `\n\n__SECTION_SPLIT_${sec.type.toUpperCase()}__\n\n`;
-    });
-  });
-
-  // Restore protected URLs
-  markedText = markedText.replace(/__PROTECTED_URL_(\d+)__/g, (m, idx) => urlTokens[Number(idx)] || '');
-
-  const splits = markedText.split(/__SECTION_SPLIT_([A-Z]+)__/);
-  const sections = {};
-  for (let i = 1; i < splits.length; i += 2) {
-    const type = splits[i].toLowerCase();
-    const content = splits[i+1].trim();
-    sections[type] = (sections[type] ? sections[type] + '\n\n' : '') + content;
-  }
-
   // 3. Parse Individual Sections
-  // Summary
+  // A. Summary
   const summary = (sections.summary || '').trim();
 
-  // Skills
+  // B. Skills
   let skills = [];
   if (sections.skills) {
-    let normalizedSkills = sections.skills
-      .replace(/(?:--+|—+|–+|\n+|[•·|;])/g, '|')
-      .replace(/\b(Python\s*\(FastAPI|Multi\s+Agent\s+Orchestration|Inter-Agent\s+Contracts|Dynamic\s+Context\s+Assembly|Tracing\s*&\s*Production\s+Debugging|Semantic\s+Memory|Google\s+Gemini\s+API|Open-Weight\s+LLMs|Next\.?js|HubSpot\s+CRM|REST\s+APIs|Git\s*&\s*Version\s+Control)\b/g, '|$1');
+    let cleanSkillsText = sections.skills
+      .replace(/\bTwilio AP!\b/gi, 'Twilio API')
+      .replace(/\bOpenAIAPI\b/gi, 'OpenAI API')
+      .replace(/\bRESTAPIs\b/gi, 'REST APIs')
+      .replace(/\bNexis\b/gi, 'Next.js')
+      .replace(/\bNextjs\b/gi, 'Next.js')
+      .replace(/\bGwen\b/gi, 'Qwen')
+      .replace(/(?:~~+|—+|–+|--+|\n+|[•·|;])/g, '|')
+      .replace(/\b(Inter-Agent Contracts|Dynamic Context Assembly|Tracing & Production Debugging|Semantic Memory|Google Gemini API|Open-Weight LLMs|Python \(FastAPI|Next\.?js|HubSpot CRM|REST APIs|Git & Version Control)\b/gi, '|$1');
 
-    const rawTokens = normalizedSkills
+    const rawTokens = cleanSkillsText
       .split('|')
-      .map(s => s.replace(/^(?:Core Skills|Languages|Frameworks|Databases|Tools|Libraries)[A-Za-z\s&]*:\s*/i, '').replace(/^[*\-•«»+\s]+|[*\-•«»+\s]+$/g, '').trim())
+      .map(s => s.replace(/^(?:Core Skills|Languages|Frameworks|Databases|Tools|Libraries)[A-Za-z\s&]*:\s*/i, '').replace(/^[*\-•«»+~!\s,–—]+|[*\-•«»+~!\s,–—]+$/g, '').trim())
       .filter(s => s.length > 1 && !/^(?:Core Skills|Languages|Tools|Databases)$/i.test(s));
 
     rawTokens.forEach(t => {
-      if (t.includes(',') && !t.includes('(')) {
-        t.split(',').forEach(sub => {
-          const c = sub.trim();
+      let cleanT = t.replace(/^[*\-•«»+~!\s,–—]+|[*\-•«»+~!\s,–—]+$/g, '').replace(/\s{2,}/g, ' ').trim();
+      if (cleanT.includes(',') && !cleanT.includes('(')) {
+        cleanT.split(',').forEach(sub => {
+          const c = sub.replace(/^[*\-•«»+~!\s,–—]+|[*\-•«»+~!\s,–—]+$/g, '').trim();
           if (c && c.length > 1 && c.length < 60 && !skills.includes(c)) skills.push(c);
         });
-      } else if (t.length > 1 && t.length < 65 && !skills.includes(t)) {
-        skills.push(t);
+      } else if (cleanT.length > 1 && cleanT.length < 65 && !skills.includes(cleanT)) {
+        skills.push(cleanT);
       }
     });
     skills = [...new Set(skills)];
   }
 
-  // Experience
+  // C. Experience
   const experience = [];
   if (sections.experience) {
     let currentExp = null;
@@ -3296,7 +3382,7 @@ function parseResumeTextHeuristically(rawText) {
     const expLines = sections.experience.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
     for (const line of expLines) {
       const hasDate = dateRegex.test(line);
-      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«');
+      const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«') || line.startsWith('+');
 
       if (hasDate || (!isBullet && line.length < 90 && !currentExp)) {
         if (currentExp && (currentExp.role || currentExp.company)) {
@@ -3326,7 +3412,7 @@ function parseResumeTextHeuristically(rawText) {
           };
         }
       } else if (currentExp) {
-        const bulletText = line.replace(/^[•*\-·«»\s]+/, '').trim();
+        const bulletText = line.replace(/^[•*\-·«»+\s]+/, '').trim();
         if (bulletText) currentExp.descriptions.push(bulletText);
       }
     }
@@ -3335,7 +3421,7 @@ function parseResumeTextHeuristically(rawText) {
     }
   }
 
-  // Projects
+  // D. Projects
   const projects = [];
   if (sections.projects) {
     const ACTION_VERBS = [
@@ -3350,13 +3436,15 @@ function parseResumeTextHeuristically(rawText) {
 
     // 0. OCR URL & Text Normalization
     let cleanProjectsText = sections.projects
-      // 1. Repair protocol: htips://, htps://, https/, http:, hitos:, etc.
-      .replace(/\b(?:https?|htips?|htps?|hitos?)[:;\s/\\|!]+(?:[/\\|!]{1,2})?/gi, 'https://')
-      // 2. Repair github domain & slash separator: github com/, github.comf, github_com/
-      .replace(/github[\s._-]+com[\s/\\f|I!]+/gi, 'github.com/')
+      .replace(/©/g, '')
+      .replace(/\b(?:https?|htips?|htps?|hitos?|ritps?)[:;\s/\\|!]+(?:[/\\|!]{1,2})?/gi, 'https://')
+      .replace(/(?:github|qithub)[\s._-]+com[\s/\\f|I!]+/gi, 'github.com/')
       .replace(/gitlab[\s._-]+com[\s/\\f|I!]+/gi, 'gitlab.com/')
       .replace(/bitbucket[\s._-]+org[\s/\\f|I!]+/gi, 'bitbucket.org/')
-      // 3. Fix hyphenated line breaks in OCR
+      .replace(/jagadeesvarrac-design/gi, 'jagadeesvarrao-design')
+      .replace(/promptiabs/gi, 'promptlabs')
+      .replace(/Quen-Coder/gi, 'Qwen-Coder')
+      .replace(/OLlama/gi, 'Ollama')
       .replace(/\b(Traceback|Self|Real|Multi|Full|Time)\s*\n+\s*(Aware|Healing|Time|Agent|Stack|Travel)\b/gi, '$1-$2 ')
       .replace(/\bImplemented\s+Traceback[\s\-]*\n*[\s\-]*Aware\b/gi, 'Implemented Traceback-Aware');
 
@@ -3364,7 +3452,7 @@ function parseResumeTextHeuristically(rawText) {
     const actionVerbRegex = new RegExp(`(?:[.?!]\\s+|(?<=[^\\s]\\s+))\\b(${verbAlternation})\\b`, 'g');
     let normalized = cleanProjectsText.trim().replace(actionVerbRegex, '\n• $1');
 
-    // 2. Identify project boundaries anchored by repository/demo URLs (GitHub, GitLab, http/https)
+    // 2. Identify project boundaries anchored by repository/demo URLs
     const urlRegex = /(?:https?:\/\/[^\s)]+|github\.com\/[^\s)]+)/gi;
     const urls = [];
     let urlM;
@@ -3376,7 +3464,6 @@ function parseResumeTextHeuristically(rawText) {
     }
 
     let marked = normalized;
-
     if (urls.length > 1) {
       for (let i = urls.length - 1; i >= 1; i--) {
         const u = urls[i];
@@ -3386,7 +3473,7 @@ function parseResumeTextHeuristically(rawText) {
 
         let titleWords = [];
         for (let w = words.length - 1; w >= 0; w--) {
-          const word = words[w].replace(/^[•*\-«»]+/, '');
+          const word = words[w].replace(/^[•*\-«»+]+/, '');
           if (!word) continue;
 
           if (word.endsWith('.') || word.endsWith('!') || word.endsWith('?')) {
@@ -3414,9 +3501,9 @@ function parseResumeTextHeuristically(rawText) {
       }
     }
 
-    // 3. Delimiter & line-based splitting for non-URL projects only
+    // 3. Fallback delimiter for non-URL projects
     if (urls.length === 0) {
-      const nonUrlHeaderRegex = /(?:\n+|^)([A-Z][A-Za-z0-9\s_&/-]{2,50}\s*(?:\||–|—|-)\s*[A-Za-z0-9\s,./#+]+)(?=\n+\s*(?:[•*\-«»]|Architected|Engineered|Implemented|Built|Developed|Created|Designed))/g;
+      const nonUrlHeaderRegex = /(?:\n+|^)([A-Z][A-Za-z0-9\s_&/-]{2,50}\s*(?:\||–|—|-)\s*[A-Za-z0-9\s,./#+]+)(?=\n+\s*(?:[•*\-«»+]|Architected|Engineered|Implemented|Built|Developed|Created|Designed))/g;
       marked = marked.replace(nonUrlHeaderRegex, '\n\n__PROJECT_SPLIT__\n$1');
     }
 
@@ -3432,8 +3519,8 @@ function parseResumeTextHeuristically(rawText) {
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«');
-        const startsWithActionVerb = new RegExp(`^\\s*\\b(${verbAlternation})\\b`, 'i').test(line.replace(/^[•*\-«»\s]+/, ''));
+        const isBullet = line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || line.startsWith('·') || line.startsWith('«') || line.startsWith('+');
+        const startsWithActionVerb = new RegExp(`^\\s*\\b(${verbAlternation})\\b`, 'i').test(line.replace(/^[•*\-«»+\s]+/, ''));
 
         if ((isBullet || startsWithActionVerb) && headerLines.length > 0) {
           bulletsStarted = true;
@@ -3441,7 +3528,7 @@ function parseResumeTextHeuristically(rawText) {
 
         if (bulletsStarted) {
           if (isBullet || startsWithActionVerb) {
-            bulletLines.push(line.replace(/^[•*\-«»\s]+/, '').trim());
+            bulletLines.push(line.replace(/^[•*\-«»+\s]+/, '').trim());
           } else if (bulletLines.length > 0) {
             bulletLines[bulletLines.length - 1] += ' ' + line.trim();
           } else {
@@ -3453,7 +3540,6 @@ function parseResumeTextHeuristically(rawText) {
       }
 
       const header = headerLines.join(' ');
-
       let link = '';
       const urlMatch = header.match(/(?:https?:\/\/[^\s)]+|github\.com\/[^\s)]+)/i);
       let beforeUrl = header;
@@ -3461,14 +3547,12 @@ function parseResumeTextHeuristically(rawText) {
       if (urlMatch) {
         const rawUrl = urlMatch[0].replace(/[),.\s]+$/, '');
         link = rawUrl.startsWith('http') ? rawUrl : 'https://' + rawUrl;
-        link = link.replace(/promptiabs\b/gi, 'promptlabs');
         beforeUrl = header.substring(0, header.indexOf(urlMatch[0])).replace(/[()]/g, ' ').trim();
         afterUrl = header.substring(header.indexOf(urlMatch[0]) + urlMatch[0].length).replace(/^[),.\s]+/, '').trim();
       }
 
       let title = '';
       let tech = '';
-
       const techRegex = /\b(Python|FastAPI|React|Next\.?js|TypeScript|JavaScript|Node(?:\.js)?|SQL|Gemini|Ollama|Pydantic|NetworkX|Flask|Java|C\+\+|AWS|Docker|PostgreSQL|MongoDB|ChromaDB|Prisma|HTML|CSS|Tailwind)\b/i;
 
       if (afterUrl) {
@@ -3504,7 +3588,7 @@ function parseResumeTextHeuristically(rawText) {
         .trim();
 
       const cleanBullets = bulletLines
-        .map(b => b.replace(/^[•*\-«»\s]+/, '').trim())
+        .map(b => b.replace(/^[•*\-«»+\s]+/, '').trim())
         .filter(b => b.length > 10);
 
       projects.push({
@@ -3516,12 +3600,15 @@ function parseResumeTextHeuristically(rawText) {
     });
   }
 
-  // Education
+  // E. Education
   const education = [];
   if (sections.education) {
-    let eduText = sections.education.replace(/\b(B\.?Tech|Bachelor|Master|M\.?Tech|Intermediate\s+Education|TENTH|10th|12th|Diploma|Higher\s+Secondary|Ph\.?D)\b/gi, '\n__DEGREE_SPLIT__$1');
-    const eduBlocks = eduText.split('__DEGREE_SPLIT__').map(b => b.trim()).filter(Boolean);
+    let eduText = sections.education
+      .replace(/(\d+\.\d)[1I|l/]+1?0(?:\.0)?(?:\s*CGPA)?/gi, '$1/10.0 CGPA')
+      .replace(/(\d+\.\d+)\s*\/\s*110(?:\.0)?/gi, '$1/10.0')
+      .replace(/\b(B\.?Tech|Bachelor|Master|M\.?Tech|Intermediate\s+Education|TENTH|10th|12th|Diploma|Higher\s+Secondary|Ph\.?D)\b/gi, '\n__DEGREE_SPLIT__$1');
 
+    const eduBlocks = eduText.split('__DEGREE_SPLIT__').map(b => b.trim()).filter(Boolean);
     const yearRangeRegex = /\b(19\d{2}|20\d{2})\s*(?:-|–|to)\s*(19\d{2}|20\d{2}|Present)\b|\b(19\d{2}|20\d{2})\b/i;
 
     eduBlocks.forEach(block => {
@@ -3546,9 +3633,9 @@ function parseResumeTextHeuristically(rawText) {
         degree = cleanBlock.substring(0, instMatch.index).trim();
         institution = cleanBlock.substring(instMatch.index).trim();
       } else {
-        const parts = cleanBlock.split(/\r?\n/);
+        const parts = cleanBlock.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
         degree = parts[0] || 'Degree';
-        institution = parts[1] || '';
+        institution = parts.slice(1).join(' ') || '';
       }
 
       if (degree || institution) {
@@ -3563,37 +3650,80 @@ function parseResumeTextHeuristically(rawText) {
     });
   }
 
-  // Certifications
+  // F. Certifications
   const certifications = [];
   if (sections.certifications) {
-    let certText = sections.certifications.replace(/[+•]\s*/g, '\n__CERT_SPLIT__');
-    const certBlocks = certText.split('__CERT_SPLIT__').map(b => b.trim()).filter(Boolean);
+    let certClean = sections.certifications
+      .replace(/Format\s+j?le[- ]*Colu?m?[a-z\s]*ZenResume[a-z.]*/gi, '')
+      .replace(/Format\s+le-Col\s*[A-Z]*/gi, '')
+      .replace(/(?:✓\s*)?(?:Formatted\s+for\s+)?(?:\d+%\s*)?(?:Single-Column\s*)?(?:ATS\s+Compliance\s*)?(?:•\s*)?ZenResume(?:\.online)?/gi, '');
 
-    certBlocks.forEach(block => {
-      const urlMatch = block.match(/https?:\/\/[^\s)]+/i);
-      const link = urlMatch ? urlMatch[0] : '';
-      const textWithoutUrl = block.replace(/https?:\/\/[^\s)]+/g, '').trim();
+    const certLines = certClean.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const certGroups = [];
+    let currentCert = null;
 
-      const issuerMatch = textWithoutUrl.match(/\b(GOOGLE|COURSERA|UDEMY|AWS|MICROSOFT|IBM|ORACLE|META)\b/i);
-      const issuer = issuerMatch ? issuerMatch[0].toUpperCase() : '';
+    for (const line of certLines) {
+      const isNew = line.startsWith('+') || line.startsWith('•') || line.startsWith('-') || 
+                    (currentCert && currentCert.lines.length >= 3 && !/(?:https?|skills|badges|public_profiles)/i.test(line));
+      if (isNew || !currentCert) {
+        if (currentCert) certGroups.push(currentCert);
+        currentCert = { lines: [line.replace(/^[+•*\-\s]+/, '').trim()] };
+      } else {
+        currentCert.lines.push(line);
+      }
+    }
+    if (currentCert) certGroups.push(currentCert);
 
-      const dateMatch = textWithoutUrl.match(/(?:\b\d{1,2}\/\d{1,2}\/\d{2,4}\b|\b\d{4}\b)/);
-      const date = dateMatch ? dateMatch[0] : '';
-
-      let name = textWithoutUrl
-        .replace(/\b(GOOGLE|COURSERA|UDEMY|AWS|MICROSOFT|IBM|ORACLE|META)\b/gi, '')
-        .replace(/(?:\b\d{1,2}\/\d{1,2}\/\d{2,4}\b|\b\d{4}\b)/g, '')
+    certGroups.forEach(cg => {
+      let name = (cg.lines[0] || '').replace(/^[+•*\-\s]+/, '')
+        .replace(/Format\s+j?le[- ]*Colu?m?[a-z\s]*ZenResume[a-z.]*/gi, '')
+        .replace(/Format\s+le-Col\s*[A-Z]*/gi, '')
+        .replace(/\bFormat\b.*$/i, '')
+        .replace(/\bZenResume.*$/i, '')
+        .replace(/\bSingle[- ]*Column.*$/i, '')
+        .replace(/\bATS\s*Compliance.*$/i, '')
+        .replace(/\.onli[a-z]*\b/gi, '')
         .replace(/[-–:|+]/g, ' ')
         .replace(/\s+/g, ' ')
         .trim();
 
+      let issuer = '';
+      let date = '';
+      let link = '';
+
+      for (let i = 1; i < cg.lines.length; i++) {
+        const line = cg.lines[i];
+        if (/(?:https?|skills|badges|public_profiles)/i.test(line)) {
+          let cleanUrl = line.trim()
+            .replace(/https?\s*[/\\iI|]+\s*/gi, 'https://')
+            .replace(/https?:\/\/[iI]\s*/gi, 'https://')
+            .replace(/skills\.\s*public_profiles/gi, 'skills.google/public_profiles')
+            .replace(/skills\.\s*\//gi, 'skills.google/')
+            .replace(/¢/g, 'c');
+
+          const parts = cleanUrl.split(/\/public_profiles\//i);
+          if (parts.length === 2) {
+            const base = parts[0];
+            const badgeSplit = parts[1].split(/\s*\/?\s*badges\s*\/?\s*/i);
+            if (badgeSplit.length === 2) {
+              const uuid = badgeSplit[0].replace(/\s+/g, '-').replace(/-+/g, '-');
+              const badgeId = badgeSplit[1].replace(/\s+/g, '');
+              cleanUrl = `${base}/public_profiles/${uuid}/badges/${badgeId}`;
+            }
+          }
+          link = cleanUrl;
+        } else if (!issuer) {
+          const dateMatch = line.match(/(?:\b\d{1,2}\/\d{1,2}\/\d{2,4}\b|\b\d{4}\b)/);
+          if (dateMatch) date = dateMatch[0];
+          let cleanIssuer = line.replace(/(?:\b\d{1,2}\/\d{1,2}\/\d{2,4}\b|\b\d{4}\b)/g, '')
+            .replace(/^[«»•*\-–—|:\s]+|[«»•*\-–—|:\s]+$/g, '')
+            .trim();
+          issuer = cleanIssuer.toUpperCase();
+        }
+      }
+
       if (name) {
-        certifications.push({
-          name: name,
-          issuer: issuer,
-          date: date,
-          desc: link
-        });
+        certifications.push({ name, issuer, date, desc: link });
       }
     });
   }
@@ -3615,7 +3745,8 @@ function parseResumeTextHeuristically(rawText) {
     experience,
     projects,
     education,
-    certifications
+    certifications,
+    sectionTitles: detectedSectionTitles
   };
 }
 
@@ -3651,6 +3782,14 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
           "linkedin": "string",
           "github": "string",
           "customSocial": "string"
+        },
+        "sectionTitles": {
+          "summary": "string",
+          "skills": "string",
+          "experience": "string",
+          "projects": "string",
+          "education": "string",
+          "certifications": "string"
         },
         "summary": "string",
         "skills": ["string", "string"],
@@ -3702,18 +3841,68 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
       console.warn("Cloud AI parse unavailable or returned error, switching to instant client-side ATS engine:", cloudErr);
     }
 
+    // Safeguard: detect if candidate name was misclassified as a section heading
+    if (parsedData?.personal?.name && /^(?:data\s+science\s+statement|professional\s+summary|executive\s+summary|summary|profile|about\s+me|experience|work\s+experience|skills|technical\s+skills|projects|education|academic\s+record|certifications)$/i.test(parsedData.personal.name.trim())) {
+      console.warn("Detected section heading misclassified as candidate name:", parsedData.personal.name);
+      if (!parsedData.sectionTitles) parsedData.sectionTitles = {};
+      if (/data\s+science\s+statement|summary|profile|about\s+me/i.test(parsedData.personal.name)) {
+        parsedData.sectionTitles.summary = parsedData.personal.name.trim();
+      }
+      parsedData.personal.name = '';
+    }
+
+    const hasSufficientContent = parsedData && (
+      Boolean(parsedData.personal?.name) &&
+      (
+        (Array.isArray(parsedData.experience) && parsedData.experience.length > 0) ||
+        (Array.isArray(parsedData.projects) && parsedData.projects.length > 0) ||
+        (Array.isArray(parsedData.skills) && parsedData.skills.length > 0) ||
+        (Array.isArray(parsedData.education) && parsedData.education.length > 0)
+      )
+    );
+
     // 2. Secondary / Fallback: Client-Side PDF.js Extractor + Smart Heuristic ATS Engine
-    if (!parsedData || typeof parsedData !== 'object' || (!parsedData.personal && !parsedData.experience && !parsedData.skills)) {
+    if (!parsedData || typeof parsedData !== 'object' || !hasSufficientContent) {
       if (isPdf) {
         const extractedPdfText = await extractTextFromPdf(rawFile || cleanPdf);
         window._lastExtractedPdfText = extractedPdfText;
         if (extractedPdfText && extractedPdfText.trim().length > 20) {
-          parsedData = parseResumeTextHeuristically(extractedPdfText);
-        } else {
+          const heuristicData = parseResumeTextHeuristically(extractedPdfText);
+          if (!parsedData) {
+            parsedData = heuristicData;
+          } else {
+            if (!parsedData.personal?.name && heuristicData.personal?.name) parsedData.personal.name = heuristicData.personal.name;
+            if (!parsedData.personal?.title && heuristicData.personal?.title) parsedData.personal.title = heuristicData.personal.title;
+            if (!parsedData.personal?.email && heuristicData.personal?.email) parsedData.personal.email = heuristicData.personal.email;
+            if (!parsedData.personal?.phone && heuristicData.personal?.phone) parsedData.personal.phone = heuristicData.personal.phone;
+            if (!parsedData.personal?.location && heuristicData.personal?.location) parsedData.personal.location = heuristicData.personal.location;
+            if (!parsedData.personal?.website && heuristicData.personal?.website) parsedData.personal.website = heuristicData.personal.website;
+            if (!parsedData.personal?.linkedin && heuristicData.personal?.linkedin) parsedData.personal.linkedin = heuristicData.personal.linkedin;
+            if (!parsedData.personal?.github && heuristicData.personal?.github) parsedData.personal.github = heuristicData.personal.github;
+            if (!parsedData.summary && heuristicData.summary) parsedData.summary = heuristicData.summary;
+            if ((!parsedData.skills || parsedData.skills.length === 0) && heuristicData.skills?.length > 0) parsedData.skills = heuristicData.skills;
+            if ((!parsedData.experience || parsedData.experience.length === 0) && heuristicData.experience?.length > 0) parsedData.experience = heuristicData.experience;
+            if ((!parsedData.projects || parsedData.projects.length === 0) && heuristicData.projects?.length > 0) parsedData.projects = heuristicData.projects;
+            if ((!parsedData.education || parsedData.education.length === 0) && heuristicData.education?.length > 0) parsedData.education = heuristicData.education;
+            if ((!parsedData.certifications || parsedData.certifications.length === 0) && heuristicData.certifications?.length > 0) parsedData.certifications = heuristicData.certifications;
+            parsedData.sectionTitles = { ...heuristicData.sectionTitles, ...parsedData.sectionTitles };
+          }
+        } else if (!parsedData) {
           throw new Error("We could not extract readable text from this PDF file. Scanned images or protected PDFs cannot be parsed automatically.");
         }
       } else {
-        parsedData = parseResumeTextHeuristically(inputData);
+        const heuristicData = parseResumeTextHeuristically(inputData);
+        if (!parsedData) {
+          parsedData = heuristicData;
+        } else {
+          if (!parsedData.personal?.name && heuristicData.personal?.name) parsedData.personal.name = heuristicData.personal.name;
+          if ((!parsedData.skills || !parsedData.skills.length) && heuristicData.skills?.length) parsedData.skills = heuristicData.skills;
+          if ((!parsedData.experience || !parsedData.experience.length) && heuristicData.experience?.length) parsedData.experience = heuristicData.experience;
+          if ((!parsedData.projects || !parsedData.projects.length) && heuristicData.projects?.length) parsedData.projects = heuristicData.projects;
+          if ((!parsedData.education || !parsedData.education.length) && heuristicData.education?.length) parsedData.education = heuristicData.education;
+          if ((!parsedData.certifications || !parsedData.certifications.length) && heuristicData.certifications?.length) parsedData.certifications = heuristicData.certifications;
+          parsedData.sectionTitles = { ...heuristicData.sectionTitles, ...parsedData.sectionTitles };
+        }
       }
     }
 
@@ -3727,6 +3916,23 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
       loadProfileIntoForm(normalized);
       state.hasLoadedProfile = true;
     }
+    
+    if (typeof autoSaveResume === 'function') {
+      autoSaveResume();
+    }
+
+    if (typeof enterApp === 'function') {
+      enterApp();
+    }
+    const bWorkspace = document.getElementById('builder-workspace');
+    if (bWorkspace) bWorkspace.style.display = 'grid';
+    const aContainer = document.getElementById('app-container');
+    if (aContainer) aContainer.style.display = 'flex';
+    const lScreen = document.getElementById('landing-screen');
+    if (lScreen) lScreen.style.display = 'none';
+    const sScreen = document.getElementById('selection-screen');
+    if (sScreen) sScreen.style.display = 'none';
+    document.body.classList.add('in-editor');
     
     syncFormToPreview();
 
@@ -4273,6 +4479,102 @@ function attachEvents() {
     }
   });
 
+  // Section heading inputs in Editor Bar (Bidirectional Sync)
+  ['summary', 'skills', 'experience', 'projects', 'education', 'certifications'].forEach(secKey => {
+    const el = document.getElementById(`input-heading-${secKey}`);
+    if (el) {
+      el.addEventListener('input', () => {
+        const val = el.value.trim();
+        if (!state.sectionTitles) state.sectionTitles = {};
+        state.sectionTitles[secKey] = val;
+        
+        // Update live preview heading immediately
+        const paper = document.getElementById('resume-print-area');
+        if (paper) {
+          const titleEl = paper.querySelector(`[data-section-title-key="${secKey}"], [data-section="${secKey}"] .section-title, [data-section="${secKey}"] h2, [data-section="${secKey}"] h3`);
+          if (titleEl) {
+            titleEl.textContent = val || el.getAttribute('placeholder') || '';
+          }
+        }
+        autoSaveResume();
+      });
+      el.addEventListener('change', () => {
+        syncFormToPreview();
+        autoSaveResume();
+      });
+    }
+  });
+
+  // Preset Heading Chips Click Listener (1-click set heading from presets)
+  document.addEventListener('click', (e) => {
+    const presetBtn = e.target.closest('.btn-heading-preset');
+    if (presetBtn) {
+      const secKey = presetBtn.getAttribute('data-section-key');
+      const val = presetBtn.getAttribute('data-value');
+      if (secKey && val) {
+        if (!state.sectionTitles) state.sectionTitles = {};
+        state.sectionTitles[secKey] = val;
+
+        const inputEl = document.getElementById(`input-heading-${secKey}`);
+        if (inputEl) {
+          inputEl.value = val;
+        }
+
+        // Immediately update heading in preview
+        const paper = document.getElementById('resume-print-area');
+        if (paper) {
+          const titleEl = paper.querySelector(`[data-section-title-key="${secKey}"], [data-section="${secKey}"] .section-title, [data-section="${secKey}"] h2, [data-section="${secKey}"] h3`);
+          if (titleEl) {
+            titleEl.textContent = val;
+          }
+        }
+
+        autoSaveResume();
+        if (typeof window.showToast === 'function') {
+          window.showToast(`✨ Heading set to "${val}"!`, 'info', 1800);
+        }
+      }
+    }
+  });
+
+  // Live Preview Inline Heading Editing (Two-Way Sync from Live Preview to Editor)
+  const resumePrintArea = document.getElementById('resume-print-area');
+  if (resumePrintArea) {
+    resumePrintArea.addEventListener('input', (e) => {
+      const target = e.target;
+      if (target && target.classList.contains('editable-section-title')) {
+        const secKey = target.getAttribute('data-section-title-key');
+        if (secKey) {
+          const val = (target.textContent || target.innerText || '').trim();
+          if (!state.sectionTitles) state.sectionTitles = {};
+          state.sectionTitles[secKey] = val;
+
+          // Update corresponding input in editor form
+          const inputEl = document.getElementById(`input-heading-${secKey}`);
+          if (inputEl && inputEl.value !== val) {
+            inputEl.value = val;
+          }
+          autoSaveResume();
+        }
+      }
+    });
+
+    resumePrintArea.addEventListener('blur', (e) => {
+      const target = e.target;
+      if (target && target.classList.contains('editable-section-title')) {
+        const secKey = target.getAttribute('data-section-title-key');
+        if (secKey) {
+          const val = (target.textContent || target.innerText || '').trim();
+          if (!state.sectionTitles) state.sectionTitles = {};
+          state.sectionTitles[secKey] = val;
+          const inputEl = document.getElementById(`input-heading-${secKey}`);
+          if (inputEl) inputEl.value = val;
+          autoSaveResume();
+        }
+      }
+    }, true);
+  }
+
   // Dynamic Add item listeners
   btnAddExperience.addEventListener('click', () => {
     addExperienceCard();
@@ -4603,7 +4905,7 @@ function attachEvents() {
     inputMagicPdf.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      if (file.type !== 'application/pdf') {
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
         window.showToast("Please select a valid PDF file.", "warning");
         return;
       }

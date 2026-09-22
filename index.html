@@ -17,7 +17,23 @@
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
-  
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '0.0.0.0' || window.location.hostname.startsWith('192.168.')) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var r of regs) r.unregister();
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          for (var k of keys) caches.delete(k);
+        });
+      }
+    }
+  </script>
   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -145,15 +161,15 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=3.0.6">
+  <link rel="stylesheet" href="styles.css?v=3.2.0">
   
   <!-- Instant Client-Side Cache Busting & PWA Version Synchronizer -->
   <script>
     (function() {
       try {
-        var APP_DEPLOY_VERSION = 'v3.0.6';
+        var APP_DEPLOY_VERSION = 'v3.2.0';
         var storedVersion = localStorage.getItem('zen_deploy_version');
-        if (storedVersion !== APP_DEPLOY_VERSION) {
+        if (storedVersion !== APP_DEPLOY_VERSION || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
           localStorage.setItem('zen_deploy_version', APP_DEPLOY_VERSION);
           if ('caches' in window) {
             caches.keys().then(function(cacheNames) {
@@ -163,9 +179,9 @@
                 })
               );
             }).then(function() {
-              if (window.location.search.indexOf('reloaded=3.0.6') === -1) {
+              if (window.location.search.indexOf('reloaded=3.2.0') === -1 && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
                 var sep = window.location.href.indexOf('?') === -1 ? '?' : '&';
-                window.location.href = window.location.href.split('?')[0] + '?reloaded=3.0.6';
+                window.location.href = window.location.href.split('?')[0] + '?reloaded=3.2.0';
               }
             });
           }
@@ -2186,7 +2202,7 @@
                   <span>Templates</span>
                 </button>
                 <h2 class="stitch-editor-title" style="margin: 0; font-size: 1.1rem; font-weight: 800;">Edit Resume</h2>
-                <span class="editor-version-tag" style="font-size: 9.5px; font-weight: 800; border-radius: 4px; padding: 1px 4px;">v3.0</span>
+                <span class="editor-version-tag" style="font-size: 9.5px; font-weight: 800; border-radius: 4px; padding: 1px 4px;">v3.2.0</span>
                 <button type="button" class="btn-editor-tour-trigger" id="btn-editor-tour-trigger" onclick="window.startZenGuideTour && window.startZenGuideTour(true);" title="Take Quick Interactive Tour" style="font-size: 10.5px; padding: 2px 6px;">
                   <i class="fas fa-compass"></i> <span>Tour</span>
                 </button>
@@ -2439,6 +2455,21 @@
                     </div>
                   </div>
                   
+                  <div class="section-heading-control">
+                    <div class="section-heading-top-row">
+                      <label for="input-heading-summary"><i class="fas fa-heading"></i> Section Heading on Resume:</label>
+                      <div class="heading-preset-chips">
+                        <span class="preset-label">Quick Set:</span>
+                        <button type="button" class="btn-heading-preset" data-section-key="summary" data-value="Summary">Summary</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="summary" data-value="Professional Summary">Professional Summary</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="summary" data-value="Executive Summary">Executive Summary</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="summary" data-value="Data Science Statement">Data Science Statement</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="summary" data-value="About Me">About Me</button>
+                      </div>
+                    </div>
+                    <input type="text" id="input-heading-summary" class="input-section-heading" data-section-key="summary" placeholder="e.g. Summary, Professional Summary, Data Science Statement">
+                  </div>
+
                   <div class="form-group" style="position: relative;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                       <label class="form-label" for="input-summary" style="margin: 0;">Summary Statement</label>
@@ -2477,6 +2508,20 @@
                     </button>
                   </div>
                   
+                  <div class="section-heading-control">
+                    <div class="section-heading-top-row">
+                      <label for="input-heading-skills"><i class="fas fa-heading"></i> Section Heading on Resume:</label>
+                      <div class="heading-preset-chips">
+                        <span class="preset-label">Quick Set:</span>
+                        <button type="button" class="btn-heading-preset" data-section-key="skills" data-value="Skills">Skills</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="skills" data-value="Technical Skills">Technical Skills</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="skills" data-value="Core Skills & Technologies">Core Skills</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="skills" data-value="Skills Directory">Skills Directory</button>
+                      </div>
+                    </div>
+                    <input type="text" id="input-heading-skills" class="input-section-heading" data-section-key="skills" placeholder="e.g. Skills, Technical Skills, Core Skills & Technologies">
+                  </div>
+
                   <div class="form-group">
                     <label class="form-label" for="input-skills">Skills (Comma-separated)</label>
                     <textarea id="input-skills" class="form-input" style="min-height: 130px; font-size: 13.5px; line-height: 1.5;" placeholder="e.g. Python, JavaScript, React, Node.js, REST APIs, SQL, Git, Linux, Docker"></textarea>
@@ -2500,6 +2545,19 @@
                     </div>
                   </div>
                   
+                  <div class="section-heading-control">
+                    <div class="section-heading-top-row">
+                      <label for="input-heading-experience"><i class="fas fa-heading"></i> Section Heading on Resume:</label>
+                      <div class="heading-preset-chips">
+                        <span class="preset-label">Quick Set:</span>
+                        <button type="button" class="btn-heading-preset" data-section-key="experience" data-value="Experience">Experience</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="experience" data-value="Work Experience">Work Experience</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="experience" data-value="Professional Experience">Professional Experience</button>
+                      </div>
+                    </div>
+                    <input type="text" id="input-heading-experience" class="input-section-heading" data-section-key="experience" placeholder="e.g. Experience, Work Experience, Professional Experience">
+                  </div>
+
                   <div class="list-container" id="experience-list-container">
                     <!-- Dynamically generated entries -->
                   </div>
@@ -2526,6 +2584,20 @@
                     </div>
                   </div>
                   
+                  <div class="section-heading-control">
+                    <div class="section-heading-top-row">
+                      <label for="input-heading-projects"><i class="fas fa-heading"></i> Section Heading on Resume:</label>
+                      <div class="heading-preset-chips">
+                        <span class="preset-label">Quick Set:</span>
+                        <button type="button" class="btn-heading-preset" data-section-key="projects" data-value="Projects">Projects</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="projects" data-value="Key Projects">Key Projects</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="projects" data-value="Technical Projects">Technical Projects</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="projects" data-value="Data Modeling & Analytical Projects">Analytical Projects</button>
+                      </div>
+                    </div>
+                    <input type="text" id="input-heading-projects" class="input-section-heading" data-section-key="projects" placeholder="e.g. Projects, Key Projects, Technical Projects">
+                  </div>
+
                   <div class="list-container" id="projects-list-container">
                     <!-- Dynamically generated entries -->
                   </div>
@@ -2547,6 +2619,19 @@
                     </button>
                   </div>
                   
+                  <div class="section-heading-control">
+                    <div class="section-heading-top-row">
+                      <label for="input-heading-education"><i class="fas fa-heading"></i> Section Heading on Resume:</label>
+                      <div class="heading-preset-chips">
+                        <span class="preset-label">Quick Set:</span>
+                        <button type="button" class="btn-heading-preset" data-section-key="education" data-value="Education">Education</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="education" data-value="Academic Record">Academic Record</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="education" data-value="Academic History">Academic History</button>
+                      </div>
+                    </div>
+                    <input type="text" id="input-heading-education" class="input-section-heading" data-section-key="education" placeholder="e.g. Education, Academic Record, Academic History">
+                  </div>
+
                   <div class="list-container" id="education-list-container">
                     <!-- Dynamically generated entries -->
                   </div>
@@ -2568,6 +2653,20 @@
                     </button>
                   </div>
                   
+                  <div class="section-heading-control">
+                    <div class="section-heading-top-row">
+                      <label for="input-heading-certifications"><i class="fas fa-heading"></i> Section Heading on Resume:</label>
+                      <div class="heading-preset-chips">
+                        <span class="preset-label">Quick Set:</span>
+                        <button type="button" class="btn-heading-preset" data-section-key="certifications" data-value="Certifications">Certifications</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="certifications" data-value="Verified Analytics Credentials">Analytics Credentials</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="certifications" data-value="Verified Credentials">Verified Credentials</button>
+                        <button type="button" class="btn-heading-preset" data-section-key="certifications" data-value="Licenses & Certifications">Licenses & Certifications</button>
+                      </div>
+                    </div>
+                    <input type="text" id="input-heading-certifications" class="input-section-heading" data-section-key="certifications" placeholder="e.g. Certifications, Verified Credentials">
+                  </div>
+
                   <div class="list-container" id="certifications-list-container">
                     <!-- Dynamically generated entries -->
                   </div>
@@ -3887,22 +3986,22 @@
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
-  <script src="templates-data.js?v=3.0.6" defer></script>
-  <script src="indexeddb-storage.js?v=3.1.3" defer></script>
-  <script src="firebase-service.js?v=3.1.3" defer></script>
-  <script src="app.js?v=3.0.6" defer></script>
-  <script src="profile-sync.js?v=3.0" defer></script>
-  <script src="exit-intent.js?v=3.0" defer></script>
-  <script src="hero-playground.js?v=3.0" defer></script>
-  <script src="navigator-tour.js?v=3.0" defer></script>
-  <script src="role-hub.js?v=3.0" defer></script>
-  <script src="live-pulse.js?v=3.0" defer></script>
-  <script src="ats-matcher.js?v=3.1.0" defer></script>
-  <script src="cover-letter-engine.js?v=3.1.0" defer></script>
-  <script src="bullet-bank.js?v=3.0" defer></script>
+  <script src="templates-data.js?v=3.2.0" defer></script>
+  <script src="indexeddb-storage.js?v=3.2.0" defer></script>
+  <script src="firebase-service.js?v=3.2.0" defer></script>
+  <script src="app.js?v=3.2.0" defer></script>
+  <script src="profile-sync.js?v=3.2.0" defer></script>
+  <script src="exit-intent.js?v=3.2.0" defer></script>
+  <script src="hero-playground.js?v=3.2.0" defer></script>
+  <script src="navigator-tour.js?v=3.2.0" defer></script>
+  <script src="role-hub.js?v=3.2.0" defer></script>
+  <script src="live-pulse.js?v=3.2.0" defer></script>
+  <script src="ats-matcher.js?v=3.2.0" defer></script>
+  <script src="cover-letter-engine.js?v=3.2.0" defer></script>
+  <script src="bullet-bank.js?v=3.2.0" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
   <!-- Razorpay Checkout SDK is loaded on-demand via window.PaymentMediator.loadRazorpaySdk() to prevent 1,400+ unused preload warnings on page load -->
-  <script src="payment-mediator.js?v=3.1.0" defer></script>
+  <script src="payment-mediator.js?v=3.2.0" defer></script>
   <!-- Vercel Web Analytics (HTML Native - Guarded against localhost 404) -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -4279,39 +4378,51 @@
     </div>
   </div>
 
-  <!-- Service Worker Registration with Instant Auto-Update & PWA Sync -->
+  <!-- Service Worker Registration with Instant Auto-Update & PWA Sync (Production Only) -->
   <script>
     if ('serviceWorker' in navigator) {
-      var refreshing = false;
-      navigator.serviceWorker.addEventListener('controllerchange', function() {
-        if (!refreshing) {
-          refreshing = true;
-          window.location.reload();
-        }
-      });
-
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js?v=3.1.3')
-          .then(function(reg) {
-            reg.update();
-            if (reg.waiting) {
-              reg.waiting.postMessage({ type: 'SKIP_WAITING' });
-            }
-            reg.addEventListener('updatefound', function() {
-              var newWorker = reg.installing;
-              if (newWorker) {
-                newWorker.addEventListener('statechange', function() {
-                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  }
-                });
-              }
-            });
-          })
-          .catch(function(err) {
-            console.log('SW registration note:', err);
+      // Never cache or register SW on local development server
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '0.0.0.0' || window.location.hostname.startsWith('192.168.')) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var r of regs) r.unregister();
+        });
+        if ('caches' in window) {
+          caches.keys().then(function(keys) {
+            keys.forEach(function(k) { caches.delete(k); });
           });
-      });
+        }
+      } else {
+        var refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', function() {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js?v=3.2.0')
+            .then(function(reg) {
+              reg.update();
+              if (reg.waiting) {
+                reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+              }
+              reg.addEventListener('updatefound', function() {
+                var newWorker = reg.installing;
+                if (newWorker) {
+                  newWorker.addEventListener('statechange', function() {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                      newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    }
+                  });
+                }
+              });
+            })
+            .catch(function(err) {
+              console.log('SW registration note:', err);
+            });
+        });
+      }
     }
   </script>
 </body>

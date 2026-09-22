@@ -1039,9 +1039,10 @@ const RenderHelpers = {
   
   summary: (data, font, title, accentColor, leftBorder = false) => {
     if (!data.summary) return '';
+    const displayTitle = (data.sectionTitles && data.sectionTitles.summary) ? data.sectionTitles.summary : title;
     return `
       <div class="resume-section" data-section="summary" style="margin-bottom: 16px;">
-        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; ${leftBorder ? 'border-left: 3px solid ' + accentColor + '; padding-left: 8px;' : 'border-bottom: 1px solid ' + accentColor + '; padding-bottom: 3px;'} margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        <h2 class="section-title editable-section-title" data-section-title-key="summary" contenteditable="true" spellcheck="false" title="Click to edit section heading" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; ${leftBorder ? 'border-left: 3px solid ' + accentColor + '; padding-left: 8px;' : 'border-bottom: 1px solid ' + accentColor + '; padding-bottom: 3px;'} margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${displayTitle}</h2>
         <p style="font-family: Arial, sans-serif; font-size: 10.5px; line-height: 1.5; color: #333; margin: 0; text-align: justify;">${data.summary}</p>
       </div>
     `;
@@ -1049,6 +1050,7 @@ const RenderHelpers = {
 
   skills: (data, font, title, accentColor, layoutType = 'bullets') => {
     if (!data.skills || data.skills.length === 0) return '';
+    const displayTitle = (data.sectionTitles && data.sectionTitles.skills) ? data.sectionTitles.skills : title;
     let skillsContent = '';
     
     if (layoutType === 'badges') {
@@ -1069,7 +1071,7 @@ const RenderHelpers = {
 
     return `
       <div class="resume-section" data-section="skills" style="margin-bottom: 16px;">
-        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        <h2 class="section-title editable-section-title" data-section-title-key="skills" contenteditable="true" spellcheck="false" title="Click to edit section heading" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${displayTitle}</h2>
         ${skillsContent}
       </div>
     `;
@@ -1077,9 +1079,10 @@ const RenderHelpers = {
 
   experience: (data, font, title, accentColor) => {
     if (!data.experience || data.experience.length === 0) return '';
+    const displayTitle = (data.sectionTitles && data.sectionTitles.experience) ? data.sectionTitles.experience : title;
     let html = `
       <div class="resume-section" data-section="experience" style="margin-bottom: 16px;">
-        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        <h2 class="section-title editable-section-title" data-section-title-key="experience" contenteditable="true" spellcheck="false" title="Click to edit section heading" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${displayTitle}</h2>
     `;
     data.experience.forEach(exp => {
       html += `
@@ -1217,9 +1220,10 @@ const RenderHelpers = {
 
   projects: (data, font, title, accentColor, showMonoTech = false) => {
     if (!data.projects || data.projects.length === 0) return '';
+    const displayTitle = (data.sectionTitles && data.sectionTitles.projects) ? data.sectionTitles.projects : title;
     let html = `
       <div class="resume-section" data-section="projects" style="margin-bottom: 16px;">
-        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        <h2 class="section-title editable-section-title" data-section-title-key="projects" contenteditable="true" spellcheck="false" title="Click to edit section heading" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${displayTitle}</h2>
     `;
     data.projects.forEach(proj => {
       html += `
@@ -1240,9 +1244,10 @@ const RenderHelpers = {
 
   education: (data, font, title, accentColor) => {
     if (!data.education || data.education.length === 0) return '';
+    const displayTitle = (data.sectionTitles && data.sectionTitles.education) ? data.sectionTitles.education : title;
     let html = `
       <div class="resume-section" data-section="education" style="margin-bottom: 16px;">
-        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        <h2 class="section-title editable-section-title" data-section-title-key="education" contenteditable="true" spellcheck="false" title="Click to edit section heading" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${displayTitle}</h2>
     `;
     data.education.forEach(edu => {
       html += `
@@ -1270,9 +1275,10 @@ const RenderHelpers = {
 
   certifications: (data, font, title, accentColor) => {
     if (!data.certifications || data.certifications.length === 0) return '';
+    const displayTitle = (data.sectionTitles && data.sectionTitles.certifications) ? data.sectionTitles.certifications : title;
     let html = `
       <div class="resume-section" data-section="certifications" style="margin-bottom: 0;">
-        <h2 class="section-title" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${title}</h2>
+        <h2 class="section-title editable-section-title" data-section-title-key="certifications" contenteditable="true" spellcheck="false" title="Click to edit section heading" style="font-family: ${font}; font-size: 12.5px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 3px; margin: 0 0 8px 0; color: #111; letter-spacing: 0.5px;">${displayTitle}</h2>
         <ul style="margin: 0; padding-left: 16px; font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.45;">
     `;
     data.certifications.forEach(cert => {
@@ -1289,7 +1295,12 @@ const RenderHelpers = {
           html += `</div>`;
         }
         if (cert.desc) {
-          html += `<div style="color: #444; margin-top: 1px;">${cert.desc}</div>`;
+          const isUrl = /^https?:\/\//i.test(cert.desc.trim());
+          if (isUrl) {
+            html += `<div style="margin-top: 2px; font-size: 9.5px;"><a href="${cert.desc.trim()}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline; word-break: break-all;">${cert.desc.trim()}</a></div>`;
+          } else {
+            html += `<div style="color: #444; margin-top: 1px;">${cert.desc}</div>`;
+          }
         }
         html += `</li>`;
       }

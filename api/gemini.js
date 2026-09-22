@@ -63,6 +63,14 @@ export default async function handler(req, res) {
     "github": "GitHub Profile URL",
     "customSocial": ""
   },
+  "sectionTitles": {
+    "summary": "Exact section title or 'Professional Summary'",
+    "skills": "Exact section title or 'Technical Skills'",
+    "experience": "Exact section title or 'Work Experience'",
+    "projects": "Exact section title or 'Key Projects'",
+    "education": "Exact section title or 'Education'",
+    "certifications": "Exact section title or 'Certifications'"
+  },
   "summary": "Professional summary or objective",
   "skills": ["Skill 1", "Skill 2", "Skill 3"],
   "experience": [
@@ -105,8 +113,21 @@ export default async function handler(req, res) {
 }
 
 Instructions:
-1. Extract ALL information including Technical Badges, Certifications, Projects, Experience, and Education accurately.
-2. Return ONLY valid JSON in the exact schema above with no markdown code blocks or commentary.`;
+1. CANDIDATE NAME: The candidate's name is the person's real human name at the very top of the resume (e.g. "JAGADEESWARA RAO PEDDADA"). Under NO circumstances should "DATA SCIENCE STATEMENT", "SUMMARY", or any section heading be used as the candidate name!
+2. SECTION TITLES: The candidate may use custom headings for their sections. Capture their exact custom section heading in the "sectionTitles" object:
+   - "summary": If they titled their summary "DATA SCIENCE STATEMENT" or "PROFESSIONAL SUMMARY" or "ABOUT ME", put that exact title here!
+   - "skills": If they titled their skills "MACHINE LEARNING & QUANTITATIVE DIRECTORY" or "TECHNICAL SKILLS", put that exact title here!
+   - "projects": If they titled their projects "DATA MODELING & ANALYTICAL PROJECTS" or "KEY PROJECTS", put that exact title here!
+   - "education": If they titled their education "ACADEMIC RECORD" or "EDUCATION", put that exact title here!
+   - "certifications": If they titled certifications "VERIFIED ANALYTICS CREDENTIALS" or "CERTIFICATIONS", put that exact title here!
+3. SECTIONS EXTRACTION:
+   - "summary": Extract the full text under the summary heading (e.g. under "DATA SCIENCE STATEMENT").
+   - "skills": Extract all skills, badges, frameworks, and technologies into an array of strings. Clean any OCR artifacts or trailing characters like "~~".
+   - "projects": Extract all projects with their title, tech stack, bullet descriptions, and repo/demo links.
+   - "education": Extract all degrees, universities/schools, locations, graduation dates/years, and grades/CGPA.
+   - "certifications": Extract all certifications, issuers, dates, and credential links.
+   - "experience": If the resume lists work experience, extract it. If the candidate is a student or fresher with no employment experience, set "experience": [].
+4. Return ONLY valid JSON in the exact schema above with no markdown code blocks or commentary.`;
 
       if (isPdf) {
         contents = [

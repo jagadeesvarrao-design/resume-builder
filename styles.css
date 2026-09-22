@@ -12820,6 +12820,164 @@ body.in-editor .top-value-ribbon {
   color: #2DD4BF !important;
 }
 
+/* ==========================================================================
+   EDITABLE RESUME SECTION HEADINGS (Live Preview & Form Sync)
+   ========================================================================== */
+.editable-section-title {
+  position: relative;
+  cursor: text;
+  outline: none;
+  transition: all 0.18s ease;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.editable-section-title:hover {
+  outline: 1.5px dashed #006856 !important;
+  outline-offset: 2px;
+  background-color: rgba(0, 104, 86, 0.06) !important;
+}
+
+.editable-section-title:focus {
+  outline: 2px solid #006856 !important;
+  outline-offset: 2px;
+  background-color: rgba(0, 104, 86, 0.1) !important;
+}
+
+@media print {
+  .editable-section-title {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0 !important;
+  }
+}
+
+/* Editor Form: Section Heading Customization Control */
+.section-heading-control {
+  background: rgba(0, 104, 86, 0.05);
+  border: 1.5px solid rgba(0, 104, 86, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.section-heading-control:focus-within {
+  background: rgba(0, 104, 86, 0.08);
+  border-color: #006856;
+  box-shadow: 0 0 0 3px rgba(0, 104, 86, 0.12);
+}
+
+.section-heading-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.section-heading-control label {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #006856;
+  margin: 0;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.heading-preset-chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.heading-preset-chips .preset-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.btn-heading-preset {
+  background: #ffffff;
+  border: 1px solid rgba(0, 104, 86, 0.28);
+  color: #006856;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.3;
+}
+
+.btn-heading-preset:hover {
+  background: #006856;
+  color: #ffffff;
+  border-color: #006856;
+  transform: translateY(-1px);
+}
+
+.section-heading-control input {
+  width: 100%;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-main, #1e293b);
+  border: 1.5px solid var(--border-subtle, #cbd5e1);
+  border-radius: 7px;
+  padding: 7px 12px;
+  background: var(--bg-card, #ffffff);
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.section-heading-control input:focus {
+  border-color: #006856;
+  background: #ffffff;
+}
+
+[data-theme="dark"] .section-heading-control {
+  background: rgba(45, 212, 191, 0.08);
+  border-color: rgba(45, 212, 191, 0.25);
+}
+
+[data-theme="dark"] .section-heading-control label {
+  color: #2DD4BF;
+}
+
+[data-theme="dark"] .heading-preset-chips .preset-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-heading-preset {
+  background: #1e293b;
+  border-color: rgba(45, 212, 191, 0.35);
+  color: #2DD4BF;
+}
+
+[data-theme="dark"] .btn-heading-preset:hover {
+  background: #2DD4BF;
+  color: #0f172a;
+}
+
+[data-theme="dark"] .section-heading-control input {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+
 
 
 
