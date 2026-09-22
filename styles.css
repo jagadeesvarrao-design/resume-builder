@@ -2334,6 +2334,71 @@ textarea.form-input {
   border-color: #dc2626;
 }
 
+/* Project Description Format Badge & Bullet Assist */
+.proj-format-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #CBD5E1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.btn-proj-add-bullet {
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  color: #2563EB;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.btn-proj-add-bullet:hover {
+  background: #2563EB;
+  color: #ffffff;
+  border-color: #2563EB;
+}
+
+[data-theme="dark"] .proj-format-badge {
+  background: #1E293B;
+  color: #94A3B8;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .btn-proj-add-bullet {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .btn-proj-add-bullet:hover {
+  background: #3B82F6;
+  color: #ffffff;
+}
+
+.resume-section[data-section="projects"] ul {
+  margin: 0;
+  padding-left: 16px;
+  list-style-type: disc;
+}
+
+.resume-section[data-section="projects"] li {
+  margin-bottom: 2px;
+  page-break-inside: avoid;
+}
+
 .btn-add-item {
   align-self: flex-start;
   background: rgba(0, 104, 86, 0.05);

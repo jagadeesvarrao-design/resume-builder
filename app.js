@@ -622,7 +622,7 @@ function addProjectCard(data = null) {
   
   const title = data ? (data.title || '') : '';
   const technologies = data ? (data.technologies || '') : '';
-  const description = data ? (data.description || '') : '';
+  const description = data ? (Array.isArray(data.descriptions) ? data.descriptions.join('\n') : (Array.isArray(data.description) ? data.description.join('\n') : (data.description || ''))) : '';
   const link = data ? (data.link || '') : '';
   
   card.innerHTML = `
@@ -651,19 +651,80 @@ function addProjectCard(data = null) {
       <input type="text" class="form-input input-proj-link" placeholder="e.g. github.com/username/project">
     </div>
     <div class="form-group">
-      <label class="form-label">Short Description / Key Accomplishments</label>
-      <textarea class="form-input input-proj-desc" style="min-height: 70px;" placeholder="Describe what you built, key architectural design decisions, and quantifiable results..."></textarea>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+        <label class="form-label" style="margin-bottom: 0;">Project Description / Accomplishments</label>
+        <div style="display: inline-flex; align-items: center; gap: 8px;">
+          <span class="proj-format-badge" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: #F1F5F9; color: #64748B; border: 1px solid #CBD5E1; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s ease;">
+            <i class="fas fa-magic"></i> <span class="format-badge-text">Auto-Detecting</span>
+          </span>
+          <button type="button" class="btn-proj-add-bullet" title="Insert Bullet Point" style="background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.25); color: #2563EB; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;">
+            <i class="fas fa-list-ul"></i> + Bullet
+          </button>
+        </div>
+      </div>
+      <textarea class="form-input input-proj-desc" style="min-height: 85px; font-family: inherit; font-size: 13px; line-height: 1.45;" placeholder="• Bullet 1: Architected high-throughput DAG engine...&#10;• Bullet 2: Designed immutable state checkpointing...&#10;Or write as a single paragraph. Formats automatically in preview &amp; PDF."></textarea>
+      <div style="font-size: 11px; color: #64748B; margin-top: 4px; display: flex; align-items: center; gap: 5px;">
+        <i class="fas fa-info-circle" style="color: #0284C7;"></i>
+        <span>Supports points (1/2/3, a:, *, •, -, ., Bullet 1:) or single paragraph. Formats automatically.</span>
+      </div>
     </div>
   `;
   
   const titleInput = card.querySelector('.input-proj-title');
   const titlePreview = card.querySelector('.card-title-preview');
+  const descTextarea = card.querySelector('.input-proj-desc');
+  const formatBadge = card.querySelector('.proj-format-badge');
+  const btnAddBullet = card.querySelector('.btn-proj-add-bullet');
   
   titleInput.value = title;
   card.querySelector('.input-proj-tech').value = technologies;
   card.querySelector('.input-proj-link').value = link;
-  card.querySelector('.input-proj-desc').value = description;
+  descTextarea.value = description;
   
+  function updateFormatBadge() {
+    const val = descTextarea.value || '';
+    if (!val.trim()) {
+      formatBadge.style.background = '#F1F5F9';
+      formatBadge.style.color = '#64748B';
+      formatBadge.style.borderColor = '#CBD5E1';
+      formatBadge.innerHTML = '<i class="fas fa-magic"></i> <span class="format-badge-text">Auto-Detecting</span>';
+      return;
+    }
+    const parseFn = window.parseProjectDescription || (window.RenderHelpers && window.RenderHelpers.parseProjectDescription);
+    const parsed = parseFn ? parseFn(val) : { type: val.includes('\n') ? 'bullets' : 'paragraph', count: 1 };
+    if (parsed.type === 'bullets') {
+      formatBadge.style.background = 'rgba(16, 185, 129, 0.1)';
+      formatBadge.style.color = '#059669';
+      formatBadge.style.borderColor = 'rgba(16, 185, 129, 0.35)';
+      formatBadge.innerHTML = `<i class="fas fa-list-ul"></i> <span class="format-badge-text">Bullet Points (${parsed.count || (parsed.items && parsed.items.length) || 1})</span>`;
+    } else {
+      formatBadge.style.background = 'rgba(59, 130, 246, 0.1)';
+      formatBadge.style.color = '#2563EB';
+      formatBadge.style.borderColor = 'rgba(59, 130, 246, 0.35)';
+      formatBadge.innerHTML = '<i class="fas fa-paragraph"></i> <span class="format-badge-text">Paragraph Format</span>';
+    }
+  }
+
+  descTextarea.addEventListener('input', updateFormatBadge);
+  updateFormatBadge();
+
+  if (btnAddBullet) {
+    btnAddBullet.addEventListener('click', () => {
+      const currentVal = descTextarea.value;
+      if (!currentVal.trim()) {
+        descTextarea.value = '• ';
+      } else if (currentVal.endsWith('\n')) {
+        descTextarea.value = currentVal + '• ';
+      } else {
+        descTextarea.value = currentVal + '\n• ';
+      }
+      descTextarea.focus();
+      descTextarea.setSelectionRange(descTextarea.value.length, descTextarea.value.length);
+      updateFormatBadge();
+      debouncedSyncFormToPreview();
+    });
+  }
+
   titleInput.addEventListener('input', () => {
     titlePreview.textContent = titleInput.value || 'New Project Entry';
   });
@@ -2922,7 +2983,7 @@ function normalizeResumeProfile(data) {
   const projects = (Array.isArray(data.projects) ? data.projects : []).map(proj => ({
     title: proj.title || proj.name || '',
     technologies: proj.technologies || proj.tech || proj.tools || '',
-    description: Array.isArray(proj.description) ? proj.description.join('\n') : (proj.description || proj.summary || ''),
+    description: Array.isArray(proj.description) ? proj.description.join('\n') : (Array.isArray(proj.descriptions) ? proj.descriptions.join('\n') : (proj.description || proj.summary || '')),
     link: proj.link || proj.url || proj.github || ''
   }));
 

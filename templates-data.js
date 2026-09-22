@@ -1110,6 +1110,111 @@ const RenderHelpers = {
     return html;
   },
 
+  parseProjectDescription: (rawText) => {
+    if (!rawText || typeof rawText !== 'string') return { type: 'empty', items: [], text: '' };
+    const trimmed = rawText.trim();
+    if (!trimmed) return { type: 'empty', items: [], text: '' };
+
+    // Matches bullet prefixes:
+    // 1. Bullet words: "Bullet 1:", "Bullet 1 -", "Bullet:", "Point 1:", "Task 1:", "Item 1:", "Key Result 1:"
+    // 2. Bracketed: "[1]", "[a]", "[A]"
+    // 3. Parenthesized: "(1)", "(a)", "(A)"
+    // 4. Numbers with delimiters: "1.", "1)", "1:", "1 -", "1–", "1—", "1 "
+    // 5. Letters with delimiters: "a:", "a.", "a)", "A:", "A.", "A)"
+    // 6. Bullet symbols: "•", "*", "-", "+", "–", "—", ".", "~", ">", "▪", "▫", "◦", "‣", "⁃", "·", "«", "»"
+    const BULLET_PREFIX_REGEX = /^(\s*(?:(?:Bullet|Point|Task|Item|Key\s*Result)\s*(?:\d+[:\s\-\.]*|[:\-\.])|\[(?:\d+|[a-zA-Z])\]|\((?:\d+|[a-zA-Z])\)|\d+\s*[-–—:]\s*|(?:\d+|[a-zA-Z])[:\.\)\-\]]|\d+\s+|[•\*\-\–\—\+\.~>▪▫◦‣⁃·«»])\s*)/i;
+
+    // 1. Inline bullet detection for single-line text with multiple bullet indicators
+    // e.g. "Bullet 1: ... Bullet 2: ..." or "• Item 1 • Item 2" or "1. Item 1 2. Item 2" or "a: Item 1 b: Item 2"
+    const inlineMarkerPattern = /(?:^|\s+)(?:(?:Bullet|Point|Task|Item)\s*(?:\d+[:\s\-\.]*|[:\-\.])|(?:\d+|[a-zA-Z])[:\.\)]|[•▪▫◦‣⁃·])\s+/gi;
+    if (!trimmed.includes('\n')) {
+      const matches = [];
+      let m;
+      while ((m = inlineMarkerPattern.exec(trimmed)) !== null) {
+        matches.push({ index: m.index, length: m[0].length });
+      }
+      if (matches.length >= 2) {
+        const items = [];
+        for (let i = 0; i < matches.length; i++) {
+          const start = matches[i].index + matches[i].length;
+          const end = (i + 1 < matches.length) ? matches[i + 1].index : trimmed.length;
+          const piece = trimmed.substring(start, end).replace(BULLET_PREFIX_REGEX, '').trim();
+          if (piece) items.push(piece);
+        }
+        if (items.length >= 2) {
+          return { type: 'bullets', items, count: items.length };
+        }
+      }
+    }
+
+    // 2. Line-by-line parsing
+    const rawLines = trimmed.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+    if (rawLines.length === 1) {
+      // Single line - check if starts with bullet marker
+      if (BULLET_PREFIX_REGEX.test(rawLines[0])) {
+        const clean = rawLines[0].replace(BULLET_PREFIX_REGEX, '').trim();
+        if (clean) return { type: 'bullets', items: [clean], count: 1 };
+      }
+      return { type: 'paragraph', text: trimmed, paragraphs: [trimmed] };
+    }
+
+    // Check how many lines have bullet markers
+    const markerCount = rawLines.filter(l => BULLET_PREFIX_REGEX.test(l)).length;
+
+    // If at least one line has an explicit marker OR user separated by lines
+    if (markerCount > 0 || rawLines.length >= 2) {
+      // Check if it's multiple paragraphs (separated by double newlines without any bullet markers)
+      const hasDoubleNewline = /\n\s*\n/.test(trimmed);
+      if (markerCount === 0 && hasDoubleNewline) {
+        const paragraphs = trimmed.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+        return { type: 'paragraph', text: trimmed, paragraphs };
+      }
+
+      // Otherwise treat as bullets
+      const items = rawLines.map(line => line.replace(BULLET_PREFIX_REGEX, '').trim()).filter(Boolean);
+      if (items.length > 0) {
+        return { type: 'bullets', items, count: items.length };
+      }
+    }
+
+    return { type: 'paragraph', text: trimmed, paragraphs: [trimmed] };
+  },
+
+  formatProjectDescription: (rawDescription, options = {}) => {
+    if (!rawDescription) return '';
+    const parsed = RenderHelpers.parseProjectDescription(rawDescription);
+    if (parsed.type === 'empty') return '';
+
+    const font = options.font || 'Arial, sans-serif';
+    const color = options.color || '#333';
+    const fontSize = options.fontSize || '10.5px';
+    const lineHeight = options.lineHeight || '1.4';
+    const paddingLeft = options.paddingLeft || '16px';
+    const textAlign = options.textAlign || 'justify';
+
+    if (parsed.type === 'bullets') {
+      let itemsHTML = '';
+      parsed.items.forEach(item => {
+        itemsHTML += `<li style="margin-bottom: 2px; text-align: ${textAlign};">${item}</li>`;
+      });
+      return `
+        <ul style="margin: 0; padding-left: ${paddingLeft}; font-family: ${font}; font-size: ${fontSize}; color: ${color}; line-height: ${lineHeight}; list-style-type: disc;">
+          ${itemsHTML}
+        </ul>
+      `;
+    }
+
+    // Paragraph format
+    let pHTML = '';
+    const paragraphs = parsed.paragraphs || [parsed.text];
+    paragraphs.forEach((p, idx) => {
+      const bottomMargin = idx === paragraphs.length - 1 ? '0' : '4px';
+      pHTML += `<p style="font-family: ${font}; font-size: ${fontSize}; color: ${color}; line-height: ${lineHeight}; margin: 0 0 ${bottomMargin} 4px; text-align: ${textAlign};">${p}</p>`;
+    });
+    return pHTML;
+  },
+
   projects: (data, font, title, accentColor, showMonoTech = false) => {
     if (!data.projects || data.projects.length === 0) return '';
     let html = `
@@ -1125,7 +1230,7 @@ const RenderHelpers = {
               <td style="font-style: italic; text-align: right; color: ${accentColor}; font-weight: bold; ${showMonoTech ? 'font-family: monospace; font-size: 9.5px;' : ''}">${proj.technologies || ""}</td>
             </tr>
           </table>
-          <p style="font-family: Arial, sans-serif; font-size: 10.5px; color: #333; line-height: 1.4; margin: 0 0 0 4px; text-align: justify;">${proj.description || ""}</p>
+          ${RenderHelpers.formatProjectDescription(proj.description, { font: 'Arial, sans-serif', fontSize: '10.5px', color: '#333', lineHeight: '1.4', paddingLeft: '16px', textAlign: 'justify' })}
         </div>
       `;
     });
@@ -1196,6 +1301,11 @@ const RenderHelpers = {
     return html;
   }
 };
+if (typeof window !== 'undefined') {
+  window.RenderHelpers = RenderHelpers;
+  window.parseProjectDescription = RenderHelpers.parseProjectDescription;
+  window.formatProjectDescription = RenderHelpers.formatProjectDescription;
+}
 
 const TEMPLATE_STYLES = {
   // === SOFTWARE INDUSTRY ===
@@ -1903,7 +2013,7 @@ const TEMPLATE_STYLES = {
                   <td style="font-style:italic; text-align:right; color:${textSub}; font-family:monospace;">${proj.technologies || ""}</td>
                 </tr>
               </table>
-              <p style="font-size:9.5px; color:${textLight}; line-height:1.35; margin:0;">${proj.description || ""}</p>
+              ${RenderHelpers.formatProjectDescription(proj.description, { font, fontSize: '9.5px', color: textLight, lineHeight: '1.35', paddingLeft: '14px', textAlign: 'left' })}
             </div>
           `;
         });
@@ -2056,8 +2166,8 @@ const TEMPLATE_STYLES = {
                 <span>${proj.title || ""}</span>
                 <span style="color:${accent}; font-family:monospace; font-size:8.5px;">${proj.technologies || ""}</span>
               </div>
-              <p style="margin:0 0 2px 0; color:${textSub};">${proj.description || ""}</p>
-              ${proj.link ? `<div style="font-size:8.5px; color:${textSub};">Link: <span style="text-decoration:underline;">${proj.link}</span></div>` : ''}
+              ${RenderHelpers.formatProjectDescription(proj.description, { font: 'inherit', fontSize: '9.5px', color: textSub, lineHeight: '1.4', paddingLeft: '14px', textAlign: 'left' })}
+              ${proj.link ? `<div style="font-size:8.5px; color:${textSub}; margin-top:2px;">Link: <span style="text-decoration:underline;">${proj.link}</span></div>` : ''}
             </div>
           `;
         });
@@ -2205,7 +2315,7 @@ const TEMPLATE_STYLES = {
                   <td style="font-style:italic; text-align:right; color:${copper}; font-weight:bold;">${proj.technologies || ""}</td>
                 </tr>
               </table>
-              <p style="font-size:9.5px; color:${textSub}; margin:0;">${proj.description || ""}</p>
+              ${RenderHelpers.formatProjectDescription(proj.description, { font: 'inherit', fontSize: '9.5px', color: textSub, lineHeight: '1.4', paddingLeft: '14px', textAlign: 'left' })}
             </div>
           `;
         });
@@ -2373,7 +2483,7 @@ const TEMPLATE_STYLES = {
                 <span>${proj.title || ""}</span>
                 <span style="color:${steelBlue}; font-family:monospace; font-size:8.5px;">${proj.technologies || ""}</span>
               </div>
-              <p style="margin:0; color:${textSub};">${proj.description || ""}</p>
+              ${RenderHelpers.formatProjectDescription(proj.description, { font: 'inherit', fontSize: '9.5px', color: textSub, lineHeight: '1.4', paddingLeft: '14px', textAlign: 'left' })}
             </div>
           `;
         });
@@ -2526,7 +2636,7 @@ const TEMPLATE_STYLES = {
                   <td style="font-style:italic; text-align:right; color:${greenAccent}; font-weight:bold;">${proj.technologies || ""}</td>
                 </tr>
               </table>
-              <p style="font-size:9.5px; color:${textSub}; margin:0;">${proj.description || ""}</p>
+              ${RenderHelpers.formatProjectDescription(proj.description, { font: 'inherit', fontSize: '9.5px', color: textSub, lineHeight: '1.4', paddingLeft: '14px', textAlign: 'left' })}
             </div>
           `;
         });
@@ -2704,10 +2814,10 @@ const TEMPLATE_STYLES = {
         projHTML = data.projects.map(proj => `
           <div style="margin-bottom:10px; page-break-inside:avoid;">
             <div style="display:flex; justify-content:between; align-items:start; margin-bottom:2px;">
-              <strong style="font-size:11px; color:${primaryDark};">${proj.name || ''}</strong>
+              <strong style="font-size:11px; color:${primaryDark};">${proj.name || proj.title || ''}</strong>
               ${proj.link ? `<a href="${proj.link}" target="_blank" style="font-size:9px; color:${accent}; text-decoration:none; margin-left:auto;">Project Link &rarr;</a>` : ''}
             </div>
-            <p style="margin:0; font-size:9.5px; color:${textMain}; line-height:1.45; text-align:justify;">${proj.description || ''}</p>
+            ${RenderHelpers.formatProjectDescription(proj.description, { font: 'inherit', fontSize: '9.5px', color: textMain, lineHeight: '1.45', paddingLeft: '14px', textAlign: 'justify' })}
           </div>
         `).join('');
       }
