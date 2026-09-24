@@ -5819,18 +5819,19 @@ window.zoomFit = function() {
 // ==========================================================================
 window.SubscriptionManager = {
   getUserTier: function() {
-    let tier = (window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function')
-      ? window.ZenResumeDB.getSettingSync('zen_user_tier')
-      : null;
-    if (!tier) tier = localStorage.getItem('zen_user_tier') || 'free';
+    let tier = localStorage.getItem('zen_user_tier');
+    if (!tier && window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function') {
+      tier = window.ZenResumeDB.getSettingSync('zen_user_tier');
+    }
+    if (!tier || !['free', 'day', 'sprint', 'suite'].includes(tier)) tier = 'free';
 
     if (tier !== 'free') {
-      let expiry = (window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function')
-        ? parseInt(window.ZenResumeDB.getSettingSync('zen_tier_expiry') || '0', 10)
-        : 0;
-      if (!expiry) expiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+      let expiry = parseInt(localStorage.getItem('zen_tier_expiry') || '0', 10);
+      if (!expiry && window.ZenResumeDB && typeof window.ZenResumeDB.getSettingSync === 'function') {
+        expiry = parseInt(window.ZenResumeDB.getSettingSync('zen_tier_expiry') || '0', 10);
+      }
 
-      if (expiry && Date.now() > expiry) {
+      if (!expiry || Date.now() > expiry) {
         this.setUserTier('free', 0);
         return 'free';
       }
@@ -5839,14 +5840,26 @@ window.SubscriptionManager = {
   },
   setUserTierWithExpiry: function(tier, expiryTimestamp) {
     if (!['free', 'day', 'sprint', 'suite'].includes(tier)) tier = 'free';
-    if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
-      window.ZenResumeDB.saveSubscription(tier, expiryTimestamp);
+    
+    // If an expiry was provided and is already in the past, tier must immediately be free
+    if (tier !== 'free' && expiryTimestamp && expiryTimestamp <= Date.now()) {
+      tier = 'free';
+      expiryTimestamp = 0;
     }
+
+    if (tier === 'free') {
+      expiryTimestamp = 0;
+    }
+
     localStorage.setItem('zen_user_tier', tier);
-    if (expiryTimestamp && expiryTimestamp > Date.now()) {
+    if (expiryTimestamp > 0) {
       localStorage.setItem('zen_tier_expiry', expiryTimestamp.toString());
     } else {
       localStorage.removeItem('zen_tier_expiry');
+    }
+
+    if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSubscription === 'function') {
+      window.ZenResumeDB.saveSubscription(tier, expiryTimestamp);
     }
     this.applyAdVisibility();
   },

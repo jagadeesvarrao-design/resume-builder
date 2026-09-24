@@ -339,19 +339,35 @@ const ZenResumeDB = (() => {
    * Save Subscription details into IndexedDB settings
    */
   async function saveSubscription(tier, expiresAtMs, extra = {}) {
+    if (tier !== 'free' && expiresAtMs && expiresAtMs <= Date.now()) {
+      tier = 'free';
+      expiresAtMs = 0;
+    }
+    if (tier === 'free') {
+      expiresAtMs = 0;
+    }
+
     const subRecord = {
       tier: tier || 'free',
       expiresAt: expiresAtMs || 0,
       updatedAt: new Date().toISOString(),
       ...extra
     };
+
+    // CRITICAL: Synchronously mirror into _memoryCache so getSettingSync() has zero latency
+    _memoryCache.settings['zen_subscription'] = subRecord;
+    _memoryCache.settings['zen_user_tier'] = tier || 'free';
+    if (expiresAtMs > 0) {
+      _memoryCache.settings['zen_tier_expiry'] = expiresAtMs.toString();
+    } else {
+      delete _memoryCache.settings['zen_tier_expiry'];
+      try { localStorage.removeItem('zen_tier_expiry'); } catch (e) {}
+    }
+
     await saveSetting('zen_subscription', subRecord);
     await saveSetting('zen_user_tier', tier);
     if (expiresAtMs > 0) {
       await saveSetting('zen_tier_expiry', expiresAtMs.toString());
-    } else {
-      delete _memoryCache.settings['zen_tier_expiry'];
-      try { localStorage.removeItem('zen_tier_expiry'); } catch (e) {}
     }
     return subRecord;
   }
