@@ -1112,36 +1112,59 @@ function extractCurrentFormData() {
   return currentData;
 }
 
-function autoSaveResume() {
-  const currentData = extractCurrentFormData();
-  const stateToSave = {
-    formData: currentData,
-    selectedExp: state.selectedExp,
-    selectedInd: state.selectedInd,
-    selectedTemplateId: state.selectedTemplateId,
-    currentStep: state.currentStep,
-    hasLoadedProfile: state.hasLoadedProfile,
-    sectionOrder: state.sectionOrder,
-    sectionTitles: state.sectionTitles,
-    spacing: state.spacing
+let _autoSaveTimer = null;
+function autoSaveResume(immediate = false) {
+  if (_autoSaveTimer) clearTimeout(_autoSaveTimer);
+
+  const performSave = () => {
+    try {
+      const currentData = extractCurrentFormData();
+      const stateToSave = {
+        formData: currentData,
+        selectedExp: state.selectedExp,
+        selectedInd: state.selectedInd,
+        selectedTemplateId: state.selectedTemplateId,
+        currentStep: state.currentStep,
+        hasLoadedProfile: state.hasLoadedProfile,
+        sectionOrder: state.sectionOrder,
+        sectionTitles: state.sectionTitles,
+        spacing: state.spacing
+      };
+      
+      const registry = getStoredProfilesRegistry();
+      const activeId = registry.activeId || 'default';
+      const serialized = JSON.stringify(stateToSave);
+
+      if (activeId === 'default') {
+        localStorage.setItem('zenresume_state', serialized);
+      } else {
+        localStorage.setItem(`zenresume_profile_${activeId}`, serialized);
+      }
+
+      // High-resilience IndexedDB & Firestore persistence deferred off main thread to prevent UI freezing
+      const runAsyncPersist = () => {
+        if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+          window.ZenResumeDB.saveProfile(activeId, stateToSave);
+        }
+        if (typeof saveResumeToFirestore === 'function') {
+          saveResumeToFirestore(stateToSave);
+        }
+      };
+
+      if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(runAsyncPersist, { timeout: 1000 });
+      } else {
+        setTimeout(runAsyncPersist, 0);
+      }
+    } catch (err) {
+      console.warn('[AutoSave] Persistence notice:', err);
+    }
   };
-  
-  const registry = getStoredProfilesRegistry();
-  const activeId = registry.activeId || 'default';
-  if (activeId === 'default') {
-    localStorage.setItem('zenresume_state', JSON.stringify(stateToSave));
+
+  if (immediate) {
+    performSave();
   } else {
-    localStorage.setItem(`zenresume_profile_${activeId}`, JSON.stringify(stateToSave));
-  }
-
-  // High-resilience IndexedDB persistence (immune to 5MB quota & Safari 7-day purge)
-  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
-    window.ZenResumeDB.saveProfile(activeId, stateToSave);
-  }
-
-  // Also save to cloud if logged in (strictly saving subscription + stored resumes, no tracking bloat)
-  if (typeof saveResumeToFirestore === 'function') {
-    saveResumeToFirestore(stateToSave);
+    _autoSaveTimer = setTimeout(performSave, 150);
   }
 }
 
@@ -2043,19 +2066,19 @@ function syncFormToPreview() {
     }
   }
 
-  // Defer expensive height-fitting loops and scaling to yield main thread and minimize INP score
-  setTimeout(() => {
-    // Run dynamic single-page auto-fit convergence engine
-    autoFitToSinglePage();
+  // Defer expensive height-fitting loops and scaling only when preview is actually visible
+  const isMobile = window.innerWidth <= 992;
+  const isPreviewVisible = !isMobile || (builderWorkspace && builderWorkspace.classList.contains('show-preview'));
 
-    // Adjust preview scaling dynamically if on mobile
-    adjustPreviewScale();
-
-    // Regenerate summary suggestions reactively if on the Summary step
-    if (state.currentStep === 2) {
-      generateSummarySuggestions();
-    }
-  }, 0);
+  if (isPreviewVisible) {
+    requestAnimationFrame(() => {
+      autoFitToSinglePage();
+      adjustPreviewScale();
+      if (state.currentStep === 2) {
+        generateSummarySuggestions();
+      }
+    });
+  }
 }
 
 // Rebuilds the inline layout switcher dropdown options to list only templates matching current profile category
@@ -2136,8 +2159,10 @@ function updateProgressDots() {
     if (pillStep === current) {
       pill.classList.add('active');
       if (pillsContainer) {
-        const targetScroll = pill.offsetLeft - (pillsContainer.clientWidth / 2) + (pill.clientWidth / 2);
-        pillsContainer.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' });
+        requestAnimationFrame(() => {
+          const targetScroll = pill.offsetLeft - (pillsContainer.clientWidth / 2) + (pill.clientWidth / 2);
+          pillsContainer.scrollTo({ left: Math.max(0, targetScroll), behavior: 'smooth' });
+        });
       }
     } else {
       pill.classList.remove('active');
@@ -2154,6 +2179,7 @@ function updateProgressDots() {
 window.goToStep = function(stepNum) {
   const step = parseInt(stepNum, 10);
   if (isNaN(step) || step < 1 || step > (state.totalSteps || 7)) return;
+  if (step === state.currentStep) return;
   showStep(step);
   autoSaveResume();
 };
@@ -2173,7 +2199,7 @@ function showStep(stepNum) {
     activeStep.classList.add('active');
   }
   
-  // 3. Smooth scroll top on form container & lock horizontal scroll position
+  // 3. Reset scroll on form container
   const formPanel = document.querySelector('.form-panel');
   if (formPanel) {
     formPanel.scrollLeft = 0;
@@ -2184,16 +2210,18 @@ function showStep(stepNum) {
     formScroll.scrollLeft = 0;
   }
   
-  // 4. Generate dynamic summary suggestions when step 2 is active
+  // 4. Generate dynamic summary suggestions deferred so step transition is instantaneous
   if (n === 2) {
-    generateSummarySuggestions();
-    const wordCountSpan = document.getElementById('summary-word-count');
-    const summaryInput = document.getElementById('input-summary');
-    if (wordCountSpan && summaryInput) {
-      const text = (summaryInput.value || '').trim();
-      const words = text ? text.split(/\s+/).length : 0;
-      wordCountSpan.textContent = `${words} words ${words >= 30 && words <= 70 ? '• Optimal ATS Length' : ''}`;
-    }
+    requestAnimationFrame(() => {
+      generateSummarySuggestions();
+      const wordCountSpan = document.getElementById('summary-word-count');
+      const summaryInput = document.getElementById('input-summary');
+      if (wordCountSpan && summaryInput) {
+        const text = (summaryInput.value || '').trim();
+        const words = text ? text.split(/\s+/).length : 0;
+        wordCountSpan.textContent = `${words} words ${words >= 30 && words <= 70 ? '• Optimal ATS Length' : ''}`;
+      }
+    });
   }
   
   // 5. Update Navigation Controls Visibility
@@ -2651,10 +2679,12 @@ function setMobileTab(activeTab) {
     btnEdit.classList.remove('active');
     builderWorkspace.classList.add('show-preview');
     
-    // Trigger full preview rendering and layout fitting on tab entry
+    // Trigger preview rendering and layout fitting on tab entry
     syncFormToPreview();
     
-    setTimeout(adjustPreviewScale, 150);
+    requestAnimationFrame(() => {
+      adjustPreviewScale();
+    });
   }
 }
 window.setMobileTab = setMobileTab;
@@ -2662,8 +2692,13 @@ window.setMobileTab = setMobileTab;
 /* ==========================================================================
    7C. FLUID MOBILE PREVIEW SCALING
    ========================================================================== */
+let _lastPreviewScale = null;
+let _lastPreviewAvailableWidth = null;
+let _lastPreviewPaperHeight = null;
+let _isScalingPreview = false;
+
 function adjustPreviewScale() {
-  if (window.isGeneratingPdf) return;
+  if (window.isGeneratingPdf || _isScalingPreview) return;
   const builderWorkspace = document.getElementById('builder-workspace');
   if (builderWorkspace && (builderWorkspace.style.display === 'none' || builderWorkspace.offsetParent === null)) {
     return; // Avoid forced reflow when workspace is hidden
@@ -2674,8 +2709,13 @@ function adjustPreviewScale() {
   const zoomPercentageEl = document.getElementById('zoom-percentage');
   
   if (!wrapper || !paper) return;
-  
+
   const isMobile = window.innerWidth <= 992;
+  // If on mobile and in edit mode, preview is off-screen, skip expensive scaling
+  if (isMobile && !builderWorkspace.classList.contains('show-preview')) {
+    return;
+  }
+  
   const isLetter = state.paperSize === 'letter';
   const paperWidth = isLetter ? 816 : 794;
   const paperHeight = paper.scrollHeight || (isLetter ? 1056 : 1122);
@@ -2702,38 +2742,52 @@ function adjustPreviewScale() {
   } else if (availableWidth > 0 && availableWidth < (paperWidth + 40)) {
     scale = Math.min(1.0, fitWidthScale);
   }
-  
-  const visualWidth = paperWidth * scale;
-  const visualHeight = paperHeight * scale;
-  const leftOffset = Math.max(8, (availableWidth - visualWidth) / 2);
-  
-  // Apply deterministic, un-clippable transform geometry
-  paper.style.transformOrigin = 'top left';
-  paper.style.transform = `scale(${scale})`;
-  paper.style.position = 'absolute';
-  paper.style.left = `${Math.round(leftOffset)}px`;
-  paper.style.top = isMobile ? '12px' : '28px';
-  paper.style.margin = '0';
-  
-  // Wrapper dimensions
-  wrapper.style.position = 'relative';
-  wrapper.style.width = '100%';
-  wrapper.style.boxSizing = 'border-box';
-  wrapper.style.overflowX = 'hidden';
-  wrapper.style.overflowY = 'auto';
-  
-  if (isMobile) {
-    wrapper.style.height = `${Math.round(visualHeight + 48)}px`;
-    wrapper.style.minHeight = `${Math.round(visualHeight + 48)}px`;
-  } else {
-    wrapper.style.height = 'auto';
-    wrapper.style.minHeight = '100%';
-    wrapper.style.padding = '0';
+
+  // Prevent redundant DOM style manipulation if geometry hasn't changed
+  if (_lastPreviewScale !== null && Math.abs(_lastPreviewScale - scale) < 0.005 && _lastPreviewAvailableWidth === availableWidth && _lastPreviewPaperHeight === paperHeight && paper.style.transform) {
+    return;
   }
-  
-  // Update UI zoom label
-  if (zoomPercentageEl) {
-    zoomPercentageEl.textContent = `${Math.round(scale * 100)}%`;
+
+  _isScalingPreview = true;
+  try {
+    const visualWidth = paperWidth * scale;
+    const visualHeight = paperHeight * scale;
+    const leftOffset = Math.max(8, (availableWidth - visualWidth) / 2);
+    
+    // Apply deterministic, un-clippable transform geometry
+    paper.style.transformOrigin = 'top left';
+    paper.style.transform = `scale(${scale})`;
+    paper.style.position = 'absolute';
+    paper.style.left = `${Math.round(leftOffset)}px`;
+    paper.style.top = isMobile ? '12px' : '28px';
+    paper.style.margin = '0';
+    
+    // Wrapper dimensions
+    wrapper.style.position = 'relative';
+    wrapper.style.width = '100%';
+    wrapper.style.boxSizing = 'border-box';
+    wrapper.style.overflowX = 'hidden';
+    wrapper.style.overflowY = 'auto';
+    
+    if (isMobile) {
+      wrapper.style.height = `${Math.round(visualHeight + 48)}px`;
+      wrapper.style.minHeight = `${Math.round(visualHeight + 48)}px`;
+    } else {
+      wrapper.style.height = 'auto';
+      wrapper.style.minHeight = '100%';
+      wrapper.style.padding = '0';
+    }
+    
+    // Update UI zoom label
+    if (zoomPercentageEl) {
+      zoomPercentageEl.textContent = `${Math.round(scale * 100)}%`;
+    }
+
+    _lastPreviewScale = scale;
+    _lastPreviewAvailableWidth = availableWidth;
+    _lastPreviewPaperHeight = paperHeight;
+  } finally {
+    _isScalingPreview = false;
   }
 }
 
@@ -2824,7 +2878,6 @@ function autoFitToSinglePage(allowUltra = false) {
   const prevMinHeight = paper.style.minHeight;
   paper.style.setProperty('min-height', '0px', 'important');
   let naturalHeight = paper.scrollHeight;
-  paper.style.minHeight = prevMinHeight;
   
   const isLetter = state.paperSize === 'letter';
   const targetHeight = isLetter ? 1056 : 1122; // Letter: 11in (1056px), A4: 297mm (1122px)
@@ -2837,10 +2890,7 @@ function autoFitToSinglePage(allowUltra = false) {
     let fitted = false;
     for (let i = 0; i < compressClasses.length; i++) {
       paper.classList.add(compressClasses[i]);
-      
-      paper.style.setProperty('min-height', '0px', 'important');
       naturalHeight = paper.scrollHeight;
-      paper.style.minHeight = prevMinHeight;
       
       if (naturalHeight <= targetHeight + 8) {
         fitted = true;
@@ -2852,8 +2902,8 @@ function autoFitToSinglePage(allowUltra = false) {
     // remove compression to let it flow naturally over multiple pages.
     if (!fitted && !allowUltra) {
       paper.classList.remove('compress-1', 'compress-2', 'compress-3', 'compress-4');
-      return { fitted: false, naturalHeight, targetHeight };
     }
+    paper.style.minHeight = prevMinHeight;
     return { fitted, naturalHeight, targetHeight };
   } 
   // 2. If it is shorter than a single page, apply expansion classes step-by-step to fill the space
@@ -2861,18 +2911,17 @@ function autoFitToSinglePage(allowUltra = false) {
     const expandClasses = ['expand-1', 'expand-2', 'expand-3'];
     for (let i = 0; i < expandClasses.length; i++) {
       paper.classList.add(expandClasses[i]);
-      
-      paper.style.setProperty('min-height', '0px', 'important');
       naturalHeight = paper.scrollHeight;
-      paper.style.minHeight = prevMinHeight;
       
       if (naturalHeight > targetHeight + 5) {
         paper.classList.remove(expandClasses[i]);
         break;
       }
     }
+    paper.style.minHeight = prevMinHeight;
     return { fitted: true, naturalHeight, targetHeight };
   }
+  paper.style.minHeight = prevMinHeight;
   return { fitted: true, naturalHeight, targetHeight };
 }
 
@@ -4474,7 +4523,6 @@ function attachEvents() {
     if (el) {
       el.addEventListener('input', debouncedSyncFormToPreview);
       el.addEventListener('change', syncFormToPreview);
-      el.addEventListener('keyup', debouncedSyncFormToPreview);
       el.addEventListener('paste', () => setTimeout(syncFormToPreview, 20));
     }
   });
@@ -4977,17 +5025,26 @@ function attachEvents() {
     btnTabPreview.addEventListener('click', () => setMobileTab('preview'));
   }
 
-  // Handle layout and resizing reactively for fluid preview scaling
+  // Handle layout and resizing reactively for fluid preview scaling with frame throttle
   if (typeof ResizeObserver !== 'undefined') {
-    const wrapperElement = document.querySelector('.resume-paper-wrapper');
-    if (wrapperElement) {
+    const previewContainer = document.querySelector('.preview-panel') || document.querySelector('.resume-paper-wrapper');
+    if (previewContainer) {
+      let rAF = null;
       const observer = new ResizeObserver(() => {
-        adjustPreviewScale();
+        if (_isScalingPreview) return;
+        if (rAF) cancelAnimationFrame(rAF);
+        rAF = requestAnimationFrame(() => {
+          adjustPreviewScale();
+        });
       });
-      observer.observe(wrapperElement);
+      observer.observe(previewContainer);
     }
   } else {
-    window.addEventListener('resize', adjustPreviewScale);
+    let rAF = null;
+    window.addEventListener('resize', () => {
+      if (rAF) cancelAnimationFrame(rAF);
+      rAF = requestAnimationFrame(adjustPreviewScale);
+    }, { passive: true });
   }
 
   // Zoom controller handlers (Zoom In, Zoom Out, Fit to Screen)

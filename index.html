@@ -169,7 +169,7 @@
       try {
         var APP_DEPLOY_VERSION = 'v3.2.0';
         var storedVersion = localStorage.getItem('zen_deploy_version');
-        if (storedVersion !== APP_DEPLOY_VERSION || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        if (storedVersion !== APP_DEPLOY_VERSION) {
           localStorage.setItem('zen_deploy_version', APP_DEPLOY_VERSION);
           if ('caches' in window) {
             caches.keys().then(function(cacheNames) {
@@ -178,11 +178,6 @@
                   return caches.delete(name);
                 })
               );
-            }).then(function() {
-              if (window.location.search.indexOf('reloaded=3.2.0') === -1 && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                var sep = window.location.href.indexOf('?') === -1 ? '?' : '&';
-                window.location.href = window.location.href.split('?')[0] + '?reloaded=3.2.0';
-              }
             });
           }
           if ('serviceWorker' in navigator) {
@@ -198,7 +193,7 @@
   </script>
   
   <!-- ZenResume Real-Time Dynamic Adaptive UI/UX & CSS Engine -->
-  <script src="adaptive-engine.js?v=8.15"></script>
+  <script src="adaptive-engine.js?v=8.15" defer></script>
   
   <style id="zenresume-critical-header-style">
     .stitch-nav {
@@ -3984,8 +3979,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+  <!-- Note: pdf.js and tesseract.js are loaded on-demand in app.js only when AI Magic Import is opened, saving 2MB+ upfront download -->
   <script src="templates-data.js?v=3.2.0" defer></script>
   <script src="indexeddb-storage.js?v=3.2.0" defer></script>
   <script src="firebase-service.js?v=3.2.0" defer></script>
@@ -4392,12 +4386,8 @@
           });
         }
       } else {
-        var refreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', function() {
-          if (!refreshing) {
-            refreshing = true;
-            window.location.reload();
-          }
+          console.log('[SW] Service worker controller updated smoothly in background.');
         });
 
         window.addEventListener('load', function() {

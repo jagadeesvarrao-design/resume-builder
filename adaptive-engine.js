@@ -104,35 +104,20 @@
     }
 
     recalibrateComponents(profile) {
-      const templateControls = document.querySelector('.template-unified-controls');
-      if (templateControls) {
-        templateControls.style.maxWidth = profile.width > 1440 ? '1360px' : '1200px';
-      }
-
-      const templatesGrid = document.getElementById('templates-grid');
-      if (templatesGrid) {
-        if (profile.width <= BREAKPOINTS.MOBILE) {
-          templatesGrid.style.gridTemplateColumns = '1fr';
-        } else if (profile.width <= BREAKPOINTS.TABLET_LANDSCAPE) {
-          templatesGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-        } else if (profile.width <= BREAKPOINTS.DESKTOP_2K) {
-          templatesGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
-        } else {
-          templatesGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
-        }
-      }
-
       const mobileTabs = document.getElementById('mobile-workspace-tabs');
       if (mobileTabs && document.body) {
         const inEditor = document.body.classList.contains('in-editor');
-        if (!inEditor || profile.width > BREAKPOINTS.TABLET_LANDSCAPE) {
-          mobileTabs.style.display = 'none';
-        } else {
-          mobileTabs.style.display = 'flex';
+        const shouldShow = inEditor && profile.width <= BREAKPOINTS.TABLET_LANDSCAPE;
+        const currentDisplay = mobileTabs.style.display;
+        const targetDisplay = shouldShow ? 'flex' : 'none';
+        if (currentDisplay !== targetDisplay) {
+          mobileTabs.style.display = targetDisplay;
         }
       }
 
-      if (typeof window.adjustPreviewScale === 'function') {
+      // Only adjust scale if in editor and preview is visible
+      const builderWorkspace = document.getElementById('builder-workspace');
+      if (builderWorkspace && builderWorkspace.style.display !== 'none' && typeof window.adjustPreviewScale === 'function') {
         window.adjustPreviewScale();
       }
 
@@ -154,8 +139,14 @@
     debouncedAdapt() {
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => {
+        const newWidth = window.visualViewport ? Math.round(window.visualViewport.width) : window.innerWidth;
+        const newHeight = window.visualViewport ? Math.round(window.visualViewport.height) : window.innerHeight;
+        // Ignore minor height-only resizes caused by mobile address bars showing/hiding during scrolling
+        if (this.currentProfile.width && Math.abs(this.currentProfile.width - newWidth) < 6 && Math.abs(this.currentProfile.height - newHeight) < 120) {
+          return;
+        }
         this.adapt();
-      }, 50);
+      }, 100);
     }
 
     init() {
@@ -166,12 +157,8 @@
 
       window.addEventListener('resize', () => this.debouncedAdapt(), { passive: true });
       window.addEventListener('orientationchange', () => {
-        setTimeout(() => this.adapt(), 100);
+        setTimeout(() => this.adapt(), 150);
       }, { passive: true });
-
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', () => this.debouncedAdapt(), { passive: true });
-      }
 
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => this.adapt(), { once: true });
