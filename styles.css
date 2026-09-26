@@ -314,8 +314,6 @@ body {
 
 .filters-panel {
   background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   padding: 24px 32px;
@@ -378,7 +376,7 @@ body {
   border-radius: 14px;
   padding: 10px 16px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 [data-theme="dark"] .template-search-box {
@@ -425,7 +423,7 @@ body {
   border: 1.5px solid var(--border-subtle, #E2E8F0);
   border-radius: 12px;
   padding: 10px 14px;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
@@ -4039,12 +4037,10 @@ textarea.form-input {
 
 @keyframes ambientPulse {
   0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
     opacity: 0.55;
   }
   50% {
-    transform: translate(-50%, -46%) scale(1.18);
-    opacity: 0.8;
+    opacity: 0.82;
   }
 }
 
@@ -4053,31 +4049,37 @@ textarea.form-input {
   top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 720px;
-  height: 720px;
-  background: radial-gradient(circle, rgba(45, 212, 191, 0.35) 0%, rgba(0, 132, 109, 0.15) 45%, transparent 70%);
-  filter: blur(90px);
+  width: 640px;
+  height: 640px;
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.28) 0%, rgba(0, 132, 109, 0.14) 35%, rgba(0, 104, 86, 0.05) 55%, transparent 70%);
+  filter: blur(28px);
   pointer-events: none;
   z-index: 1;
-  animation: ambientPulse 8s ease-in-out infinite;
+  will-change: opacity;
+  contain: layout style paint;
+  animation: ambientPulse 10s ease-in-out infinite;
 }
 
 [data-theme="dark"] .stitch-hero-glow {
-  background: radial-gradient(circle, rgba(0, 168, 138, 0.45) 0%, rgba(0, 104, 86, 0.22) 45%, rgba(12, 18, 17, 0) 75%);
+  background: radial-gradient(circle, rgba(0, 168, 138, 0.35) 0%, rgba(0, 104, 86, 0.18) 35%, rgba(12, 18, 17, 0.05) 55%, transparent 75%);
 }
 
 .stitch-hero-glow.glow-secondary {
   top: 65%;
   left: 55%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(45, 212, 191, 0.14) 50%, transparent 75%);
-  filter: blur(95px);
-  animation: ambientPulse 10s ease-in-out infinite reverse;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.20) 0%, rgba(45, 212, 191, 0.12) 35%, rgba(0, 104, 86, 0.04) 55%, transparent 75%);
+  filter: blur(28px);
+  animation: ambientPulse 12s ease-in-out infinite reverse;
 }
 
 [data-theme="dark"] .stitch-hero-glow.glow-secondary {
-  background: radial-gradient(circle, rgba(0, 132, 109, 0.35) 0%, rgba(88, 214, 141, 0.15) 50%, rgba(12, 18, 17, 0) 75%);
+  background: radial-gradient(circle, rgba(0, 132, 109, 0.28) 0%, rgba(88, 214, 141, 0.12) 35%, transparent 75%);
+}
+
+body.in-editor .stitch-hero-glow {
+  display: none !important;
 }
 
 .stitch-hero-content {
@@ -4475,15 +4477,14 @@ textarea.form-input {
   box-shadow: 0 0 12px #00A88A, 0 0 24px rgba(0,168,138,0.5);
   animation: laserScan 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   pointer-events: none;
+  will-change: transform;
 }
 
 /* Floating Glass Badges (Dark Fintech Luxury Style) */
 .stitch-floating-badge {
   position: absolute;
   padding: 12px 20px;
-  background: rgba(12, 18, 17, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(12, 18, 17, 0.94);
   border: 1px solid rgba(0, 168, 138, 0.38);
   border-radius: 14px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 24px rgba(0, 104, 86, 0.25);
@@ -4494,18 +4495,21 @@ textarea.form-input {
   gap: 12px;
   z-index: 20;
   pointer-events: none;
+  will-change: transform;
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .stitch-floating-badge.badge-top-left {
   top: 25px;
   left: -28px;
+  will-change: transform;
   animation: subtleFloat 5s ease-in-out infinite reverse;
 }
 
 .stitch-floating-badge.badge-bottom-right {
   bottom: 25px;
   right: -28px;
+  will-change: transform;
   animation: subtleFloat 6s ease-in-out infinite;
 }
 

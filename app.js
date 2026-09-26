@@ -407,15 +407,16 @@ window.selectTemplateStyle = function selectTemplateStyle(templateId) {
   state.currentStep = 1;
   showStep(state.currentStep);
   updateProgressDots();
-  adjustPreviewScale(); // Scale the print preview container once workspace is visible
   updateHeaderNavCTA();
   
-  // Sync the form values immediately to screen preview
-  syncFormToPreview();
-  checkVaultOnboardingBanner();
-  if (typeof window.checkAutoLaunchTour === 'function') {
-    window.checkAutoLaunchTour();
-  }
+  // Render and sync resume preview in next animation frame to prevent locking up screen transition frame
+  requestAnimationFrame(() => {
+    syncFormToPreview();
+    checkVaultOnboardingBanner();
+    if (typeof window.checkAutoLaunchTour === 'function') {
+      window.checkAutoLaunchTour();
+    }
+  });
 }
 
 function loadProfileIntoForm(data) {
@@ -4514,7 +4515,7 @@ function attachEvents() {
       mobileWorkspaceTabs.style.display = 'none';
     }
     updateHeaderNavCTA();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   });
 
   // Attach Static Form Listeners (Top level details)
@@ -5358,7 +5359,11 @@ function updateThemeIcon(btn, theme) {
 }
 
 // Fire up ZenResume!
-window.addEventListener('DOMContentLoaded', bootstrap);
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', bootstrap);
+} else {
+  bootstrap();
+}
 
 /* ==========================================================================
    10. SITE UI INTERACTION (FAQ, COOKIES, MODALS)
@@ -6036,29 +6041,34 @@ window.detectUserCurrency = function() {
 };
 
 window.initBackgroundGeoDetection = function() {
-  // Fast asynchronous IP country lookup for 100% accurate location routing
-  fetch('https://ipapi.co/json/', { mode: 'cors' })
+  // 1. If currency is already stored in localStorage, use immediately with zero network overhead
+  try {
+    const savedCurrency = localStorage.getItem('zen_user_currency');
+    if (savedCurrency === 'INR' || savedCurrency === 'USD') {
+      if (window.currentCurrency !== savedCurrency) {
+        window.switchCurrency(savedCurrency, false);
+      }
+      return;
+    }
+  } catch (e) {}
+
+  // 2. Fast asynchronous IP country lookup with 1.5s timeout abort
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), 1500) : null;
+
+  fetch('https://ipapi.co/json/', { mode: 'cors', signal: controller ? controller.signal : undefined })
     .then(res => res.json())
     .then(data => {
+      if (timeoutId) clearTimeout(timeoutId);
       if (data && data.country_code) {
         const countryCurr = data.country_code === 'IN' ? 'INR' : 'USD';
         if (window.currentCurrency !== countryCurr) {
-          window.switchCurrency(countryCurr, false);
+          window.switchCurrency(countryCurr, true);
         }
       }
     })
     .catch(() => {
-      fetch('https://api.country.is/')
-        .then(r => r.json())
-        .then(d => {
-          if (d && d.country) {
-            const countryCurr = d.country === 'IN' ? 'INR' : 'USD';
-            if (window.currentCurrency !== countryCurr) {
-              window.switchCurrency(countryCurr, false);
-            }
-          }
-        })
-        .catch(() => {});
+      if (timeoutId) clearTimeout(timeoutId);
     });
 };
 

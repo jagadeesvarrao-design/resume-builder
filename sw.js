@@ -23,19 +23,8 @@ const STATIC_SHELL = [
   '/indexeddb-storage.js',
   '/app.js',
   '/templates-data.js',
-  '/firebase-service.js',
-  '/role-hub.js',
-  '/live-pulse.js',
-  '/ats-matcher.js',
-  '/cover-letter-engine.js',
-  '/bullet-bank.js',
-  '/payment-mediator.js',
   '/manifest.json',
-  '/favicon-96x96.png',
-  '/apple-touch-icon.png',
-  '/campus.html',
-  '/about.html',
-  '/contact.html'
+  '/favicon-96x96.png'
 ];
 
 // Message Handler for Immediate Activation
