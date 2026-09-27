@@ -1822,18 +1822,28 @@ body {
   display: none;
   width: 36px;
   height: 36px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: none;
-  color: #FFFFFF;
-  font-size: 17px;
+  border-radius: 9px;
+  background: rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  color: #0F172A;
+  font-size: 16px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background 0.2s, transform 0.2s;
 }
 
 .mobile-menu-toggle:hover {
+  background: rgba(15, 23, 42, 0.1);
+}
+
+[data-theme="dark"] .mobile-menu-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .mobile-menu-toggle:hover {
   background: rgba(255, 255, 255, 0.16);
 }
 
@@ -1924,6 +1934,7 @@ body {
 
   .mobile-menu-toggle {
     display: flex !important;
+    flex-shrink: 0 !important;
   }
 
   .brand-logo-text {
@@ -9982,26 +9993,64 @@ body.in-editor > button:not([class]):not([id]) {
 /* 1. Header & Navigation Refinements */
 @media (max-width: 640px) {
   .stitch-nav-container {
-    padding: 8px 14px !important;
+    padding: 8px 12px !important;
+    gap: 6px !important;
+  }
+  .brand-identity-container {
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
     gap: 8px !important;
   }
+  .brand-text-column {
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
   .brand-logo-img {
-    width: 32px !important;
-    height: 32px !important;
+    width: 30px !important;
+    height: 30px !important;
+    flex-shrink: 0 !important;
   }
   .brand-main-title {
-    font-size: 16px !important;
+    font-size: 15.5px !important;
+    white-space: nowrap !important;
   }
   .brand-subtext {
-    font-size: 8.5px !important;
+    font-size: 8px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
   .header-right-actions {
     gap: 6px !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  /* On mobile, keep logged-in user profile compact so the hamburger button is ALWAYS visible */
+  .nav-user-profile {
+    padding: 3px 6px 3px 3px !important;
+    gap: 4px !important;
+    max-width: 72px !important;
+    flex-shrink: 0 !important;
+    background: rgba(45, 212, 191, 0.1) !important;
+    border-color: rgba(45, 212, 191, 0.4) !important;
+  }
+  .nav-user-profile .nav-user-name {
+    display: none !important; /* Hide text name on mobile navbar so burger button always fits */
+  }
+  .nav-user-profile i.fa-chevron-down {
+    display: none !important; /* Hide chevron on mobile navbar */
+  }
+  .nav-user-premium-badge {
+    font-size: 8px !important;
+    padding: 1px 4px !important;
+    letter-spacing: 0.2px !important;
   }
   /* On small mobile, keep header login compact */
   #btn-landing-login {
     padding: 5px 10px !important;
     font-size: 11.5px !important;
+    flex-shrink: 0 !important;
   }
   #btn-landing-login span {
     display: none !important; /* show only Google icon in compact top ribbon */
@@ -10031,18 +10080,42 @@ body.in-editor > button:not([class]):not([id]) {
     margin-right: 8px !important;
   }
   .stitch-nav-cta {
-    padding: 6px 12px !important;
-    font-size: 11.5px !important;
+    display: none !important; /* Prevents mobile top ribbon overflow */
   }
   .btn-theme-toggle {
     width: 32px !important;
     height: 32px !important;
     font-size: 12px !important;
+    flex-shrink: 0 !important;
   }
   .mobile-menu-toggle {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 14px !important;
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 15px !important;
+    display: flex !important;
+    flex-shrink: 0 !important;
+    margin-left: 2px !important;
+    color: #0F172A !important;
+    background: rgba(15, 23, 42, 0.06) !important;
+    border: 1px solid rgba(15, 23, 42, 0.15) !important;
+    border-radius: 8px !important;
+  }
+  [data-theme="dark"] .mobile-menu-toggle {
+    color: #FFFFFF !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-subtext {
+    display: none !important; /* Ultra-compact screens: show only ZenResume title to preserve full action room */
+  }
+  .stitch-nav-container {
+    padding: 8px 8px !important;
+  }
+  .header-right-actions {
+    gap: 4px !important;
   }
 }
 

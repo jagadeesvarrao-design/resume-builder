@@ -538,9 +538,8 @@ function handleAuthStateChange(user) {
     if (immediatePremium) {
       if (window.state) window.state.isPremium = true;
       updatePremiumUI(true);
-      // Auto-sync local subscription & stored resume profiles to Firestore immediately
+      // Auto-sync local subscription if missing in Firestore, but NEVER push unhydrated local resume data
       syncLocalSubscriptionToFirestore(user.uid);
-      syncAllUserDataToFirestore();
     }
 
     // Cancel old subscription observers before setting new ones
@@ -590,10 +589,17 @@ function handleAuthStateChange(user) {
         let docData = doc.exists ? doc.data() : null;
         await processSnapshotDoc(docData);
 
-        // Bi-directional healing: If local has active subscription but Firestore doc has no subscription, sync to Firestore
-        if (checkLocalHasSubscription()) {
+        // Bi-directional healing: Only sync subscription if local has active subscription but Firestore doc has none
+        if (checkLocalHasSubscription() && (!docData || !docData.subscription || docData.subscription.status !== 'active')) {
           syncLocalSubscriptionToFirestore(user.uid);
-          syncAllUserDataToFirestore();
+        }
+
+        // Real-Time Cross-Device Resume Synchronization:
+        // When user edits on laptop, update mobile in real-time
+        if (docData && (docData.resumeData || docData.profilesRegistry || docData.profilesData)) {
+          if (typeof syncIncomingCloudResumes === 'function') {
+            syncIncomingCloudResumes(docData);
+          }
         }
       }, err => {
         console.warn('[ZenSuite] UID subscription listener note:', err);
@@ -606,7 +612,13 @@ function handleAuthStateChange(user) {
       if (canonicalKey) {
         window._unsubscribeCanonicalSub = db.collection('users').doc(canonicalKey).onSnapshot(async doc => {
           if (doc.exists) {
-            await processSnapshotDoc(doc.data());
+            const cData = doc.data();
+            await processSnapshotDoc(cData);
+            if (cData && (cData.resumeData || cData.profilesRegistry || cData.profilesData)) {
+              if (typeof syncIncomingCloudResumes === 'function') {
+                syncIncomingCloudResumes(cData);
+              }
+            }
           }
         }, err => {
           console.warn('[ZenSuite] Canonical email listener note:', err);
@@ -916,6 +928,137 @@ if (document.readyState === 'loading') {
   window.getCanonicalEmailKey = getCanonicalEmailKey;
 
 // Firestore functions - strictly persisting subscription details and stored resumes (no tracking telemetry)
+let _hasCloudHydrated = false;
+window._hasCloudHydrated = () => _hasCloudHydrated;
+
+// Real-Time Cross-Device Resume Synchronization Engine
+function syncIncomingCloudResumes(cloudDoc) {
+  if (!cloudDoc || typeof cloudDoc !== 'object') return;
+  try {
+    let hasUpdated = false;
+    
+    // 1. Extract combined profilesData from both nested object and dot-notated fields
+    const profilesData = {};
+    if (cloudDoc.profilesData && typeof cloudDoc.profilesData === 'object') {
+      Object.assign(profilesData, cloudDoc.profilesData);
+    }
+    Object.keys(cloudDoc).forEach(k => {
+      if (k.startsWith('profilesData.')) {
+        const pId = k.substring('profilesData.'.length);
+        if (pId && !profilesData[pId] && cloudDoc[k]) {
+          profilesData[pId] = cloudDoc[k];
+        }
+      }
+    });
+    if (cloudDoc.resumeData && !profilesData['default']) {
+      profilesData['default'] = cloudDoc.resumeData;
+    }
+
+    // 2. Extract and merge profiles registry
+    const cloudRegistry = cloudDoc.profilesRegistry;
+    if (cloudRegistry && Array.isArray(cloudRegistry.profiles) && cloudRegistry.profiles.length > 0) {
+      const localRegistry = (typeof window.getStoredProfilesRegistry === 'function')
+        ? window.getStoredProfilesRegistry()
+        : { activeId: 'default', profiles: [{ id: 'default', name: 'Master Resume' }] };
+
+      const mergedProfiles = [...cloudRegistry.profiles];
+      const seenIds = new Set(mergedProfiles.map(p => p.id));
+      
+      // Preserve any local offline profiles
+      if (Array.isArray(localRegistry.profiles)) {
+        localRegistry.profiles.forEach(lp => {
+          if (lp && lp.id && !seenIds.has(lp.id)) {
+            seenIds.add(lp.id);
+            mergedProfiles.push(lp);
+          }
+        });
+      }
+
+      // Auto-recover any profile versions present in profilesData
+      Object.keys(profilesData).forEach(pId => {
+        if (!seenIds.has(pId) && profilesData[pId]) {
+          seenIds.add(pId);
+          mergedProfiles.push({
+            id: pId,
+            name: (profilesData[pId].formData && profilesData[pId].formData.name) ? `${profilesData[pId].formData.name}'s Resume` : 'Saved Version',
+            updatedAt: new Date().toISOString()
+          });
+        }
+      });
+
+      const updatedRegistry = {
+        activeId: cloudRegistry.activeId || localRegistry.activeId || 'default',
+        profiles: mergedProfiles
+      };
+
+      if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSetting === 'function') {
+        window.ZenResumeDB.saveSetting('zenresume_application_profiles', updatedRegistry);
+      }
+      try {
+        localStorage.setItem('zenresume_application_profiles', JSON.stringify(updatedRegistry));
+      } catch (e) {}
+
+      if (typeof window.renderProfileDropdown === 'function') {
+        window.renderProfileDropdown(updatedRegistry);
+      }
+      hasUpdated = true;
+    }
+
+    // 3. Hydrate each profile into local storage
+    Object.keys(profilesData).forEach(pId => {
+      const pData = profilesData[pId];
+      if (pData && typeof pData === 'object') {
+        if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+          window.ZenResumeDB.saveProfile(pId, pData);
+        }
+        try {
+          const storageKey = pId === 'default' ? 'zenresume_state' : `zenresume_profile_${pId}`;
+          localStorage.setItem(storageKey, JSON.stringify(pData));
+          if (pId === 'default') {
+            localStorage.setItem('zen_resume_draft', JSON.stringify(pData));
+          }
+        } catch (e) {}
+        hasUpdated = true;
+      }
+    });
+
+    // 4. Hydrate master resume if present
+    const masterData = profilesData['default'] || cloudDoc.resumeData;
+    if (masterData) {
+      if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+        window.ZenResumeDB.saveProfile('default', masterData);
+      }
+      try {
+        localStorage.setItem('zenresume_state', JSON.stringify(masterData));
+        localStorage.setItem('zen_resume_draft', JSON.stringify(masterData));
+      } catch (e) {}
+
+      // If user is currently in editor, update form and preview
+      const isInEditor = document.body.classList.contains('in-editor');
+      if (isInEditor && typeof window.hydrateStateFromData === 'function') {
+        window.hydrateStateFromData(masterData, true);
+        if (typeof window.syncFormToPreview === 'function') {
+          window.syncFormToPreview();
+        }
+      }
+      hasUpdated = true;
+    }
+
+    if (hasUpdated) {
+      _hasCloudHydrated = true;
+      if (typeof window.renderProfileModalSavedResumes === 'function') {
+        window.renderProfileModalSavedResumes();
+      }
+      const countBadge = document.getElementById('profile-resumes-count-badge');
+      const reg = (typeof window.getStoredProfilesRegistry === 'function') ? window.getStoredProfilesRegistry() : null;
+      if (countBadge && reg?.profiles) countBadge.textContent = reg.profiles.length;
+    }
+  } catch (err) {
+    console.warn('[ZenCloud] syncIncomingCloudResumes note:', err);
+  }
+}
+window.syncIncomingCloudResumes = syncIncomingCloudResumes;
+
 async function saveResumeToFirestore(stateObj) {
   if (!currentUser || !db) return; // Only save if logged in
   
@@ -927,12 +1070,17 @@ async function saveResumeToFirestore(stateObj) {
     const activeId = registry.activeId || 'default';
     const userEmail = (currentUser.email || '').toLowerCase();
 
+    // Sanitize stateObj into pure JSON to eliminate undefined values that cause Firestore .set() to crash
+    const cleanState = JSON.parse(JSON.stringify(stateObj));
+
     // Strictly save subscription info and the user's stored resumes (no tracking telemetry)
     const updatePayload = {
       email: userEmail,
-      resumeData: stateObj,
+      resumeData: cleanState,
       profilesRegistry: registry,
-      [`profilesData.${activeId}`]: stateObj,
+      profilesData: {
+        [activeId]: cleanState
+      },
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
@@ -957,9 +1105,16 @@ async function saveResumeToFirestore(stateObj) {
     console.error("Error saving to Firestore:", error);
   }
 }
+window.saveResumeToFirestore = saveResumeToFirestore;
 
 async function syncAllUserDataToFirestore() {
   if (!currentUser || !db) return;
+  // Safety guard: Never push local data before initial cloud hydration has completed
+  if (!_hasCloudHydrated) {
+    console.log('[ZenCloud] syncAllUserDataToFirestore postponed until cloud data hydration completes');
+    return;
+  }
+
   try {
     const registry = (typeof window.getStoredProfilesRegistry === 'function')
       ? window.getStoredProfilesRegistry()
@@ -979,12 +1134,18 @@ async function syncAllUserDataToFirestore() {
           }
         }
         if (pData) {
-          profilesData[p.id] = pData;
+          profilesData[p.id] = JSON.parse(JSON.stringify(pData));
         }
       }
     }
 
     const masterData = profilesData[registry.activeId || 'default'] || profilesData['default'] || null;
+
+    // Safety guard: If we have no local profile data, do not overwrite cloud with empty profilesData
+    if (Object.keys(profilesData).length === 0 && !masterData) {
+      console.log('[ZenCloud] Skipping cloud sync: local profile storage is empty');
+      return;
+    }
 
     const payload = {
       email: (currentUser.email || '').toLowerCase(),
@@ -1041,7 +1202,8 @@ async function loadUserDataFromFirestore(user) {
       const dExpDate = parseExpiryDate(d.subscription?.expiresAt || d.expiresAt);
       const hasSub = d.isPremium || (d.subscription && (d.subscription.status === 'active' || d.subscription.status === 'completed' || d.subscription.status === 'paid') && (!dExpDate || dExpDate.getTime() > Date.now()));
       const hasProfs = d.profilesRegistry && Array.isArray(d.profilesRegistry.profiles) && d.profilesRegistry.profiles.length > 0;
-      return hasSub || hasProfs;
+      const hasRes = !!(d.resumeData || d.profilesData);
+      return hasSub || hasProfs || hasRes;
     };
 
     if (!checkHasSubOrProfiles(uidData) && !checkHasSubOrProfiles(canonicalData) && userEmail) {
@@ -1062,7 +1224,7 @@ async function loadUserDataFromFirestore(user) {
       }
     }
 
-    // Combine docData with priority: canonicalData / queryData merged into uidData
+    // Combine docData with priority: queryData, canonicalData, and uidData
     let docData = Object.assign({}, queryData || {}, canonicalData || {}, uidData || {});
 
     // If canonicalData or queryData has an active subscription but uidData does not, enforce active subscription
@@ -1073,34 +1235,85 @@ async function loadUserDataFromFirestore(user) {
       docData.isPremium = true;
     }
 
-    // Merge stored profiles registries if present in secondary sources
-    const registries = [uidData?.profilesRegistry, canonicalData?.profilesRegistry, queryData?.profilesRegistry].filter(r => r && Array.isArray(r.profiles));
-    if (registries.length > 1) {
-      const combinedRegistry = { activeId: uidData?.profilesRegistry?.activeId || canonicalData?.profilesRegistry?.activeId || 'default', profiles: [] };
-      const seenIds = new Set();
-      for (const reg of registries) {
-        for (const p of reg.profiles) {
-          if (p && p.id && !seenIds.has(p.id)) {
-            seenIds.add(p.id);
-            combinedRegistry.profiles.push(p);
+    // Comprehensive extraction of profilesData across nested maps and flat dot-notated fields
+    const combinedProfilesData = {};
+    const allSources = [queryData, canonicalData, uidData].filter(Boolean);
+    allSources.forEach(src => {
+      if (src.profilesData && typeof src.profilesData === 'object') {
+        Object.assign(combinedProfilesData, src.profilesData);
+      }
+      Object.keys(src).forEach(k => {
+        if (k.startsWith('profilesData.')) {
+          const pId = k.substring('profilesData.'.length);
+          if (pId && !combinedProfilesData[pId] && src[k]) {
+            combinedProfilesData[pId] = src[k];
           }
         }
+      });
+      if (src.resumeData && !combinedProfilesData['default']) {
+        combinedProfilesData['default'] = src.resumeData;
       }
-      docData.profilesRegistry = combinedRegistry;
+    });
+
+    if (docData.resumeData && !combinedProfilesData['default']) {
+      combinedProfilesData['default'] = docData.resumeData;
+    }
+    if (!docData.resumeData && combinedProfilesData['default']) {
+      docData.resumeData = combinedProfilesData['default'];
+    }
+    docData.profilesData = combinedProfilesData;
+
+    // Merge stored profiles registries if present in sources
+    const registries = [uidData?.profilesRegistry, canonicalData?.profilesRegistry, queryData?.profilesRegistry].filter(r => r && Array.isArray(r.profiles));
+    const combinedRegistry = {
+      activeId: uidData?.profilesRegistry?.activeId || canonicalData?.profilesRegistry?.activeId || 'default',
+      profiles: []
+    };
+    const seenIds = new Set();
+    
+    // 1. Add all profiles from cloud registries
+    for (const reg of registries) {
+      for (const p of reg.profiles) {
+        if (p && p.id && !seenIds.has(p.id)) {
+          seenIds.add(p.id);
+          combinedRegistry.profiles.push(p);
+        }
+      }
     }
 
-    // Merge profilesData objects across sources
-    const profilesDataSources = [uidData?.profilesData, canonicalData?.profilesData, queryData?.profilesData].filter(p => p && typeof p === 'object');
-    if (profilesDataSources.length > 0) {
-      docData.profilesData = Object.assign({}, ...profilesDataSources.reverse());
+    // 2. Auto-recover any orphaned profile versions found in profilesData
+    Object.keys(combinedProfilesData).forEach(pId => {
+      if (!seenIds.has(pId) && combinedProfilesData[pId]) {
+        seenIds.add(pId);
+        const pObj = combinedProfilesData[pId];
+        const pName = (pObj.formData && pObj.formData.name)
+          ? `${pObj.formData.name}'s Resume`
+          : (pObj.basics && pObj.basics.name ? `${pObj.basics.name}'s Resume` : (pId === 'default' ? 'Master Resume' : 'Saved Version'));
+        combinedRegistry.profiles.push({
+          id: pId,
+          name: pName,
+          updatedAt: new Date().toISOString()
+        });
+      }
+    });
+
+    // 3. Ensure Master Resume ('default') is always in registry
+    if (!seenIds.has('default')) {
+      combinedRegistry.profiles.unshift({
+        id: 'default',
+        name: 'Master Resume',
+        updatedAt: new Date().toISOString()
+      });
     }
 
-    if (!docData || (!docData.subscription && !docData.profilesRegistry && !docData.resumeData)) {
+    docData.profilesRegistry = combinedRegistry;
+
+    if (!docData || (!docData.subscription && !docData.profilesRegistry && !docData.resumeData && Object.keys(combinedProfilesData).length === 0)) {
       // Local has subscription, auto-sync to Firestore
       if (checkLocalHasSubscription()) {
         syncLocalSubscriptionToFirestore(user.uid);
       }
-      syncAllUserDataToFirestore();
+      _hasCloudHydrated = true;
       return;
     }
 
@@ -1137,55 +1350,61 @@ async function loadUserDataFromFirestore(user) {
       syncLocalSubscriptionToFirestore(user.uid);
     }
 
-    // 2. Hydrate Stored Resumes from Master Vault into IndexedDB
-    if (docData.profilesRegistry && docData.profilesRegistry.profiles && Array.isArray(docData.profilesRegistry.profiles)) {
+    // 2. Hydrate Stored Resumes from Master Vault into IndexedDB and LocalStorage
+    if (combinedRegistry.profiles.length > 0) {
       if (window.ZenResumeDB && typeof window.ZenResumeDB.saveSetting === 'function') {
-        await window.ZenResumeDB.saveSetting('zenresume_application_profiles', docData.profilesRegistry);
+        await window.ZenResumeDB.saveSetting('zenresume_application_profiles', combinedRegistry);
       }
       try {
-        localStorage.setItem('zenresume_application_profiles', JSON.stringify(docData.profilesRegistry));
+        localStorage.setItem('zenresume_application_profiles', JSON.stringify(combinedRegistry));
       } catch (e) {}
 
       // Hydrate each stored profile
-      if (docData.profilesData && typeof docData.profilesData === 'object') {
-        for (const [pId, pContent] of Object.entries(docData.profilesData)) {
-          if (pContent) {
-            if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
-              await window.ZenResumeDB.saveProfile(pId, pContent);
-            }
-            try {
-              const storageKey = pId === 'default' ? 'zenresume_state' : `zenresume_profile_${pId}`;
-              localStorage.setItem(storageKey, JSON.stringify(pContent));
-            } catch (e) {}
+      for (const [pId, pContent] of Object.entries(combinedProfilesData)) {
+        if (pContent) {
+          if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+            await window.ZenResumeDB.saveProfile(pId, pContent);
           }
+          try {
+            const storageKey = pId === 'default' ? 'zenresume_state' : `zenresume_profile_${pId}`;
+            localStorage.setItem(storageKey, JSON.stringify(pContent));
+            if (pId === 'default') {
+              localStorage.setItem('zen_resume_draft', JSON.stringify(pContent));
+            }
+          } catch (e) {}
         }
       }
 
       // Re-render UI components
       if (typeof window.renderProfileDropdown === 'function') {
-        window.renderProfileDropdown(docData.profilesRegistry);
+        window.renderProfileDropdown(combinedRegistry);
       }
       if (typeof window.renderProfileModalSavedResumes === 'function') {
         window.renderProfileModalSavedResumes();
       }
       const countBadge = document.getElementById('profile-resumes-count-badge');
-      if (countBadge) countBadge.textContent = docData.profilesRegistry.profiles.length;
+      if (countBadge) countBadge.textContent = combinedRegistry.profiles.length;
     }
 
     // 3. Hydrate Master / Active Resume
-    if (docData.resumeData) {
+    const activeResumeData = docData.resumeData || combinedProfilesData[combinedRegistry.activeId] || combinedProfilesData['default'];
+    if (activeResumeData) {
       if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
-        await window.ZenResumeDB.saveProfile('default', docData.resumeData);
+        await window.ZenResumeDB.saveProfile('default', activeResumeData);
       }
       try {
-        localStorage.setItem('zenresume_state', JSON.stringify(docData.resumeData));
+        localStorage.setItem('zenresume_state', JSON.stringify(activeResumeData));
+        localStorage.setItem('zen_resume_draft', JSON.stringify(activeResumeData));
       } catch (e) {}
 
-      if (typeof hydrateStateFromData === 'function') {
+      if (typeof window.hydrateStateFromData === 'function') {
         const isInEditor = document.body.classList.contains('in-editor');
-        hydrateStateFromData(docData.resumeData, !isInEditor);
+        window.hydrateStateFromData(activeResumeData, !isInEditor);
       }
     }
+
+    _hasCloudHydrated = true;
+    console.log('[ZenCloud] Master Resume Vault successfully hydrated from cloud on this device.');
   } catch (error) {
     console.warn('[ZenCloud] Error loading user data from Firestore:', error);
   }
@@ -1455,7 +1674,7 @@ window.openUserProfileModal = function() {
   const modal = document.getElementById('user-profile-modal');
   if (!modal) return;
 
-  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || currentUser;
   if (!user) {
     if (typeof window.openEmailAuthModal === 'function') window.openEmailAuthModal();
     return;
@@ -1534,12 +1753,21 @@ window.openUserProfileModal = function() {
       }
     };
     fetchLatestSub();
+
+    // Also re-verify stored resumes in background so mobile has any edits made recently on laptop
+    if (typeof loadUserDataFromFirestore === 'function') {
+      loadUserDataFromFirestore(user).then(() => {
+        if (typeof window.renderProfileModalSavedResumes === 'function') {
+          window.renderProfileModalSavedResumes();
+        }
+      }).catch(e => console.warn('[ProfileModal] Background cloud resume refresh error:', e));
+    }
   }
 };
 
 // 1-Click Manual Cloud Restore Engine: Fetches active subscriptions and resumes from Cloud Vault
 window.restoreCloudUserData = async function() {
-  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || currentUser;
   if (!user) {
     if (typeof window.openEmailAuthModal === 'function') window.openEmailAuthModal();
     return;
@@ -1584,7 +1812,7 @@ window.restoreCloudUserData = async function() {
 
 // 1-Click Force Backup to Cloud Vault: Uploads local subscription and resumes immediately
 window.forceBackupToCloud = async function() {
-  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser);
+  const user = (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) || currentUser;
   if (!user) {
     if (typeof window.openEmailAuthModal === 'function') window.openEmailAuthModal();
     return;
@@ -1820,7 +2048,7 @@ function escapeHtml(str) {
 
 window.loadProfileFromModal = function(profileId) {
   if (typeof window.switchProfileVersion === 'function') {
-    window.switchProfileVersion(profileId);
+    window.switchProfileVersion(profileId, true);
   }
   window.closeUserProfileModal();
   

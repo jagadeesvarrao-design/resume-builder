@@ -1120,6 +1120,25 @@ function autoSaveResume(immediate = false) {
   const performSave = () => {
     try {
       const currentData = extractCurrentFormData();
+      // Safety guard: if currentData is completely empty (no name, no exp, no edu) but we already have saved resume in localStorage/ZenResumeDB, do NOT overwrite with blank!
+      const hasAnyField = currentData && (
+        (currentData.personal && (currentData.personal.name || currentData.personal.email || currentData.personal.phone)) ||
+        (currentData.experience && currentData.experience.length > 0) ||
+        (currentData.education && currentData.education.length > 0) ||
+        (currentData.skills && currentData.skills.length > 0)
+      );
+      if (!hasAnyField) {
+        const existingRaw = localStorage.getItem('zenresume_state');
+        if (existingRaw) {
+          try {
+            const parsedExisting = JSON.parse(existingRaw);
+            if (parsedExisting && parsedExisting.formData && (parsedExisting.formData.personal?.name || parsedExisting.formData.experience?.length)) {
+              return;
+            }
+          } catch(e) {}
+        }
+      }
+
       const stateToSave = {
         formData: currentData,
         selectedExp: state.selectedExp,
@@ -1138,6 +1157,7 @@ function autoSaveResume(immediate = false) {
 
       if (activeId === 'default') {
         localStorage.setItem('zenresume_state', serialized);
+        localStorage.setItem('zen_resume_draft', serialized);
       } else {
         localStorage.setItem(`zenresume_profile_${activeId}`, serialized);
       }
@@ -1362,28 +1382,36 @@ function promptCreateNewProfileVersion(customName = null) {
   window.showToast(`🎉 Created job profile: "${cleanName}"! Master resume saved.`, "success", 4000);
 }
 
-function switchProfileVersion(targetId) {
+function switchProfileVersion(targetId, forceReload = false) {
   const registry = getStoredProfilesRegistry();
-  if (targetId === registry.activeId) return;
+  if (targetId === registry.activeId && !forceReload) return;
 
-  // Auto-save current profile first
-  const currentData = extractCurrentFormData();
-  const currentState = {
-    formData: currentData,
-    selectedExp: state.selectedExp,
-    selectedInd: state.selectedInd,
-    selectedTemplateId: state.selectedTemplateId,
-    currentStep: state.currentStep,
-    hasLoadedProfile: state.hasLoadedProfile,
-    sectionOrder: state.sectionOrder
-  };
-  if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
-    window.ZenResumeDB.saveProfile(registry.activeId || 'default', currentState);
-  }
-  if (registry.activeId === 'default') {
-    localStorage.setItem('zenresume_state', JSON.stringify(currentState));
-  } else {
-    localStorage.setItem(`zenresume_profile_${registry.activeId}`, JSON.stringify(currentState));
+  // Auto-save current profile first ONLY if switching away to another profile
+  if (targetId !== registry.activeId) {
+    const currentData = extractCurrentFormData();
+    // Only save if current form has actual content to avoid overwriting with blanks
+    if (currentData && (currentData.personal?.name || currentData.experience?.length || currentData.education?.length)) {
+      const currentState = {
+        formData: currentData,
+        selectedExp: state.selectedExp,
+        selectedInd: state.selectedInd,
+        selectedTemplateId: state.selectedTemplateId,
+        currentStep: state.currentStep,
+        hasLoadedProfile: state.hasLoadedProfile,
+        sectionOrder: state.sectionOrder,
+        sectionTitles: state.sectionTitles,
+        spacing: state.spacing
+      };
+      if (window.ZenResumeDB && typeof window.ZenResumeDB.saveProfile === 'function') {
+        window.ZenResumeDB.saveProfile(registry.activeId || 'default', currentState);
+      }
+      if (registry.activeId === 'default') {
+        localStorage.setItem('zenresume_state', JSON.stringify(currentState));
+        localStorage.setItem('zen_resume_draft', JSON.stringify(currentState));
+      } else {
+        localStorage.setItem(`zenresume_profile_${registry.activeId}`, JSON.stringify(currentState));
+      }
+    }
   }
 
   // Set active ID in registry
@@ -1393,7 +1421,7 @@ function switchProfileVersion(targetId) {
   // Load target profile from localStorage or ZenResumeDB
   let targetStateJson;
   if (targetId === 'default') {
-    targetStateJson = localStorage.getItem('zenresume_state');
+    targetStateJson = localStorage.getItem('zenresume_state') || localStorage.getItem('zen_resume_draft');
   } else {
     targetStateJson = localStorage.getItem(`zenresume_profile_${targetId}`);
   }
@@ -1401,6 +1429,9 @@ function switchProfileVersion(targetId) {
   let parsed = null;
   if (targetStateJson) {
     try { parsed = JSON.parse(targetStateJson); } catch (e) {}
+  }
+  if (!parsed && window.ZenResumeDB && typeof window.ZenResumeDB.getProfileSync === 'function') {
+    parsed = window.ZenResumeDB.getProfileSync(targetId);
   }
 
   if (parsed) {
@@ -1569,10 +1600,10 @@ function loadSavedResume(preventDisplayTransition = false) {
   const registry = getStoredProfilesRegistry();
   let savedState = null;
 
-  // 1. Try reading from ZenResumeDB
-  if (window.ZenResumeDB && typeof window.ZenResumeDB.loadProfile === 'function') {
-    const cached = window.ZenResumeDB.loadProfile(registry.activeId || 'default');
-    if (cached && typeof cached.then !== 'function' && cached.formData) {
+  // 1. Try reading from ZenResumeDB synchronous cache
+  if (window.ZenResumeDB && typeof window.ZenResumeDB.getProfileSync === 'function') {
+    const cached = window.ZenResumeDB.getProfileSync(registry.activeId || 'default');
+    if (cached && cached.formData) {
       savedState = cached;
     }
   }
@@ -1581,9 +1612,9 @@ function loadSavedResume(preventDisplayTransition = false) {
   if (!savedState) {
     let savedStateJson;
     if (registry.activeId === 'default') {
-      savedStateJson = localStorage.getItem('zenresume_state');
+      savedStateJson = localStorage.getItem('zenresume_state') || localStorage.getItem('zen_resume_draft');
     } else {
-      savedStateJson = localStorage.getItem(`zenresume_profile_${registry.activeId}`) || localStorage.getItem('zenresume_state');
+      savedStateJson = localStorage.getItem(`zenresume_profile_${registry.activeId}`) || localStorage.getItem('zenresume_state') || localStorage.getItem('zen_resume_draft');
     }
 
     if (savedStateJson) {
@@ -1595,7 +1626,17 @@ function loadSavedResume(preventDisplayTransition = false) {
     }
   }
 
-  if (!savedState) return false;
+  if (!savedState) {
+    // 3. Asynchronous fallback to IndexedDB if memory cache wasn't ready
+    if (window.ZenResumeDB && typeof window.ZenResumeDB.loadProfile === 'function') {
+      window.ZenResumeDB.loadProfile(registry.activeId || 'default').then(asyncState => {
+        if (asyncState && asyncState.formData) {
+          hydrateStateFromData(asyncState, preventDisplayTransition);
+        }
+      });
+    }
+    return false;
+  }
   return hydrateStateFromData(savedState, preventDisplayTransition);
 }
 
@@ -5598,9 +5639,11 @@ function enterApp() {
   if (landingScreen) landingScreen.style.display = 'none';
   if (appContainer) appContainer.style.display = 'flex';
   
-  // Check if they have an active resume session (saved data)
-  const savedStateJson = localStorage.getItem('zenresume_state');
-  if (savedStateJson) {
+  // Check if they have an active resume session (saved data) and hydrate
+  const hasSaved = loadSavedResume(false);
+  const savedStateJson = localStorage.getItem('zenresume_state') || localStorage.getItem('zen_resume_draft');
+  
+  if (hasSaved || savedStateJson) {
     document.body.classList.add('in-editor');
     // Transition straight to builder workspace
     if (selectionScreen) selectionScreen.style.display = 'none';

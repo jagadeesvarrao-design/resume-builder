@@ -536,9 +536,9 @@
     }
     .mobile-menu-toggle {
       display: none !important;
-      background: transparent !important;
-      border: 1px solid rgba(255, 255, 255, 0.12) !important;
-      color: #FFFFFF !important;
+      background: rgba(15, 23, 42, 0.05) !important;
+      border: 1px solid rgba(15, 23, 42, 0.15) !important;
+      color: #0F172A !important;
       width: 32px !important;
       height: 32px !important;
       border-radius: 8px !important;
@@ -547,10 +547,19 @@
       font-size: 14px !important;
       cursor: pointer !important;
       transition: all 0.15s ease !important;
+      flex-shrink: 0 !important;
     }
     .mobile-menu-toggle:hover {
+      background: rgba(15, 23, 42, 0.1) !important;
+      border-color: rgba(15, 23, 42, 0.25) !important;
+    }
+    [data-theme="dark"] .mobile-menu-toggle {
       background: rgba(255, 255, 255, 0.08) !important;
-      border-color: rgba(255, 255, 255, 0.22) !important;
+      border-color: rgba(255, 255, 255, 0.16) !important;
+      color: #FFFFFF !important;
+    }
+    [data-theme="dark"] .mobile-menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.16) !important;
     }
 
     /* Light Theme Support for Navigation Ribbon */
@@ -598,6 +607,14 @@
     [data-theme="light"] .btn-theme-toggle:hover {
       background: rgba(0, 0, 0, 0.05) !important;
       color: #0F172A !important;
+    }
+    [data-theme="light"] .mobile-menu-toggle {
+      border-color: rgba(0, 0, 0, 0.15) !important;
+      color: #0F172A !important;
+      background: rgba(0, 0, 0, 0.05) !important;
+    }
+    [data-theme="light"] .mobile-menu-toggle:hover {
+      background: rgba(0, 0, 0, 0.1) !important;
     }
     [data-theme="light"] .btn-header-login {
       background: rgba(0, 0, 0, 0.04);
@@ -776,22 +793,24 @@
         font-size: 12px !important;
       }
       .mobile-menu-toggle {
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 14px !important;
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 15px !important;
+        display: flex !important;
+        flex-shrink: 0 !important;
+        margin-left: 2px !important;
       }
       .nav-user-profile {
-        padding: 3px 8px 3px 4px !important;
-        gap: 5px !important;
+        padding: 3px 6px 3px 3px !important;
+        gap: 4px !important;
+        max-width: 72px !important;
+        flex-shrink: 0 !important;
       }
       .nav-user-name {
-        display: inline-block !important;
-        max-width: 65px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 11px;
-        font-weight: 700;
+        display: none !important;
+      }
+      .nav-user-profile i.fa-chevron-down {
+        display: none !important;
       }
       .btn-user-logout {
         display: none !important;
