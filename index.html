@@ -161,13 +161,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=3.2.0">
+  <link rel="stylesheet" href="styles.css?v=3.2.4">
   
   <!-- Instant Client-Side Cache Busting & PWA Version Synchronizer -->
   <script>
     (function() {
       try {
-        var APP_DEPLOY_VERSION = 'v3.2.0';
+        var APP_DEPLOY_VERSION = 'v3.2.4';
         var storedVersion = localStorage.getItem('zen_deploy_version');
         if (storedVersion !== APP_DEPLOY_VERSION) {
           localStorage.setItem('zen_deploy_version', APP_DEPLOY_VERSION);
@@ -2294,10 +2294,10 @@
             </div>
 
             <!-- Row 3: Visual Style Selector & Clean Secondary Utility Actions -->
-            <div class="stitch-editor-actions-row" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
-              <div class="quick-layout-switch" style="margin: 0; display: flex; align-items: center; gap: 6px; border-radius: 8px; padding: 3px 8px;">
-                <label for="select-layout-inline" class="quick-switch-label" style="font-size: 11px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 4px;"><i class="fas fa-palette" style="font-size: 11px;"></i> Style:</label>
-                <select id="select-layout-inline" class="quick-switch-select" style="border: none; background: transparent; font-size: 11.5px; font-weight: 700; cursor: pointer; outline: none; padding: 2px 4px;">
+            <div class="stitch-editor-actions-row">
+              <div class="quick-layout-switch">
+                <label for="select-layout-inline" class="quick-switch-label"><i class="fas fa-palette"></i> Style:</label>
+                <select id="select-layout-inline" class="quick-switch-select">
                   <option value="classic">Minimalist Classic</option>
                   <option value="modern">Serene Modern</option>
                   <option value="grid">Technical Grid</option>
@@ -2309,28 +2309,28 @@
                 </select>
               </div>
 
-              <div class="data-actions" style="margin: 0; gap: 5px; display: flex; align-items: center;">
-                <button type="button" class="btn-data-action" id="btn-magic-import" style="font-weight: 700; font-size: 11px; padding: 4px 9px; border-radius: 6px;" title="Auto-fill from an existing PDF Resume">
-                  <i class="fas fa-file-pdf" style="margin-right: 4px;"></i> Import PDF
+              <div class="data-actions">
+                <button type="button" class="btn-data-action" id="btn-magic-import" title="Auto-fill from an existing PDF Resume">
+                  <i class="fas fa-file-pdf"></i> Import PDF
                 </button>
                 <input type="file" id="input-magic-pdf" accept="application/pdf" style="display: none;">
 
-                <button type="button" class="btn-data-action" id="btn-open-bullet-bank-toolbar" onclick="window.ZenBulletBank && window.ZenBulletBank.openBulletBank();" style="font-weight: 700; font-size: 11px; padding: 4px 9px; border-radius: 6px;" title="Browse Google XYZ Formula Bullets">
-                  <i class="fas fa-bolt" style="margin-right: 4px; color: #F59E0B;"></i> Bullets
+                <button type="button" class="btn-data-action" id="btn-open-bullet-bank-toolbar" onclick="window.ZenBulletBank && window.ZenBulletBank.openBulletBank();" title="Browse Google XYZ Formula Bullets">
+                  <i class="fas fa-bolt" style="color: #F59E0B;"></i> Bullets
                 </button>
                 
-                <button type="button" class="btn-data-action" id="btn-reorder-layout" style="font-weight: 700; font-size: 11px; padding: 4px 9px; border-radius: 6px;" title="Reorder Resume Sections">
-                  <i class="fas fa-bars-staggered" style="margin-right: 4px;"></i> Reorder
+                <button type="button" class="btn-data-action" id="btn-reorder-layout" title="Reorder Resume Sections">
+                  <i class="fas fa-bars-staggered"></i> Reorder
                 </button>
 
-                <div class="mini-data-tools" style="display: inline-flex; border-radius: 6px; overflow: hidden;">
-                  <button type="button" class="btn-data-action" id="btn-export-json" title="Export JSON Backup" style="border: none; padding: 4px 7px; font-size: 10.5px; border-radius: 0; background: transparent;">
+                <div class="mini-data-tools">
+                  <button type="button" class="btn-data-action" id="btn-export-json" title="Export JSON Backup">
                     <i class="fas fa-download"></i>
                   </button>
-                  <button type="button" class="btn-data-action" id="btn-import-json" title="Restore JSON Backup" style="border: none; padding: 4px 7px; font-size: 10.5px; border-radius: 0; background: transparent;">
+                  <button type="button" class="btn-data-action" id="btn-import-json" title="Restore JSON Backup">
                     <i class="fas fa-upload"></i>
                   </button>
-                  <button type="button" class="btn-data-action" id="btn-reset-defaults" title="Reset to Defaults" style="border: none; padding: 4px 7px; font-size: 10.5px; border-radius: 0; background: transparent; color: #EF4444;">
+                  <button type="button" class="btn-data-action" id="btn-reset-defaults" title="Reset to Defaults" style="color: #EF4444;">
                     <i class="fas fa-undo"></i>
                   </button>
                 </div>
@@ -4002,7 +4002,7 @@
   <script src="templates-data.js?v=3.2.0" defer></script>
   <script src="indexeddb-storage.js?v=3.2.0" defer></script>
   <script src="firebase-service.js?v=3.2.2" defer></script>
-  <script src="app.js?v=3.2.3" defer></script>
+  <script src="app.js?v=3.2.4" defer></script>
   <script src="profile-sync.js?v=3.2.0" defer></script>
   <script src="exit-intent.js?v=3.2.0" defer></script>
   <script src="hero-playground.js?v=3.2.0" defer></script>

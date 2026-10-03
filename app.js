@@ -3132,11 +3132,21 @@ async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf 
         });
       }
 
-      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(customUserKey.trim())}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: parts }] })
-      });
+      let response;
+      const customModels = ['gemini-3.5-flash-lite', 'gemini-3.8-flash'];
+      for (const model of customModels) {
+        try {
+          response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(customUserKey.trim())}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: [{ parts: parts }] })
+          });
+          if (response.ok) break;
+        } catch (e) {
+          console.warn(`[Client Gemini] Failed on ${model}:`, e);
+        }
+      }
+      if (!response) throw new Error("Failed to connect to Gemini API with provided key.");
 
       const data = await response.json();
       if (data.error) throw new Error(data.error.message);
@@ -3510,22 +3520,28 @@ function parseResumeTextHeuristically(rawText) {
       .replace(/\bNexis\b/gi, 'Next.js')
       .replace(/\bNextjs\b/gi, 'Next.js')
       .replace(/\bGwen\b/gi, 'Qwen')
+      // Break category headers (with or without colon) into delimiters
+      .replace(/(?:^|\n|\s{2,})\b(Languages|Web|Frameworks|Database|Databases|Tools|Libraries|Others|Core Skills|Technical Skills|Backend|Frontend|Concepts)\b\s*:?\s*/gi, '|')
       .replace(/(?:~~+|—+|–+|--+|\n+|[•·|;])/g, '|')
       .replace(/\b(Inter-Agent Contracts|Dynamic Context Assembly|Tracing & Production Debugging|Semantic Memory|Google Gemini API|Open-Weight LLMs|Python \(FastAPI|Next\.?js|HubSpot CRM|REST APIs|Git & Version Control)\b/gi, '|$1');
 
     const rawTokens = cleanSkillsText
       .split('|')
       .map(s => s.replace(/^(?:Core Skills|Languages|Frameworks|Databases|Tools|Libraries)[A-Za-z\s&]*:\s*/i, '').replace(/^[*\-•«»+~!\s,–—]+|[*\-•«»+~!\s,–—]+$/g, '').trim())
-      .filter(s => s.length > 1 && !/^(?:Core Skills|Languages|Tools|Databases)$/i.test(s));
+      .filter(s => s.length > 1 && !/^(?:Core Skills|Languages|Tools|Databases|Web|Frameworks|Others|Database)$/i.test(s));
 
     rawTokens.forEach(t => {
       let cleanT = t.replace(/^[*\-•«»+~!\s,–—]+|[*\-•«»+~!\s,–—]+$/g, '').replace(/\s{2,}/g, ' ').trim();
-      if (cleanT.includes(',') && !cleanT.includes('(')) {
+      // Filter out soft skill paragraphs / sentences
+      if (/^(?:Quick Learner|Problem Solver|Team Player|Time Management|Strengths|Adapts fast|Analytical|Strong collaboration|Prioritizes tasks)\b/i.test(cleanT)) {
+        return;
+      }
+      if (cleanT.includes(',')) {
         cleanT.split(',').forEach(sub => {
           const c = sub.replace(/^[*\-•«»+~!\s,–—]+|[*\-•«»+~!\s,–—]+$/g, '').trim();
-          if (c && c.length > 1 && c.length < 60 && !skills.includes(c)) skills.push(c);
+          if (c && c.length > 1 && c.length < 75 && !skills.includes(c)) skills.push(c);
         });
-      } else if (cleanT.length > 1 && cleanT.length < 65 && !skills.includes(cleanT)) {
+      } else if (cleanT.length > 1 && cleanT.length < 75 && !skills.includes(cleanT)) {
         skills.push(cleanT);
       }
     });
@@ -3562,9 +3578,12 @@ function parseResumeTextHeuristically(rawText) {
           };
         } else {
           const parts = lineWithoutDate.split(/\s*\|\s*|\s*–\s*|\s*-\s*|,\s*/);
+          const firstPart = parts[0] ? parts[0].trim() : '';
+          const isCompanyFirst = /\b(Pvt\.?\s*Ltd\.?|Ltd\.?|Inc\.?|LLC|Corporation|Systems|Technologies|Software|Solutions|Services)\b/i.test(firstPart);
+
           currentExp = {
-            role: parts[0] ? parts[0].trim() : 'Role',
-            company: parts[1] ? parts[1].trim() : '',
+            role: isCompanyFirst ? '' : (firstPart || 'Role'),
+            company: isCompanyFirst ? firstPart : (parts[1] ? parts[1].trim() : ''),
             dates: dates,
             location: parts[2] ? parts[2].trim() : '',
             descriptions: []
@@ -3572,12 +3591,27 @@ function parseResumeTextHeuristically(rawText) {
         }
       } else if (currentExp) {
         const bulletText = line.replace(/^[•*\-·«»+\s]+/, '').trim();
-        if (bulletText) currentExp.descriptions.push(bulletText);
+        if (!currentExp.role && !line.startsWith('•') && !line.startsWith('-') && !line.startsWith('*') && line.length < 80) {
+          currentExp.role = bulletText;
+        } else if (bulletText) {
+          currentExp.descriptions.push(bulletText);
+        }
       }
     }
     if (currentExp && (currentExp.role || currentExp.company)) {
       experience.push(currentExp);
     }
+  }
+
+  // Deduce professional title if empty
+  if (!title && summary) {
+    const titleMatch = summary.match(/\b([A-Z][a-zA-Z\s/&-]+?\b(?:undergraduate|graduate|engineer|developer|specialist|analyst|designer|manager|architect|consultant))\b/i);
+    if (titleMatch) {
+      title = titleMatch[0].trim();
+    }
+  }
+  if (!title && experience && experience.length > 0 && experience[0].role) {
+    title = experience[0].role;
   }
 
   // D. Projects
@@ -4105,7 +4139,7 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
 
     // Direct transition into editor workspace first without calling destructive enterApp()
     if (typeof enterBuilderDirectly === 'function') {
-      enterBuilderDirectly();
+      enterBuilderDirectly(true);
     } else {
       const bWorkspace = document.getElementById('builder-workspace');
       if (bWorkspace) bWorkspace.style.display = 'grid';
@@ -4137,6 +4171,17 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
       setMobileTab('edit');
     }
 
+    // Dismiss onboarding tour & tip banner on import so form is immediately visible
+    if (typeof window.closeZenGuideTour === 'function') {
+      window.closeZenGuideTour();
+    }
+    const tourOverlay = document.getElementById('zenguide-tour-overlay');
+    if (tourOverlay) tourOverlay.style.display = 'none';
+    const tourPopover = document.getElementById('zen-guide-popover');
+    if (tourPopover) tourPopover.style.display = 'none';
+    const vaultBanner = document.getElementById('vault-onboarding-banner');
+    if (vaultBanner) vaultBanner.style.display = 'none';
+
     // Synchronize live preview and ATS quality score
     syncFormToPreview();
     adjustPreviewScale();
@@ -4145,6 +4190,19 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
     if (typeof autoSaveResume === 'function') {
       autoSaveResume(true);
     }
+
+    // Smoothly scroll down so user immediately sees their imported details in the form
+    setTimeout(() => {
+      const formScroll = document.querySelector('.form-scroll-container');
+      if (formScroll) {
+        formScroll.scrollTop = 0;
+      }
+      const nameInput = document.getElementById('input-name');
+      if (nameInput) {
+        nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        nameInput.focus();
+      }
+    }, 150);
 
     // Track GA4 Conversion Event: gemini_ai_import_success
     trackGAEvent('gemini_ai_import_success', {
@@ -5841,7 +5899,7 @@ function closeOnboardingModal() {
   }
 }
 
-function enterBuilderDirectly() {
+function enterBuilderDirectly(isImporting = false) {
   document.body.classList.add('in-editor');
   const globalNav = document.querySelector('.stitch-nav');
   if (globalNav) globalNav.style.display = 'none';
@@ -5863,11 +5921,13 @@ function enterBuilderDirectly() {
   if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = '';
   if (typeof setMobileTab === 'function') setMobileTab('edit');
   
-  syncFormToPreview();
+  if (!isImporting) {
+    syncFormToPreview();
+  }
   adjustPreviewScale();
   checkVaultOnboardingBanner();
   updateHeaderNavCTA();
-  if (typeof window.checkAutoLaunchTour === 'function') {
+  if (!isImporting && typeof window.checkAutoLaunchTour === 'function') {
     window.checkAutoLaunchTour();
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -181,38 +181,44 @@ Respond ONLY with valid JSON in this exact format with no extra text or markdown
       return res.status(400).json({ error: 'Missing prompt or valid action.' });
     }
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+    const CANDIDATE_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.8-flash'];
 
     let geminiResponse;
     let geminiData;
-    for (let attempt = 0; attempt < 3; attempt++) {
-      geminiResponse = await fetch(geminiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: contents,
-          generationConfig: {
-            temperature: 0.2,
-            topP: 0.95
-          }
-        })
-      });
+    let lastError = null;
 
-      geminiData = await geminiResponse.json().catch(() => ({}));
-      if (geminiResponse.ok && !geminiData.error) {
-        break;
-      }
-      if (geminiResponse.status === 503 || geminiResponse.status === 429) {
-        if (attempt < 2) {
-          await new Promise(r => setTimeout(r, 1200 * (attempt + 1)));
-          continue;
+    for (const model of CANDIDATE_MODELS) {
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      try {
+        geminiResponse = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: contents,
+            generationConfig: {
+              temperature: 0.1,
+              topP: 0.95,
+              responseMimeType: "application/json"
+            }
+          })
+        });
+
+        geminiData = await geminiResponse.json().catch(() => ({}));
+        if (geminiResponse.ok && !geminiData.error) {
+          lastError = null;
+          break;
         }
+
+        lastError = geminiData.error?.message || `HTTP ${geminiResponse.status} on ${model}`;
+        console.warn(`[Gemini Proxy] Model ${model} returned error (${lastError}), falling back to next model...`);
+      } catch (netErr) {
+        lastError = netErr.message;
+        console.warn(`[Gemini Proxy] Network error on model ${model}:`, netErr);
       }
-      break;
     }
 
-    if (geminiData.error) {
-      return res.status(geminiResponse.status || 500).json({ error: geminiData.error.message || 'Gemini API Error' });
+    if (!geminiData || geminiData.error || !geminiResponse?.ok) {
+      return res.status(geminiResponse?.status || 500).json({ error: lastError || 'Gemini API Error' });
     }
 
     const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
