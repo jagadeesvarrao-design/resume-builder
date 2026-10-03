@@ -1630,6 +1630,8 @@ function loadSavedResume(preventDisplayTransition = false) {
     // 3. Asynchronous fallback to IndexedDB if memory cache wasn't ready
     if (window.ZenResumeDB && typeof window.ZenResumeDB.loadProfile === 'function') {
       window.ZenResumeDB.loadProfile(registry.activeId || 'default').then(asyncState => {
+        // If a profile is already actively loaded in memory/DOM (e.g. from an import or user editing), do not clobber it
+        if (state.hasLoadedProfile) return;
         if (asyncState && asyncState.formData) {
           hydrateStateFromData(asyncState, preventDisplayTransition);
         }
@@ -1713,11 +1715,19 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     loadProfileIntoForm(savedState.formData);
     
     // Transition Screen UI directly to workspace if not prevented (e.g. startup)
-    if (!preventDisplayTransition) {
+    const isCurrentlyInEditor = document.body.classList.contains('in-editor') ||
+      (builderWorkspace && builderWorkspace.style.display === 'grid');
+
+    if (!preventDisplayTransition || isCurrentlyInEditor) {
       document.body.classList.add('in-editor');
-      selectionScreen.style.display = 'none';
-      builderWorkspace.style.display = 'grid';
-      triggerAdPush('promo-banner-sidebar');
+      const landingScreen = document.getElementById('landing-screen');
+      if (landingScreen) landingScreen.style.display = 'none';
+      if (selectionScreen) selectionScreen.style.display = 'none';
+      if (welcomeHeader) welcomeHeader.style.display = 'none';
+      if (builderWorkspace) {
+        builderWorkspace.style.display = 'grid';
+        triggerAdPush('promo-banner-sidebar');
+      }
       
       // Show mobile tabs on small screens and default to 'edit' tab
       const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
@@ -1731,8 +1741,8 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
       const landingScreen = document.getElementById('landing-screen');
       if (landingScreen) landingScreen.style.display = 'block';
       
-      selectionScreen.style.display = 'none';
-      builderWorkspace.style.display = 'none';
+      if (selectionScreen) selectionScreen.style.display = 'none';
+      if (builderWorkspace) builderWorkspace.style.display = 'none';
       const welcomeHeader = document.getElementById('app-header-welcome');
       if (welcomeHeader) welcomeHeader.style.display = 'none';
       const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
@@ -4002,29 +4012,56 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
     }
     const normalized = normalizeResumeProfile(parsedData);
 
+    const hasExtractedContent = normalized && (
+      Boolean(normalized.personal?.name || normalized.personal?.email || normalized.personal?.phone) ||
+      (Array.isArray(normalized.experience) && normalized.experience.length > 0) ||
+      (Array.isArray(normalized.projects) && normalized.projects.length > 0) ||
+      (Array.isArray(normalized.skills) && normalized.skills.length > 0) ||
+      (Array.isArray(normalized.education) && normalized.education.length > 0) ||
+      Boolean(normalized.summary)
+    );
+
+    if (!hasExtractedContent) {
+      throw new Error("We could not extract readable resume details from this document. Please check the file format or try another PDF.");
+    }
+
     if (typeof loadProfileIntoForm === 'function') {
       loadProfileIntoForm(normalized);
       state.hasLoadedProfile = true;
     }
     
+    // Save imported data immediately to LocalStorage and IndexedDB
     if (typeof autoSaveResume === 'function') {
-      autoSaveResume();
+      autoSaveResume(true);
     }
 
-    if (typeof enterApp === 'function') {
-      enterApp();
+    // Direct transition into editor workspace without calling destructive enterApp()
+    if (typeof enterBuilderDirectly === 'function') {
+      enterBuilderDirectly();
+    } else {
+      const bWorkspace = document.getElementById('builder-workspace');
+      if (bWorkspace) bWorkspace.style.display = 'grid';
+      const aContainer = document.getElementById('app-container');
+      if (aContainer) aContainer.style.display = 'flex';
+      const lScreen = document.getElementById('landing-screen');
+      if (lScreen) lScreen.style.display = 'none';
+      const sScreen = document.getElementById('selection-screen');
+      if (sScreen) sScreen.style.display = 'none';
+      const wHeader = document.getElementById('app-header-welcome');
+      if (wHeader) wHeader.style.display = 'none';
+      document.body.classList.add('in-editor');
+      if (typeof setMobileTab === 'function') setMobileTab('edit');
     }
-    const bWorkspace = document.getElementById('builder-workspace');
-    if (bWorkspace) bWorkspace.style.display = 'grid';
-    const aContainer = document.getElementById('app-container');
-    if (aContainer) aContainer.style.display = 'flex';
-    const lScreen = document.getElementById('landing-screen');
-    if (lScreen) lScreen.style.display = 'none';
-    const sScreen = document.getElementById('selection-screen');
-    if (sScreen) sScreen.style.display = 'none';
-    document.body.classList.add('in-editor');
+
+    if (typeof showStep === 'function') {
+      showStep(1);
+    }
+    if (typeof updateProgressDots === 'function') {
+      updateProgressDots();
+    }
     
     syncFormToPreview();
+    adjustPreviewScale();
 
     // Track GA4 Conversion Event: gemini_ai_import_success
     trackGAEvent('gemini_ai_import_success', {
@@ -4987,7 +5024,11 @@ function attachEvents() {
   const inputMagicPdf = document.getElementById('input-magic-pdf');
 
   if (btnMagicImport && inputMagicPdf) {
-    btnMagicImport.addEventListener('click', () => {
+    btnMagicImport.addEventListener('click', (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       inputMagicPdf.click();
     });
     
@@ -5787,7 +5828,11 @@ function setupLandingPageNavigation() {
 
   const choiceMagic = document.getElementById('choice-magic-import');
   if (choiceMagic) {
-    choiceMagic.addEventListener('click', () => {
+    choiceMagic.addEventListener('click', (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       closeOnboardingModal();
       enterBuilderDirectly();
       const inputMagicPdf = document.getElementById('input-magic-pdf');
