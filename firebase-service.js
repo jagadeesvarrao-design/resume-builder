@@ -680,9 +680,10 @@ function handleAuthStateChange(user) {
       unsubscribeSubscription();
       unsubscribeSubscription = null;
     }
-    if (window.state) window.state.isPremium = false;
-    document.dispatchEvent(new CustomEvent('zensuite_premium_status', { detail: { isPremium: false } }));
-    updatePremiumUI(false);
+    const hasLocalSub = checkLocalHasSubscription();
+    if (window.state) window.state.isPremium = hasLocalSub;
+    document.dispatchEvent(new CustomEvent('zensuite_premium_status', { detail: { isPremium: hasLocalSub } }));
+    updatePremiumUI(hasLocalSub);
 
     // Reset Landing Header Auth UI
     if (landingLoginBtn) {
@@ -1537,6 +1538,9 @@ function syncLocalSubscriptionToFirestore(uid) {
 }
 
 function updatePremiumUI(isPremium) {
+  if (!isPremium && typeof checkLocalHasSubscription === 'function' && checkLocalHasSubscription()) {
+    isPremium = true;
+  }
   if (isPremium) {
     document.body.classList.add('zensuite-premium-active');
     const badge = document.getElementById('nav-user-premium-badge');
@@ -1559,6 +1563,7 @@ function updatePremiumUI(isPremium) {
     }
   }
 }
+window.updatePremiumUI = updatePremiumUI;
 
 // Initialize premium state on script load
 try {

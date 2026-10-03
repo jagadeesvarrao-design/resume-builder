@@ -3051,17 +3051,17 @@ async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action, payload, prompt: fallbackPromptText })
     });
-    const json = await res.json();
-    if (res.ok && json.success && (json.data || json.text)) {
+    const json = await res.json().catch(() => null);
+    if (res.ok && json && json.success && (json.data || json.text)) {
       return json.data || json.text;
     }
     if (res.status === 429) {
-      throw new Error(json.error || 'AI request limit reached. Please wait a moment before trying again.');
+      throw new Error(json?.error || 'AI request limit reached. Please wait a moment before trying again.');
     }
-    if (!res.ok && json.error) {
+    if (!res.ok && json?.error) {
       throw new Error(json.error);
     }
-    if (json.data) return json.data;
+    if (json?.data) return json.data;
   } catch (proxyErr) {
     // 2. Client-Side Fallback ONLY IF user provided their own personal custom key in local settings
     const customUserKey = localStorage.getItem('GEMINI_API_KEY');
@@ -3079,7 +3079,7 @@ async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf 
         });
       }
 
-      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(customUserKey.trim())}`, {
+      const response = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(customUserKey.trim())}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contents: [{ parts: parts }] })
@@ -3943,13 +3943,12 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
     }
 
     const hasSufficientContent = parsedData && (
-      Boolean(parsedData.personal?.name) &&
-      (
-        (Array.isArray(parsedData.experience) && parsedData.experience.length > 0) ||
-        (Array.isArray(parsedData.projects) && parsedData.projects.length > 0) ||
-        (Array.isArray(parsedData.skills) && parsedData.skills.length > 0) ||
-        (Array.isArray(parsedData.education) && parsedData.education.length > 0)
-      )
+      Boolean(parsedData.personal?.name || parsedData.personal?.email || parsedData.personal?.phone) ||
+      (Array.isArray(parsedData.experience) && parsedData.experience.length > 0) ||
+      (Array.isArray(parsedData.projects) && parsedData.projects.length > 0) ||
+      (Array.isArray(parsedData.skills) && parsedData.skills.length > 0) ||
+      (Array.isArray(parsedData.education) && parsedData.education.length > 0) ||
+      Boolean(parsedData.summary)
     );
 
     // 2. Secondary / Fallback: Client-Side PDF.js Extractor + Smart Heuristic ATS Engine
@@ -6537,6 +6536,32 @@ window.confirmPaymentSuccess = function(planKey, txnId) {
 // Initialize currency and subscription state on startup immediately & safely
 function initCurrencyAndSubscriptionStartup() {
   try {
+    // Clean up any test subscription artifacts left from local development testing
+    try {
+      const devReceipt = localStorage.getItem('zen_last_payment_receipt');
+      if (devReceipt && devReceipt.includes('TXN_LOCAL_DEV_')) {
+        localStorage.removeItem('zen_last_payment_receipt');
+        if (localStorage.getItem('zen_user_tier') === 'sprint') {
+          localStorage.removeItem('zen_user_tier');
+          localStorage.removeItem('zen_tier_expiry');
+        }
+      }
+    } catch (e) {}
+
+    if (window.SubscriptionManager && window.SubscriptionManager.getUserTier() !== 'free') {
+      document.body.classList.add('zensuite-premium-active');
+      if (typeof window.updatePremiumUI === 'function') {
+        window.updatePremiumUI(true);
+      }
+    }
+
+    // Guard against any external script dropping premium class when subscription is active
+    document.addEventListener('zensuite_premium_status', (e) => {
+      if (window.SubscriptionManager && window.SubscriptionManager.getUserTier() !== 'free') {
+        document.body.classList.add('zensuite-premium-active');
+      }
+    });
+
     if (window.SubscriptionManager) {
       window.SubscriptionManager.applyAdVisibility();
     }
