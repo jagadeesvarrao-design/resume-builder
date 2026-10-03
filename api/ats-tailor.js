@@ -102,8 +102,9 @@ export default async function handler(req, res) {
     }
 
     // 4. Call Gemini API for AI-powered tailoring
-    const rawKey = process.env.GEMINI_API_KEY;
-    const GEMINI_API_KEY = (rawKey && !rawKey.startsWith('sk-')) 
+    const rawKey = (process.env.GEMINI_API_KEY || '').trim();
+    // Prioritize active new key; legacy key from disabled project 993725933368 starts with AIzaSy
+    const GEMINI_API_KEY = (rawKey && !rawKey.startsWith('sk-') && !rawKey.startsWith('AIzaSy')) 
       ? rawKey 
       : Buffer.from('QVEuQWI4Uk42SVVHZjhTeG9Xc0dGcE91T1F6MDhUaTNLcTM1TzBhUG1jdERySGhJUFRrSUE=', 'base64').toString('utf-8');
     if (!GEMINI_API_KEY) {
