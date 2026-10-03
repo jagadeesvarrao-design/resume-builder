@@ -420,54 +420,81 @@ window.selectTemplateStyle = function selectTemplateStyle(templateId) {
 }
 
 function loadProfileIntoForm(data) {
-  // A. Contact details
-  if (data.personal) {
-    document.getElementById('input-name').value = data.personal.name || '';
-    document.getElementById('input-title').value = data.personal.title || '';
-    document.getElementById('input-email').value = data.personal.email || '';
-    document.getElementById('input-phone').value = data.personal.phone || '';
-    document.getElementById('input-location').value = data.personal.location || '';
-    document.getElementById('input-website').value = data.personal.website || '';
-    document.getElementById('input-linkedin').value = data.personal.linkedin || '';
-    document.getElementById('input-github').value = (data.personal && data.personal.github) || '';
-    document.getElementById('input-custom-social').value = (data.personal && data.personal.customSocial) || '';
-  }
-  
+  if (!data || typeof data !== 'object') return;
+
+  const setField = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.value = (val !== undefined && val !== null) ? String(val) : '';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  };
+
+  // A. Contact details - check personal, contact, or top-level properties
+  const p = data.personal || data.contact || data;
+  const candidateName = p.name || data.name || data.fullName || '';
+  const candidateTitle = p.title || p.role || data.title || data.headline || '';
+  const candidateEmail = p.email || data.email || '';
+  const candidatePhone = p.phone || data.phone || data.mobile || '';
+  const candidateLocation = p.location || data.location || data.city || '';
+  const candidateWebsite = p.website || data.website || data.portfolio || '';
+  const candidateLinkedin = p.linkedin || data.linkedin || '';
+  const candidateGithub = p.github || data.github || '';
+  const candidateSocial = p.customSocial || data.customSocial || p.social || '';
+
+  setField('input-name', candidateName);
+  setField('input-title', candidateTitle);
+  setField('input-email', candidateEmail);
+  setField('input-phone', candidatePhone);
+  setField('input-location', candidateLocation);
+  setField('input-website', candidateWebsite);
+  setField('input-linkedin', candidateLinkedin);
+  setField('input-github', candidateGithub);
+  setField('input-custom-social', candidateSocial);
+
   // B. Summary
-  document.getElementById('input-summary').value = data.summary || '';
-  
+  const summaryVal = data.summary || data.objective || data.about || '';
+  setField('input-summary', summaryVal);
+
   // C. Skills (join with commas)
-  document.getElementById('input-skills').value = (data.skills || []).join(', ');
-  
+  let skillsVal = '';
+  if (Array.isArray(data.skills)) {
+    skillsVal = data.skills.map(s => String(s).trim()).filter(Boolean).join(', ');
+  } else if (typeof data.skills === 'string') {
+    skillsVal = data.skills;
+  }
+  setField('input-skills', skillsVal);
+
   // D. Reset dynamic list containers
-  experienceListContainer.innerHTML = '';
-  projectsListContainer.innerHTML = '';
-  educationListContainer.innerHTML = '';
-  certificationsListContainer.innerHTML = '';
-  
+  if (experienceListContainer) experienceListContainer.innerHTML = '';
+  if (projectsListContainer) projectsListContainer.innerHTML = '';
+  if (educationListContainer) educationListContainer.innerHTML = '';
+  if (certificationsListContainer) certificationsListContainer.innerHTML = '';
+
   // E. Load Work Experience
-  if (data.experience && data.experience.length > 0) {
+  if (data.experience && Array.isArray(data.experience) && data.experience.length > 0) {
     data.experience.forEach(exp => addExperienceCard(exp));
   } else if (!data.isImported) {
     addExperienceCard();
   }
-  
+
   // F. Load Projects
-  if (data.projects && data.projects.length > 0) {
+  if (data.projects && Array.isArray(data.projects) && data.projects.length > 0) {
     data.projects.forEach(proj => addProjectCard(proj));
   } else if (!data.isImported) {
     addProjectCard();
   }
-  
+
   // G. Load Education
-  if (data.education && data.education.length > 0) {
+  if (data.education && Array.isArray(data.education) && data.education.length > 0) {
     data.education.forEach(edu => addEducationCard(edu));
   } else if (!data.isImported) {
     addEducationCard();
   }
-  
+
   // H. Load Certifications
-  if (data.certifications && data.certifications.length > 0) {
+  if (data.certifications && Array.isArray(data.certifications) && data.certifications.length > 0) {
     data.certifications.forEach(cert => addCertificationCard(cert));
   } else if (!data.isImported) {
     addCertificationCard();
@@ -488,8 +515,23 @@ function loadProfileIntoForm(data) {
     const el = document.getElementById(`input-heading-${k}`);
     if (el) {
       el.value = (state.sectionTitles && state.sectionTitles[k]) || '';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
     }
   });
+
+  // K. Update active profile name in registry if candidate name was imported
+  if (candidateName && candidateName.trim()) {
+    try {
+      const registry = getStoredProfilesRegistry();
+      const active = registry.profiles.find(p => p.id === registry.activeId) || registry.profiles[0];
+      if (active) {
+        active.name = candidateName.trim();
+        active.updatedAt = new Date().toISOString();
+        saveProfilesRegistry(registry);
+        renderProfileDropdown(registry);
+      }
+    } catch(e) {}
+  }
 }
 
 /* ==========================================================================
@@ -1631,7 +1673,7 @@ function loadSavedResume(preventDisplayTransition = false) {
     if (window.ZenResumeDB && typeof window.ZenResumeDB.loadProfile === 'function') {
       window.ZenResumeDB.loadProfile(registry.activeId || 'default').then(asyncState => {
         // If a profile is already actively loaded in memory/DOM (e.g. from an import or user editing), do not clobber it
-        if (state.hasLoadedProfile) return;
+        if (state.hasLoadedProfile || document.body.classList.contains('in-editor')) return;
         if (asyncState && asyncState.formData) {
           hydrateStateFromData(asyncState, preventDisplayTransition);
         }
@@ -1736,17 +1778,18 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
       }
       if (typeof setMobileTab === 'function') setMobileTab('edit');
     } else {
-      document.body.classList.remove('in-editor');
-      // Ensure landing screen is shown, and other screens are hidden
-      const landingScreen = document.getElementById('landing-screen');
-      if (landingScreen) landingScreen.style.display = 'block';
-      
-      if (selectionScreen) selectionScreen.style.display = 'none';
-      if (builderWorkspace) builderWorkspace.style.display = 'none';
-      const welcomeHeader = document.getElementById('app-header-welcome');
-      if (welcomeHeader) welcomeHeader.style.display = 'none';
-      const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
-      if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
+      // ONLY reset to landing screen if user is explicitly NOT in editor and not already transitioned
+      if (!isCurrentlyInEditor && !document.body.classList.contains('in-editor')) {
+        document.body.classList.remove('in-editor');
+        const landingScreen = document.getElementById('landing-screen');
+        if (landingScreen) landingScreen.style.display = 'block';
+        if (selectionScreen) selectionScreen.style.display = 'none';
+        if (builderWorkspace) builderWorkspace.style.display = 'none';
+        const welcomeHeader = document.getElementById('app-header-welcome');
+        if (welcomeHeader) welcomeHeader.style.display = 'none';
+        const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+        if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
+      }
     }
     
     showStep(state.currentStep);
@@ -3117,9 +3160,24 @@ async function callSecureGeminiProxy(action, payload, fallbackPromptText, isPdf 
 }
 
 function normalizeResumeProfile(data) {
+  if (typeof data === 'string') {
+    try {
+      const clean = data.replace(/```json/gi, '').replace(/```/gi, '').trim();
+      data = JSON.parse(clean);
+    } catch (e) {
+      const fBrace = data.indexOf('{');
+      const lBrace = data.lastIndexOf('}');
+      if (fBrace !== -1 && lBrace > fBrace) {
+        try {
+          data = JSON.parse(data.substring(fBrace, lBrace + 1));
+        } catch (e2) {}
+      }
+    }
+  }
+
   if (!data || typeof data !== 'object') return { personal: {}, summary: '', skills: [], experience: [], projects: [], education: [], certifications: [] };
 
-  const personal = data.personal || {};
+  const personal = (data.personal && typeof data.personal === 'object') ? data.personal : ((data.contact && typeof data.contact === 'object') ? data.contact : data);
   let skills = data.skills || [];
   if (typeof skills === 'string') {
     skills = skills.split(/[,•\n]+/).map(s => s.trim()).filter(Boolean);
@@ -3942,6 +4000,21 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
       console.warn("Cloud AI parse unavailable or returned error, switching to instant client-side ATS engine:", cloudErr);
     }
 
+    if (typeof parsedData === 'string') {
+      try {
+        const clean = parsedData.replace(/```json/gi, '').replace(/```/gi, '').trim();
+        parsedData = JSON.parse(clean);
+      } catch (e) {
+        const fBrace = parsedData.indexOf('{');
+        const lBrace = parsedData.lastIndexOf('}');
+        if (fBrace !== -1 && lBrace > fBrace) {
+          try {
+            parsedData = JSON.parse(parsedData.substring(fBrace, lBrace + 1));
+          } catch(e2) {}
+        }
+      }
+    }
+
     // Safeguard: detect if candidate name was misclassified as a section heading
     if (parsedData?.personal?.name && /^(?:data\s+science\s+statement|professional\s+summary|executive\s+summary|summary|profile|about\s+me|experience|work\s+experience|skills|technical\s+skills|projects|education|academic\s+record|certifications)$/i.test(parsedData.personal.name.trim())) {
       console.warn("Detected section heading misclassified as candidate name:", parsedData.personal.name);
@@ -3952,7 +4025,7 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
       parsedData.personal.name = '';
     }
 
-    const hasSufficientContent = parsedData && (
+    const hasSufficientContent = parsedData && typeof parsedData === 'object' && (
       Boolean(parsedData.personal?.name || parsedData.personal?.email || parsedData.personal?.phone) ||
       (Array.isArray(parsedData.experience) && parsedData.experience.length > 0) ||
       (Array.isArray(parsedData.projects) && parsedData.projects.length > 0) ||
@@ -3968,17 +4041,18 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
         window._lastExtractedPdfText = extractedPdfText;
         if (extractedPdfText && extractedPdfText.trim().length > 20) {
           const heuristicData = parseResumeTextHeuristically(extractedPdfText);
-          if (!parsedData) {
+          if (!parsedData || typeof parsedData !== 'object') {
             parsedData = heuristicData;
           } else {
-            if (!parsedData.personal?.name && heuristicData.personal?.name) parsedData.personal.name = heuristicData.personal.name;
-            if (!parsedData.personal?.title && heuristicData.personal?.title) parsedData.personal.title = heuristicData.personal.title;
-            if (!parsedData.personal?.email && heuristicData.personal?.email) parsedData.personal.email = heuristicData.personal.email;
-            if (!parsedData.personal?.phone && heuristicData.personal?.phone) parsedData.personal.phone = heuristicData.personal.phone;
-            if (!parsedData.personal?.location && heuristicData.personal?.location) parsedData.personal.location = heuristicData.personal.location;
-            if (!parsedData.personal?.website && heuristicData.personal?.website) parsedData.personal.website = heuristicData.personal.website;
-            if (!parsedData.personal?.linkedin && heuristicData.personal?.linkedin) parsedData.personal.linkedin = heuristicData.personal.linkedin;
-            if (!parsedData.personal?.github && heuristicData.personal?.github) parsedData.personal.github = heuristicData.personal.github;
+            if (!parsedData.personal || typeof parsedData.personal !== 'object') parsedData.personal = {};
+            if (!parsedData.personal.name && heuristicData.personal?.name) parsedData.personal.name = heuristicData.personal.name;
+            if (!parsedData.personal.title && heuristicData.personal?.title) parsedData.personal.title = heuristicData.personal.title;
+            if (!parsedData.personal.email && heuristicData.personal?.email) parsedData.personal.email = heuristicData.personal.email;
+            if (!parsedData.personal.phone && heuristicData.personal?.phone) parsedData.personal.phone = heuristicData.personal.phone;
+            if (!parsedData.personal.location && heuristicData.personal?.location) parsedData.personal.location = heuristicData.personal.location;
+            if (!parsedData.personal.website && heuristicData.personal?.website) parsedData.personal.website = heuristicData.personal.website;
+            if (!parsedData.personal.linkedin && heuristicData.personal?.linkedin) parsedData.personal.linkedin = heuristicData.personal.linkedin;
+            if (!parsedData.personal.github && heuristicData.personal?.github) parsedData.personal.github = heuristicData.personal.github;
             if (!parsedData.summary && heuristicData.summary) parsedData.summary = heuristicData.summary;
             if ((!parsedData.skills || parsedData.skills.length === 0) && heuristicData.skills?.length > 0) parsedData.skills = heuristicData.skills;
             if ((!parsedData.experience || parsedData.experience.length === 0) && heuristicData.experience?.length > 0) parsedData.experience = heuristicData.experience;
@@ -3992,10 +4066,14 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
         }
       } else {
         const heuristicData = parseResumeTextHeuristically(inputData);
-        if (!parsedData) {
+        if (!parsedData || typeof parsedData !== 'object') {
           parsedData = heuristicData;
         } else {
-          if (!parsedData.personal?.name && heuristicData.personal?.name) parsedData.personal.name = heuristicData.personal.name;
+          if (!parsedData.personal || typeof parsedData.personal !== 'object') parsedData.personal = {};
+          if (!parsedData.personal.name && heuristicData.personal?.name) parsedData.personal.name = heuristicData.personal.name;
+          if (!parsedData.personal.title && heuristicData.personal?.title) parsedData.personal.title = heuristicData.personal.title;
+          if (!parsedData.personal.email && heuristicData.personal?.email) parsedData.personal.email = heuristicData.personal.email;
+          if (!parsedData.personal.phone && heuristicData.personal?.phone) parsedData.personal.phone = heuristicData.personal.phone;
           if ((!parsedData.skills || !parsedData.skills.length) && heuristicData.skills?.length) parsedData.skills = heuristicData.skills;
           if ((!parsedData.experience || !parsedData.experience.length) && heuristicData.experience?.length) parsedData.experience = heuristicData.experience;
           if ((!parsedData.projects || !parsedData.projects.length) && heuristicData.projects?.length) parsedData.projects = heuristicData.projects;
@@ -4025,17 +4103,7 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
       throw new Error("We could not extract readable resume details from this document. Please check the file format or try another PDF.");
     }
 
-    if (typeof loadProfileIntoForm === 'function') {
-      loadProfileIntoForm(normalized);
-      state.hasLoadedProfile = true;
-    }
-    
-    // Save imported data immediately to LocalStorage and IndexedDB
-    if (typeof autoSaveResume === 'function') {
-      autoSaveResume(true);
-    }
-
-    // Direct transition into editor workspace without calling destructive enterApp()
+    // Direct transition into editor workspace first without calling destructive enterApp()
     if (typeof enterBuilderDirectly === 'function') {
       enterBuilderDirectly();
     } else {
@@ -4053,15 +4121,30 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
       if (typeof setMobileTab === 'function') setMobileTab('edit');
     }
 
+    // Overwrite the editor form fields with imported data and dispatch all events
+    if (typeof loadProfileIntoForm === 'function') {
+      loadProfileIntoForm(normalized);
+      state.hasLoadedProfile = true;
+    }
+
     if (typeof showStep === 'function') {
       showStep(1);
     }
     if (typeof updateProgressDots === 'function') {
       updateProgressDots();
     }
-    
+    if (typeof setMobileTab === 'function') {
+      setMobileTab('edit');
+    }
+
+    // Synchronize live preview and ATS quality score
     syncFormToPreview();
     adjustPreviewScale();
+
+    // Persist immediately to LocalStorage and IndexedDB
+    if (typeof autoSaveResume === 'function') {
+      autoSaveResume(true);
+    }
 
     // Track GA4 Conversion Event: gemini_ai_import_success
     trackGAEvent('gemini_ai_import_success', {
@@ -5068,6 +5151,11 @@ function attachEvents() {
       // Read file as Data URL to easily get the Base64 encoding
       reader.readAsDataURL(file);
     });
+
+    window.triggerResumeImport = function(type = 'pdf') {
+      const inputMagicPdf = document.getElementById('input-magic-pdf');
+      if (inputMagicPdf) inputMagicPdf.click();
+    };
   }
 
   if (btnExportJson) {
