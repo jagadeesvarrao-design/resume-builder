@@ -71,10 +71,10 @@ function createDevServer(port) {
 
   server.listen(port, '0.0.0.0', () => {
     console.log(`====================================================`);
-    console.log(`🚀 ZenResume Dev Server is LIVE on Port ${port}!`);
-    console.log(`👉 http://127.0.0.1:${port}/`);
-    console.log(`👉 http://localhost:${port}/`);
-    console.log(`📚 Blog Hub: http://127.0.0.1:${port}/blog/`);
+    console.log(`ZenResume Dev Server is LIVE on Port ${port}!`);
+    console.log(`> http://127.0.0.1:${port}/`);
+    console.log(`> http://localhost:${port}/`);
+    console.log(`Blog Hub: http://127.0.0.1:${port}/blog/`);
     console.log(`====================================================`);
   });
 }

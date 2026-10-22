@@ -4,7 +4,7 @@
  * Stale-While-Revalidate for media, fonts & icons.
  */
 
-const CACHE_NAME = 'zenresume-cache-v3.2.4';
+const CACHE_NAME = 'zenresume-cache-v3.3.0';
 
 // If executed on local development environment, completely bypass and unregister
 if (self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1' || self.location.hostname === '0.0.0.0' || self.location.hostname.startsWith('192.168.')) {
@@ -53,7 +53,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((name) => {
           if (name !== CACHE_NAME) {
-            console.log('🧹 [SW] Purging outdated cache:', name);
+            console.log('[SW] Purging outdated cache:', name);
             return caches.delete(name);
           }
         })

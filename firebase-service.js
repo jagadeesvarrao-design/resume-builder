@@ -1610,10 +1610,10 @@ function renderSubscriptionDetails(subData) {
   const pulseEl = document.getElementById('profile-modal-active-pulse');
 
   const planTitles = {
-    day: { name: '⚡ 1-Day Sprint', subtitle: '24-Hour Full ATS & AI Access Pass' },
-    sprint: { name: '⚡ 7-Day Fast Track', subtitle: '1-Week Full Career Stack & ATS Pass' },
-    suite: { name: '⭐ Entire ZenSuite', subtitle: '1-Month Full Career Ecosystem Access' },
-    free: { name: '🌱 Free Starter Plan', subtitle: 'Standard Single-Column ATS Editor' }
+    day: { name: '1-Day Sprint', subtitle: '24-Hour Full ATS & AI Access Pass' },
+    sprint: { name: '7-Day Fast Track', subtitle: '1-Week Full Career Stack & ATS Pass' },
+    suite: { name: 'Entire ZenSuite', subtitle: '1-Month Full Career Ecosystem Access' },
+    free: { name: 'Free Starter Plan', subtitle: 'Standard Single-Column ATS Editor' }
   };
 
   if (isActive && expDate) {
@@ -1649,7 +1649,7 @@ function renderSubscriptionDetails(subData) {
     });
 
     if (expiryDateEl) expiryDateEl.textContent = dateFormatted;
-    if (upgradeBtnText) upgradeBtnText.textContent = '⚡ Extend / Upgrade Plan (Zero Lost Time)';
+    if (upgradeBtnText) upgradeBtnText.textContent = 'Extend / Upgrade Plan (Zero Lost Time)';
     if (pulseEl) {
       pulseEl.style.display = 'inline-flex';
       pulseEl.style.background = 'rgba(16, 185, 129, 0.1)';
@@ -1664,7 +1664,7 @@ function renderSubscriptionDetails(subData) {
     if (badgeTextEl) badgeTextEl.textContent = 'FREE TIER';
     if (timeLeftEl) timeLeftEl.textContent = expDate ? 'Plan Expired' : 'No active paid pass';
     if (expiryDateEl) expiryDateEl.textContent = expDate ? expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Lifetime Free Access';
-    if (upgradeBtnText) upgradeBtnText.textContent = '🚀 Upgrade to Pro (Unlock AI & Unlimited Downloads)';
+    if (upgradeBtnText) upgradeBtnText.textContent = 'Upgrade to Pro (Unlock AI & Unlimited Downloads)';
     if (pulseEl) {
       pulseEl.style.display = 'inline-flex';
       pulseEl.style.background = 'rgba(100, 116, 139, 0.1)';
@@ -1792,7 +1792,7 @@ window.restoreCloudUserData = async function() {
     const hasActiveSub = checkUserHasActiveSubscription();
     if (hasActiveSub) {
       if (typeof window.showToast === 'function') {
-        window.showToast('🎉 Cloud Data Restored! Active PRO Subscription & Resumes Loaded.', 'success', 4500);
+        window.showToast('Cloud Data Restored! Active PRO Subscription & Resumes Loaded.', 'success', 4500);
       }
     } else {
       if (typeof window.showToast === 'function') {
@@ -1836,7 +1836,7 @@ window.forceBackupToCloud = async function() {
       await syncAllUserDataToFirestore();
     }
     if (typeof window.showToast === 'function') {
-      window.showToast('✅ Cloud Backup Successful! Synced across all your devices.', 'success', 4000);
+      window.showToast('Cloud Backup Successful! Synced across all your devices.', 'success', 4000);
     }
   } catch (err) {
     console.warn('[ZenCloud] Manual backup error:', err);

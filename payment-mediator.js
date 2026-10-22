@@ -463,7 +463,7 @@
         });
 
         if (btn) {
-          btn.textContent = '⚡ Unlock Pro';
+          btn.textContent = 'Unlock Pro';
           btn.disabled = false;
         }
       }, 700);
@@ -594,18 +594,18 @@
       // 8. Celebration & Stacking Notification
       if (remainingMs > 60 * 1000 && typeof window.showFriendlyNoticeModal === 'function') {
         window.showFriendlyNoticeModal({
-          title: '🎉 Plan Upgraded & Extended!',
+          title: 'Plan Upgraded & Extended!',
           message: `<p style="margin-bottom:12px; font-size:15px; color:#334155; line-height:1.5;">Your <strong>${planConfig.name}</strong> is now active with unlimited downloads and AI tailoring.</p>
           <div style="background:rgba(0,104,86,0.08); border:1px solid rgba(0,104,86,0.25); border-radius:10px; padding:12px 14px; font-size:14px; color:#005041; line-height:1.5;">
-            ⏳ <strong>Zero Lost Time Guarantee:</strong> You had <strong>${remainingText}</strong> remaining from your previous plan. That extra time has been automatically added to your new subscription!
+            <strong>Zero Lost Time Guarantee:</strong> You had <strong>${remainingText}</strong> remaining from your previous plan. That extra time has been automatically added to your new subscription!
           </div>`,
           badgeText: 'Smart Time-Stacking Active',
           badgeIcon: 'fas fa-clock-rotate-left',
           type: 'success',
-          primaryBtnText: 'Start Building 🚀'
+          primaryBtnText: 'Start Building'
         });
       } else if (typeof window.showToast === 'function') {
-        window.showToast(`🎉 Payment Confirmed! Your ${planConfig.name} is now ACTIVE! Unlimited downloads & AI unlocked.`, 'success', 6000);
+        window.showToast(`Payment Confirmed! Your ${planConfig.name} is now ACTIVE! Unlimited downloads & AI unlocked.`, 'success', 6000);
       }
     },
 
@@ -631,7 +631,7 @@
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(this.merchantVpa).then(() => {
           if (typeof window.showToast === 'function') {
-            window.showToast(`✅ Copied UPI ID: ${this.merchantVpa}`, 'success');
+            window.showToast(`Copied UPI ID: ${this.merchantVpa}`, 'success');
           }
         }).catch(() => prompt('Copy UPI ID:', this.merchantVpa));
       } else {

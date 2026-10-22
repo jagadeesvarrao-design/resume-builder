@@ -1,5 +1,5 @@
 /**
- * ZenResume - Universal Cross-Device Editor Navigator ("ZenGuide 🧭")
+ * ZenResume - Universal Cross-Device Editor Navigator ("ZenGuide")
  * Engineered to work seamlessly across all smartphones, tablets, laptops, and desktops.
  * Intelligently switches mobile tabs, anchors next to active buttons, and spotlights controls.
  * Replaces lengthy tours with a high-impact, 4-step core onboarding journey.
@@ -14,7 +14,7 @@
     {
       targetId: 'select-layout-inline',
       panel: 'edit',
-      title: '🎨 1. Choose Your ATS Style',
+      title: '1. Choose Your ATS Style',
       desc: 'Switch between <strong>Minimalist Classic</strong>, <strong>Serene Modern</strong>, <strong>Bold Executive</strong>, and <strong>Tech Grid</strong> in 1 click. Your data automatically re-formats without losing any typed content.',
       tip: 'All layouts maintain strict single-column vector hierarchy for 100% ATS parser readability.',
       badge: 'Step 1 of 4 • Layouts'
@@ -22,15 +22,15 @@
     {
       targetId: 'btn-magic-import',
       panel: 'edit',
-      title: '✨ 2. Fill Details or AI Import',
+      title: '2. Fill Details or AI Import',
       desc: 'Type step-by-step in the section tabs below, or click <strong>AI Import</strong> to upload an existing PDF resume or GitHub username to auto-populate the form in 10 seconds!',
-      tip: 'Look for the ⚡ AI Bullet Suggester inside Experience & Projects to generate quantified Google XYZ bullets.',
+      tip: 'Look for the AI Bullet Suggester inside Experience & Projects to generate quantified Google XYZ bullets.',
       badge: 'Step 2 of 4 • Smart Input'
     },
     {
       targetId: 'editor-realtime-ats',
       panel: 'edit',
-      title: '🎯 3. Real-Time ATS Score & Matcher',
+      title: '3. Real-Time ATS Score & Matcher',
       desc: 'Watch your <strong>ATS Health Meter</strong> calculate in real time as you add action verbs and metrics. Click <strong>ATS Matcher</strong> to paste any target job description and detect missing keywords.',
       tip: 'Aim for a score of 85%+ to maximize recruiter callback rates on Workday, Taleo, and Greenhouse.',
       badge: 'Step 3 of 4 • ATS Health'
@@ -38,7 +38,7 @@
     {
       targetId: 'btn-trigger-download',
       panel: 'preview',
-      title: '📥 4. Instant 100% Free Vector PDF',
+      title: '4. Instant 100% Free Vector PDF',
       desc: 'Click <strong>Download PDF</strong> to export a high-fidelity, machine-parsable vector PDF directly to your device. <strong>Zero paywalls, zero watermarks, 100% free always.</strong>',
       tip: 'In your browser print dialog, uncheck "Headers and Footers" for the cleanest professional finish.',
       badge: 'Step 4 of 4 • Instant Export'
@@ -60,7 +60,7 @@
           <div class="zenguide-header">
             <div class="zenguide-avatar-wrap">
               <div class="zenguide-avatar-pulse"></div>
-              <div class="zenguide-avatar">🧭</div>
+              <div class="zenguide-avatar"><i class="fas fa-compass"></i></div>
             </div>
             <div class="zenguide-header-text">
               <div class="zenguide-badge" id="zenguide-step-badge">Step 1 of 4</div>
@@ -214,7 +214,7 @@
 
     if (nextBtn) {
       if (index === TOUR_STEPS.length - 1) {
-        nextBtn.innerHTML = '⚡ Done! Start Building <i class="fas fa-check"></i>';
+        nextBtn.innerHTML = 'Done! Start Building <i class="fas fa-check"></i>';
         nextBtn.classList.add('btn-finish');
       } else {
         nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';

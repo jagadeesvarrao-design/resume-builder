@@ -271,7 +271,7 @@ function renderBulletMetricsReview(analysis) {
         </div>
         <p style="font-size: 12px; color: #64748B; margin: 6px 0 10px;">Add bullet points with measurable metrics (e.g. <em>"Reduced latency by 40%"</em>) to pass recruiter screening.</p>
         <button type="button" class="ats-btn-open-bullet-bank" onclick="closeATSMatcher(); window.openBulletBank && window.openBulletBank('experience');">
-          ⚡ Browse Metric Bullet Bank
+          Browse Metric Bullet Bank
         </button>
       </div>
     `;
@@ -289,7 +289,7 @@ function renderBulletMetricsReview(analysis) {
           <strong style="font-size: 13px;">Google XYZ Metric Health (${analysis.metricCount}/${analysis.total} Bullets)</strong>
         </div>
         <span style="font-size: 11px; font-weight: 700; color: ${isHealthy ? '#16A34A' : '#D97706'};">
-          ${isHealthy ? '✓ Recruiter-Grade' : '⚠️ Gaps Detected'}
+          ${isHealthy ? 'Recruiter-Grade' : 'Gaps Detected'}
         </span>
       </div>
 
@@ -307,12 +307,12 @@ function renderBulletMetricsReview(analysis) {
             </div>
           ` : ''}
           <button type="button" class="ats-btn-open-bullet-bank" onclick="closeATSMatcher(); window.openBulletBank && window.openBulletBank('experience');">
-            ⚡ Fix Weak Bullets with Metric Bank (Free)
+            Fix Weak Bullets with Metric Bank (Free)
           </button>
         </div>
       ` : `
         <p style="margin: 6px 0 0 0; font-size: 12px; color: #15803D;">
-          🎉 Outstanding! Your bullet points demonstrate quantifiable achievements using numbers, percentages, and scale metrics.
+          Outstanding! Your bullet points demonstrate quantifiable achievements using numbers, percentages, and scale metrics.
         </p>
       `}
     </div>
@@ -358,7 +358,7 @@ function trySampleJD(type) {
   const isCoverLetterMode = banner && banner.style.display !== 'none';
   if (isCoverLetterMode) {
     if (typeof window.showToast === 'function') {
-      window.showToast(`🎯 Loaded ${type === 'swiggy' ? 'Swiggy SDE-1' : 'TCS NQT'} Job Description! Click generate below.`, 'success');
+      window.showToast(`Loaded ${type === 'swiggy' ? 'Swiggy SDE-1' : 'TCS NQT'} Job Description! Click generate below.`, 'success');
     }
   } else {
     runATSScan();
@@ -491,7 +491,7 @@ function confirmJDForCoverLetter() {
 
   if (!jdText || jdText.length < 15) {
     if (typeof window.showToast === 'function') {
-      window.showToast('⚠️ Please paste a Job Description first (at least 15 characters).', 'warning');
+      window.showToast('Please paste a Job Description first (at least 15 characters).', 'warning');
     }
     if (atsJd) atsJd.focus();
     return;
@@ -502,7 +502,7 @@ function confirmJDForCoverLetter() {
   openCoverLetterModal();
 
   if (typeof window.showToast === 'function') {
-    window.showToast('🎯 Target Job Description saved for this session! Generated tailored Cover Letter & InMail.', 'success');
+    window.showToast('Target Job Description saved for this session! Generated tailored Cover Letter & InMail.', 'success');
   }
 }
 
@@ -515,7 +515,7 @@ document.addEventListener('resume_imported', () => {
     setTimeout(() => {
       runATSScan();
       if (typeof window.showToast === 'function') {
-        window.showToast('🎯 Analyzed match score for your imported resume!', 'success');
+        window.showToast('Analyzed match score for your imported resume!', 'success');
       }
     }, 400);
   }
@@ -557,7 +557,7 @@ function runATSScan() {
   
   // Color coding
   let ringColor = '#e74c3c'; // Red
-  let labelText = '🔴 High Risk of ATS Rejection';
+  let labelText = 'High Risk of ATS Rejection';
   if (score >= 80) { ringColor = '#27ae60'; labelText = '🟢 Strong Match — Likely to Pass ATS'; }
   else if (score >= 60) { ringColor = '#f39c12'; labelText = '🟡 Moderate Match — Missing Critical Keywords'; }
   else if (score >= 40) { ringColor = '#e67e22'; labelText = '🟠 Weak Match — Significant Gaps Detected'; }
@@ -592,7 +592,7 @@ function runATSScan() {
     const dayPrice = subManager && subManager.getCurrency() === 'USD' ? '$4.99' : '₹49';
 
     if (missing.length === 0) {
-      freeMissingBox.innerHTML = '<p style="color:#27ae60;font-weight:600;">🎉 Perfect! No critical keywords missing.</p>';
+      freeMissingBox.innerHTML = '<p style="color:#27ae60;font-weight:600;">Perfect! No critical keywords missing.</p>';
       if (premiumSection) premiumSection.style.display = 'none';
     } else if (!freeKwClaimed) {
       const freeKeyword = missing[0];
@@ -601,7 +601,7 @@ function runATSScan() {
           <p>Your resume is missing: <strong class="ats-highlight-keyword">${freeKeyword}</strong></p>
           <p class="ats-free-fix-hint">Free tier includes 1 instant keyword fix. Add it to your Skills section to improve your score.</p>
           <button class="ats-btn-free-fix" onclick="localStorage.setItem('zen_free_kw_claimed', '${freeKeyword.replace(/'/g, "\\'")}'); injectFreeKeyword('${freeKeyword.replace(/'/g, "\\'")}');">
-            ✨ Auto-Add "${freeKeyword}" to My Resume (Free)
+            Auto-Add "${freeKeyword}" to My Resume (Free)
           </button>
         </div>
       `;
@@ -615,7 +615,7 @@ function runATSScan() {
           premiumSection.style.display = 'block';
           const promoMsg = document.getElementById('ats-premium-teaser-msg');
           if (promoMsg) {
-            promoMsg.innerHTML = `🔒 <strong>+${remainingCount} more critical keywords hidden.</strong> Find &amp; paste more keywords manually, or unlock full ATS Keyword Gap Analysis &amp; AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!`;
+            promoMsg.innerHTML = `<strong>+${remainingCount} more critical keywords hidden.</strong> Find &amp; paste more keywords manually, or unlock full ATS Keyword Gap Analysis &amp; AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!`;
           }
         } else {
           premiumSection.style.display = 'none';
@@ -635,7 +635,7 @@ function runATSScan() {
         if (remEl) remEl.textContent = missing.length;
         const promoMsg = document.getElementById('ats-premium-teaser-msg');
         if (promoMsg) {
-          promoMsg.innerHTML = `🔒 <strong>+${missing.length} more critical keywords hidden.</strong> Unlock full ATS Keyword Gap Analysis &amp; AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!`;
+          promoMsg.innerHTML = `<strong>+${missing.length} more critical keywords hidden.</strong> Unlock full ATS Keyword Gap Analysis &amp; AI Tailoring with 1-Day (${dayPrice}) or 7-Day Sprint!`;
         }
       }
     }
@@ -651,7 +651,7 @@ function runATSScan() {
           : `You have completed your daily quota of 4 resume keyword reviews for today. Your daily allocation resets at midnight!`;
         freeMissingBox.innerHTML = `
           <div class="ats-free-fix-card" style="border-left: 4px solid #F59E0B; background: rgba(245, 158, 11, 0.08);">
-            <p style="margin: 0 0 6px 0; font-weight: 700; color: #B45309;">⚠️ Keyword Review Quota Reached (${maxQuota}/${maxQuota} Resumes)</p>
+            <p style="margin: 0 0 6px 0; font-weight: 700; color: #B45309;">Keyword Review Quota Reached (${maxQuota}/${maxQuota} Resumes)</p>
             <p style="margin: 0; font-size: 12.5px; color: #78350F;">${quotaNotice}</p>
           </div>
         `;
@@ -681,7 +681,7 @@ function runATSScan() {
             </div>
           `;
         } else {
-          freeMissingBox.innerHTML = '<p style="color:#27ae60;font-weight:600;">🎉 Perfect! No critical keywords missing.</p>';
+          freeMissingBox.innerHTML = '<p style="color:#27ae60;font-weight:600;">Perfect! No critical keywords missing.</p>';
         }
       }
       if (premiumSection) premiumSection.style.display = 'none';
@@ -721,7 +721,7 @@ function openCoverLetterModal() {
   // If no JD has been given in this session yet (or too short to be a valid JD)
   if (!currentJD || currentJD.length < 15) {
     if (typeof window.showToast === 'function') {
-      window.showToast('🎯 Please paste your target Job Description first to tailor your Cover Letter & InMail!', 'info');
+      window.showToast(' Please paste your target Job Description first to tailor your Cover Letter & InMail!', 'info');
     }
     openATSMatcher({ purpose: 'cover_letter' });
     return;
@@ -758,7 +758,7 @@ function loadCoverLetterSample(sampleType) {
     setSessionJD(jd);
     generateCoverLetterMaterials();
     if (typeof window.showToast === 'function') {
-      window.showToast(`🎯 Loaded ${sampleType === 'swiggy' ? 'Swiggy SDE-1' : 'TCS NQT'} Job Description!`, 'success');
+      window.showToast(`Loaded ${sampleType === 'swiggy' ? 'Swiggy SDE-1' : 'TCS NQT'} Job Description!`, 'success');
     }
   }
 }
@@ -833,7 +833,7 @@ function copyCoverLetterText() {
   if (!ta || !ta.value) return;
   navigator.clipboard.writeText(ta.value).then(() => {
     if (typeof window.showToast === 'function') {
-      window.showToast('📋 Copied Tailored Cover Letter to clipboard!', 'success');
+      window.showToast('Copied Tailored Cover Letter to clipboard!', 'success');
     }
   });
 }
@@ -844,7 +844,7 @@ function copyInMailText() {
   const full = (subj ? 'Subject: ' + subj.value + '\n\n' : '') + (body ? body.value : '');
   navigator.clipboard.writeText(full).then(() => {
     if (typeof window.showToast === 'function') {
-      window.showToast('📋 Copied Recruiter InMail script to clipboard!', 'success');
+      window.showToast('Copied Recruiter InMail script to clipboard!', 'success');
     }
   });
 }
@@ -983,7 +983,7 @@ function injectFreeKeyword(keyword) {
   if (typeof updatePreview === 'function') updatePreview();
   if (typeof syncFormToPreview === 'function') syncFormToPreview();
   
-  window.showToast && window.showToast(`✨ "${keyword}" added to your resume! Your ATS score just improved.`);
+  window.showToast && window.showToast(` "${keyword}" added to your resume! Your ATS score just improved.`);
   
   // Track conversion
   trackATSEvent('ats_free_keyword_injected', {
@@ -1078,11 +1078,11 @@ function initiatePayment() {
 // ═══════════════════════════════════════════════════════════════
 
 const SOCIAL_PROOF_MESSAGES = [
-  '🎓 <strong>Rahul K.</strong> (CSE Fresher, Hyderabad) unlocked this, achieved 98% ATS match, and got shortlisted at Cognizant.',
-  '💻 <strong>Priya S.</strong> (Junior Developer, Pune) matched her resume for an AWS role and got interview call from TCS.',
-  '📊 <strong>Arjun M.</strong> (Data Analyst, Bangalore) improved his score from 45% to 96% and landed a placement at Wipro.',
-  '🎯 <strong>Sneha R.</strong> (MBA Fresher, Chennai) used ZenPass to tailor her resume and received 3 interview calls in one week.',
-  '⚡ <strong>Vikram P.</strong> (Full Stack Dev, Delhi) auto-matched 12 missing keywords and got shortlisted at Amazon.',
+  '<strong>Rahul K.</strong> (CSE Fresher, Hyderabad) unlocked this, achieved 98% ATS match, and got shortlisted at Cognizant.',
+  '<strong>Priya S.</strong> (Junior Developer, Pune) matched her resume for an AWS role and got interview call from TCS.',
+  '<strong>Arjun M.</strong> (Data Analyst, Bangalore) improved his score from 45% to 96% and landed a placement at Wipro.',
+  '<strong>Sneha R.</strong> (MBA Fresher, Chennai) used ZenPass to tailor her resume and received 3 interview calls in one week.',
+  '<strong>Vikram P.</strong> (Full Stack Dev, Delhi) auto-matched 12 missing keywords and got shortlisted at Amazon.',
 ];
 
 let proofIndex = 0;
@@ -1105,7 +1105,7 @@ setInterval(() => {
 
 const FEATURE_PREVIEWS = {
   missing_keywords: {
-    icon: '🔍',
+    icon: '<i class="fas fa-search"></i>',
     badge: '95%+ ATS PASS RATE',
     title: 'Full ATS Missing Keywords Deep-Scan',
     whatItDoes: 'Extracts 100% of hard & soft skill keywords, tools, protocols, and certifications directly from your target Job Description.',
@@ -1114,7 +1114,7 @@ const FEATURE_PREVIEWS = {
     example: 'Identifies missing niche terms like <code>Docker</code>, <code>Kubernetes</code>, <code>REST APIs</code>, <code>CI/CD Pipelines</code>, and indicates their exact placement priority.'
   },
   ai_rewrites: {
-    icon: '✨',
+    icon: '<i class="fas fa-magic"></i>',
     badge: 'GOOGLE XYZ FORMULA',
     title: 'AI-Powered Bullet Point Rewriter',
     whatItDoes: 'Automatically rewrites your past experience and project bullet points into high-impact Google XYZ metrics (<em>"Accomplished [X], as measured by [Y], by doing [Z]"</em>) with target keywords injected.',
@@ -1123,7 +1123,7 @@ const FEATURE_PREVIEWS = {
     example: 'Transforms <em>"Built backend services"</em> → <strong>"Architected scalable microservices using Node.js & Redis, reducing API response times by 35% across 1M+ daily active requests."</strong>'
   },
   zenscout: {
-    icon: '🤖',
+    icon: '<i class="fas fa-robot"></i>',
     badge: '10x APPLICATION VELOCITY',
     title: 'ZenScout AI — Automated Job Hunter',
     whatItDoes: 'Autonomous AI job-hunting agent that scans tech portals and automatically submits your tailored resume to 200+ matched openings.',
@@ -1132,7 +1132,7 @@ const FEATURE_PREVIEWS = {
     example: 'Auto-detects matching jobs on company career boards, tailors your profile on the fly, and tracks all submissions in a single live dashboard.'
   },
   zendoc: {
-    icon: '🎤',
+    icon: '<i class="fas fa-microphone"></i>',
     badge: '88% INTERVIEW PASS RATE',
     title: 'ZenDoc AI — Mock Interview Simulator',
     whatItDoes: 'Generates tailored technical and HR interview questions based on your exact resume projects and the company’s job description.',
@@ -1165,7 +1165,7 @@ function showFeaturePreview(featureKey) {
       <h4><i class="fas fa-chart-line"></i> How It Increases Your Selection Chances:</h4>
       <p>${data.whyItMatters}</p>
       <div class="ats-feature-metric-pill">
-        🏆 <strong>Impact:</strong> ${data.metric}
+        <strong>Impact:</strong> ${data.metric}
       </div>
     </div>
 

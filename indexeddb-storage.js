@@ -409,7 +409,7 @@ const ZenResumeDB = (() => {
         await saveSubscription(tier, expiry);
       }
 
-      console.log('✅ Local data verified and mirrored in ZenResumeDB (IndexedDB).');
+      console.log('Local data verified and mirrored in ZenResumeDB (IndexedDB).');
     } catch (e) {
       console.warn('[ZenResumeDB] Auto-migration error:', e);
     }

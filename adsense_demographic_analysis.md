@@ -40,8 +40,8 @@ Based on your actual Google Analytics (GA4) report from June 17 to July 27, here
 ### Revenue Analysis based on this Demographic:
 Because **65%+ of your traffic is from India**, you are operating in what ad networks call a "Tier 3" market. Advertisers in India pay less for ad space than advertisers in the US or Europe.
 
-*   **Average Indian Tech/Education Page RPM:** ~$0.50 to $1.50
-*   **Average US Tech/Education Page RPM:** ~$5.00 to $12.00
+* **Average Indian Tech/Education Page RPM:** ~$0.50 to $1.50
+* **Average US Tech/Education Page RPM:** ~$5.00 to $12.00
 
 Since you had 400 page views dominated by Indian traffic, your estimated revenue so far is roughly:
 **400 views / 1,000 * $1.00 RPM = $0.40 (approx ₹33 INR).**

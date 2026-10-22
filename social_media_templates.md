@@ -1,4 +1,4 @@
-# 🚦 The Traffic Cheat Code: Manual Link Dropping
+# The Traffic Cheat Code: Manual Link Dropping
 
 To force Google to index your unindexed pages, we need to send real human traffic to them immediately. Copy and paste these exact templates into your social media accounts. 
 
@@ -18,9 +18,9 @@ To force Google to index your unindexed pages, we need to send real human traffi
 >
 > If you are applying for tech roles right now, you can use the exact formatting that recruiters are looking for here:
 > 
-> 👨‍💻 Software Engineers: https://resume-builder-swart-sigma-93.vercel.app/role/software-engineer-resume.html
-> 🎨 Frontend Devs: https://resume-builder-swart-sigma-93.vercel.app/role/frontend-developer-resume.html
-> 📊 Data Scientists: https://resume-builder-swart-sigma-93.vercel.app/role/data-scientist-resume.html
+> ‍ Software Engineers: https://resume-builder-swart-sigma-93.vercel.app/role/software-engineer-resume.html
+> Frontend Devs: https://resume-builder-swart-sigma-93.vercel.app/role/frontend-developer-resume.html
+> Data Scientists: https://resume-builder-swart-sigma-93.vercel.app/role/data-scientist-resume.html
 >
 > Stop getting rejected by robots. Feel free to use it! 
 > #TechJobs #SoftwareEngineering #ResumeTips #Hiring

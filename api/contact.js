@@ -155,7 +155,7 @@ export default async function handler(req, res) {
         const fromFormatted = fromWhatsApp.startsWith('whatsapp:') ? fromWhatsApp : `whatsapp:${fromWhatsApp}`;
         const toFormatted = toWhatsApp.startsWith('whatsapp:') ? toWhatsApp : `whatsapp:${toWhatsApp}`;
 
-        const whatsappBody = `🚨 *New ZenResume Inquiry*\n\n👤 *From:* ${name}\n📧 *Email:* ${email}\n⭐ *Rating:* ${rating}★\n💬 *Message:* \"${message.substring(0, 300)}\"\n\n🔗 *Reply:* mailto:${email}`;
+        const whatsappBody = ` *New ZenResume Inquiry*\n\n *From:* ${name}\n *Email:* ${email}\n *Rating:* ${rating}★\n *Message:* \"${message.substring(0, 300)}\"\n\n *Reply:* mailto:${email}`;
 
         const authHeader = 'Basic ' + Buffer.from(`${twilioSid}:${twilioToken}`).toString('base64');
         const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`;

@@ -9,43 +9,43 @@
 
   const PULSE_ACTIVITIES = [
     {
-      icon: '💸',
+      icon: '<i class="fas fa-indian-rupee-sign"></i>',
       tag: 'SAVED ₹499',
       text: 'Candidate in <strong>Hyderabad</strong> exported a clean vector ATS resume for <strong>100% Free</strong> (avoided paid paywall traps).',
       time: 'Just now'
     },
     {
-      icon: '⚡',
+      icon: '<i class="fas fa-bolt"></i>',
       tag: 'BUILT IN 3 MINS',
       text: 'Developer in <strong>Bengaluru</strong> generated <strong>Google XYZ bullet points</strong> in 10s without manual typing.',
       time: '1m ago'
     },
     {
-      icon: '🚀',
+      icon: '<i class="fas fa-rocket"></i>',
       tag: 'AUTO-SYNCED',
       text: 'Fresher in <strong>Pune</strong> imported their <strong>GitHub profile & repositories</strong> into single-column ATS format in <strong>12 seconds</strong>.',
       time: '2m ago'
     },
     {
-      icon: '🎯',
+      icon: '<i class="fas fa-bullseye"></i>',
       tag: '99% ATS SCORE',
       text: 'TCS applicant in <strong>Chennai</strong> passed ATS scanner checks with <strong>zero parsing errors</strong>.',
       time: '4m ago'
     },
     {
-      icon: '🛡️',
+      icon: '<i class="fas fa-shield-alt"></i>',
       tag: '100% PRIVATE',
       text: 'Job seeker in <strong>Visakhapatnam</strong> built their resume with <strong>zero data harvesting or spam emails</strong>.',
       time: '6m ago'
     },
     {
-      icon: '📁',
+      icon: '<i class="fas fa-folder-open"></i>',
       tag: 'TAILORED IN 1 CLICK',
       text: 'Data Analyst in <strong>Mumbai</strong> created <strong>2 tailored resume versions</strong> in 30 seconds.',
       time: '8m ago'
     },
     {
-      icon: '✨',
+      icon: '<i class="fas fa-magic"></i>',
       tag: '1-PAGE AUTO-FIT',
       text: 'Student in <strong>Delhi NCR</strong> auto-fitted an overflowing draft into <strong>1 perfect single page</strong>.',
       time: '10m ago'
@@ -68,7 +68,7 @@
       <div class="pulse-card" id="pulse-card">
         <div class="pulse-avatar-box">
           <span class="pulse-live-ring"></span>
-          <span id="pulse-icon" class="pulse-emoji">💸</span>
+          <span id="pulse-icon" class="pulse-emoji"><i class="fas fa-indian-rupee-sign"></i></span>
         </div>
         <div class="pulse-content-col">
           <div class="pulse-header-row">
@@ -76,7 +76,7 @@
             <span id="pulse-time" class="pulse-time-text">Just now</span>
           </div>
           <p id="pulse-text" class="pulse-main-text">Candidate exported clean ATS resume for 100% Free.</p>
-          <div class="pulse-action-hint">⚡ Click to build your free resume in 60s &rarr;</div>
+          <div class="pulse-action-hint">Click to build your free resume in 60s &rarr;</div>
         </div>
         <button type="button" class="pulse-close-btn" id="btn-pulse-close" aria-label="Dismiss">&times;</button>
       </div>
@@ -116,7 +116,7 @@
     const textEl = document.getElementById('pulse-text');
     const timeEl = document.getElementById('pulse-time');
 
-    if (iconEl) iconEl.textContent = item.icon;
+    if (iconEl) iconEl.innerHTML = item.icon;
     if (tagEl) tagEl.innerHTML = `<span class="pulse-dot"></span> ${item.tag}`;
     if (textEl) textEl.innerHTML = item.text;
     if (timeEl) timeEl.textContent = item.time;

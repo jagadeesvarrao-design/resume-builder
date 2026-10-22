@@ -174,7 +174,7 @@ const ZenBulletBank = (() => {
         window.syncFormToPreview();
       }
       if (typeof window.showToast === 'function') {
-        window.showToast('🎯 Added metric bullet to ' + (activeTargetSection === 'projects' ? 'Project' : 'Experience') + '!', 'success');
+        window.showToast('Added metric bullet to ' + (activeTargetSection === 'projects' ? 'Project' : 'Experience') + '!', 'success');
       }
 
       // Close modal and focus textarea
@@ -186,7 +186,7 @@ const ZenBulletBank = (() => {
       if (navigator.clipboard) {
         navigator.clipboard.writeText('• ' + bulletText);
         if (typeof window.showToast === 'function') {
-          window.showToast('📋 Copied bullet to clipboard! Paste it into your experience.', 'success');
+          window.showToast('Copied bullet to clipboard! Paste it into your experience.', 'success');
         }
       }
       closeBulletBank();

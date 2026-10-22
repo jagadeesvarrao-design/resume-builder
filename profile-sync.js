@@ -165,7 +165,7 @@
       }
 
       if (typeof window.showToast === 'function') {
-        window.showToast('⚡ Synced GitHub profile for @' + cleanUser + '! Name, bio, and ' + projects.length + ' repository projects pre-loaded.', 'success');
+        window.showToast('Synced GitHub profile for @' + cleanUser + '! Name, bio, and ' + projects.length + ' repository projects pre-loaded.', 'success');
       }
       return true;
 
@@ -285,7 +285,7 @@
       window.enterApp();
     }
 
-    showSyncSuccessToast('⚡ LinkedIn summary parsed and populated into ATS format successfully!');
+    showSyncSuccessToast('LinkedIn summary parsed and populated into ATS format successfully!');
     return true;
   }
 

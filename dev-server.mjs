@@ -58,10 +58,20 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (pathname === '/') pathname = '/index.html';
-  const filePath = path.join(__dirname, decodeURIComponent(pathname));
-  if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+  let filePath = path.join(__dirname, decodeURIComponent(pathname));
+
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+    filePath = path.join(filePath, 'index.html');
+  }
+
+  if (!fs.existsSync(filePath) && fs.existsSync(filePath + '.html')) {
+    filePath = filePath + '.html';
+  }
+
+  if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
     res.statusCode = 404;
-    res.end('Not Found');
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.end(`<h2>404 Not Found</h2><p>The requested path <code>${pathname}</code> was not found.</p><p><a href="/">Return to Home</a></p>`);
     return;
   }
 
@@ -71,6 +81,8 @@ const server = http.createServer(async (req, res) => {
   fs.createReadStream(filePath).pipe(res);
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Server running at http://127.0.0.1:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`ZenResume Local Server is running at:`);
+  console.log(`- http://localhost:${PORT}/`);
+  console.log(`- http://127.0.0.1:${PORT}/`);
 });

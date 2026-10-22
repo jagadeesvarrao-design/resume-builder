@@ -116,14 +116,14 @@
         <div class="prompt-glow-dot"></div>
         <div class="prompt-content">
           <div class="prompt-title">
-            <span style="font-size: 16px;">🚀</span>
+            <span style="font-size: 14px;"><i class="fas fa-bolt"></i></span>
             <span>Awesome edits! Ready to build your full ATS Resume?</span>
           </div>
           <p class="prompt-subtitle">You've customized your live playground preview! Transfer your edits straight into the full builder to add education, run AI checks, and export your 100% vector PDF.</p>
         </div>
         <div class="prompt-actions">
           <button type="button" class="btn-prompt-transfer" onclick="window.transferPlaygroundToBuilder()">
-            ⚡ Open Full Builder Free &rarr;
+            Open Full Builder Free &rarr;
           </button>
           <button type="button" class="btn-prompt-close" onclick="window.closePlaygroundPrompt()" aria-label="Dismiss">&times;</button>
         </div>

@@ -9426,12 +9426,23 @@ body.in-editor > button:not([class]):not([id]) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
+  color: #00846D;
   flex-shrink: 0;
+}
+
+.pulse-avatar-box i {
+  font-size: 15px;
+  color: #00846D;
 }
 
 [data-theme="dark"] .pulse-avatar-box {
   background: rgba(45, 212, 191, 0.15);
+  color: #2DD4BF;
+}
+
+[data-theme="dark"] .pulse-avatar-box i {
+  color: #2DD4BF;
 }
 
 .pulse-live-ring {

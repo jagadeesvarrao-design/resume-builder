@@ -1421,7 +1421,7 @@ function promptCreateNewProfileVersion(customName = null) {
     total_versions: registry.profiles.length
   });
 
-  window.showToast(`🎉 Created job profile: "${cleanName}"! Master resume saved.`, "success", 4000);
+  window.showToast(`Created job profile: "${cleanName}"! Master resume saved.`, "success", 4000);
 }
 
 function switchProfileVersion(targetId, forceReload = false) {
@@ -1489,7 +1489,7 @@ function switchProfileVersion(targetId, forceReload = false) {
         version_name: profileName
       });
       if (typeof window.showToast === 'function') {
-        window.showToast(`📂 Switched to profile: "${profileName}"`, 'success');
+        window.showToast(`Switched to profile: "${profileName}"`, 'success');
       }
     } catch (e) {
       console.error("Error switching profile:", e);
@@ -1565,7 +1565,7 @@ function showWelcomeVaultToast() {
   toast.className = 'vault-welcome-toast';
   toast.innerHTML = `
     <div style="display: flex; align-items: flex-start; gap: 12px;">
-      <span style="font-size: 24px; line-height: 1;">🌟</span>
+      <span style="font-size: 20px; line-height: 1;"><i class="fas fa-star" style="color: #F59E0B;"></i></span>
       <div style="flex: 1;">
         <strong style="display: block; color: #0f172a; font-size: 13.5px; font-weight: 700; margin-bottom: 3px; font-family: 'Outfit', sans-serif;">Welcome back! Your Master Resume is ready.</strong>
         <p style="margin: 0 0 10px 0; font-size: 12px; color: #475569; line-height: 1.45;">Tailoring your resume for a new job application today?</p>
@@ -1922,7 +1922,7 @@ function importResumeJSON(e) {
       // Sync form content to preview
       syncFormToPreview();
       
-      window.showToast("🎉 Resume data successfully restored!", "success");
+      window.showToast("Resume data successfully restored!", "success");
       
       // Clear file selector input so same file can be imported again
       e.target.value = '';
@@ -4212,7 +4212,7 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
       has_education: !!(normalized.education && normalized.education.length)
     });
 
-    window.showToast("🎉 Resume imported and structured successfully! All sections are ready.", "success");
+    window.showToast("Resume imported and structured successfully! All sections are ready.", "success");
     document.dispatchEvent(new CustomEvent('resume_imported', { detail: normalized }));
     
   } catch (err) {
@@ -4236,7 +4236,7 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
           badgeIcon: "fas fa-file-pdf", 
           type: "warning", 
           message: err.message || "We could not extract readable text from this PDF file. Pick a 1-click ATS role blueprint to get started!", 
-          primaryBtnText: "⚡ Explore 71 Role Blueprints", 
+          primaryBtnText: "Explore 71 Role Blueprints", 
           onPrimary: () => window.location.href = "/role/", 
           secondaryBtnText: "Close" 
         });
@@ -4405,7 +4405,7 @@ function magicFitToSinglePage() {
   }
 
   if (fitted) {
-    showToast('⚡ Optimized cleanly onto 1 single page!');
+    showToast('Optimized cleanly onto 1 single page!');
   } else {
     showToast('Applied maximum compression (Content is extensive)');
   }
@@ -4596,7 +4596,7 @@ function initSummaryPresetsAndActions() {
         updateSummaryWordCount();
         syncFormToPreview();
         autoSaveResume();
-        showToast(`🌿 Applied ${btn.textContent} preset!`);
+        showToast(`Applied ${btn.textContent} preset!`);
       }
     });
   });
@@ -4798,7 +4798,7 @@ function attachEvents() {
 
         autoSaveResume();
         if (typeof window.showToast === 'function') {
-          window.showToast(`✨ Heading set to "${val}"!`, 'info', 1800);
+          window.showToast(`Heading set to "${val}"!`, 'info', 1800);
         }
       }
     }
@@ -4870,7 +4870,7 @@ function attachEvents() {
     realtimeAtsPill.addEventListener('click', () => {
       const result = calculateGeneralATSScore();
       if (typeof showToast === 'function') {
-        showToast(`🎯 ATS Score: ${result.score}/100 (${result.score >= 85 ? 'Elite' : 'Strong'})`);
+        showToast(`ATS Score: ${result.score}/100 (${result.score >= 85 ? 'Elite' : 'Strong'})`);
       }
     });
   }
@@ -4944,7 +4944,7 @@ function attachEvents() {
       }
       
       if (typeof showToast === 'function') {
-        showToast("💡 Tip: Shorten 1-2 bullet points or remove an older role to fit cleanly on 1 page!", "info");
+        showToast("Tip: Shorten 1-2 bullet points or remove an older role to fit cleanly on 1 page!", "info");
       }
     });
   }
@@ -4985,7 +4985,7 @@ function attachEvents() {
       const userTier = subManager ? subManager.getUserTier() : 'free';
 
       if (userTier === 'free') {
-        if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Upgrade to AI Job Tailoring", badgeText: "Pro Feature", badgeIcon: "fas fa-bolt", type: "warning", message: "AI Resume Tailoring is a Pro feature! Free tier includes <strong>100% vector single-column ATS PDF creation</strong> and keyword checks. Upgrade to 1-Day Sprint (₹49) for 3 AI tailored resumes, or 7-Day Fast Track (₹199) for 4 AI tailored resumes every day.", primaryBtnText: "⚡ View Pro Pricing", onPrimary: () => { const el = document.getElementById("pricing"); if (el) el.scrollIntoView({behavior: "smooth"}); } }); } else { window.showToast("AI Tailoring is a Pro feature.", "info"); }
+        if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Upgrade to AI Job Tailoring", badgeText: "Pro Feature", badgeIcon: "fas fa-bolt", type: "warning", message: "AI Resume Tailoring is a Pro feature! Free tier includes <strong>100% vector single-column ATS PDF creation</strong> and keyword checks. Upgrade to 1-Day Sprint (₹49) for 3 AI tailored resumes, or 7-Day Fast Track (₹199) for 4 AI tailored resumes every day.", primaryBtnText: " View Pro Pricing", onPrimary: () => { const el = document.getElementById("pricing"); if (el) el.scrollIntoView({behavior: "smooth"}); } }); } else { window.showToast("AI Tailoring is a Pro feature.", "info"); }
         closePrintModal();
         if (window.openProPaymentModal) window.openProPaymentModal('day');
         return;
@@ -5192,7 +5192,7 @@ function attachEvents() {
           await parseHeuristics(base64Pdf, true, file);
         } catch (err) {
           console.error("PDF Parsing Error:", err);
-          if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Could Not Read PDF", badgeText: "Scanned / Image PDF", badgeIcon: "fas fa-file-pdf", type: "warning", message: "We could not extract readable text from this PDF file. Scanned images or protected PDFs cannot be parsed automatically. Pick a 1-click ATS role blueprint to get started!", primaryBtnText: "⚡ Explore 71 Role Blueprints", onPrimary: () => window.location.href = "/role/", secondaryBtnText: "Try Another PDF" }); } else { window.showToast("Could not read PDF.", "warning"); }
+          if (window.showFriendlyNoticeModal) { window.showFriendlyNoticeModal({ title: "Could Not Read PDF", badgeText: "Scanned / Image PDF", badgeIcon: "fas fa-file-pdf", type: "warning", message: "We could not extract readable text from this PDF file. Scanned images or protected PDFs cannot be parsed automatically. Pick a 1-click ATS role blueprint to get started!", primaryBtnText: "Explore 71 Role Blueprints", onPrimary: () => window.location.href = "/role/", secondaryBtnText: "Try Another PDF" }); } else { window.showToast("Could not read PDF.", "warning"); }
         } finally {
           btnMagicImport.innerHTML = originalHTML;
           btnMagicImport.disabled = false;
@@ -5484,7 +5484,7 @@ function checkURLParamsOnLoad() {
         }
         setTimeout(() => {
           if (typeof window.showToast === 'function') {
-            window.showToast(`✨ 1-Click ATS Blueprint Loaded: ${formattedTitle}!`, 'success', 3500);
+            window.showToast(`1-Click ATS Blueprint Loaded: ${formattedTitle}!`, 'success', 3500);
           }
         }, 300);
       } else if (formattedTitle) {
@@ -5657,7 +5657,7 @@ window.addEventListener('click', (e) => {
    ========================================================================== */
 
 let _contactRating = 0;
-const _ratingLabels = ['', 'Poor 😞', 'Fair 😐', 'Good 🙂', 'Great 😊', 'Excellent! 🌟'];
+const _ratingLabels = ['', 'Poor', 'Fair', 'Good', 'Great', 'Excellent!'];
 
 function initContactForm() {
   const stars = document.querySelectorAll('.contact-star');
@@ -5772,7 +5772,7 @@ function updateHeaderNavCTA() {
         if (btn) btn.click();
       };
     } else {
-      navCta.innerHTML = '⚡ Create My Resume';
+      navCta.innerHTML = 'Create My Resume';
       navCta.onclick = (e) => {
         if (e) e.preventDefault();
         if (typeof window.handleHeaderCTAClick === 'function') {
@@ -6553,7 +6553,7 @@ window.copyUPIId = function() {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(vpa).then(() => {
       if (typeof window.showToast === 'function') {
-        window.showToast('✅ Copied UPI ID: ' + vpa, 'success');
+        window.showToast('Copied UPI ID: ' + vpa, 'success');
       }
     }).catch(() => {
       prompt('Copy UPI ID:', vpa);
@@ -6577,7 +6577,7 @@ window.submitUPIPaymentVerification = function() {
   setTimeout(() => {
     window.confirmPaymentSuccess(planKey, refVal);
     if (btn) {
-      btn.textContent = '⚡ Unlock Pro';
+      btn.textContent = 'Unlock Pro';
       btn.disabled = false;
     }
   }, 600);
@@ -6711,18 +6711,18 @@ window.confirmPaymentSuccess = function(planKey, txnId) {
 
   if (remainingMs > 60 * 1000 && typeof window.showFriendlyNoticeModal === 'function') {
     window.showFriendlyNoticeModal({
-      title: '🎉 Plan Upgraded & Extended!',
+      title: 'Plan Upgraded & Extended!',
       message: `<p style="margin-bottom:12px; font-size:15px; color:#334155; line-height:1.5;">Your <strong>${pName}</strong> pass is now ACTIVE with unlimited downloads and AI tailoring.</p>
       <div style="background:rgba(0,104,86,0.08); border:1px solid rgba(0,104,86,0.25); border-radius:10px; padding:12px 14px; font-size:14px; color:#005041; line-height:1.5;">
-        ⏳ <strong>Zero Lost Time Guarantee:</strong> You had <strong>${remainingText}</strong> remaining from your previous plan. That extra time has been automatically added to your new subscription!
+        <strong>Zero Lost Time Guarantee:</strong> You had <strong>${remainingText}</strong> remaining from your previous plan. That extra time has been automatically added to your new subscription!
       </div>`,
       badgeText: 'Smart Time-Stacking Active',
       badgeIcon: 'fas fa-clock-rotate-left',
       type: 'success',
-      primaryBtnText: 'Start Building 🚀'
+      primaryBtnText: 'Start Building'
     });
   } else if (typeof window.showToast === 'function') {
-    window.showToast(`🎉 Payment Confirmed! Your ${pName} pass is now ACTIVE! Unlimited downloads & AI unlocked.`, 'success', 6000);
+    window.showToast(`Payment Confirmed! Your ${pName} pass is now ACTIVE! Unlimited downloads & AI unlocked.`, 'success', 6000);
   }
 };
 

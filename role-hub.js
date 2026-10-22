@@ -11,7 +11,7 @@
       category: "tech",
       matchScore: "99% ATS Match",
       badge: "High Demand",
-      icon: "💻",
+      icon: '<i class="fas fa-laptop-code"></i>',
       guideUrl: "/blog/software-engineer-resume-guide.html",
       keywords: ["React", "TypeScript", "Node.js", "Microservices", "Docker", "AWS", "REST APIs", "CI/CD"],
       bullet: "Architected scalable microservices with Node.js and TypeScript, handling 2M+ daily active requests with 99.9% uptime."
@@ -21,7 +21,7 @@
       category: "freshers",
       matchScore: "100% ATS Match",
       badge: "Campus Placement",
-      icon: "🎓",
+      icon: '<i class="fas fa-graduation-cap"></i>',
       guideUrl: "/blog/resume-tips-for-freshers.html",
       keywords: ["Java", "SQL", "Data Structures", "OOPs", "Spring Boot", "Git", "Problem Solving", "Agile"],
       bullet: "Engineered full-stack academic portal using Java and MySQL, reducing student registration processing time by 40%."
@@ -31,7 +31,7 @@
       category: "data",
       matchScore: "98% ATS Match",
       badge: "Data & Cloud",
-      icon: "📊",
+      icon: '<i class="fas fa-chart-line"></i>',
       guideUrl: "/blog/ats-resume-format-2026.html",
       keywords: ["Python", "SQL", "Apache Spark", "Airflow", "Kafka", "Snowflake", "ETL Pipelines", "AWS S3"],
       bullet: "Constructed automated ETL data pipelines in Apache Spark and Python, processing 10TB+ daily telemetry data."
@@ -41,7 +41,7 @@
       category: "data",
       matchScore: "97% ATS Match",
       badge: "AI / ML",
-      icon: "🤖",
+      icon: '<i class="fas fa-robot"></i>',
       guideUrl: "/blog/ats-resume-format-2026.html",
       keywords: ["PyTorch", "TensorFlow", "Pandas", "Scikit-Learn", "NLP", "LLM Fine-Tuning", "Regression", "Tableau"],
       bullet: "Trained transformer-based classification models achieving 94.2% accuracy, decreasing customer churn by 18%."
@@ -51,7 +51,7 @@
       category: "cloud",
       matchScore: "99% ATS Match",
       badge: "Infrastructure",
-      icon: "☁️",
+      icon: '<i class="fas fa-cloud"></i>',
       guideUrl: "/blog/software-engineer-resume-guide.html",
       keywords: ["Kubernetes", "Terraform", "Docker", "AWS ECS", "GitHub Actions", "Prometheus", "Linux", "IaC"],
       bullet: "Implemented multi-region Kubernetes clusters with automated Terraform IaC, slashing deployment downtime to zero."
@@ -61,7 +61,7 @@
       category: "tech",
       matchScore: "98% ATS Match",
       badge: "UI / Web",
-      icon: "🎨",
+      icon: '<i class="fas fa-palette"></i>',
       guideUrl: "/blog/software-engineer-resume-guide.html",
       keywords: ["React.js", "Next.js", "Tailwind CSS", "JavaScript ES6+", "Redux Toolkit", "Web Vitals", "Jest"],
       bullet: "Redesigned consumer checkout flow in Next.js, boosting conversion rate by 24% and achieving 98+ Google Lighthouse score."
@@ -71,7 +71,7 @@
       category: "freshers",
       matchScore: "100% ATS Match",
       badge: "Zero Experience",
-      icon: "🏫",
+      icon: '<i class="fas fa-school"></i>',
       guideUrl: "/blog/resume-tips-for-freshers.html",
       keywords: ["C++", "Java", "Python", "DBMS", "Computer Networks", "Operating Systems", "Web Development"],
       bullet: "Developed real-time IoT weather monitoring system using Arduino & Python, presenting findings at National Tech Symposium."
@@ -81,7 +81,7 @@
       category: "business",
       matchScore: "96% ATS Match",
       badge: "Leadership",
-      icon: "💼",
+      icon: '<i class="fas fa-briefcase"></i>',
       guideUrl: "/blog/ats-resume-format-2026.html",
       keywords: ["Agile/Scrum", "Product Roadmap", "User Stories", "A/B Testing", "SQL Analytics", "Jira", "Stakeholder Management"],
       bullet: "Led cross-functional sprint team of 8 engineers to launch mobile payments feature, acquiring 50K+ new active users in Q2."
@@ -175,7 +175,7 @@
         </div>
         <div class="role-card-actions">
           <button type="button" class="btn-role-load" onclick="event.stopPropagation(); if (typeof window.loadPreset === 'function') window.loadPreset('${key}'); if (typeof window.enterBuilderDirectly === 'function') window.enterBuilderDirectly();">
-            <span>⚡ Use Blueprint</span>
+            <span>Use Blueprint</span>
           </button>
           <a href="${role.guideUrl}" class="role-guide-link" onclick="event.stopPropagation();">
             <span>Guide &rarr;</span>

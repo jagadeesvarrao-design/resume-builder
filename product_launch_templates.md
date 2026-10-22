@@ -1,4 +1,4 @@
-# 🚀 Launch Templates for Product Platforms
+# Launch Templates for Product Platforms
 
 Product platforms (like HackerNews and IndieHackers) hate marketing language. They want to hear from a passionate developer who built a tool to solve a real problem. Copy and paste these exact templates.
 
@@ -50,13 +50,13 @@ Product platforms (like HackerNews and IndieHackers) hate marketing language. Th
 *Peerlist is very visual and developer-focused. Add a screenshot of a finished resume with this text.*
 
 **Copy/Paste:**
-> 90% of job applications get rejected by ATS software before a human even reads them because of bad PDF formatting. 🤖📉
+> 90% of job applications get rejected by ATS software before a human even reads them because of bad PDF formatting. 
 > 
 > I built ZenResume to fix this. It’s a 100% free, single-column resume builder that guarantees ATS readability. 
 > 
-> ❌ No signups required.
-> ❌ No $15 paywalls at the end.
-> ✅ 100% Client-side privacy.
+> No signups required.
+> No $15 paywalls at the end.
+> 100% Client-side privacy.
 > 
 > Try it out and let me know what you think! 
 > Link: https://resume-builder-swart-sigma-93.vercel.app/

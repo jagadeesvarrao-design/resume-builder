@@ -165,7 +165,7 @@
       }
       window.addEventListener('load', () => this.adapt(), { once: true });
 
-      console.log('[ZenResume] Dynamic Adaptive UI/UX & CSS Engine Active 🚀');
+      console.log('[ZenResume] Dynamic Adaptive UI/UX & CSS Engine Active');
     }
   }
 
