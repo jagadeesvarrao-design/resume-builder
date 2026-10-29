@@ -1036,7 +1036,8 @@ function syncIncomingCloudResumes(cloudDoc) {
 
       // If user is currently in editor, update form and preview
       const isInEditor = document.body.classList.contains('in-editor');
-      if (isInEditor && typeof window.hydrateStateFromData === 'function') {
+      const isRecentlyImported = window._lastImportTimestamp && (Date.now() - window._lastImportTimestamp < 15000);
+      if (isInEditor && !isRecentlyImported && typeof window.hydrateStateFromData === 'function') {
         window.hydrateStateFromData(masterData, true);
         if (typeof window.syncFormToPreview === 'function') {
           window.syncFormToPreview();

@@ -467,10 +467,15 @@ function loadProfileIntoForm(data) {
   setField('input-skills', skillsVal);
 
   // D. Reset dynamic list containers
-  if (experienceListContainer) experienceListContainer.innerHTML = '';
-  if (projectsListContainer) projectsListContainer.innerHTML = '';
-  if (educationListContainer) educationListContainer.innerHTML = '';
-  if (certificationsListContainer) certificationsListContainer.innerHTML = '';
+  const expListContainer = document.getElementById('experience-list-container') || experienceListContainer;
+  const projListContainer = document.getElementById('projects-list-container') || projectsListContainer;
+  const eduListContainer = document.getElementById('education-list-container') || educationListContainer;
+  const certListContainer = document.getElementById('certifications-list-container') || certificationsListContainer;
+
+  if (expListContainer) expListContainer.innerHTML = '';
+  if (projListContainer) projListContainer.innerHTML = '';
+  if (eduListContainer) eduListContainer.innerHTML = '';
+  if (certListContainer) certListContainer.innerHTML = '';
 
   // E. Load Work Experience
   if (data.experience && Array.isArray(data.experience) && data.experience.length > 0) {
@@ -1741,14 +1746,22 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
       });
     }
     
-    // Set UI filters active state
-    if (expFilters.querySelector('.active')) expFilters.querySelector('.active').classList.remove('active');
-    const expBtn = expFilters.querySelector(`[data-exp="${state.selectedExp}"]`);
-    if (expBtn) expBtn.classList.add('active');
+    // Set UI filters active state safely
+    const expFilters = document.getElementById('exp-filters');
+    const industryFilters = document.getElementById('industry-filters');
+    if (expFilters) {
+      const activeExp = expFilters.querySelector('.active');
+      if (activeExp) activeExp.classList.remove('active');
+      const expBtn = expFilters.querySelector(`[data-exp="${state.selectedExp}"]`);
+      if (expBtn) expBtn.classList.add('active');
+    }
     
-    if (industryFilters.querySelector('.active')) industryFilters.querySelector('.active').classList.remove('active');
-    const indBtn = industryFilters.querySelector(`[data-ind="${state.selectedInd}"]`);
-    if (indBtn) indBtn.classList.add('active');
+    if (industryFilters) {
+      const activeInd = industryFilters.querySelector('.active');
+      if (activeInd) activeInd.classList.remove('active');
+      const indBtn = industryFilters.querySelector(`[data-ind="${state.selectedInd}"]`);
+      if (indBtn) indBtn.classList.add('active');
+    }
     
     // Sync inline quick layout selector dynamically
     updateInlineLayoutSwitcher();
@@ -1757,22 +1770,30 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     loadProfileIntoForm(savedState.formData);
     
     // Transition Screen UI directly to workspace if not prevented (e.g. startup)
+    const landingScreen = document.getElementById('landing-screen');
+    const appContainer = document.getElementById('app-container');
+    const selectionScreen = document.getElementById('selection-screen');
+    const builderWorkspace = document.getElementById('builder-workspace');
+    const welcomeHeader = document.getElementById('app-header-welcome');
+    const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
+    const globalNav = document.querySelector('.stitch-nav');
+
     const isCurrentlyInEditor = document.body.classList.contains('in-editor') ||
       (builderWorkspace && builderWorkspace.style.display === 'grid');
 
     if (!preventDisplayTransition || isCurrentlyInEditor) {
       document.body.classList.add('in-editor');
-      const landingScreen = document.getElementById('landing-screen');
+      if (globalNav) globalNav.style.display = 'none';
       if (landingScreen) landingScreen.style.display = 'none';
+      if (appContainer) appContainer.style.display = 'flex';
       if (selectionScreen) selectionScreen.style.display = 'none';
       if (welcomeHeader) welcomeHeader.style.display = 'none';
       if (builderWorkspace) {
         builderWorkspace.style.display = 'grid';
-        triggerAdPush('promo-banner-sidebar');
+        if (typeof triggerAdPush === 'function') triggerAdPush('promo-banner-sidebar');
       }
       
       // Show mobile tabs on small screens and default to 'edit' tab
-      const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
       if (mobileWorkspaceTabs) {
         mobileWorkspaceTabs.style.display = '';
       }
@@ -1781,13 +1802,10 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
       // ONLY reset to landing screen if user is explicitly NOT in editor and not already transitioned
       if (!isCurrentlyInEditor && !document.body.classList.contains('in-editor')) {
         document.body.classList.remove('in-editor');
-        const landingScreen = document.getElementById('landing-screen');
         if (landingScreen) landingScreen.style.display = 'block';
         if (selectionScreen) selectionScreen.style.display = 'none';
         if (builderWorkspace) builderWorkspace.style.display = 'none';
-        const welcomeHeader = document.getElementById('app-header-welcome');
         if (welcomeHeader) welcomeHeader.style.display = 'none';
-        const mobileWorkspaceTabs = document.getElementById('mobile-workspace-tabs');
         if (mobileWorkspaceTabs) mobileWorkspaceTabs.style.display = 'none';
       }
     }
@@ -1802,11 +1820,13 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     if (template) {
       const renderedHTML = template.render(savedState.formData);
       const paper = document.getElementById('resume-print-area');
-      paper.innerHTML = renderedHTML;
-      if (state.selectedTemplateId === 'sidebar') {
-        paper.classList.add('sidebar-layout');
-      } else {
-        paper.classList.remove('sidebar-layout');
+      if (paper) {
+        paper.innerHTML = renderedHTML;
+        if (state.selectedTemplateId === 'sidebar') {
+          paper.classList.add('sidebar-layout');
+        } else {
+          paper.classList.remove('sidebar-layout');
+        }
       }
       
       // Compress and scale dynamically on load
@@ -1820,6 +1840,7 @@ function hydrateStateFromData(savedState, preventDisplayTransition = false) {
     return false;
   }
 }
+window.hydrateStateFromData = hydrateStateFromData;
 
 /* ==========================================================================
    5B. JSON DATA BACKUP & RESTORE
@@ -4138,6 +4159,7 @@ async function parseHeuristics(inputData, isPdf = false, rawFile = null) {
     }
 
     // Direct transition into editor workspace first without calling destructive enterApp()
+    window._lastImportTimestamp = Date.now();
     if (typeof enterBuilderDirectly === 'function') {
       enterBuilderDirectly(true);
     } else {
